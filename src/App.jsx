@@ -11,7 +11,7 @@ function App() {
     <>
       {/* app */}
       <MobileNav />
-      <div className='flex overflow-hidden w-svw'>
+      <div className='flex overflow-hidden '>
         <SideBar />
         <Dashboard />
       </div>
