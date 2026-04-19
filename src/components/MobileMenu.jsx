@@ -20,7 +20,7 @@ function MobileMenu({ isOpen, toggleMenu }) {
 
     return (
         <div ref={menuRef} className='fixed backdrop-[50px] bottom-0 Menu max-h-[40svh] overflow-y-auto
-         w-full bg-white/30 glass z-2 px-10 py-2 glass-scroll'>
+         w-full bg-white glass z-2 px-10 py-2 glass-scroll'>
             <div className='sticky top-2 dragger w-40 h-2 mx-auto rounded-md bg-white mb-15'></div>
             <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>OVERVIEW</h3>
             <ul>
