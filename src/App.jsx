@@ -14,13 +14,12 @@ function App() {
 
   return (
     <>
-      {/* Overlay Background - Positioned on top */}
       <div 
         className='fixed inset-0 pointer-events-none z-50' 
         style={{ 
           backgroundImage: `url(${crustBg})`,
           backgroundSize: 'cover',
-          mixBlendMode: 'multiply' // Optional: helps the "crusty" texture blend with content below
+          mixBlendMode: 'multiply' 
         }}
       />
 
