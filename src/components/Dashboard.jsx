@@ -28,7 +28,7 @@ function Dashboard() {
                 <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
                 <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
                 <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='group flex items-center tab hover:bg-white/20 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm transition-all'>
+                <li className='group flex items-center tab hover:bg-white/20 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm transition-all mr-35'>
                     <span><i className="fa-solid fa-plus"></i></span>
                     <span className='max-w-0 opacity-0 overflow-hidden group-hover:max-w-xs
                      group-hover:opacity-100 group-hover:ml-2 transition-all duration-300 

@@ -1,9 +1,26 @@
 import React from 'react'
+import MobileNav from './MobileNav'
+import { useRef, useState } from 'react';
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
-function MobileMenu() {
+function MobileMenu({ isOpen, toggleMenu }) {
+
+    const menuRef = useRef();
+
+    useGSAP(() => {
+        gsap.to(menuRef.current, {
+            y: isOpen ? 0 : "100%",
+            opacity: isOpen ? 1 : 0,
+            duration: 0.5,
+            ease: "power3.out",
+            display: isOpen ? "block" : "none"
+        });
+    }, [isOpen]);
+
     return (
-        // fixed position incoming, it's hidden for now
-        <div className='hidden bottom-0 Menu max-h-[40svh] overflow-y-auto w-full bg-white/30 glass z-2 px-10 py-2 '>
+        <div ref={menuRef} className='fixed bottom-0 Menu max-h-[40svh] overflow-y-auto
+         w-full bg-white/30 glass z-2 px-10 py-2 glass-scroll'>
             <div className='sticky top-2 dragger w-40 h-2 mx-auto rounded-md bg-white mb-15'></div>
             <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>OVERVIEW</h3>
             <ul>

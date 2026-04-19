@@ -17,7 +17,7 @@ function SideBar() {
                     OVERVIEW
                 </h3>
                 <ul className="space-y-2">
-                    <li className="flex items-center gap-2 p-3 bg-white/10 hover:bg-white/20 rounded-lg border border-white/80 text-white cursor-pointer transition
+                    <li className="flex items-center gap-2 p-3 bg-white/20 hover:bg-white/20 rounded-lg border border-white/80 text-white cursor-pointer transition
               active-side-tab">
                         <i class="fa-solid fa-house"></i>Dashboard
                     </li>
