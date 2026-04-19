@@ -33,7 +33,7 @@ function Dashboard() {
                 {/* Card 1: Total Collections (Spans 1 col) */}
                 {/* Card 1: Allow it to be wider if needed */}
 
-                <div className='glass p-6 text-white flex flex-col justify-between min-h-62.5 md:col-span-1 lg:col-span-1'>
+                <div className='glass p-6 text-white flex flex-col justify-between min-h-50 md:col-span-1 lg:col-span-1'>
                     <h2 className='text-[clamp(1rem,2.5vw,1rem)] flex items-start gap-3'>
                         <i className="fa-solid fa-wallet mt-1"></i>
                         <span>Total collections(YTD) - Monthly Expenses</span>
@@ -49,7 +49,7 @@ function Dashboard() {
                 </div>
 
                 {/* Card 2: Yearly Target (Spans 2 cols on large screens) ...*/}
-                <div className='glass p-6 text-white md:col-span-2 flex flex-col justify-between min-h-62.5'>
+                <div className='glass p-6 text-white md:col-span-2 flex flex-col justify-between min-h-50'>
                     <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
                         <h2 className='text-xl flex items-center gap-3'>
                             <i className="fa-solid fa-piggy-bank"></i>
