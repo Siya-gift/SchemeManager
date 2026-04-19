@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import "tailwindcss";
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-image: url("./images/bannerPic1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: 10px;
+  min-height: 100vh;
+}
+
+/* .active-tab {
+  background-color: #fff !important;
+  color: gray !important;
+  opacity: .9 !important;
+} */
+
+.glass {
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.21);
+  border: 1px solid #fff;
+}
+
+/* width will change dynamically */
+.progBar1 .progress{
+  width: 40%;
+  height: 100%;
+  border-radius: 25px;
+  background-color: white;
+}
