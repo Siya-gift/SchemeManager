@@ -29,7 +29,7 @@ function MobileMenu({ isOpen, toggleMenu }) {
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>OVERVIEW</h3>
                 <ul>
                     <li className='flex items-center text-white gap-3 p-3 font-light 
-                    bg-white/30'>
+                    bg-white/30 border-l-3 border-white'>
                         <i class="fa-solid fa-house"></i>Dashboard
                     </li>
                 </ul>
@@ -47,7 +47,7 @@ function MobileMenu({ isOpen, toggleMenu }) {
                 </ul>
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>SYSTEM</h3>
                 <ul>
-                    <li className='flex items-center text-white gap-3 p-3 font-light'>
+                    <li className='flex items-center text-white gap-3 p-3 border-b font-light'>
                         <i class="fa-solid fa-clock-rotate-left"></i>Activity History
                     </li>
                     <li className='flex items-center text-white gap-3 p-3 font-light'>
