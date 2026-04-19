@@ -11,7 +11,7 @@ function MobileNav() {
     return (
         <>
             <div className='sticky top-2 z-1'>
-                <div className='profile bg-white/75 glass flex md:hidden justify-between items-center m-5
+                <div className='profile bg-white/55 glass flex md:hidden justify-between items-center m-5
                  p-3 cursor-pointer hover:bg-white/45'>
                     <div className='pp'>
                         <div className="ppic static -top-1 left-[50%] w-10 h-10 rounded-full overflow-hidden">
