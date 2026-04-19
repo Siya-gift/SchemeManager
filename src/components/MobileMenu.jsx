@@ -28,7 +28,8 @@ function MobileMenu({ isOpen, toggleMenu }) {
             <div className='w-full max-h-70 overflow-y-auto glass-scroll pt-6'>
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>OVERVIEW</h3>
                 <ul>
-                    <li className='flex items-center text-white gap-3 p-3 font-light'>
+                    <li className='flex items-center text-white gap-3 p-3 font-light 
+                    bg-white/30'>
                         <i class="fa-solid fa-house"></i>Dashboard
                     </li>
                 </ul>
