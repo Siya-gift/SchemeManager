@@ -10,8 +10,8 @@ function MobileNav() {
 
     return (
         <>
-            <div className='profile glass flex md:hidden justify-between items-center m-5
-                 p-3 cursor-pointer hover:bg-white/45'>
+            <div className='profile glass flex md:hidden justify-between items-center mx-2 mt-3
+                 p-6 cursor-pointer hover:bg-white/45'>
                 <div className='pp'>
                     <div className="ppic static -top-1 left-[50%] w-10 h-10 rounded-full overflow-hidden">
                         <img src={luffyImg} className="h-full w-full object-cover" />
