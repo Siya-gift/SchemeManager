@@ -2,6 +2,29 @@
 
 @import "tailwindcss";
 
+
+::-webkit-scrollbar {
+  width: 8px; 
+  height: 12px; 
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#dee8ee, #3498db);
+  border-radius: 10px;
+  border: 1px solid #f1f1f1; 
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2980b9;
+}
+
+
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
