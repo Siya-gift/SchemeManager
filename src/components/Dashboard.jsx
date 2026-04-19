@@ -2,7 +2,7 @@ import React from 'react'
 
 function Dashboard() {
     return (
-        <div className='dashboard min-h-screen p-4 md:p-8 md:block'>
+        <div className='dashboard w-full min-h-screen p-4 md:p-8 md:block'>
             {/* Header Stays full width */}
             <div className='hearder flex flex-col md:flex-row justify-between items-center py-5 px-6 glass mb-6'>
                 <h1 className='text-3xl font-bold text-white'>Dashboard</h1>
@@ -14,9 +14,19 @@ function Dashboard() {
             </div>
 
             {/* Tabs Scrollable on mobile */}
-            <ul className='tabs flex gap-2 overflow-x-auto pb-4 no-scrollbar'>
+            <ul className='tabs glass-scroll flex gap-2 max-w-svw md:max-w-[70vw] overflow-x-auto pb-4 no-scrollbar'>
                 <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>VV</li>
                 <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all bg-white/45'>Clubs</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
                 <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
                 <li className='group flex items-center tab hover:bg-white/20 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm transition-all'>
                     <span><i className="fa-solid fa-plus"></i></span>
@@ -39,7 +49,7 @@ function Dashboard() {
                         <span>Total collections(YTD) - Monthly Expenses</span>
                     </h2>
                     <div className='mt-4'>
-                        <h1 className="text-[clamp(2rem,10vw,3rem)] font-bold leading-none whitespace-nowrap">
+                        <h1 className="text-[clamp(2rem,5vw,6rem)] font-bold leading-none whitespace-nowrap">
                             R -370
                         </h1>
                         <h4 className='text-sm text-white/70 mt-2 cursor-pointer hover:text-white transition-all'>
@@ -78,18 +88,30 @@ function Dashboard() {
                 </div>
 
                 {/* Card 3: Latest Transactions */}
-                <div className='glass p-6 text-white'>
+                <div className='glass glass-scroll p-6 text-white max-h-140 0verflow-hidden'>
                     <h2 className='text-xl font-semibold mb-6 flex items-center gap-3'>
                         <i className="fa-solid fa-clock-rotate-left"></i> Latest Transactions
                     </h2>
-                    <ul className=' text-sm'>
+                    <ul className='glass-scroll text-[11px] max-h-95 overflow-y-auto'>
                         {[
                             { d: '18 Feb 26', c: 'Expense', v: 'R 500' },
                             { d: '18 Feb 26', c: 'Payment', v: 'R 500' },
                             { d: '18 Feb 26', c: 'New Scheme', v: 'Scheme2' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
+                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
                             { d: '18 Feb 26', c: 'New Member', v: 'Sive' }
                         ].map((item, i) => (
-                            <li key={i} className='flex justify-between items-center border-b border-white/10 py-5 
+                            <li key={i} className='flex gap-6 items-center border-b border-white/10 py-3 mr-2 w-65 
                             hover:bg-white/20 h-full cursor-pointer'>
                                 <span className='opacity-70'>{item.d}</span>
                                 <span className='font-medium'>{item.c}</span>
@@ -100,25 +122,25 @@ function Dashboard() {
                 </div>
 
                 {/* Card 4: Arrears */}
-                <div className='glass p-6 text-white'>
+                <div className='glass p-6 text-white max-h-140 0verflow-hidden'>
                     <h2 className='text-xl font-semibold mb-6 flex items-start gap-3'>
                         <i className='fa-solid fa-triangle-exclamation text-yellow-400'></i>
                         <span>Members Behind on Payment</span>
                     </h2>
-                    <ul className='text-sm'>
-                        {[1, 2, 3].map((_, i) => (
-                            <li key={i} className='flex justify-between items-center border-b border-white/10 py-4
+                    <ul className='glass-scroll text-sm max-h-95 overflow-y-auto'>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((_, i) => (
+                            <li key={i} className='flex justify-between items-center border-b border-white/10 py-4 mr-2
                             hover:bg-white/20 cursor-pointer'>
                                 <span className='opacity-70'>18 Feb 26</span>
                                 <span className='font-medium'>Expense</span>
-                                <span className='text-red-300 font-bold'>R 500</span>
+                                <span className='text-red-300 font-bold hidden xl:block'>R 500</span>
                             </li>
                         ))}
                     </ul>
                 </div>
 
                 {/* Card 5: Helpful tips to navigate seemlessly */}
-                <div className='glass p-6 text-white'>
+                <div className='glass glass-scroll p-6 text-white max-h-140 overflow-y-auto line-clamp-6'>
                     <h2 className='text-xl font-semibold mb-6 flex items-center gap-3'>
                         <i class="fa-solid fa-lightbulb"></i> Helpful Tips
                     </h2>
@@ -149,7 +171,7 @@ function Dashboard() {
                     </ul>
                 </div>
             </div>
-            <div className='hearder flex flex-col sm:flex-row justify-center items-center py-5 px-6 glass mb-6 text-white'>
+            <div className='footer flex flex-col sm:flex-row justify-center items-center py-5 px-6 glass mb-6 text-white'>
                 <p>All rights reserved &copy; 2026 </p>
             </div>
         </div>

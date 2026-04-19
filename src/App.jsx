@@ -9,15 +9,13 @@ import MobileMenu from './components/MobileMenu.jsx'
 function App() {
   return (
     <>
-    {/* app */}
-      <div className='cointans_content relative'>
-        <MobileNav />
-        <div className='flex'>
-          <SideBar />
-          <Dashboard />
-        </div>
-        <MobileMenu />
+      {/* app */}
+      <MobileNav />
+      <div className='flex overflow-hidden w-svw'>
+        <SideBar />
+        <Dashboard />
       </div>
+      <MobileMenu />
     </>
   )
 }

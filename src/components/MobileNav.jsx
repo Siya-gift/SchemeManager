@@ -10,24 +10,27 @@ function MobileNav() {
 
     return (
         <>
-            <div className='profile glass flex md:hidden justify-between items-center mx-2 mt-3
-                 p-6 cursor-pointer hover:bg-white/45'>
-                <div className='pp'>
-                    <div className="ppic static -top-1 left-[50%] w-10 h-10 rounded-full overflow-hidden">
+            <div className='profile w-[95%] max-w-125 mx-auto p-6 glass flex md:hidden 
+            justify-between items-center mt-3 rounded-2xl cursor-pointer
+            hover:bg-white/45'>
+                <div className='pp flex items-center gap-3'>
+                    <div className="ppic w-10 h-10 rounded-full overflow-hidden 
+                    border border-white/20">
                         <img src={luffyImg} className="h-full w-full object-cover" />
                     </div>
-                    <h1 className='text-white text-3xl font-bold'>Vusi Nkosi</h1>
-                    <small className='text-[#abe9be]'>Scheme Owner</small>
+                    <div>
+                        <h1 className='text-white text-xl font-bold'>Vusi Nkosi</h1>
+                        <small className='text-[#abe9be] block'>Scheme Owner</small>
+                    </div>
                 </div>
-                <div className='burger w-6.25' onClick={openMenu}>
+                <div className='burger w-6' onClick={openMenu}>
                     <div className='line1 h-0.75 w-full bg-white rounded-sm'></div>
                     <div className='line2 h-0.75 w-full bg-white rounded-sm mt-1.25'></div>
                     <div className='line3 h-0.75 w-full bg-white rounded-sm mt-1.25'></div>
                 </div>
+
             </div>
         </>
-
-
     )
 }
 
