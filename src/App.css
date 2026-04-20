@@ -4,8 +4,8 @@
 
 
 ::-webkit-scrollbar {
-  width: 8px; 
-  height: 12px; 
+  width: 8px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -16,7 +16,7 @@
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(#dee8ee, #3498db);
   border-radius: 10px;
-  border: 1px solid #f1f1f1; 
+  border: 1px solid #f1f1f1;
 }
 
 
@@ -27,8 +27,8 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
-              url("./images/bannerPic1.jpg");
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("./images/bannerPic1.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -42,6 +42,16 @@ body {
   opacity: .9 !important;
 } */
 
+.tab-leg::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background-color: white;
+}
+
 .glass {
 
   backdrop-filter: blur(10px);
@@ -54,7 +64,7 @@ body {
 }
 
 /* width will change dynamically */
-.progBar1 .progress{
+.progBar1 .progress {
   width: 40%;
   height: 100%;
   border-radius: 25px;
