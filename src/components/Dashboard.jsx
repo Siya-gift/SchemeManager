@@ -1,9 +1,12 @@
 import React from 'react'
 
-function Dashboard() {
+function Dashboard({ toggleState, toggleMobileState }) {
     return (
-        <div className='dashboard w-full min-h-screen p-4 md:p-8 md:block'>
-            {/* Header Stays full width */}
+        <div className={`dashboard w-full min-h-screen p-4 
+        md:p-8 ${toggleMobileState === 1 ? "block" : "hidden"}
+         ${toggleState === 1 ? "md:block" : "hidden"}
+        `}>
+
             <div className='hearder flex flex-col md:flex-row justify-between items-center py-5 px-6 glass mb-6'>
                 <h1 className='text-3xl font-bold text-white'>Dashboard</h1>
                 <div className='flex gap-4 text-white mt-4 md:mt-0'>

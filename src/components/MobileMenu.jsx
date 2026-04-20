@@ -4,10 +4,9 @@ import { useRef, useState } from 'react';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
-function MobileMenu({ isOpen, toggleMenu }) {
+function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileState }) {
 
     const menuRef = useRef();
-    const [toggleState, setToggleState] = useState(1)
 
     useGSAP(() => {
         gsap.to(menuRef.current, {
@@ -19,8 +18,8 @@ function MobileMenu({ isOpen, toggleMenu }) {
         });
     }, [isOpen]);
 
-    let toggleTab = (idx) => {
-        setToggleState(idx)
+    let toggleTabMobile = (idx) => {
+        settoggleMobileState(idx)
     }
 
     return (
@@ -34,45 +33,45 @@ function MobileMenu({ isOpen, toggleMenu }) {
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>OVERVIEW</h3>
                 <ul>
                     <li
-                        onClick={() => { toggleTab(1) }}
+                        onClick={() => { toggleTabMobile(1) }}
                         className={`relative flex items-center text-white gap-3 p-3 font-light 
-                        ${toggleState === 1 ? "bg-white/30 tab-leg" : ""}`}>
+                        ${toggleMobileState === 1 ? "bg-white/30 tab-leg" : ""}`}>
                         <i class="fa-solid fa-house"></i>Dashboard
                     </li>
                 </ul>
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>MANAGER</h3>
                 <ul>
                     <li
-                        onClick={() => { toggleTab(2) }}
+                        onClick={() => { toggleTabMobile(2) }}
                         className={`relative flex items-center text-white gap-3 p-3 border-b font-light
-                        ${toggleState === 2 ? "bg-white/30 tab-leg" : ""}`}>
+                        ${toggleMobileState === 2 ? "bg-white/30 tab-leg" : ""}`}>
                         <i class="fa-solid fa-layer-group"></i>Scheme & Members
                     </li>
                     <li
-                        onClick={() => { toggleTab(3) }}
+                        onClick={() => { toggleTabMobile(3) }}
                         className={`relative flex items-center text-white gap-3 p-3 border-b font-light
-                        ${toggleState === 3 ? "bg-white/30 tab-leg" : ""}`}>
+                        ${toggleMobileState === 3 ? "bg-white/30 tab-leg" : ""}`}>
                         <i class="fa-solid fa-file-invoice"></i>Expenses
                     </li>
                     <li
-                        onClick={() => { toggleTab(4) }}
+                        onClick={() => { toggleTabMobile(4) }}
                         className={`relative flex items-center text-white gap-3 p-3 font-light
-                        ${toggleState === 4 ? "bg-white/30 tab-leg" : ""}`}>
+                        ${toggleMobileState === 4 ? "bg-white/30 tab-leg" : ""}`}>
                         <i class="fa-solid fa-chart-line"></i>Insights
                     </li>
                 </ul>
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>SYSTEM</h3>
                 <ul>
                     <li
-                        onClick={() => { toggleTab(5) }}
+                        onClick={() => { toggleTabMobile(5) }}
                         className={`relative flex items-center text-white gap-3 p-3 border-b font-light
-                        ${toggleState === 5 ? "bg-white/30 tab-leg" : ""}`}>
+                        ${toggleMobileState === 5 ? "bg-white/30 tab-leg" : ""}`}>
                         <i class="fa-solid fa-clock-rotate-left"></i>Activity History
                     </li>
                     <li
-                        onClick={() => { toggleTab(6) }}
+                        onClick={() => { toggleTabMobile(6) }}
                         className={`relative flex items-center text-white gap-3 p-3 font-light
-                        ${toggleState === 6 ? "bg-white/30 tab-leg" : ""}`}>
+                        ${toggleMobileState === 6 ? "bg-white/30 tab-leg" : ""}`}>
                         <i class="fa-solid fa-gear"></i>Settings
                     </li>
                 </ul>

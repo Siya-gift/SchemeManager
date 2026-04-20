@@ -17,6 +17,7 @@ function MobileNav({ isOpen, toggleMenu }) {
             gsap.to(".line3", { rotate: 0, y: 0, duration: 0.3 });
         }
     }, { scope: container, dependencies: [isOpen] });
+    
 
     return (
         <div ref={container}>

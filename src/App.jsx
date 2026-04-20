@@ -4,8 +4,13 @@ import crustBg from './images/bg.png'
 
 
 //tabs
+import Profile from './components/Profile.jsx'
 import Dashboard from './components/Dashboard.jsx'
 import SchemeMembers from './components/SchemeMembers.jsx'
+import Expenses from './components/Expenses.jsx'
+import Insights from './components/Insights.jsx'
+import ActivityHistory from './components/ActivityHistory.jsx'
+import Settings from './components/Settings.jsx'
 
 //components
 import SideBar from './components/SideBar.jsx'
@@ -15,6 +20,9 @@ import MobileMenu from './components/MobileMenu.jsx'
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const [toggleState, setToggleState] = useState(1);
+  const [toggleMobileState, settoggleMobileState] = useState(1);
 
   return (
     <>
@@ -31,11 +39,16 @@ function App() {
 
       <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} />
       <div className='flex overflow-hidden'>
-        <SideBar />
-        <Dashboard />
-        <SchemeMembers />
+        <SideBar toggleState={toggleState} setToggleState={setToggleState} />
+        <Profile toggleState={toggleState} />
+        <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} />
+        <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} />
+        <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} />
+        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} />
+        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} />
+        <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
-      <MobileMenu isOpen={isOpen} />
+      <MobileMenu isOpen={isOpen} toggleMobileState={toggleMobileState} settoggleMobileState={settoggleMobileState} />
     </>
   )
 }
