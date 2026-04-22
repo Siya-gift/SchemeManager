@@ -149,7 +149,7 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                             <li key={i} className='flex justify-around items-center border-b border-white/10 py-4 mr-2
                             hover:bg-white/20 cursor-pointer'>
                                 <span className='text-white'>John</span>
-                                <span className='text-red-300 font-bold block'>R 500</span>
+                                <span className='text-red-500 font-bold block'>R 500</span>
                             </li>
                         ))}
                     </ul>
