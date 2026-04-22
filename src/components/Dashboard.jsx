@@ -118,12 +118,12 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                             { d: '18 Feb 26', c: 'Expense', v: 'R 50' }
 
                         ].map((item, i) => (
-                            <li key={i} className='flex items-center 
+                            <li key={i} className='flex justify-between items-center 
                             border-b border-white/10 py-3 w-full
                             hover:bg-white/20 h-full cursor-pointer'>
-                                <span className='opacity-70 w-full'>{item.d}</span>
+                                <span className='opacity-70 w-30'>{item.d}</span>
                                 <div className='flex justify-between items-center w-full'>
-                                    <span className='font-medium '>{item.c}</span>
+                                    <span className='font-medium'>{item.c}</span>
                                     <span className='font-bold flex-end'>{item.v}</span>
                                 </div>
 
