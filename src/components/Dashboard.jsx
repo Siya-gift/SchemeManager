@@ -136,9 +136,9 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                         <i className='fa-solid fa-triangle-exclamation text-yellow-400'></i>
                         <span>Members Behind on Payment</span>
                     </h2>
-                    <ul className='glass-scroll text-sm max-h-95 overflow-y-auto'>
+                    <ul className='glass-scroll text-md max-h-95 overflow-y-auto'>
                         {[1, 2].map((_, i) => (
-                            <li key={i} className='flex justify-around items-center border-b border-white/10 py-4 mr-2
+                            <li key={i} className='flex justify-between items-center border-b border-white/10 py-4 mr-2
                             hover:bg-white/20 cursor-pointer'>
                                 <span className='text-white'>John</span>
                                 <span className='text-red-500 font-bold block'>R 500</span>
