@@ -3,21 +3,28 @@ import luffyImg from '../images/Luffy_profile_pic.jpg';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
-function MobileNav({ isOpen, toggleMenu }) {
+function MobileNav({ isOpen, toggleMenu, setOverlayer }) {
     const container = useRef();
 
     useGSAP(() => {
+        const tl = gsap.timeline();
+
         if (isOpen) {
-            gsap.to(".line1", { rotate: 45, y: 8, duration: 0.3 });
-            gsap.to(".line2", { opacity: 0, x: -20, duration: 0.3 });
-            gsap.to(".line3", { rotate: -45, y: -8, duration: 0.3 });
+            tl.to(".line1", { rotate: 45, y: 8, duration: 0.3 })
+                .to(".line2", { opacity: 0, x: -20, duration: 0.3 }, "<")
+                .to(".line3", { rotate: -45, y: -8, duration: 0.3 }, "<")
+                .call(() => setOverlayer(true)); // Fires when the animation finishes
         } else {
-            gsap.to(".line1", { rotate: 0, y: 0, duration: 0.3 });
-            gsap.to(".line2", { opacity: 1, x: 0, duration: 0.3 });
-            gsap.to(".line3", { rotate: 0, y: 0, duration: 0.3 });
+            tl.to(".line1", { rotate: 0, y: 0, duration: 0.3 })
+                .to(".line2", { opacity: 1, x: 0, duration: 0.3 }, "<")
+                .to(".line3", { rotate: 0, y: 0, duration: 0.3 }, "<")
+                .call(() => setOverlayer(false));
         }
     }, { scope: container, dependencies: [isOpen] });
-    
+
+
+
+
 
     return (
         <div ref={container}>
@@ -33,10 +40,10 @@ function MobileNav({ isOpen, toggleMenu }) {
                     </div>
                 </div>
 
-                <div className='burger w-6' onClick={toggleMenu}>
-                    <div className='line1 h-0.75 w-full bg-white rounded-sm'></div>
-                    <div className='line2 h-0.75 w-full bg-white rounded-sm mt-1.25'></div>
-                    <div className='line3 h-0.75 w-full bg-white rounded-sm mt-1.25'></div>
+                <div className='burger z-50 w-6' onClick={toggleMenu}>
+                    <div className='line1 h-0.75 w-full z-20 bg-white rounded-sm'></div>
+                    <div className='line2 h-0.75 w-full z-20 bg-white rounded-sm mt-1.25'></div>
+                    <div className='line3 h-0.75 w-full z-20 bg-white rounded-sm mt-1.25'></div>
                 </div>
             </div>
         </div>

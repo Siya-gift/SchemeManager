@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Overlayer from './Overlayer'
 
-function Dashboard({ toggleState, toggleMobileState }) {
+function Dashboard({ toggleState, toggleMobileState, overlayer }) {
+
     return (
         <div className={`dashboard w-full min-h-screen p-4 
         md:p-8 ${toggleMobileState === 1 ? "block" : "hidden"}
          ${toggleState === 1 ? "md:block" : "hidden"}
         `}>
+            <Overlayer />
 
             <div className='hearder flex flex-col md:flex-row justify-between items-center py-5 px-6 glass mb-6'>
                 <h1 className='text-3xl font-bold text-white'>Dashboard</h1>
@@ -131,12 +134,11 @@ function Dashboard({ toggleState, toggleMobileState }) {
                         <span>Members Behind on Payment</span>
                     </h2>
                     <ul className='glass-scroll text-sm max-h-95 overflow-y-auto'>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((_, i) => (
-                            <li key={i} className='flex justify-between items-center border-b border-white/10 py-4 mr-2
+                        {[1, 2].map((_, i) => (
+                            <li key={i} className='flex justify-around items-center border-b border-white/10 py-4 mr-2
                             hover:bg-white/20 cursor-pointer'>
-                                <span className='opacity-70'>18 Feb 26</span>
-                                <span className='font-medium'>Expense</span>
-                                <span className='text-red-300 font-bold hidden xl:block'>R 500</span>
+                                <span className='opacity-70'>John</span>
+                                <span className='text-red-300 font-bold block'>R 500</span>
                             </li>
                         ))}
                     </ul>

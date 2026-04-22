@@ -6,6 +6,7 @@ import crustBg from './images/bg.png'
 //tabs
 import Profile from './components/Profile.jsx'
 import Dashboard from './components/Dashboard.jsx'
+import Overlayer from './components/Overlayer.jsx'
 import SchemeMembers from './components/SchemeMembers.jsx'
 import Expenses from './components/Expenses.jsx'
 import Insights from './components/Insights.jsx'
@@ -20,6 +21,7 @@ import MobileMenu from './components/MobileMenu.jsx'
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
+  const [overlayer, setOverlayer] = useState(false)
 
   const [toggleState, setToggleState] = useState(1);
   const [toggleMobileState, settoggleMobileState] = useState(1);
@@ -37,11 +39,12 @@ function App() {
       />
 
 
-      <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} />
+      <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} />
       <div className='flex overflow-hidden'>
         <SideBar toggleState={toggleState} setToggleState={setToggleState} />
         <Profile toggleState={toggleState} />
-        <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} />
+        <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer} />
+        <Overlayer overlayer={overlayer}/>
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} />
