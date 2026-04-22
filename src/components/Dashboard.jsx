@@ -58,8 +58,8 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                         <h1 className="text-[clamp(2rem,5vw,6rem)] font-bold leading-none whitespace-nowrap">
                             R -370
                         </h1>
-                        <h3 className="text-[14px] my-3 font-2 leading-none whitespace-nowrap">
-                            Starting Balance: R 1,000 (April 2026)
+                        <h3 className="text-[clamp(12px,8vw,11px)] my-3 font-2 leading-none whitespace-nowrap">
+                            <i class="fa-solid fa-flag-checkered"></i> Starting Balance: R 1,000 (April 2026)
                         </h3>
                         <hr className='mb-2 mt-3 border-white/25' />
                         <div className='flex justify-between items-center w-full'>
@@ -67,11 +67,9 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                                 Spent This Month <span className='ml-2'>&rarr;</span>
                             </h4>
                             <h4 className='text-sm text-white/70 font-bold mt-2 cursor-pointer hover:text-white transition-all'>
-                                R 0.00
+                                R 630.00
                             </h4>
-
                         </div>
-
                     </div>
                 </div>
 
