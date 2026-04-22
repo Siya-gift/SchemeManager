@@ -112,23 +112,14 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                     <ul className='glass-scroll text-[11px] max-h-95 overflow-y-auto'>
                         {[
                             { d: '18 Feb 26', c: 'Expense', v: 'R 500' },
-                            { d: '18 Feb 26', c: 'Payment', v: 'R 500' },
-                            { d: '18 Feb 26', c: 'New Scheme', v: 'Scheme2' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' },
-                            { d: '18 Feb 26', c: 'New Member', v: 'Sive' }
+                            { d: '18 Feb 26', c: 'Payment', v: 'R 300' },
+                            { d: '18 Feb 26', c: 'Payment', v: 'R 2500' },
+                            { d: '18 Feb 26', c: 'Payment', v: 'R 10 500' },
+                            { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                            
                         ].map((item, i) => (
-                            <li key={i} className='flex gap-6 items-center border-b border-white/10 py-3 mr-2 w-65 
+                            <li key={i} className='flex justify-between gap-6 items-center 
+                            border-b border-white/10 py-3 mr-2 w-65 
                             hover:bg-white/20 h-full cursor-pointer'>
                                 <span className='opacity-70'>{item.d}</span>
                                 <span className='font-medium'>{item.c}</span>
