@@ -107,7 +107,7 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                     <h2 className='text-xl font-semibold mb-6 flex items-center gap-3'>
                         <i className="fa-solid fa-clock-rotate-left"></i> Latest Transactions
                     </h2>
-                    <ul className='glass-scroll text-[11px] max-h-95 overflow-y-auto'>
+                    <ul className='glass-scroll text-md max-h-95 overflow-y-auto'>
                         {[
                             { d: '18 Feb 26', c: 'Expense', v: 'R 500' },
                             { d: '18 Feb 26', c: 'Payment', v: 'R 300' },
