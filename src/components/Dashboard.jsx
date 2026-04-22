@@ -61,13 +61,13 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                         <h3 className="text-[14px] my-3 font-2 leading-none whitespace-nowrap">
                             Starting Balance: R 1,000 (April 2026)
                         </h3>
-                        <hr className='mb-2 mt-3 border-white/25'/>
+                        <hr className='mb-2 mt-3 border-white/25' />
                         <div className='flex justify-between items-center w-full'>
                             <h4 className='text-sm text-white/70 mt-2 cursor-pointer hover:text-white transition-all'>
                                 Spent This Month <span className='ml-2'>&rarr;</span>
                             </h4>
                             <h4 className='text-sm text-white/70 font-bold mt-2 cursor-pointer hover:text-white transition-all'>
-                                R 0.00 
+                                R 0.00
                             </h4>
 
                         </div>
@@ -115,15 +115,18 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                             { d: '18 Feb 26', c: 'Payment', v: 'R 300' },
                             { d: '18 Feb 26', c: 'Payment', v: 'R 2500' },
                             { d: '18 Feb 26', c: 'Payment', v: 'R 10 500' },
-                            { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
-                            
+                            { d: '18 Feb 26', c: 'Expense', v: 'R 50' }
+
                         ].map((item, i) => (
-                            <li key={i} className='flex justify-even gap-6 items-center 
-                            border-b border-white/10 py-3 mr-2 w-65 
+                            <li key={i} className='flex gap-15 items-center 
+                            border-b border-white/10 py-3 w-full
                             hover:bg-white/20 h-full cursor-pointer'>
                                 <span className='opacity-70'>{item.d}</span>
-                                <span className='font-medium'>{item.c}</span>
-                                <span className='font-bold'>{item.v}</span>
+                                <div className='flex justify-between items-center w-full'>
+                                    <span className='font-medium '>{item.c}</span>
+                                    <span className='font-bold flex-end'>{item.v}</span>
+                                </div>
+
                             </li>
                         ))}
                     </ul>
