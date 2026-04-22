@@ -30,7 +30,7 @@ function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileStat
             <div className='sticky top-2 dragger w-40 h-2 mx-auto rounded-md bg-white mb-10'></div>
 
             
-            <div className='w-full max-h-auto overflow-y-auto glass-scroll pt-2'>
+            <div className='w-full max-h-full overflow-y-auto glass-scroll py-2'>
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>OVERVIEW</h3>
                 <ul>
                     <li
