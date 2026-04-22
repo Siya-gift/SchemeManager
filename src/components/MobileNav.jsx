@@ -13,7 +13,7 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer }) {
             tl.to(".line1", { rotate: 45, y: 8, duration: 0.3 })
                 .to(".line2", { opacity: 0, x: -20, duration: 0.3 }, "<")
                 .to(".line3", { rotate: -45, y: -8, duration: 0.3 }, "<")
-                .call(() => setOverlayer(true)); // Fires when the animation finishes
+                .call(() => setOverlayer(true));
         } else {
             tl.to(".line1", { rotate: 0, y: 0, duration: 0.3 })
                 .to(".line2", { opacity: 1, x: 0, duration: 0.3 }, "<")
