@@ -32,7 +32,7 @@ function SideBar({ toggleState, setToggleState }) {
                         ${toggleState === 1 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"} 
                         border  text-white cursor-pointer transition
                     `}>
-                        <i class="fa-solid fa-house"></i>Dashboard
+                        <i className="fa-solid fa-house"></i>Dashboard
                     </li>
                 </ul>
                 <h3 className="text-white text-sm font-semibold my-5 uppercase tracking-wider opacity-70">
@@ -45,21 +45,21 @@ function SideBar({ toggleState, setToggleState }) {
                         {`flex items-center gap-2 p-3 bg-white/10 hover:bg-white/20 rounded-lg 
                         ${toggleState === 2 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"} 
                         border border-white/10 text-white cursor-pointer transition`}>
-                        <i class="fa-solid fa-layer-group"></i>Scheme & Members
+                        <i className="fa-solid fa-layer-group"></i>Scheme & Members
                     </li>
                     <li
                         onClick={() => activeTab(3)}
                         className={`flex items-center gap-2 p-3 bg-white/10 hover:bg-white/20 rounded-lg 
                         ${toggleState === 3 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"} 
                         border border-white/10 text-white cursor-pointer transition`}>
-                        <i class="fa-solid fa-file-invoice"></i>Expenses
+                        <i className="fa-solid fa-file-invoice"></i>Expenses
                     </li>
                     <li
                         onClick={() => activeTab(4)}
                         className={`flex items-center gap-2 p-3 bg-white/10 hover:bg-white/20 rounded-lg 
                         ${toggleState === 4 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"} 
                         border border-white/10 text-white cursor-pointer transition`}>
-                        <i class="fa-solid fa-chart-line"></i>Insights
+                        <i className="fa-solid fa-chart-line"></i>Insights
                     </li>
                 </ul>
                 <h3 className="text-white text-sm font-semibold my-5 uppercase tracking-wider opacity-70">
@@ -71,14 +71,14 @@ function SideBar({ toggleState, setToggleState }) {
                         className={`flex items-center gap-2 p-3 bg-white/10 hover:bg-white/20 rounded-lg
                         ${toggleState === 5 ? "bg-white /20 border-white/80" : "bg-white/10 border-white/10"} 
                         border border-white/10 text-white cursor-pointer transition`}>
-                        <i class="fa-solid fa-clock-rotate-left"></i>Activity History
+                        <i className="fa-solid fa-clock-rotate-left"></i>Activity History
                     </li>
                     <li
                         onClick={() => activeTab(6)}
                         className={`flex items-center gap-2 p-3 bg-white/10 hover:bg-white/20 rounded-lg
                     ${toggleState === 6 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"} 
                          border border-white/10 text-white cursor-pointer transition`}>
-                        <i class="fa-solid fa-gear"></i>Settings
+                        <i className="fa-solid fa-gear"></i>Settings
                     </li>
                 </ul>
             </div>

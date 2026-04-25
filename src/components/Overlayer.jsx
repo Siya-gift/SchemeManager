@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react';
 
-function Overlayer({ overlayer }) {
+function Overlayer({ overlayer, toggleMenu }) {
 
   useEffect(() => {
     if (overlayer) {
@@ -13,9 +13,14 @@ function Overlayer({ overlayer }) {
   }, [overlayer]);
 
 
+  const closeMobileMenu = () => { toggleMenu(false) }
+
+
 
   return (
-    <div className={`fixed overlayer z-9 -top-1 left-0 bg-black/50 h-full w-svw ${overlayer ? "block" : "hidden"}`}></div>
+    <div className={`fixed overlayer z-9 -top-1 left-0 bg-black/50 h-full w-svw ${overlayer ? "block" : "hidden"}`}
+    onClick={closeMobileMenu}
+    ></div>
   )
 }
 

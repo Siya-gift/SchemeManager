@@ -3,6 +3,18 @@ import Overlayer from './Overlayer'
 
 function Dashboard({ toggleState, toggleMobileState, overlayer }) {
 
+    const [YearMonthFilter, setYearMonthFilter] = useState(1)
+    const [schemeTabState, setschemeTabState] = useState(1)
+
+    const switchYearMonthFilter = (periodSelected) => {
+        setYearMonthFilter(periodSelected)
+    }
+
+    const switchScheme = (schemeTabSelected) => {
+        setschemeTabState(schemeTabSelected)
+    }
+
+
     return (
         <div className={`dashboard w-full min-h-screen p-4 
         md:p-8 ${toggleMobileState === 1 ? "block" : "hidden"}
@@ -21,19 +33,25 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
 
             {/* Tabs Scrollable on mobile */}
             <ul className='tabs glass-scroll flex gap-2 max-w-svw md:max-w-[70vw] overflow-x-auto pb-4 no-scrollbar'>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>VV</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all bg-white/45'>Clubs</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
-                <li className='tab hover:bg-white/45 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm whitespace-nowrap transition-all'>Scheme2</li>
+                <li className={`tab hover:bg-white/45 cursor-pointer 
+                text-white glass rounded-2xl px-4 py-1.5 font-bold 
+                text-sm whitespace-nowrap transition-all
+                ${schemeTabState === 1 ? "bg-white/45" : ""}`}
+                    onClick={() => switchScheme(1)}
+                >VV</li>
+                <li className={`tab hover:bg-white/45 cursor-pointer 
+                text-white glass rounded-2xl px-4 py-1.5 font-bold 
+                text-sm whitespace-nowrap transition-all
+                ${schemeTabState === 2 ? "bg-white/45" : ""}`}
+                    onClick={() => switchScheme(2)}
+                >Clubs</li>
+                <li className={`tab hover:bg-white/45 cursor-pointer 
+                text-white glass rounded-2xl px-4 py-1.5 font-bold 
+                text-sm whitespace-nowrap transition-all
+                ${schemeTabState === 3 ? "bg-white/45" : ""}`}
+                    onClick={() => switchScheme(3)}
+                >Scheme2</li>
+
                 <li className='group flex items-center tab hover:bg-white/20 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm transition-all mr-35'>
                     <span><i className="fa-solid fa-plus"></i></span>
                     <span className='max-w-0 opacity-0 overflow-hidden group-hover:max-w-xs
@@ -59,7 +77,7 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                             R -370
                         </h1>
                         <h3 className="text-[clamp(12px,8vw,11px)] my-3 font-2 leading-none whitespace-nowrap">
-                            <i class="fa-solid fa-flag-checkered"></i> Starting Balance: R 1,000 (April 2026)
+                            <i className="fa-solid fa-flag-checkered"></i> Starting Balance: R 1,000 (April 2026)
                         </h3>
                         <hr className='mb-2 mt-3 border-white/25' />
                         <div className='flex justify-between items-center w-full'>
@@ -80,10 +98,14 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                             <i className="fa-solid fa-piggy-bank"></i>
                             Total Collected This Year
                         </h2>
-                        <ul className='border flex items-center text-xs overflow-hidden rounded'>
-                            <li className='bg-white/40 px-3 py-1.5 cursor-pointer hover:bg-white/60'>YEAR</li>
+                        <ul className='YearMonthFilter border flex items-center text-xs overflow-hidden rounded'>
+                            <li className={`${YearMonthFilter === 1 ? "bg-white/40" : ""} px-3 py-1.5 cursor-pointer w-full hover:bg-white/60`}
+                                onClick={() => switchYearMonthFilter(1)}
+                            >YEAR</li>
                             <li className='w-px h-4 bg-white/50'></li>
-                            <li className='px-3 py-1.5 cursor-pointer hover:bg-white/20'>MONTH</li>
+                            <li className={`${YearMonthFilter === 2 ? "bg-white/40" : ""} px-3 py-1.5 cursor-pointer hover:bg-white/60`}
+                                onClick={() => switchYearMonthFilter(2)}
+                            >MONTH</li>
                         </ul>
                     </div>
 
@@ -150,7 +172,7 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                 {/* Card 5: Helpful tips to navigate seemlessly */}
                 <div className='glass glass-scroll p-6 text-white max-h-140 overflow-y-auto line-clamp-6'>
                     <h2 className='text-xl font-semibold mb-6 flex items-center gap-3'>
-                        <i class="fa-solid fa-lightbulb"></i> Helpful Tips
+                        <i className="fa-solid fa-lightbulb"></i> Helpful Tips
                     </h2>
                     <ul>
                         <li className='flex gap-3'><p>*</p>

@@ -44,7 +44,7 @@ function App() {
         <SideBar toggleState={toggleState} setToggleState={setToggleState} />
         <Profile toggleState={toggleState} />
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer} />
-        <Overlayer overlayer={overlayer}/>
+          <Overlayer overlayer={overlayer} toggleMenu={toggleMenu}/>
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} />

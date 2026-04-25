@@ -37,7 +37,7 @@ function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileStat
                         onClick={() => { toggleTabMobile(1) }}
                         className={`relative flex items-center text-white gap-3 p-3 font-light 
                         ${toggleMobileState === 1 ? "bg-white/30 tab-leg" : ""}`}>
-                        <i class="fa-solid fa-house"></i>Dashboard
+                        <i className="fa-solid fa-house"></i>Dashboard
                     </li>
                 </ul>
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>MANAGER</h3>
@@ -46,19 +46,19 @@ function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileStat
                         onClick={() => { toggleTabMobile(2) }}
                         className={`relative flex items-center text-white gap-3 p-3 border-b font-light
                         ${toggleMobileState === 2 ? "bg-white/30 tab-leg" : ""}`}>
-                        <i class="fa-solid fa-layer-group"></i>Scheme & Members
+                        <i className="fa-solid fa-layer-group"></i>Scheme & Members
                     </li>
                     <li
                         onClick={() => { toggleTabMobile(3) }}
                         className={`relative flex items-center text-white gap-3 p-3 border-b font-light
                         ${toggleMobileState === 3 ? "bg-white/30 tab-leg" : ""}`}>
-                        <i class="fa-solid fa-file-invoice"></i>Expenses
+                        <i className="fa-solid fa-file-invoice"></i>Expenses
                     </li>
                     <li
                         onClick={() => { toggleTabMobile(4) }}
                         className={`relative flex items-center text-white gap-3 p-3 font-light
                         ${toggleMobileState === 4 ? "bg-white/30 tab-leg" : ""}`}>
-                        <i class="fa-solid fa-chart-line"></i>Insights
+                        <i className="fa-solid fa-chart-line"></i>Insights
                     </li>
                 </ul>
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>SYSTEM</h3>
@@ -67,13 +67,13 @@ function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileStat
                         onClick={() => { toggleTabMobile(5) }}
                         className={`relative flex items-center text-white gap-3 p-3 border-b font-light
                         ${toggleMobileState === 5 ? "bg-white/30 tab-leg" : ""}`}>
-                        <i class="fa-solid fa-clock-rotate-left"></i>Activity History
+                        <i className="fa-solid fa-clock-rotate-left"></i>Activity History
                     </li>
                     <li
                         onClick={() => { toggleTabMobile(6) }}
                         className={`relative flex items-center text-white gap-3 p-3 font-light
                         ${toggleMobileState === 6 ? "bg-white/30 tab-leg" : ""}`}>
-                        <i class="fa-solid fa-gear"></i>Settings
+                        <i className="fa-solid fa-gear"></i>Settings
                     </li>
                 </ul>
             </div>
