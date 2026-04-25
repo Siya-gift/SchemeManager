@@ -3,6 +3,7 @@ import MobileNav from './MobileNav'
 import { useRef, useState } from 'react';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { Draggable } from "gsap/Draggable";
 
 function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileState }) {
 
@@ -16,7 +17,26 @@ function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileStat
             ease: "power3.out",
             display: isOpen ? "block" : "none"
         });
+
+        Draggable.create('#Menu', {
+            type: 'y',
+            bounds: {
+                minY: 0,
+                maxY: window.innerHeight - document.querySelector('#Menu').offsetHeight
+            },
+            inertia: true,
+            onDragEnd: function () {
+                // If it was dragged significantly, close it
+                if (this.y > 100) {
+                    toggleMenu(false);
+                }
+            }
+        });
+
+
     }, [isOpen]);
+
+
 
     let toggleTabMobile = (idx) => {
         settoggleMobileState(idx)
@@ -26,10 +46,12 @@ function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileStat
         <div ref={menuRef}
             className='fixed bottom-0 w-full h-[60svh] z-10 px-10 py-2 
              bg-white/30 backdrop-blur-[50px] border-t rounded-b-0 border-white/20 
-             Menu glass-scroll rounded-t-3xl'>
-            <div className='sticky top-2 dragger w-40 h-2 mx-auto rounded-md bg-white mb-10'></div>
+             Menu glass-scroll rounded-t-3xl' id='Menu'>
+            <div className='sticky top-2 dragger w-40 h-2 mx-auto rounded-md bg-white mb-10'
+                id='dragger'
+            ></div>
 
-            
+
             <div className='w-full max-h-[70%] overflow-y-auto glass-scroll py-2'>
                 <h3 className='text-[clamp(1rem,2.5vw,1rem)] font-semibold text-white/70 my-3'>OVERVIEW</h3>
                 <ul>

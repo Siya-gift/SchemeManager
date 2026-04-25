@@ -1,5 +1,8 @@
 import './App.css'
 import { useState } from 'react'
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { Draggable } from "gsap/Draggable";
 import crustBg from './images/bg.png'
 
 
@@ -26,6 +29,10 @@ function App() {
   const [toggleState, setToggleState] = useState(1);
   const [toggleMobileState, settoggleMobileState] = useState(1);
 
+
+  // gsap
+  gsap.registerPlugin(Draggable) 
+
   return (
     <>
       {/* crusty bg */}
@@ -51,7 +58,7 @@ function App() {
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
-      <MobileMenu isOpen={isOpen} toggleMobileState={toggleMobileState} settoggleMobileState={settoggleMobileState} />
+      <MobileMenu isOpen={isOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} />
     </>
   )
 }

@@ -13,9 +13,8 @@ function Overlayer({ overlayer, toggleMenu }) {
   }, [overlayer]);
 
 
+  // switch off mobile menu
   const closeMobileMenu = () => { toggleMenu(false) }
-
-
 
   return (
     <div className={`fixed overlayer z-9 -top-1 left-0 bg-black/50 h-full w-svw ${overlayer ? "block" : "hidden"}`}
