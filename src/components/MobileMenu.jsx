@@ -20,18 +20,22 @@ function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileStat
 
         Draggable.create('#Menu', {
             type: 'y',
+            trigger: '#dragger',
             bounds: {
                 minY: 0,
-                maxY: window.innerHeight - document.querySelector('#Menu').offsetHeight
+                maxY: window.innerHeight - menuRef.current.offsetHeight
             },
             inertia: true,
+            dragClickables: true,
             onDragEnd: function () {
-                // If it was dragged significantly, close it
                 if (this.y > 100) {
                     toggleMenu(false);
+                } else {
+                    gsap.to(this.target, { y: 0, duration: 0.3 });
                 }
             }
         });
+
 
 
     }, [isOpen]);
