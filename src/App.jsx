@@ -2,6 +2,8 @@ import './App.css'
 import { useState } from 'react'
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import { Draggable } from "gsap/Draggable";
 import crustBg from './images/bg.png'
 
@@ -21,17 +23,23 @@ import SideBar from './components/SideBar.jsx'
 import MobileNav from './components/MobileNav.jsx'
 import MobileMenu from './components/MobileMenu.jsx'
 
+
+// gsap
+gsap.registerPlugin(Draggable)
+
+
 function App() {
   const [isOpen, setIsOpen] = useState(false);
+  const [calenderState, setCalenderState] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
+  const openCalender = () => setCalenderState(!calenderState);
   const [overlayer, setOverlayer] = useState(false)
 
   const [toggleState, setToggleState] = useState(1);
   const [toggleMobileState, settoggleMobileState] = useState(1);
 
+  const [value, onChange] = useState(new Date());
 
-  // gsap
-  gsap.registerPlugin(Draggable) 
 
   return (
     <>
@@ -46,12 +54,20 @@ function App() {
       />
 
 
+      {/* calender */}
+      {calenderState && <Calendar onChange={onChange} value={value} className={`fixed top-[50%] left-[50%]
+      -translate-x-1/2 -translate-y-1/2 z-999999 ${calenderState ? "block" : "hidden"}`}
+        calenderState={calenderState} setCalenderState={setCalenderState} />}
+
+
       <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} />
       <div className='flex overflow-hidden'>
         <SideBar toggleState={toggleState} setToggleState={setToggleState} />
         <Profile toggleState={toggleState} />
-        <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer} />
-          <Overlayer overlayer={overlayer} toggleMenu={toggleMenu}/>
+        <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
+          openCalender={openCalender}
+        />
+        <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} />

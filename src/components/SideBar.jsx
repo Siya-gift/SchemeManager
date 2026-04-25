@@ -8,7 +8,7 @@ function SideBar({ toggleState, setToggleState }) {
     }
 
     return (
-        <div className='hidden md:block container w-170 m-5
+        <div className='hidden md:block container w-auto m-5
             p-5 glass'>
             <div
                 onClick={() => activeTab(0)}

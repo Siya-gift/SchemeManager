@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import Overlayer from './Overlayer'
 
-function Dashboard({ toggleState, toggleMobileState, overlayer }) {
+function Dashboard({ toggleState, toggleMobileState, overlayer, openCalender }) {
 
     const [YearMonthFilter, setYearMonthFilter] = useState(1)
     const [schemeTabState, setschemeTabState] = useState(1)
+
+    const [totalAmount, setTotalAmount] = useState(9900)
 
     const switchYearMonthFilter = (periodSelected) => {
         setYearMonthFilter(periodSelected)
@@ -14,22 +16,52 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
         setschemeTabState(schemeTabSelected)
     }
 
+    // Numbers helper
+    const formatShorthand = (num) => {
+        const abs = Math.abs(num);
+        let result;
+
+        if (abs >= 1e12) result = (num / 1e12).toFixed(1) + 't';
+        else if (abs >= 1e6) result = (num / 1e6).toFixed(1) + 'm';
+        else if (abs >= 1e3) result = (num / 1e3).toFixed(1) + 'k';
+        else result = num.toString();
+
+        // Removes unnecessary 0's
+        return result.replace('.0', '');
+    };
+
+
 
     return (
-        <div className={`dashboard w-full min-h-screen p-4 
-        md:p-8 ${toggleMobileState === 1 ? "block" : "hidden"}
-         ${toggleState === 1 ? "md:block" : "hidden"}
+        <div className={`dashboard w-full min-h-screen p-4 md:p-8 
+        /* Mobile Logic: Only hide if mobile state isn't 1 */
+        ${toggleMobileState === 1 ? "block" : "hidden"} 
+            
+        /* Desktop Logic: On md+ screens, toggle based on desktop state */
+        ${toggleState === 1 ? "md:block" : "md:hidden"}
         `}>
+
             <Overlayer />
 
-            <div className='hearder flex flex-col md:flex-row justify-between items-center py-5 px-6 glass mb-6'>
-                <h1 className='text-3xl font-bold text-white'>Dashboard</h1>
-                <div className='flex gap-4 text-white mt-4 md:mt-0'>
-                    <h5 className='text-white/50'>Filter by date:</h5>
-                    <h3 className='text-light cursor-pointer hover:text-white/80 uppercase'>20 April 2026</h3>
-                    <span className='cursor-pointer hover:text-white/80'><i className="fa-solid fa-calendar-days"></i></span>
+            <div className='hearder flex flex-col md:flex-row justify-between items-center py-5 px-6 glass mb-6 gap-4'>
+                <h1 className='text-3xl font-bold text-white w-full md:w-auto text-center md:text-left'>
+                    Dashboard
+                </h1>
+                <div className='flex flex-wrap justify-center md:justify-end items-center gap-4 text-white mt-4 md:mt-0'>
+                    <h5 className='text-white/50 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap'>
+                        Filter by date:
+                    </h5>
+                    <h3 className='text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap'>
+                        20 April 2026
+                    </h3>
+                    <span className='cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]'
+                        onClick={openCalender}
+                    >
+                        <i className="fa-solid fa-calendar-days"></i>
+                    </span>
                 </div>
             </div>
+
 
             {/* Tabs Scrollable on mobile */}
             <ul className='tabs glass-scroll flex gap-2 max-w-svw md:max-w-[70vw] overflow-x-auto pb-4 no-scrollbar'>
@@ -67,29 +99,36 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                 {/* Card 1: Total Collections (Spans 1 col) */}
                 {/* Card 1: Allow it to be wider if needed */}
 
-                <div className='glass p-6 text-white flex flex-col justify-between min-h-50 md:col-span-1 lg:col-span-1'>
-                    <h2 className='text-[clamp(1rem,2.5vw,1rem)] flex items-start gap-3'>
+                <div className='glass p-6 text-white flex flex-col justify-between min-h-50 md:col-span-2 lg:col-span-1 h-full w-full'>
+                    <h2 className='text-[clamp(1rem,4vw,1.25rem)] flex items-start gap-3 leading-tight'>
                         <i className="fa-solid fa-wallet mt-1"></i>
                         <span>Total collections(YTD) - Monthly Expenses</span>
                     </h2>
+
                     <div className='mt-4'>
-                        <h1 className="text-[clamp(2rem,5vw,6rem)] font-bold leading-none whitespace-nowrap">
-                            R -370
+                        <h1 className="text-[clamp(1.5rem,10vw,3rem)] font-bold leading-none whitespace-nowrap">
+                            R -{formatShorthand(totalAmount)}
                         </h1>
-                        <h3 className="text-[clamp(12px,8vw,11px)] my-3 font-2 leading-none whitespace-nowrap">
-                            <i className="fa-solid fa-flag-checkered"></i> Starting Balance: R 1,000 (April 2026)
+
+
+                        <h3 className="text-[clamp(0.7rem,2vw,0.9rem)] my-3 font-2 opacity-80">
+                            <i className="fa-solid fa-flag-checkered mr-1"></i>
+                            Starting Balance: R 1,000 (April 2026)
                         </h3>
+
                         <hr className='mb-2 mt-3 border-white/25' />
-                        <div className='flex justify-between items-center w-full'>
-                            <h4 className='text-sm text-white/70 mt-2 cursor-pointer hover:text-white transition-all'>
-                                Spent This Month <span className='ml-2'>&rarr;</span>
+
+                        <div className='flex justify-between items-center w-full whitespace-nowrap'>
+                            <h4 className='text-xs sm:text-sm lg:text-xs text-white/70 mt-2 cursor-pointer hover:text-white transition-all'>
+                                Spent This Month <span className='ml-1'>&rarr;</span>
                             </h4>
-                            <h4 className='text-sm text-white/70 font-bold mt-2 cursor-pointer hover:text-white transition-all'>
+                            <h4 className='text-xs sm:text-sm lg:text-xs text-white/70 font-bold mt-2 cursor-pointer hover:text-white transition-all'>
                                 R 630.00
                             </h4>
                         </div>
                     </div>
                 </div>
+
 
                 {/* Card 2: Yearly Target (Spans 2 cols on large screens) ...*/}
                 <div className='glass p-6 text-white md:col-span-2 flex flex-col justify-between min-h-50'>
@@ -125,83 +164,99 @@ function Dashboard({ toggleState, toggleMobileState, overlayer }) {
                 </div>
 
                 {/* Card 3: Latest Transactions */}
-                <div className='glass glass-scroll p-6 text-white max-h-140 0verflow-hidden'>
-                    <h2 className='text-xl font-semibold mb-6 flex items-center gap-3'>
+                <div className='glass p-6 text-white h-90 flex flex-col'>
+                    <h2 className='text-xl font-semibold mb-6 flex items-center gap-3 shrink-0'>
                         <i className="fa-solid fa-clock-rotate-left"></i> Latest Transactions
                     </h2>
-                    <ul className='glass-scroll text-md max-h-95 overflow-y-auto'>
-                        {[
-                            { d: '18 Feb 26', c: 'Expense', v: 'R 500' },
-                            { d: '18 Feb 26', c: 'Payment', v: 'R 300' },
-                            { d: '18 Feb 26', c: 'Payment', v: 'R 2500' },
-                            { d: '18 Feb 26', c: 'Payment', v: 'R 10 500' },
-                            { d: '18 Feb 26', c: 'Expense', v: 'R 50' }
 
-                        ].map((item, i) => (
-                            <li key={i} className='flex justify-between items-center 
-                            border-b border-white/10 py-3 w-full
-                            hover:bg-white/20 h-full cursor-pointer'>
-                                <span className='opacity-70 w-30'>{item.d}</span>
-                                <div className='flex justify-between items-center w-full'>
-                                    <span className='font-medium'>{item.c}</span>
-                                    <span className='font-bold flex-end'>{item.v}</span>
-                                </div>
+                    {/* flex-1 inside h-90 ensures the list fills the remaining card height */}
+                    <div className='flex-1 overflow-hidden'>
+                        <ul className='glass-scroll text-md h-full overflow-auto pr-2'>
+                            {[
+                                { d: '18 Feb 26', c: 'Expense', v: 'R 500' },
+                                { d: '18 Feb 26', c: 'Payment', v: 'R 300' },
+                                { d: '18 Feb 26', c: 'Payment', v: 'R 2500' },
+                                { d: '18 Feb 26', c: 'Payment', v: 'R 10 500' },
+                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                            ].map((item, i) => (
+                                <li key={i} className='flex justify-between items-center 
+                                border-b border-white/10 py-3 
+                                min-w-87.5 w-full whitespace-nowrap
+                                hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'>
 
-                            </li>
-                        ))}
-                    </ul>
+                                    <span className='opacity-70 w-32 shrink-0'>{item.d}</span>
+
+                                    <div className='flex justify-between items-center w-full gap-4'>
+                                        <span className='font-medium'>{item.c}</span>
+                                        <span className='font-bold tabular-nums'>{item.v}</span>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
 
+
                 {/* Card 4: Arrears */}
-                <div className='glass p-6 text-white max-h-140 0verflow-hidden'>
+                <div className='glass p-6 text-white h-90 0verflow-hidden flex flex-col'>
                     <h2 className='text-xl font-semibold mb-6 flex items-start gap-3'>
                         <i className='fa-solid fa-triangle-exclamation text-yellow-400'></i>
                         <span>Members Behind on Payment</span>
                     </h2>
-                    <ul className='glass-scroll text-md max-h-95 overflow-y-auto'>
-                        {[1, 2].map((_, i) => (
-                            <li key={i} className='flex justify-around items-center border-b border-white/10 py-4 mr-2
-                            hover:bg-white/20 cursor-pointer'>
-                                <span className='text-white'>John</span>
-                                <span className='text-red-500 font-bold block'>R 500</span>
-                            </li>
-                        ))}
+                    <ul className='glass-scroll text-md h-full overflow-y-auto'>
+                        <div className='flex-1 overflow-hidden'>
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 9].map((_, i) => (
+                                <li key={i} className='flex justify-around items-center border-b border-white/10 py-4 mr-2
+                            hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'>
+                                    <span className='text-white'>John</span>
+                                    <span className='text-red-500 font-bold block'>R 500</span>
+                                </li>
+                            ))}
+                        </div>
                     </ul>
                 </div>
 
                 {/* Card 5: Helpful tips to navigate seemlessly */}
-                <div className='glass glass-scroll p-6 text-white max-h-140 overflow-y-auto line-clamp-6'>
+                <div className='glass glass-scroll p-6 text-white h-90 max-h-140 overflow-y-auto line-clamp-6 flex flex-col'>
                     <h2 className='text-xl font-semibold mb-6 flex items-center gap-3'>
                         <i className="fa-solid fa-lightbulb"></i> Helpful Tips
                     </h2>
-                    <ul>
-                        <li className='flex gap-3'><p>*</p>
-                            <p>Create new Scheme using the plus sign</p>
-                        </li>
-                        <li className='flex gap-3'><p>*</p>
-                            <p>Change the Month & Year to look at past
-                                or future payment records.</p>
-                        </li>
-                        <li className='flex gap-3'><p>*</p>
-                            <p>Click on a member's name to see their
-                                full payment history.</p>
-                        </li>
-                        <li className='flex gap-3'><p>*</p>
-                            <p>Click on any entry in the Activity
-                                History to see exactly what details were changed.</p>
-                        </li>
-                        <li className='flex gap-3'><p>*</p>
-                            <p>Use the PDF Statement or Scheme Summary
-                                buttons to generate professional reports for sharing.</p>
-                        </li>
-                        <li className='flex gap-3'><p>*</p>
-                            <p>Check the Insights tab to see which members
-                                may need a reminder to pay.</p>
-                        </li>
-                    </ul>
+                    <div className='flex-1 overflow-hidden'>
+                        <ul className='glass-scroll text-md h-full overflow-y-auto'>
+                            <li className='flex gap-3'><p>*</p>
+                                <p>Create new Scheme using the plus sign</p>
+                            </li>
+                            <li className='flex gap-3'><p>*</p>
+                                <p>Change the Month & Year to look at past
+                                    or future payment records.</p>
+                            </li>
+                            <li className='flex gap-3'><p>*</p>
+                                <p>Click on a member's name to see their
+                                    full payment history.</p>
+                            </li>
+                            <li className='flex gap-3'><p>*</p>
+                                <p>Click on any entry in the Activity
+                                    History to see exactly what details were changed.</p>
+                            </li>
+                            <li className='flex gap-3'><p>*</p>
+                                <p>Use the PDF Statement or Scheme Summary
+                                    buttons to generate professional reports for sharing.</p>
+                            </li>
+                            <li className='flex gap-3'><p>*</p>
+                                <p>Check the Insights tab to see which members
+                                    may need a reminder to pay.</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div className='footer flex flex-col sm:flex-row justify-center items-center py-5 px-6 glass mb-6 text-white'>
+            <div className='footer flex flex-col sm:flex-row justify-center items-center py-5 px-6 glass text-white'>
                 <p>All rights reserved &copy; 2026 </p>
             </div>
         </div>
