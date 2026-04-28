@@ -183,7 +183,7 @@ function Dashboard({ toggleState, toggleMobileState, overlayer, openCalender }) 
                                 { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
                                 { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
                                 { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
-                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' }
                             ].map((item, i) => (
                                 <li key={i} className='flex justify-between items-center 
                                 border-b border-white/10 py-3 
