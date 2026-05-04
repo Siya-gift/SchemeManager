@@ -79,8 +79,8 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
           <div className='flex justify-between items-center flex-col md:flex-row'>
             <h1 className='font-bold text-xl mb-4 md:mb-0 xl:w-[20%]'>Members of club now</h1>
             <div className='flex flex-col xl:flex-row gap-3 mx-auto'>
-              <input className='py-2.5 px-5 border rounded-xl' type='text' placeholder='Search Members...' />
-              <button className='bg-white/30 px-5 py-2.5 border rounded-xl cursor-pointer
+              <input className='py-2.5 px-5 border rounded-xl max-w-auto' type='text' placeholder='Search Members...' />
+              <button className='bg-white/30 px-5 py-2.5 max-w-auto border rounded-xl cursor-pointer
               hover:bg-white/45'>
                 <i className="fa-solid fa-plus"></i> Add Member
               </button>
