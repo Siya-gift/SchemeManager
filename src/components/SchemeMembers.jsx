@@ -58,11 +58,11 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
                     <h3 className='text-md font-bold'>{item.scheme}</h3>
                     <p className='text-[11px] text-white/70'>R500/mo</p>
                   </div>
-                  <div className='flex gap-3 flex-end'>
-                    <span className='px-2 py-2 border'>
+                  <div className='flex gap-3 flex-end text-[11px]'>
+                    <span className='px-2 py-2 border rounded-lg'>
                       <i className="fa-regular fa-pen-to-square"></i>
                     </span>
-                    <span className='px-2 py-2 border'>
+                    <span className='px-2 py-2 border rounded-lg'>
                       <i className="fa-solid fa-trash"></i>
                     </span>
                   </div>
@@ -79,7 +79,7 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
           <div className='flex justify-between items-center flex-col md:flex-row'>
             <h1 className='font-bold text-xl mb-4 md:mb-0 xl:w-[20%]'>Members of club now</h1>
             <div className='flex flex-col xl:flex-row gap-3 mx-auto w-full'>
-              <input className='py-2.5 px-5 border rounded-xl w-full' type='text' placeholder='Search Members...' />
+              <input className='py-2.5 px-5 border rounded-xl w-full focus:border-white focus:outline-white' type='text' placeholder='Search Members...' />
               <button className='bg-white/30 px-5 py-2.5 w-full border rounded-xl cursor-pointer hover:bg-white/45'>
                 <i className="fa-solid fa-plus"></i> Add Member
               </button>

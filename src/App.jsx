@@ -55,9 +55,25 @@ function App() {
 
 
       {/* calender */}
-      {calenderState && <Calendar onChange={onChange} value={value} className={`fixed top-[50%] left-[50%]
-      -translate-x-1/2 -translate-y-1/2 z-999999 ${calenderState ? "block" : "hidden"}`}
-        calenderState={calenderState} setCalenderState={setCalenderState} />}
+      {calenderState && (
+        <div
+          className='fixed top-0 left-0 w-screen h-screen bg-black/70 z-999999'
+          onClick={() => setCalenderState(false)} 
+        >
+          <div
+            onClick={(e) => e.stopPropagation()} 
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          >
+            <Calendar
+              onChange={onChange}
+              value={value}
+              calenderState={calenderState}
+              setCalenderState={setCalenderState}
+            />
+          </div>
+        </div>
+      )}
+
 
 
       <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} />
