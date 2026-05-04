@@ -27,7 +27,7 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6 my-4'>
-        <div className='glass p-6 text-white flex flex-col h-svh md:col-span-1'>
+        <div className='glass p-6 text-white flex flex-col h-auto md:col-span-1'>
           <div className='flex justify-between items-center py-4'>
             <h1 className='font-bold text-xl'>Your Schemes</h1>
             <span className='text-2xl cursor-pointer'>
@@ -37,19 +37,8 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
 
           <ul className='grow min-h-25 overflow-y-auto glass-scroll'>
             {[
-              { scheme: "clubs" },
-              { scheme: "Scheme2" },
-              { scheme: "VV" },
-              { scheme: "Test scheme" },
-              { scheme: "clubs2" },
-              { scheme: "clubs2" },
-              { scheme: "clubs2" },
-              { scheme: "clubs2" },
-              { scheme: "clubs2" },
-              { scheme: "clubs2" },
-              { scheme: "clubs2" },
-              { scheme: "clubs2" },
-              { scheme: "clubs3" }
+              { scheme: "clubs" }
+
             ].map((item, idx) => (
               <li key={idx} className='py-5 px-10 bg-white/30 border cursor-pointer hover:bg-white/40
               my-2 rounded-xl mr-1.5'>
@@ -85,8 +74,44 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
               </button>
             </div>
 
+
+
           </div>
 
+          <ul className='flex p-6 w-full mt-9'>
+            <div className="w-full overflow-x-auto">
+              <table className='w-full text-left border-collapse'>
+                <thead>
+                  <tr className="border-b text-white-500 uppercase text-sm">
+                    <th className="py-4 px-2">Name</th>
+                    <th className="py-4 px-2">Total Paid</th>
+                    <th className="py-4 px-2">Status</th>
+                    <th className="py-4 px-2 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b hover:bg-white/30 transition-colors">
+                    {/* py-4 and align-middle handle vertical spacing/alignment */}
+                    <td className="py-4 px-2 align-middle font-medium">Siya</td>
+                    <td className="py-4 px-2 align-middle">R 300.00</td>
+                    <td className="py-4 px-2 align-middle">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Paid
+                      </span>
+                    </td>
+                    <td className="py-4 px-2 align-middle text-right">
+                        <span className='px-2 py-2  mr-3'>
+                          <i className="fa-regular fa-pen-to-square"></i>
+                        </span>
+                        <span className='px-2 py-2'>
+                          <i className="fa-solid fa-trash"></i>
+                        </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ul>
         </div>
         <div className='footer md:col-span-3 flex flex-col sm:flex-row justify-center items-center py-5 px-6 glass text-white'>
           <p>All rights reserved &copy; 2026 </p>
