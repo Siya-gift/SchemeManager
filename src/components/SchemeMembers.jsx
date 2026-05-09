@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-function SchemeMembers({ toggleState, toggleMobileState, openCalender }) {
+function SchemeMembers({ toggleState, toggleMobileState, openCalender, formattedDate }) {
 
   const [searchState, setSearchState] = useState("");
   const [searchList, setsearchList] = useState("");
@@ -106,7 +106,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender }) {
             Filter by date:
           </h5>
           <h3 className='text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap'>
-            20 April 2026
+            {formattedDate}
           </h3>
           <span className='cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]'
           onClick={openCalender}>

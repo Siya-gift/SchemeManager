@@ -39,8 +39,12 @@ function App() {
   const [toggleMobileState, settoggleMobileState] = useState(1);
 
   const [value, onChange] = useState(new Date());
-
-
+  const formattedDate = value.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
   return (
     <>
       {/* crusty bg */}
@@ -58,10 +62,10 @@ function App() {
       {calenderState && (
         <div
           className='fixed top-0 left-0 w-screen h-screen bg-black/70 z-999999'
-          onClick={() => setCalenderState(false)} 
+          onClick={() => setCalenderState(false)}
         >
           <div
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
             className="fixed bottom-1/8 left-1/2 -translate-x-1/2 -translate-y-1/8"
           >
             <Calendar
@@ -81,10 +85,12 @@ function App() {
         <SideBar toggleState={toggleState} setToggleState={setToggleState} />
         <Profile toggleState={toggleState} />
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
-          openCalender={openCalender}
+          openCalender={openCalender} formattedDate={formattedDate}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
-        <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}/>
+        <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
+          formattedDate={formattedDate}
+        />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} />
