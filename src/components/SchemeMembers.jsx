@@ -66,7 +66,7 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
         </div>
         <div className='glass p-6 text-white flex flex-col min-h-svh md:col-span-2'>
           <div className='flex justify-between items-center flex-col md:flex-row'>
-            <h1 className='font-bold text-xl mb-4 md:mb-0 xl:w-[20%]'>Members of club now</h1>
+            <h1 className='font-bold text-xl md:w-20 mb-4 md:mb-0 xl:w-[20%]'>Members of club now</h1>
 
             <div className='flex flex-col xl:flex-row gap-3 sm:w-full md:w-auto'>
               <input className='py-2.5 px-2 border rounded-xl w-full focus:border-white 
