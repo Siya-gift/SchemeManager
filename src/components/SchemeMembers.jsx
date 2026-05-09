@@ -170,11 +170,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
           </div>
 
-          <ul className='flex flex-wrap w-full mt-9 rounded-2xl'> 
-            <div
-              className="w-full h-200 md:max-h-110 glass-scroll overflow-x-hidden overflow-y-auto transition-color duration-300 rounded-xl"
-              onScroll={scrollOnList}
-            >
+          <ul className='flex w-full mt-9 rounded-2xl'>
+            <div className="w-full h-200 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl"
+              onScroll={scrollOnList}>
               <table className='w-full text-left border-collapse'>
                 <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full z-999`}>
                   <tr className="border-b uppercase text-sm">
