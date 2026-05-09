@@ -44,7 +44,7 @@ function App() {
     month: 'long',
     year: 'numeric'
   });
-  
+
   return (
     <>
       {/* crusty bg */}
@@ -91,9 +91,9 @@ function App() {
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
           formattedDate={formattedDate}
         />
-        <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} />
-        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} />
-        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} />
+        <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate}/>
+        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate}/>
+        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate}/>
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
       <MobileMenu isOpen={isOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} />

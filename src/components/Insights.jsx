@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Insights({ toggleState, toggleMobileState }) {
+function Insights({ toggleState, toggleMobileState, formattedDate }) {
   return (
     <div className={`Insights w-full min-h-screen p-4 
         md:p-8 ${toggleMobileState === 4 ? "block" : "hidden"}
@@ -16,7 +16,7 @@ function Insights({ toggleState, toggleMobileState }) {
             Filter by date:
           </h5>
           <h3 className='text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap'>
-            20 April 2026
+            {formattedDate}
           </h3>
           <span className='cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]'>
             <i className="fa-solid fa-calendar-days"></i>
