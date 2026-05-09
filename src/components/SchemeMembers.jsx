@@ -170,14 +170,16 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
           </div>
 
-          <ul className='flex w-full mt-9 rounded-2xl'>
-            <div className="w-full h-200 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl"
-              onScroll={scrollOnList}>
+          <ul className='flex flex-wrap w-full mt-9 rounded-2xl'> 
+            <div
+              className="w-full h-200 md:max-h-110 glass-scroll overflow-x-hidden overflow-y-auto transition-color duration-300 rounded-xl"
+              onScroll={scrollOnList}
+            >
               <table className='w-full text-left border-collapse'>
                 <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full z-999`}>
                   <tr className="border-b uppercase text-sm">
                     <th className="sticky top-0 py-4 px-2">Name</th>
-                    <th className="sticky top-0 py-4 px-2">Total Paid This Year</th>
+                    <th className="sticky top-0 py-4 px-2 truncate max-w-50">Total Paid</th>
                     <th className="sticky top-0 py-4 px-2">Status</th>
                     <th className="sticky top-0 py-4 px-2 text-right">Action</th>
                   </tr>
@@ -186,7 +188,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 <tbody id='membersList'>
                   {filteredMembers.map((member, idx) => (
                     <tr key={idx} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`}>
-                      <td className="py-4 px-2 align-middle font-medium truncate max-w-50">
+                      <td className="py-4 px-2 align-middle font-medium truncate">
                         {idx + 1}. {member.memberName}
                       </td>
                       <td className="py-4 px-2 align-middle">R {member.totPaid}</td>
