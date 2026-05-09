@@ -47,11 +47,11 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
                     <h3 className='text-md font-bold'>{item.scheme}</h3>
                     <p className='text-[11px] text-white/70'>R500/mo</p>
                   </div>
-                  <div className='flex gap-3 flex-end text-[11px]'>
-                    <span className='px-2 py-2 border rounded-lg'>
+                  <div className='flex gap-3 flex-end text-[11px] transition-transform'>
+                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1'>
                       <i className="fa-regular fa-pen-to-square"></i>
                     </span>
-                    <span className='px-2 py-2 border rounded-lg'>
+                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1'>
                       <i className="fa-solid fa-trash"></i>
                     </span>
                   </div>
@@ -68,8 +68,10 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
           <div className='flex justify-between items-center flex-col md:flex-row'>
             <h1 className='font-bold text-xl mb-4 md:mb-0 xl:w-[20%]'>Members of club now</h1>
             <div className='flex flex-col xl:flex-row gap-3 mx-auto w-full'>
-              <input className='py-2.5 px-5 border rounded-xl w-full focus:border-white focus:outline-white' type='text' placeholder='Search Members...' />
-              <button className='bg-white/30 px-5 py-2.5 w-full border rounded-xl cursor-pointer hover:bg-white/45'>
+              <input className='py-2.5 px-5 border rounded-xl w-full focus:border-white 
+              focus:outline-white' type='text' placeholder='Search Members...' />
+              <button className='bg-white/30 px-5 py-2.5 w-full border rounded-xl 
+              cursor-pointer hover:bg-white/45'>
                 <i className="fa-solid fa-plus"></i> Add Member
               </button>
             </div>
@@ -90,30 +92,55 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b hover:bg-white/30 transition-colors">
-                    {/* py-4 and align-middle handle vertical spacing/alignment */}
-                    <td className="py-4 px-2 align-middle font-medium">Siya</td>
-                    <td className="py-4 px-2 align-middle">R 300.00</td>
-                    <td className="py-4 px-2 align-middle">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Paid
-                      </span>
-                    </td>
-                    <td className="py-4 px-2 align-middle text-right">
-                        <span className='px-2 py-2  mr-3'>
+                  {[
+                    {
+                      memberName: "Sam",
+                      totPaid: 750.00,
+                      status: "Paid"
+                    },
+                    {
+                      memberName: "John",
+                      totPaid: 120.00,
+                      status: "Paid"
+                    },
+                    {
+                      memberName: "Vivian",
+                      totPaid: 5000.00,
+                      status: "Paid"
+                    },
+                    {
+                      memberName: "Paul",
+                      totPaid: 4250.00,
+                      status: "Paid"
+                    }
+                  ].map((member, idx) => (
+                    <tr key={idx} className="border-b hover:bg-white/30 transition-colors cursor-pointer">
+                      <td className="py-4 px-2 align-middle font-medium">{member.memberName}</td>
+                      <td className="py-4 px-2 align-middle">R {member.totPaid}</td>
+                      <td className="py-4 px-2 align-middle">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full 
+                      text-xs font-medium bg-green-100 text-green-800">
+                          {member.status}
+                        </span>
+                      </td>
+                      <td className="py-4 px-2 align-middle text-right">
+                        <span className='px-2 py-2  mr-3 transition-transform inline-block hover:-translate-y-1'>
                           <i className="fa-regular fa-pen-to-square"></i>
                         </span>
-                        <span className='px-2 py-2'>
+                        <span className='px-2 py-2 transition-transform inline-block hover:-translate-y-1'>
                           <i className="fa-solid fa-trash"></i>
                         </span>
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                  ))}
+
                 </tbody>
               </table>
             </div>
           </ul>
         </div>
-        <div className='footer md:col-span-3 flex flex-col sm:flex-row justify-center items-center py-5 px-6 glass text-white'>
+        <div className='footer md:col-span-3 flex flex-col sm:flex-row 
+        justify-center items-center py-5 px-6 glass text-white'>
           <p>All rights reserved &copy; 2026 </p>
         </div>
       </div>
