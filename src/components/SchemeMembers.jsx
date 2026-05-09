@@ -169,7 +169,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
           <ul className='flex w-full mt-9 rounded-2xl'>
             <div
-              className="w-full h-auto max-h-150 md:max-h-110 glass-scroll overflow-y-auto overflow-x-hidden transition-color duration-300 rounded-xl"
+              className="w-full h-auto max-h-150 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl"
               onScroll={scrollOnList}
             >
               <table className='w-full text-left border-collapse'>
