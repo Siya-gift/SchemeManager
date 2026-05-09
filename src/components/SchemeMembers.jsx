@@ -62,6 +62,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       totPaid: 5000.00,
       status: "Paid"
     },
+
     {
       memberName: "Paul",
       totPaid: 4250.00,
@@ -127,11 +128,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
           <ul className='grow min-h-25 max-h-130 overflow-y-auto glass-scroll'>
             {[
               { scheme: "clubs" },
-              { scheme: "Cool" },
-              { scheme: "Speks" },
-              { scheme: "Jozi" },
-              { scheme: "clubs2" },
-              { scheme: "Ticks" },
+              { scheme: "Cool" }
 
             ].map((item, idx) => (
               <li key={idx} className='py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
@@ -171,8 +168,10 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
           </div>
 
           <ul className='flex w-full mt-9 rounded-2xl'>
-            <div className="w-full h-200 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl"
-              onScroll={scrollOnList}>
+            <div
+              className="w-full h-auto max-h-150 md:max-h-110 glass-scroll overflow-y-auto overflow-x-hidden transition-color duration-300 rounded-xl"
+              onScroll={scrollOnList}
+            >
               <table className='w-full text-left border-collapse'>
                 <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full z-999`}>
                   <tr className="border-b uppercase text-sm">
