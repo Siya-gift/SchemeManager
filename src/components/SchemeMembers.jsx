@@ -124,12 +124,16 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
                         </span>
                       </td>
                       <td className="py-4 px-2 align-middle text-right">
-                        <span className='px-2 py-2  mr-3 transition-transform inline-block hover:-translate-y-1'>
+                        <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'>
                           <i className="fa-regular fa-pen-to-square"></i>
                         </span>
-                        <span className='px-2 py-2 transition-transform inline-block hover:-translate-y-1'>
+                        <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1'>
                           <i className="fa-solid fa-trash"></i>
                         </span>
+                        <button className='px-3 py-2 mr-2 transition-transform inline-block hover:-translate-y-1
+                        bg-white text-black text-xs rounded-xl cursor-pointer'>
+                          Pay
+                        </button>
                       </td>
                     </tr>
                   ))}
