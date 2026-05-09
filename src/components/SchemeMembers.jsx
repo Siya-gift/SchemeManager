@@ -67,10 +67,11 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
         <div className='glass p-6 text-white flex flex-col min-h-svh md:col-span-2'>
           <div className='flex justify-between items-center flex-col md:flex-row'>
             <h1 className='font-bold text-xl mb-4 md:mb-0 xl:w-[20%]'>Members of club now</h1>
-            <div className='flex flex-col xl:flex-row gap-3 mx-auto w-full'>
-              <input className='py-2.5 px-5 border rounded-xl w-full focus:border-white 
+
+            <div className='flex flex-col xl:flex-row gap-3 w-full md:w-auto'>
+              <input className='py-2.5 px-2 border rounded-xl w-full focus:border-white 
               focus:outline-white' type='text' placeholder='Search Members...' />
-              <button className='bg-white/30 px-5 py-2.5 w-full border rounded-xl 
+              <button className='bg-white/30 px-2 py-2.5 w-full border rounded-xl 
               cursor-pointer hover:bg-white/45'>
                 <i className="fa-solid fa-plus"></i> Add Member
               </button>
@@ -86,7 +87,7 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
                 <thead>
                   <tr className="border-b text-white-500 uppercase text-sm">
                     <th className="py-4 px-2">Name</th>
-                    <th className="py-4 px-2">Total Paid</th>
+                    <th className="py-4 px-2">Total Paid This Year</th>
                     <th className="py-4 px-2">Status</th>
                     <th className="py-4 px-2 text-right">Action</th>
                   </tr>
