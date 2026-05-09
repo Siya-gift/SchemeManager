@@ -62,7 +62,7 @@ function App() {
         >
           <div
             onClick={(e) => e.stopPropagation()} 
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4"
           >
             <Calendar
               onChange={onChange}
@@ -84,7 +84,7 @@ function App() {
           openCalender={openCalender}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
-        <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} />
+        <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}/>
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} />
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} />
