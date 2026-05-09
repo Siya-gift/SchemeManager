@@ -1,6 +1,94 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 function SchemeMembers({ toggleState, toggleMobileState }) {
+
+  const [searchState, setSearchState] = useState("");
+  const [searchList, setsearchList] = useState("");
+  const [txtListState, setTxtListState] = useState(false);
+
+  const allMembers = [
+    {
+      memberName: "Sam",
+      totPaid: 750.00,
+      status: "Paid"
+    },
+    {
+      memberName: "John",
+      totPaid: 120.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Vivian",
+      totPaid: 5000.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Vivian",
+      totPaid: 5000.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Vivian",
+      totPaid: 5000.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Vivian",
+      totPaid: 5000.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Vivian",
+      totPaid: 5000.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Vivian",
+      totPaid: 5000.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Vivian",
+      totPaid: 5000.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Vivian",
+      totPaid: 5000.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Vivian",
+      totPaid: 5000.00,
+      status: "Paid"
+    },
+    {
+      memberName: "Paul",
+      totPaid: 4250.00,
+      status: "Paid"
+    }
+  ]
+
+  const filteredMembers = allMembers.filter((member) =>
+    member.memberName.toLowerCase().includes(searchState.toLowerCase())
+  );
+
+  const searchFunc = (e) => {
+    setSearchState(e.target.value);
+  };
+
+
+  const scrollOnList = (event) => {
+    const position = event.currentTarget.scrollTop;
+
+    if (position > 0) {
+      setTxtListState(true);
+    } else {
+      setTxtListState(false);
+    }
+  };
+
+
   return (
     // Fixed w-vh to w-full. min-h-screen ensures it covers the viewport.
     <div className={`schemeMembers w-full min-h-screen p-4 md:p-8 
@@ -35,12 +123,17 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
             </span>
           </div>
 
-          <ul className='grow min-h-25 overflow-y-auto glass-scroll'>
+          <ul className='grow min-h-25 max-h-130 overflow-y-auto glass-scroll'>
             {[
-              { scheme: "clubs" }
+              { scheme: "clubs" },
+              { scheme: "Cool" },
+              { scheme: "Speks" },
+              { scheme: "Jozi" },
+              { scheme: "clubs2" },
+              { scheme: "Ticks" },
 
             ].map((item, idx) => (
-              <li key={idx} className='py-5 px-10 bg-white/30 border cursor-pointer hover:bg-white/40
+              <li key={idx} className='py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
               my-2 rounded-xl mr-1.5'>
                 <div className='flex justify-between items-center'>
                   <div className='flex justify-between flex-col max-w-[20%]'>
@@ -65,7 +158,7 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
             <h1 className='font-bold text-xl'>Members of club now</h1>
             <div className='flex flex-col xl:flex-row gap-3 sm:w-full md:w-auto'>
               <input className='py-2.5 px-2 border rounded-xl w-full focus:border-white 
-              focus:outline-white' type='text' placeholder='Search Members...' />
+              focus:outline-white' type='text' value={searchState} onChange={searchFunc} id="inputField" placeholder='Search Members...' />
               <button className='bg-white/30 px-2 py-2.5 w-full border rounded-xl 
               cursor-pointer hover:bg-white/45'>
                 <i className="fa-solid fa-plus"></i> Add Member
@@ -76,42 +169,23 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
 
           </div>
 
-          <ul className='flex p-6 w-full mt-9'>
-            <div className="w-full overflow-x-auto">
+          <ul className='flex w-full mt-9 rounded-2xl'>
+            <div className="w-full h-200 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl"
+              onScroll={scrollOnList}>
               <table className='w-full text-left border-collapse'>
-                <thead>
-                  <tr className="border-b text-white-500 uppercase text-sm">
-                    <th className="py-4 px-2">Name</th>
-                    <th className="py-4 px-2">Total Paid This Year</th>
-                    <th className="py-4 px-2">Status</th>
-                    <th className="py-4 px-2 text-right">Action</th>
+                <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full z-999`}>
+                  <tr className="border-b uppercase text-sm">
+                    <th className="sticky top-0 py-4 px-2">Name</th>
+                    <th className="sticky top-0 py-4 px-2">Total Paid This Year</th>
+                    <th className="sticky top-0 py-4 px-2">Status</th>
+                    <th className="sticky top-0 py-4 px-2 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {[
-                    {
-                      memberName: "Sam",
-                      totPaid: 750.00,
-                      status: "Paid"
-                    },
-                    {
-                      memberName: "John",
-                      totPaid: 120.00,
-                      status: "Paid"
-                    },
-                    {
-                      memberName: "Vivian",
-                      totPaid: 5000.00,
-                      status: "Paid"
-                    },
-                    {
-                      memberName: "Paul",
-                      totPaid: 4250.00,
-                      status: "Paid"
-                    }
-                  ].map((member, idx) => (
-                    <tr key={idx} className="border-b hover:bg-white/30 transition-colors cursor-pointer">
-                      <td className="py-4 px-2 align-middle font-medium">{member.memberName}</td>
+
+                <tbody id='membersList'>
+                  {filteredMembers.map((member, idx) => (
+                    <tr key={idx} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`}>
+                      <td className="py-4 px-2 align-middle font-medium">{idx + 1}. {member.memberName}</td>
                       <td className="py-4 px-2 align-middle">R {member.totPaid}</td>
                       <td className="py-4 px-2 align-middle">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full 
@@ -133,7 +207,11 @@ function SchemeMembers({ toggleState, toggleMobileState }) {
                       </td>
                     </tr>
                   ))}
-
+                  {filteredMembers.length === 0 && (
+                    <tr>
+                      <td colSpan="4" className="py-10 text-center opacity-50">No members found</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
