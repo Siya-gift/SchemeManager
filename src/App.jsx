@@ -62,7 +62,7 @@ function App() {
         >
           <div
             onClick={(e) => e.stopPropagation()} 
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4"
+            className="fixed bottom-1/8 left-1/2 -translate-x-1/2 -translate-y-1/8"
           >
             <Calendar
               onChange={onChange}
