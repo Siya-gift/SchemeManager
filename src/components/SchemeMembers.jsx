@@ -109,7 +109,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             {formattedDate}
           </h3>
           <span className='cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]'
-          onClick={openCalender}>
+            onClick={openCalender}>
             <i className="fa-solid fa-calendar-days"></i>
           </span>
         </div>
@@ -186,7 +186,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 <tbody id='membersList'>
                   {filteredMembers.map((member, idx) => (
                     <tr key={idx} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`}>
-                      <td className="py-4 px-2 align-middle font-medium">{idx + 1}. {member.memberName}</td>
+                      <td className="py-4 px-2 align-middle font-medium truncate max-w-50">
+                        {idx + 1}. {member.memberName}
+                      </td>
                       <td className="py-4 px-2 align-middle">R {member.totPaid}</td>
                       <td className="py-4 px-2 align-middle">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full 
@@ -194,7 +196,12 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                           {member.status}
                         </span>
                       </td>
-                      <td className="py-4 px-2 align-middle text-right">
+                      <td className="md:hidden py-4 px-2 align-middle text-right">
+                        <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'>
+                          <i className="fa-solid fa-ellipsis-vertical"></i>
+                        </span>
+                      </td>
+                      <td className="hidden md:block py-4 px-2 align-middle text-right">
                         <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'>
                           <i className="fa-regular fa-pen-to-square"></i>
                         </span>
