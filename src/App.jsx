@@ -1,5 +1,5 @@
 import './App.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Calendar from 'react-calendar';
@@ -44,6 +44,11 @@ function App() {
     month: 'long',
     year: 'numeric'
   });
+
+
+  useEffect(()=>{
+    setCalenderState(!calenderState)
+  },[value])
 
   return (
     <>
