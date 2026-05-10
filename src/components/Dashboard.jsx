@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Overlayer from './Overlayer'
 
-function Dashboard({ toggleState, toggleMobileState, overlayer, openCalender, formattedDate }) {
+function Dashboard({ toggleState, toggleMobileState, overlayer, openCalender, formattedDate, }) {
 
     const [YearMonthFilter, setYearMonthFilter] = useState(1)
     const [schemeTabState, setschemeTabState] = useState(1)

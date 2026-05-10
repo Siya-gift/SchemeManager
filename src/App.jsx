@@ -1,5 +1,5 @@
 import './App.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Calendar from 'react-calendar';
@@ -45,10 +45,19 @@ function App() {
     year: 'numeric'
   });
 
+  const isFirstRender = useRef(true);
 
-  useEffect(()=>{
-    setCalenderState(!calenderState)
-  },[value])
+  useEffect(() => {
+    
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    
+    setCalenderState(false);
+
+  }, [value]);
 
   return (
     <>
@@ -96,9 +105,9 @@ function App() {
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
           formattedDate={formattedDate}
         />
-        <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate}/>
-        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate}/>
-        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate}/>
+        <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
+        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
+        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
       <MobileMenu isOpen={isOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} />
