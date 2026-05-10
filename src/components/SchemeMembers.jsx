@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react'
 function SchemeMembers({ toggleState, toggleMobileState, openCalender, formattedDate }) {
 
   const [searchState, setSearchState] = useState("");
+  const [isDotMenu, setisDotMenu] = useState(false);
+  const [activeMenuIdx, setActiveMenuIdx] = useState(null);
+  const [isDotMenuState, setisDotMenuState] = useState("hidden");
   const [searchList, setsearchList] = useState("");
   const [txtListState, setTxtListState] = useState(false);
 
@@ -87,6 +90,11 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     } else {
       setTxtListState(false);
     }
+  };
+
+  const toggleDotMenu = (idx) => {
+    setisDotMenu(!isDotMenu);
+    setActiveMenuIdx(activeMenuIdx === idx ? null : idx);
   };
 
 
@@ -195,10 +203,32 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                           {member.status}
                         </span>
                       </td>
-                      <td className="md:hidden py-4 px-2 align-middle text-right">
-                        <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'>
+                      <td className="relative md:hidden py-4 px-2 align-middle text-right">
+                        <span
+                          className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1 cursor-pointer'
+                          onClick={() => { toggleDotMenu(idx) }}
+                        >
                           <i className="fa-solid fa-ellipsis-vertical"></i>
                         </span>
+
+                        {activeMenuIdx === idx && (
+                          <div className="md:hidden glass bg-white absolute -bottom-30 right-0 
+                          py-2.5 px-5 text-sm text-left text-black/70 z-999999
+                          after:content-[''] after:absolute after:bottom-full after:right-5
+                          after:border-8 after:border-transparent after:border-b-white">
+
+                            <p className='border-white-400 flex gap-2 align-center py-2'>
+                              <i className="fa-regular fa-pen-to-square"></i> Edit
+                            </p><hr />
+                            <p className='border-white-400 flex gap-2 align-center py-2'>
+                              <i className="fa-solid fa-trash"></i> Delete
+                            </p><hr />
+                            <p className='border-white-400 flex gap-2 align-center py-2'>
+                              <i className="fa-regular fa-credit-card"></i> Pay
+                            </p>
+                          </div>
+                        )}
+
                       </td>
                       <td className="hidden md:block py-4 px-2 align-middle text-right">
                         <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'>
