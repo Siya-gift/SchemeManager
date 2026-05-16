@@ -296,8 +296,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
            w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-99999999999">
 
             <div className='flex justify-between align-center w-full text-white'>
-              <h1 className='text-lg'>Add Member</h1>
-              <p className='font-bold text-xl cursor-pointer' onClick={openAddMember}>&times;</p>
+              <h1 className='text-2xl'>Add Member</h1>
+              <p className='font-bold text-2xl cursor-pointer' onClick={openAddMember}>&times;</p>
             </div>
             <div className='flex justify-between align-center w-full text-white mt-10
           text-sm'>
