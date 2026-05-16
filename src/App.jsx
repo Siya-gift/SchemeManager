@@ -48,15 +48,11 @@ function App() {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-
-    
     setCalenderState(false);
-
   }, [value]);
 
   return (

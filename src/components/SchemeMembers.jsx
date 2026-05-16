@@ -8,6 +8,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const [isDotMenuState, setisDotMenuState] = useState("hidden");
   const [searchList, setsearchList] = useState("");
   const [txtListState, setTxtListState] = useState(false);
+  const [isAddMember, setIsAddMember] = useState(false);
 
   const allMembers = [
     {
@@ -97,6 +98,16 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     setActiveMenuIdx(activeMenuIdx === idx ? null : idx);
   };
 
+  const openAddMember = () => {
+
+    setIsAddMember(true);
+    if (isAddMember) {
+      setIsAddMember(false)
+    } else {
+      setIsAddMember(true)
+    }
+  }
+
 
   return (
     // Fixed w-vh to w-full. min-h-screen ensures it covers the viewport.
@@ -164,9 +175,11 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             <h1 className='font-bold text-xl'>Members of club now</h1>
             <div className='flex flex-col xl:flex-row gap-3 sm:w-full md:w-auto'>
               <input className='py-2.5 px-2 border rounded-xl w-full focus:border-white 
-              focus:outline-white' type='text' value={searchState} onChange={searchFunc} id="inputField" placeholder='Search Members...' />
+              focus:outline-white' type='text' value={searchState} onChange={searchFunc}
+                id="inputField" placeholder='Search Members...' />
+
               <button className='bg-white/30 px-2 py-2.5 w-full border rounded-xl 
-              cursor-pointer hover:bg-white/45'>
+              cursor-pointer hover:bg-white/45' onClick={openAddMember}>
                 <i className="fa-solid fa-plus"></i> Add Member
               </button>
             </div>
@@ -259,6 +272,30 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
           <p>All rights reserved &copy; 2026 </p>
         </div>
       </div>
+
+
+      {isAddMember &&
+        <div className='fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+        w-75 md:w-85 h-auto glass p-3'>
+          <div className='flex justify-between align-center w-full text-white'>
+            <h1 className='text-lg'>Add Member</h1>
+            <p className='font-bold text-xl cursor-pointer' onClick={openAddMember}>&times;</p>
+          </div>
+          <div className='flex justify-between align-center w-full text-white mt-10
+          text-sm'>
+            <h3 className='text-white'>Name</h3>
+            <p className='cursor-pointer text-xs align-center'>
+              <i className="fa-solid fa-plus"></i> Add More
+            </p>
+          </div>
+          <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
+              focus:outline-white text-white' type='text' placeholder='Enter Member Name' />
+
+
+          <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40'>
+            Add Member
+          </button>
+        </div>}
 
     </div>
   )
