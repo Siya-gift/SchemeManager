@@ -275,8 +275,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
 
       {isAddMember &&
-        <div className='fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-        w-75 md:w-85 h-auto glass p-3'>
+        <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+         w-75 md:w-85 h-auto glass p-3 bg-white/30 backdrop-blur-md">
           <div className='flex justify-between align-center w-full text-white'>
             <h1 className='text-lg'>Add Member</h1>
             <p className='font-bold text-xl cursor-pointer' onClick={openAddMember}>&times;</p>
@@ -292,7 +292,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               focus:outline-white text-white' type='text' placeholder='Enter Member Name' />
 
 
-          <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40'>
+          <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 '>
             Add Member
           </button>
         </div>}
