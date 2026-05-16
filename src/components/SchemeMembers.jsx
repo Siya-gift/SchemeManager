@@ -209,7 +209,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               onScroll={scrollOnList}
             >
               <table className='w-full text-left border-collapse'>
-                <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full z-999`}>
+                <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full z-9`}>
                   <tr className="border-b uppercase text-sm">
                     <th className="sticky top-0 py-4 px-2">Name</th>
                     <th className="sticky top-0 py-4 px-2 truncate max-w-50">Total Paid</th>
