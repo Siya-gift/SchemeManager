@@ -293,7 +293,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
         bg-black/50 h-screen w-screen'>
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-999999">
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-99999999999">
 
             <div className='flex justify-between align-center w-full text-white'>
               <h1 className='text-lg'>Add Member</h1>
