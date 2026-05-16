@@ -34,6 +34,7 @@ body {
   background-repeat: no-repeat;
   background-blend-mode: 10px;
   min-height: 100vh;
+  scrollbar-gutter: stable;
 }
 
 /* .active-tab {

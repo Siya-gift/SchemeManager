@@ -99,8 +99,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   };
 
   const openAddMember = () => {
-
-    setIsAddMember(true);
+    setIsAddMember(prev => !prev);
     if (isAddMember) {
       setIsAddMember(false)
     } else {
@@ -108,9 +107,25 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     }
   }
 
+  useEffect(() => {
+    const preventScroll = (e) => {
+      e.preventDefault();
+    };
+
+    if (isAddMember) {
+      // Blocks mouse wheel, trackpad, and touch scrolling
+      window.addEventListener('wheel', preventScroll, { passive: false });
+      window.addEventListener('touchmove', preventScroll, { passive: false });
+    }
+
+    return () => {
+      window.removeEventListener('wheel', preventScroll);
+      window.removeEventListener('touchmove', preventScroll);
+    };
+  }, [isAddMember]);
+
 
   return (
-    // Fixed w-vh to w-full. min-h-screen ensures it covers the viewport.
     <div className={`schemeMembers w-full min-h-screen p-4 md:p-8 
         ${toggleMobileState === 2 ? "block" : "hidden"} 
         ${toggleState === 2 ? "md:block" : "md:hidden"}
@@ -275,27 +290,33 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
 
       {isAddMember &&
-        <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-         w-75 md:w-85 h-auto glass p-3 bg-white/30 backdrop-blur-md">
-          <div className='flex justify-between align-center w-full text-white'>
-            <h1 className='text-lg'>Add Member</h1>
-            <p className='font-bold text-xl cursor-pointer' onClick={openAddMember}>&times;</p>
-          </div>
-          <div className='flex justify-between align-center w-full text-white mt-10
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-999999">
+
+            <div className='flex justify-between align-center w-full text-white'>
+              <h1 className='text-lg'>Add Member</h1>
+              <p className='font-bold text-xl cursor-pointer' onClick={openAddMember}>&times;</p>
+            </div>
+            <div className='flex justify-between align-center w-full text-white mt-10
           text-sm'>
-            <h3 className='text-white'>Name</h3>
-            <p className='cursor-pointer text-xs align-center'>
-              <i className="fa-solid fa-plus"></i> Add More
-            </p>
-          </div>
-          <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
+              <h3 className='text-white'>Name</h3>
+              <p className='cursor-pointer text-xs align-center hover:text-white/75'>
+                <i className="fa-solid fa-plus"></i> Add More
+              </p>
+            </div>
+            <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
               focus:outline-white text-white' type='text' placeholder='Enter Member Name' />
 
 
-          <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 '>
-            Add Member
-          </button>
-        </div>}
+            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30'>
+              Add Member
+            </button>
+          </div>
+        </div>
+      }
 
     </div>
   )
