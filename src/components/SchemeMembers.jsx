@@ -107,10 +107,11 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     }
   }
 
+  const preventScroll = (e) => {
+    e.preventDefault();
+  };
   useEffect(() => {
-    const preventScroll = (e) => {
-      e.preventDefault();
-    };
+
 
     if (isAddMember) {
       // Blocks mouse wheel, trackpad, and touch scrolling
@@ -123,6 +124,36 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       window.removeEventListener('touchmove', preventScroll);
     };
   }, [isAddMember]);
+
+
+  const addMore = () => {
+    window.removeEventListener('wheel', preventScroll);
+    window.removeEventListener('touchmove', preventScroll);
+
+    let members = document.getElementById('AddMoreMembers');
+    let memberIndex = 0
+
+    members.innerHTML += `<div key={idx}
+    class="flex justify-between align-center flex-row mt-3" id="member-${memberIndex}"><input class="border-white 
+    border rounded-xl p-3 w-auto focus:border-white focus:outline-white text-white type="text" 
+    placeholder="Enter Member Name" />
+    <p class="border border-white
+    rounded-xl w-10 h-auto grid place-content-center text-white" onclick="deleteMemberCan(${memberIndex})">
+    <i class="fa-solid fa-trash"></i></p>
+    </div>`
+
+
+  }
+
+  window.deleteMemberCan = (idx) => {
+    const memberElement = document.getElementById(`member-${idx}`);
+
+    if (memberElement) {
+      memberElement.remove();
+    }
+  }
+
+
 
 
   return (
@@ -302,17 +333,19 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             <div className='flex justify-between align-center w-full text-white mt-10
           text-sm'>
               <h3 className='text-white'>Name</h3>
-              <p className='cursor-pointer text-xs align-center hover:text-white/75'>
+              <p className='cursor-pointer text-xs align-center hover:text-white/75' onClick={() => { addMore() }}>
                 <i className="fa-solid fa-plus"></i> Add More
               </p>
             </div>
-            <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
-              focus:outline-white text-white' type='text' placeholder='Enter Member Name' />
 
+            <ul className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
+              <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
+              focus:outline-white text-white' type='text' placeholder='Enter Member Name' />
+            </ul>
 
             <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
             hover:bg-white/30'>
-              Add Member
+              Save
             </button>
           </div>
         </div>
