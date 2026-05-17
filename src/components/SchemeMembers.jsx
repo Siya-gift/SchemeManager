@@ -130,18 +130,21 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     window.removeEventListener('wheel', preventScroll);
     window.removeEventListener('touchmove', preventScroll);
 
+
+
     let members = document.getElementById('AddMoreMembers');
     let memberIndex = 0
-
-    members.innerHTML += `<div key={idx}
-    class="flex justify-between align-center flex-row mt-3" id="member-${memberIndex}"><input class="border-white 
-    border rounded-xl p-3 w-auto focus:border-white focus:outline-white text-white type="text" 
-    placeholder="Enter Member Name" />
-    <p class="border border-white
-    rounded-xl w-10 h-auto grid place-content-center text-white" onclick="deleteMemberCan(${memberIndex})">
-    <i class="fa-solid fa-trash"></i></p>
+    memberIndex++;
+    members.innerHTML += `<div class="flex gap-2 items-center flex-row mt-3 w-full" id="member-${memberIndex}">
+    <input class="border-white border rounded-xl p-3 
+    focus:border-white focus:outline-white text-white 
+    w-full" type="text" placeholder="Enter Member Name" />
+    <p class="border border-white rounded-xl w-12 h-12 
+    grid place-content-center text-white shrink-0 hover:-translate-y-1
+    cursor-pointer" onclick="deleteMemberCan(${memberIndex})">
+        <i class="fa-solid fa-trash"></i>
+    </p>
     </div>`
-
 
   }
 
