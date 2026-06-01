@@ -292,7 +292,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                             <p className='border-white-400 flex gap-2 align-center py-2'>
                               <i className="fa-solid fa-trash"></i> Delete
                             </p><hr />
-                            <p className='border-white-400 flex gap-2 align-center py-2'>
+                            <p className='border-white-400 flex gap-2 align-center py-2'
+                              onClick={() => deleteMember(idx)}>
                               <i className="fa-regular fa-credit-card"></i> Pay
                             </p>
                           </div>
@@ -371,17 +372,17 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
            w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
 
-           <h1 className='text-white text-xl'>Do you want to delete this member?</h1>
-           <div className='flex justify-between align-center gap-4'>
-            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30' onClick={()=>{setIsDeleteMember(false)}}>
-              No
-            </button>
-            <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
+            <h1 className='text-white text-xl'>Do you want to delete this member?</h1>
+            <div className='flex justify-between align-center gap-4'>
+              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30' onClick={() => { setIsDeleteMember(false) }}>
+                No
+              </button>
+              <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
             hover:bg-red-400'>
-              Yes
-            </button>
-           </div>
+                Yes
+              </button>
+            </div>
 
           </div>
         </div>
