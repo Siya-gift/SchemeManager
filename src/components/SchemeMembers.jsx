@@ -8,7 +8,11 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const [isDotMenuState, setisDotMenuState] = useState("hidden");
   const [searchList, setsearchList] = useState("");
   const [txtListState, setTxtListState] = useState(false);
+
+  //popups states
   const [isAddMember, setIsAddMember] = useState(false);
+  const [isDeleteMember, setIsDeleteMember] = useState(false);
+
 
   const allMembers = [
     {
@@ -27,54 +31,17 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       status: "Paid"
     },
     {
-      memberName: "Vivian",
-      totPaid: 5000.00,
-      status: "Paid"
-    },
-    {
-      memberName: "Vivian",
-      totPaid: 5000.00,
-      status: "Paid"
-    },
-    {
-      memberName: "Vivian",
-      totPaid: 5000.00,
-      status: "Paid"
-    },
-    {
-      memberName: "Vivian",
-      totPaid: 5000.00,
-      status: "Paid"
-    },
-    {
-      memberName: "Vivian",
-      totPaid: 5000.00,
-      status: "Paid"
-    },
-    {
-      memberName: "Vivian",
-      totPaid: 5000.00,
-      status: "Paid"
-    },
-    {
-      memberName: "Vivian",
-      totPaid: 5000.00,
-      status: "Paid"
-    },
-    {
-      memberName: "Vivian",
-      totPaid: 5000.00,
-      status: "Paid"
-    },
-
-    {
       memberName: "Paul",
       totPaid: 4250.00,
       status: "Paid"
     }
   ]
 
-  const filteredMembers = allMembers.filter((member) =>
+  const [members, setMembers] = useState(() => allMembers);
+  const [newMember, setNewMember] = useState("");
+
+
+  const filteredMembers = members.filter((member) =>
     member.memberName.toLowerCase().includes(searchState.toLowerCase())
   );
 
@@ -138,7 +105,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     members.innerHTML += `<div class="flex gap-2 items-center flex-row mt-3 w-full" id="member-${memberIndex}">
     <input class="border-white border rounded-xl p-3 
     focus:border-white focus:outline-white text-white 
-    w-full" type="text" placeholder="Enter Member Name" />
+    w-full" type="text" id="NameOfMember" placeholder="Enter Member Name" />
     <p class="border border-white rounded-xl w-12 h-12 
     grid place-content-center text-white shrink-0 hover:-translate-y-1
     cursor-pointer" onclick="deleteMemberCan(${memberIndex})">
@@ -156,6 +123,46 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     }
   }
 
+
+  const handleInputChange = (e) => {
+    setNewMember(e.target.value);
+  };
+
+  const saveMember = () => {
+    if (!newMember.trim()) return;
+
+    const memberToAdd = {
+      memberName: newMember.trim(),
+      totPaid: 0,
+      status: "Pending"
+    };
+
+    allMembers.push(memberToAdd)
+
+    setMembers((prev) => [...prev, memberToAdd]);
+    setNewMember("");
+    setIsAddMember(false);
+  };
+
+  const deleteMember = (idx) => {
+    confirmDelete()
+    const updatedMembers = members.filter((_, index) => index !== idx);
+    setMembers(updatedMembers);
+  }
+
+  const getStatusClass = (status) => {
+    if (status === "Paid") {
+      return "bg-green-100 text-green-800";
+    } else if (status === "Pending") {
+      return "bg-blue-100 text-blue-800";
+    } else {
+      return "bg-red-100 text-red-800";
+    }
+  };
+
+  const confirmDelete = () => {
+    setIsDeleteMember(true)
+  }
 
 
 
@@ -177,7 +184,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
           <h3 className='text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap'>
             {formattedDate}
           </h3>
-          <span className='cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]'
+          <span className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
             onClick={openCalender}>
             <i className="fa-solid fa-calendar-days"></i>
           </span>
@@ -254,14 +261,14 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
                 <tbody id='membersList'>
                   {filteredMembers.map((member, idx) => (
-                    <tr key={idx} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`}>
+                    <tr key={idx} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`} id='memberRow'>
                       <td className="py-4 px-2 align-middle font-medium truncate">
                         {idx + 1}. {member.memberName}
                       </td>
                       <td className="py-4 px-2 align-middle">R {member.totPaid}</td>
                       <td className="py-4 px-2 align-middle">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full 
-                      text-xs font-medium bg-green-100 text-green-800">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full 
+                      text-xs font-medium ${getStatusClass(member.status)}`}>
                           {member.status}
                         </span>
                       </td>
@@ -296,7 +303,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                         <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'>
                           <i className="fa-regular fa-pen-to-square"></i>
                         </span>
-                        <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1'>
+                        <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1'
+                          onClick={() => deleteMember(idx)}>
                           <i className="fa-solid fa-trash"></i>
                         </span>
                         <button className='px-3 py-2 mr-2 transition-transform inline-block hover:-translate-y-1
@@ -343,13 +351,38 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
             <ul className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
               <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
-              focus:outline-white text-white' type='text' placeholder='Enter Member Name' />
+              focus:outline-white text-white' type='text' placeholder='Enter Member Name' id='inputName'
+                onChange={handleInputChange}
+                value={newMember}
+              />
             </ul>
 
             <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30'>
+            hover:bg-white/30' onClick={saveMember}>
               Save
             </button>
+          </div>
+        </div>
+      }
+
+      {isDeleteMember &&
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+
+           <h1 className='text-white text-xl'>Do you want to delete this member?</h1>
+           <div className='flex justify-between align-center gap-4'>
+            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30' onClick={()=>{setIsDeleteMember(false)}}>
+              No
+            </button>
+            <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
+            hover:bg-red-400'>
+              Yes
+            </button>
+           </div>
+
           </div>
         </div>
       }
