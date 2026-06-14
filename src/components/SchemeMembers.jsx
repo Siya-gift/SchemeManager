@@ -12,6 +12,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   //popups states
   const [isAddMember, setIsAddMember] = useState(false);
   const [isDeleteMember, setIsDeleteMember] = useState(false);
+  const [isEditMember, setIsEditMember] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+
 
 
   const allMembers = [
@@ -144,11 +147,12 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     setIsAddMember(false);
   };
 
+  const [deleteTargetIndex, setDeleteTargetIndex] = useState(null);
+
   const deleteMember = (idx) => {
-    confirmDelete()
-    const updatedMembers = members.filter((_, index) => index !== idx);
-    setMembers(updatedMembers);
-  }
+    setIsDeleteMember(true);
+    setDeleteTargetIndex(idx);
+  };
 
   const getStatusClass = (status) => {
     if (status === "Paid") {
@@ -160,9 +164,14 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     }
   };
 
-  const confirmDelete = () => {
-    setIsDeleteMember(true)
-  }
+  const removeMember = () => {
+    setIsDeleteMember(false);
+    if (deleteTargetIndex === null) return;
+
+    const updatedMembers = members.filter((_, index) => index !== deleteTargetIndex);
+    setMembers(updatedMembers);
+    setDeleteTargetIndex(null);
+  };
 
 
 
@@ -250,7 +259,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               onScroll={scrollOnList}
             >
               <table className='w-full text-left border-collapse'>
-                <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full z-9`}>
+                <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full`}>
                   <tr className="border-b uppercase text-sm">
                     <th className="sticky top-0 py-4 px-2">Name</th>
                     <th className="sticky top-0 py-4 px-2 truncate max-w-50">Total Paid</th>
@@ -282,18 +291,20 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
                         {activeMenuIdx === idx && (
                           <div className="md:hidden glass bg-white absolute -bottom-30 right-0 
-                          py-2.5 px-5 text-sm text-left text-black/70 z-999999
+                          py-2.5 px-5 text-sm text-left text-black/70 z-9
                           after:content-[''] after:absolute after:bottom-full after:right-5
                           after:border-8 after:border-transparent after:border-b-white">
 
-                            <p className='border-white-400 flex gap-2 align-center py-2'>
+                            <p className='border-white-400 flex gap-2 align-center py-2'
+                              onClick={() => setIsEditMember(true)}>
                               <i className="fa-regular fa-pen-to-square"></i> Edit
-                            </p><hr />
-                            <p className='border-white-400 flex gap-2 align-center py-2'>
-                              <i className="fa-solid fa-trash"></i> Delete
                             </p><hr />
                             <p className='border-white-400 flex gap-2 align-center py-2'
                               onClick={() => deleteMember(idx)}>
+                              <i className="fa-solid fa-trash"></i> Delete
+                            </p><hr />
+                            <p className='border-white-400 flex gap-2 align-center py-2'
+                            onClick={() => setIsPaying(true)}>
                               <i className="fa-regular fa-credit-card"></i> Pay
                             </p>
                           </div>
@@ -301,7 +312,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
                       </td>
                       <td className="hidden md:block py-4 px-2 align-middle text-right">
-                        <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'>
+                        <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'
+                          onClick={() => setIsEditMember(true)}>
                           <i className="fa-regular fa-pen-to-square"></i>
                         </span>
                         <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1'
@@ -309,7 +321,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                           <i className="fa-solid fa-trash"></i>
                         </span>
                         <button className='px-3 py-2 mr-2 transition-transform inline-block hover:-translate-y-1
-                        bg-white text-black text-xs rounded-xl cursor-pointer'>
+                        bg-white text-black text-xs rounded-xl cursor-pointer' onClick={() => setIsPaying(true)}>
                           Pay
                         </button>
                       </td>
@@ -371,21 +383,77 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
         bg-black/50 h-screen w-screen'>
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
            w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+            <h1 className='text-white text-2xl'>Delete Member?</h1>
+            <hr className='my-2 border-white' />
 
-            <h1 className='text-white text-xl'>Do you want to delete this member?</h1>
+            <h1 className='text-white text-xl'>Are you sure you want to delete this member and all their history? This cannot be undone.</h1>
             <div className='flex justify-between align-center gap-4'>
               <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
             hover:bg-white/30' onClick={() => { setIsDeleteMember(false) }}>
                 No
               </button>
               <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
-            hover:bg-red-400'>
+            hover:bg-red-400' onClick={() => { removeMember() }}>
                 Yes
               </button>
             </div>
 
           </div>
         </div>
+      }
+
+      {isEditMember &&
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+
+            <div className='flex justify-between align-center w-full text-white'>
+              <h1 className='text-2xl'>Edit Member</h1>
+              <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsEditMember(false)}>&times;</p>
+            </div>
+            <div className='flex start align-center w-full text-white mt-10
+            text-sm'>
+              <h3 className='text-white'>Name</h3>
+            </div>
+
+            <div className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
+              <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
+              focus:outline-white text-white' type='text' placeholder='Enter Member Name' id='inputName'
+              />
+            </div>
+
+            <div className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
+              <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
+              focus:outline-white text-white' type='number' placeholder='Monthly Distributions' id='inputName'
+              />
+            </div>
+
+            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30'>
+              Save
+            </button>
+          </div>
+        </div>
+      }
+
+      {isPaying &&
+
+
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+            <div className='flex justify-between align-center w-full text-white'>
+              <h1 className='text-2xl'>Record Payment</h1>
+              <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsPaying(false)}>&times;</p>
+            </div>
+            <hr className='my-2 border-white' />
+
+          </div>
+
+        </div>
+
       }
 
     </div>
