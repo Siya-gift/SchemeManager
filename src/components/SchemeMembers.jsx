@@ -8,12 +8,16 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const [isDotMenuState, setisDotMenuState] = useState("hidden");
   const [searchList, setsearchList] = useState("");
   const [txtListState, setTxtListState] = useState(false);
+  const [payingMember, setPayingMember] = useState(null);
+  const [editMember, setEditMember] = useState(null);
+
 
   //popups states
   const [isAddMember, setIsAddMember] = useState(false);
   const [isDeleteMember, setIsDeleteMember] = useState(false);
   const [isEditMember, setIsEditMember] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
+  const [isAddSchemeModal, setAddSchemeModal] = useState(false);
 
 
 
@@ -130,6 +134,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const handleInputChange = (e) => {
     setNewMember(e.target.value);
   };
+  const handleInputChangeEdit = (e) => {
+    setEditMember(e.target.value);
+  };
 
   const saveMember = () => {
     if (!newMember.trim()) return;
@@ -173,6 +180,19 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     setDeleteTargetIndex(null);
   };
 
+  const payingModal = (memberName) => {
+    setIsPaying(true)
+    setPayingMember(memberName)
+  }
+  const editModal = (memberName) => {
+    setIsEditMember(true)
+    setEditMember(memberName)
+  }
+
+  const addSchemeModal = () => {
+    setAddSchemeModal(true)
+  }
+
 
 
   return (
@@ -204,7 +224,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
         <div className='glass p-6 text-white flex flex-col h-auto md:col-span-1'>
           <div className='flex justify-between items-center py-4'>
             <h1 className='font-bold text-xl'>Your Schemes</h1>
-            <span className='text-2xl cursor-pointer'>
+            <span className='text-2xl cursor-pointer' onClick={() => { addSchemeModal() }}>
               <i className="fa-solid fa-circle-plus"></i>
             </span>
           </div>
@@ -255,7 +275,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
           <ul className='flex w-full mt-9 rounded-2xl'>
             <div
-              className="w-full h-auto max-h-150 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl"
+              className="w-full h-auto max-h-150 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl z-1"
               onScroll={scrollOnList}
             >
               <table className='w-full text-left border-collapse'>
@@ -304,7 +324,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                               <i className="fa-solid fa-trash"></i> Delete
                             </p><hr />
                             <p className='border-white-400 flex gap-2 align-center py-2'
-                            onClick={() => setIsPaying(true)}>
+                              onClick={() => payingModal(member.memberName)}>
                               <i className="fa-regular fa-credit-card"></i> Pay
                             </p>
                           </div>
@@ -313,7 +333,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                       </td>
                       <td className="hidden md:block py-4 px-2 align-middle text-right">
                         <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'
-                          onClick={() => setIsEditMember(true)}>
+                          onClick={() => editModal(member.memberName)}>
                           <i className="fa-regular fa-pen-to-square"></i>
                         </span>
                         <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1'
@@ -321,7 +341,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                           <i className="fa-solid fa-trash"></i>
                         </span>
                         <button className='px-3 py-2 mr-2 transition-transform inline-block hover:-translate-y-1
-                        bg-white text-black text-xs rounded-xl cursor-pointer' onClick={() => setIsPaying(true)}>
+                        bg-white text-black text-xs rounded-xl cursor-pointer' onClick={() => payingModal(member.memberName)}>
                           Pay
                         </button>
                       </td>
@@ -383,10 +403,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
         bg-black/50 h-screen w-screen'>
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
            w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-            <h1 className='text-white text-2xl'>Delete Member?</h1>
-            <hr className='my-2 border-white' />
+            <h1 className='text-white text-2xl mb-4'>Delete Member?</h1>
 
-            <h1 className='text-white text-xl'>Are you sure you want to delete this member and all their history? This cannot be undone.</h1>
+            <h1 className='text-white/90 text-md'>Are you sure you want to delete this member and all their history? This cannot be undone.</h1>
             <div className='flex justify-between align-center gap-4'>
               <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
             hover:bg-white/30' onClick={() => { setIsDeleteMember(false) }}>
@@ -412,20 +431,24 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               <h1 className='text-2xl'>Edit Member</h1>
               <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsEditMember(false)}>&times;</p>
             </div>
-            <div className='flex start align-center w-full text-white mt-10
+            <div className='flex start align-center w-full text-white mt-6
             text-sm'>
               <h3 className='text-white'>Name</h3>
             </div>
 
             <div className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
               <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
-              focus:outline-white text-white' type='text' placeholder='Enter Member Name' id='inputName'
+              focus:outline-white text-white' type='text' value={editMember} onChange={handleInputChangeEdit}
               />
+            </div>
+            <div className='flex start align-center w-full text-white mt-5
+            text-sm'>
+              <h3 className='text-white'>Monthly Contribution</h3>
             </div>
 
             <div className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
               <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
-              focus:outline-white text-white' type='number' placeholder='Monthly Distributions' id='inputName'
+              focus:outline-white text-white' type='number' placeholder='Default'
               />
             </div>
 
@@ -438,8 +461,6 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       }
 
       {isPaying &&
-
-
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
         bg-black/50 h-screen w-screen'>
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
@@ -448,12 +469,138 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               <h1 className='text-2xl'>Record Payment</h1>
               <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsPaying(false)}>&times;</p>
             </div>
-            <hr className='my-2 border-white' />
+
+            <div className='Username w-full bg-white/20 border border-white rounded-2xl mt-3 mb-6'>
+              <h2 className='p-2 text-white'>{payingMember}</h2>
+            </div>
+            <div className='flex justify-between flex-col md:flex-row gap-4 align-center mb-2 text-xs'>
+              <div className='flex flex-col w-full'>
+                <h4 className='text-white/85' >Amount (R) </h4>
+                <input className='border-white mt-1 border rounded-xl p-3 focus:border-white 
+              focus:outline-white text-white' placeholder='R ' type='number' name='payAmount' />
+              </div>
+              <div className='flex flex-col w-full'>
+                <h4 className='text-white/85'>Date </h4>
+                <input
+                  className="border-white mt-1 border rounded-xl p-3 bg-transparent text-white focus:border-white focus:outline-none scheme-dark"
+                  type="date"
+                  name="payDate"
+                />
+              </div>
+            </div>
+            <div className='my-3 text-xs'>
+              <h4 className='text-white/85'>Payment Method</h4>
+              <select className='p-2 border border-white rounded-xl w-full focus:border-white 
+              focus:outline-white text-white mt-1 bg-black/40'>
+                <option>Cash</option>
+                <option>EFT</option>
+                <option>Mobile Money</option>
+                <option>Direct Deposit</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30' onClick={() => { setIsPaying(false) }}>
+              Save
+            </button>
 
           </div>
 
         </div>
+      }
 
+      {isAddSchemeModal &&
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+            <div className='flex justify-between align-center w-full text-white mb-4'>
+              <h1 className='text-2xl'>New Scheme</h1>
+              <p className='font-bold text-2xl cursor-pointer' onClick={() => setAddSchemeModal(false)}>&times;</p>
+            </div>
+
+
+            <div className='mb-2 text-xs'>
+              <h4 className='text-white/85'>Scheme Name</h4>
+              <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+              focus:outline-white text-white' placeholder={`e.g. Social Club ${new Date().getFullYear()}`} type='text' />
+            </div>
+            <div className='mb-2 text-xs'>
+              <h4 className='text-white/85'>Default Monthly Contribution</h4>
+              <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+              focus:outline-white text-white' type='number' placeholder='R 0.00' />
+              <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>This is the default amount you expect from each member every month.</p>
+            </div>
+
+            <div className="mb-3">
+              <label className="block text-xs font-bold uppercase text-white/60 mb-1">
+                Starting Balance (Optional)
+              </label>
+              <div className="flex mb-2">
+                <span className="flex items-center px-3 bg-white/60 border border-r-0 
+                border-gray-300 rounded-l-lg text-white">
+                  <i className="fas fa-coins"></i>
+                </span>
+                <input
+                  type="number"
+                  id="editSchemeStartingBalance"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-r-lg 
+                  text-white focus:outline-none focus:border-white"
+                  placeholder="R 0.00"
+                />
+              </div>
+
+
+              <div className="flex">
+                <span className="flex items-center px-3 bg-white/60 border border-r-0 
+                border-gray-300 rounded-l-lg text-sm text-white">
+                  As Of
+                </span>
+                <select
+                  id="editSchemeSBMonth"
+                  defaultValue={new Date().getMonth()}
+                  className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
+                >
+                  {[
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                  ].map((month, index) => (
+                    <option key={index} value={index} className="text-black">
+                      {month}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  id="editSchemeSBYear"
+                  defaultValue={new Date().getFullYear()}
+                  className="w-25 bg-transparent px-3 py-2 text-white border 
+                  border-l-0 border-white/60 rounded-r-lg text-xs
+                  focus:outline-none focus:border-white scheme-dark"
+                >
+                  {Array.from({ length: 2027 - 2006 + 1 }, (_, index) => 2006 + index).map((year) => (
+                    <option key={year} value={year} className="text-black">
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <small className="block mt-2 text-[9px] text-white/60 leading-normal">
+                If you have existing funds from before using this app, enter the total
+                here and select the month/year it applies to.
+              </small>
+
+              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30' onClick={() => { setAddSchemeModal(false) }}>
+                Save
+              </button>
+
+            </div>
+
+          </div>
+        </div>
       }
 
     </div>
