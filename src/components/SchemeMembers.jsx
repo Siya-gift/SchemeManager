@@ -482,7 +482,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               <div className='flex flex-col w-full'>
                 <h4 className='text-white/85'>Date </h4>
                 <input
-                  className="border-white mt-1 border rounded-xl p-3 bg-transparent text-white focus:border-white focus:outline-none scheme-dark"
+                  className="border-white mt-1 border w-full rounded-xl p-3 bg-transparent text-white focus:border-white focus:outline-none scheme-dark"
                   type="date"
                   name="payDate"
                 />
