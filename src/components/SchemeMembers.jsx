@@ -316,7 +316,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                           after:border-8 after:border-transparent after:border-b-white">
 
                             <p className='border-white-400 flex gap-2 align-center py-2'
-                              onClick={() => setIsEditMember(true)}>
+                              onClick={() => editModal(member.memberName)}>
                               <i className="fa-regular fa-pen-to-square"></i> Edit
                             </p><hr />
                             <p className='border-white-400 flex gap-2 align-center py-2'
