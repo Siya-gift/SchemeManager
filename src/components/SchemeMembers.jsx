@@ -178,8 +178,22 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const handleSchemeDateInputChange = (e) => {
     setNewSchemeDate(e.target.value);
   };
+
+  //Edit
   const handleInputChangeEdit = (e) => {
     setEditMember(e.target.value);
+  };
+  const handleSchemeInputChangeEdit = (e) => {
+    setEditSchemeName(e.target.value);
+  };
+  const handleAmountInputChangeEdit = (e) => {
+    setEditSchemeAmount(e.target.value);
+  };
+  const handleStartingBalInputChangeEdit = (e) => {
+    setEditSchemeStartingBal(e.target.value);
+  };
+  const handleDateInputChangeEdit = (e) => {
+    setEditSchemeDate(e.target.value);
   };
 
   const saveMember = () => {
@@ -282,6 +296,18 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     setPaymentHistoryModal(true)
     setMember(memberName)
   }
+
+  //Payment history Accordion
+  const [openIndex, setOpenIndex] = useState(null);
+  const toggleAccordion = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+  const accordionData = [
+    { year: "2026", content: "Your 2026 history data goes here..." },
+    { year: "2025", content: "Your 2025 history data goes here..." },
+    { year: "2024", content: "Your 2024 history data goes here..." },
+  ];
+  //-------------------------------------------------------------------
 
 
   return (
@@ -593,13 +619,13 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               <h4 className='text-white/85'>Scheme Name</h4>
               <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
               focus:outline-white text-white' required placeholder={`e.g. Social Club ${new Date().getFullYear()}`} type='text'
-                onChange={handleSchemeNameInputChange} value={editSchemeName} />
+                onChange={handleSchemeInputChangeEdit} value={editSchemeName} />
             </div>
             <div className='mb-2 text-xs'>
               <h4 className='text-white/85'>Default Monthly Contribution</h4>
               <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
               focus:outline-white text-white ' required type='number' placeholder='R 0.00'
-                onChange={handleSchemeAmountInputChange} value={editSchemeAmount}
+                onChange={handleAmountInputChangeEdit} value={editSchemeAmount}
               />
               <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
                 This is the default amount you expect from each member every month.</p>
@@ -621,6 +647,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                   text-white focus:outline-none focus:border-white"
                   placeholder="R 0.00"
                   value={editSchemeStartingBal}
+                  onChange={handleStartingBalInputChangeEdit}
                 />
               </div>
 
@@ -632,7 +659,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 </span>
                 <select
                   id="editSchemeSBMonth"
-                  defaultValue={new Date(editSchemeDate).getMonth()}
+                  defaultValue={new Date().getMonth()}
+                  onChange={handleDateInputChangeEdit}
                   className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
                 >
                   {[
@@ -843,7 +871,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 border-gray-300 rounded-l-xl text-white">
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </span>
-                <input className='border w-full border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
+                <input className='border max-w-80 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
               focus:outline-white text-white' type="text" placeholder='Search History...' />
               </div>
               <button className='bg-green-900 text-white text-md hover:bg-green-800 border-none 
@@ -858,31 +886,38 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               </button>
             </div>
 
-            <button className='histAccordian flex justify-between align-center text-white bg-white/40 
-            w-full px-5 py-6 my-3 rounded-xl mb-2'>
-              <h1>
-              <i className="fa-solid fa-calendar-check"></i>
-                <span className='ml-2'>2026</span>
-              </h1>
 
-              <i className="fa-solid fa-chevron-down"></i>
-            </button>
-            <button className='histAccordian flex justify-between align-center text-white bg-white/40 
-            w-full px-5 py-6 my-3 rounded-xl mb-2'>
-              <h1>
-              <i className="fa-solid fa-calendar-check"></i>
-                <span className='ml-2'>2025</span>
-              </h1>
-              <i className="fa-solid fa-chevron-down"></i>
-            </button>
-            <button className='histAccordian flex justify-between align-center text-white bg-white/40 
-            w-full px-5 py-6 my-3 rounded-xl mb-2'>
-              <h1>
-              <i className="fa-solid fa-calendar-check"></i>
-                <span className='ml-2'>2024</span>
-              </h1>
-              <i className="fa-solid fa-chevron-down"></i>
-            </button>
+            <div className="max-h-100 overflow-y-auto pr-2 custom-scrollbar">
+              {accordionData.map((item, index) => {
+                const isOpen = openIndex === index;
+
+                return (
+                  <div key={index} className="mb-2">
+                    
+                    <button
+                      onClick={() => toggleAccordion(index)}
+                      className="histAccordian flex justify-between items-center text-white bg-white/40 
+                      w-full px-5 py-6 my-3 rounded-xl transition-all duration-200 hover:bg-white/50"
+                    >
+                      <h1 className="flex items-center">
+                        <i className="fa-solid fa-calendar-check"></i>
+                        <span className="ml-2 font-semibold">{item.year}</span>
+                      </h1>
+                      <i className={`fa-solid fa-chevron-down transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}></i>
+                    </button>
+
+                    <div className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden 
+                      ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
+                      <div className="overflow-hidden text-white/90 text-sm">
+                        {item.content}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+
 
 
           </div>
