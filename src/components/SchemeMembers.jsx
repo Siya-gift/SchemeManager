@@ -305,7 +305,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const accordionData = [
     { year: "2026", content: "Your 2026 history data goes here..." },
     { year: "2025", content: "Your 2025 history data goes here..." },
-    { year: "2024", content: "Your 2024 history data goes here..." },
+    { year: "2024", content: "Your 2024 history data goes here..." }
   ];
   //-------------------------------------------------------------------
 
@@ -347,7 +347,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
           <ul className='grow min-h-25 max-h-130 overflow-y-auto glass-scroll'>
             {schemes.map((item, idx) => (
               <li key={idx} className='py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
-              my-2 rounded-xl mr-1.5'>
+              my-2 rounded-xl mr-1.5 focus:border-2'>
                 <div className='flex justify-between items-center gap-3'>
                   <div className='flex justify-between flex-col leading-5'>
                     <h3 className='text-md font-bold'>{item.scheme}</h3>
@@ -871,7 +871,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 border-gray-300 rounded-l-xl text-white">
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </span>
-                <input className='border w-full md:max-w-80 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
+                <input className='border w-full md:w-50 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
               focus:outline-white text-white' type="text" placeholder='Search History...' />
               </div>
               <button className='bg-green-900 text-white text-md hover:bg-green-800 border-none 
@@ -887,31 +887,107 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             </div>
 
 
-            <div className="max-h-100 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="max-h-100 overflow-y-auto pr-2 glass-scroll">
               {accordionData.map((item, index) => {
-                const isOpen = openIndex === index;
+                const isOpen = openIndex == index;
 
                 return (
                   <div key={index} className="mb-2">
-                    
+
                     <button
                       onClick={() => toggleAccordion(index)}
                       className="histAccordian flex justify-between items-center text-white bg-white/40 
-                      w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50"
+                      w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50
+                      focus:border cursor-pointer"
                     >
                       <h1 className="flex items-center">
                         <i className="fa-solid fa-calendar-check"></i>
                         <span className="ml-2 font-semibold">{item.year}</span>
                       </h1>
-                      <i className={`fa-solid fa-chevron-down transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}></i>
+                      <div className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}>
+                        <i className='fa-solid fa-chevron-down'></i>
+                      </div>
                     </button>
 
+                    {/* //content */}
                     <div className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden 
-                      ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
+  ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
                       <div className="overflow-hidden text-white/90 text-sm">
-                        {item.content}
+
+                        {/* Desktop Table View (Hidden on mobile) */}
+                        <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                          <table className="min-w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500">
+                            <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700">
+                              <tr>
+                                <th scope="col" className="px-6 py-3">Date</th>
+                                <th scope="col" className="px-6 py-3">Month</th>
+                                <th scope="col" className="px-6 py-3">Amount</th>
+                                <th scope="col" className="px-6 py-3">Details</th>
+                                <th scope="col" className="px-6 py-3">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                              <tr className="hover:bg-gray-50">
+                                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900">2026-04-12</td>
+                                <td className="whitespace-nowrap px-6 py-4">April</td>
+                                <td className="whitespace-nowrap px-6 py-4 text-gray-900 font-semibold">R150.00</td>
+                                <td className="px-6 py-4">
+                                  <i className="fa-solid fa-money-bill-wave mr-2"></i>Cash
+                                </td>
+                                <td className="whitespace-nowrap px-6 py-4">
+                                  <div className="flex gap-3 px-3 py-1 text-xs font-medium text-black-500 transition">
+                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                      <i className="fa-regular fa-pen-to-square"></i>
+                                    </span>
+                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                      <i className="fa-solid fa-trash"></i>
+                                    </span>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        {/* Mobile Block/Card View (Hidden on desktop) */}
+                        <div className="block md:hidden space-y-4">
+                          {/* Card Instance */}
+                          <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-gray-600 space-y-2">
+                            <div className="flex justify-between border-b pb-2">
+                              <span className="font-semibold text-gray-900">2026-04-12</span>
+                              <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Date</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Month:</span>
+                              <span className="text-gray-900 font-medium">April</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Amount:</span>
+                              <span className="text-gray-900 font-bold">R150.00</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Details:</span>
+                              <span className="text-gray-900">
+                                <i className="fa-solid fa-money-bill-wave mr-2"></i>Cash
+                              </span>
+                            </div>
+                            <div className="flex text-center justify-between items-center pt-2 border-t">
+                              <div className="flex gap-2 text-xs font-medium text-black-500">
+                                <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer bg-gray-50 active:bg-gray-100'>
+                                  <i className="fa-regular fa-pen-to-square mr-1"></i> Edit
+                                </span>
+                                <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer bg-gray-50 active:bg-gray-100 text-red-600 border-red-100'>
+                                  <i className="fa-solid fa-trash mr-1"></i> Delete
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
+
+
                   </div>
                 );
               })}
