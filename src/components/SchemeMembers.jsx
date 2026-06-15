@@ -64,7 +64,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
   const [schemes, setSchemes] = useState(() => allSchemes);
   const [newScheme, setNewScheme] = useState("");
-  const [newSchemeAmount, setNewSchemeAmount] = useState(0);
+  const [newSchemeAmount, setNewSchemeAmount] = useState();
 
   const filteredMembers = members.filter((member) =>
     member.memberName.toLowerCase().includes(searchState.toLowerCase())
@@ -178,6 +178,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
   const saveScheme = () => {
     if (!newScheme.trim()) return;
+    if (!newSchemeAmount) return;
 
     const schemeToAdd = {
       scheme: newScheme.trim(),
@@ -557,16 +558,17 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             <div className='mb-2 text-xs'>
               <h4 className='text-white/85'>Scheme Name</h4>
               <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white' placeholder={`e.g. Social Club ${new Date().getFullYear()}`} type='text'
+              focus:outline-white text-white' required placeholder={`e.g. Social Club ${new Date().getFullYear()}`} type='text'
                 onChange={handleSchemeNameInputChange} value={newScheme} />
             </div>
             <div className='mb-2 text-xs'>
               <h4 className='text-white/85'>Default Monthly Contribution</h4>
               <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white' type='number' placeholder='R 0.00' 
+              focus:outline-white text-white ' required type='number' placeholder='R 0.00' 
                 onChange={handleSchemeAmountInputChange} value={newSchemeAmount}
               />
-              <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>This is the default amount you expect from each member every month.</p>
+              <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
+              This is the default amount you expect from each member every month.</p>
             </div>
 
             <div className="mb-3">
