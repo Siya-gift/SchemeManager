@@ -10,61 +10,78 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const [txtListState, setTxtListState] = useState(false);
   const [payingMember, setPayingMember] = useState(null);
   const [editMember, setEditMember] = useState(null);
+  const [editSchemeName, setEditSchemeName] = useState(null);
+  const [editSchemeAmount, setEditSchemeAmount] = useState(null);
+  const [editSchemeStartingBal, setEditSchemeStartingBal] = useState(null);
+  const [editSchemeDate, setEditSchemeDate] = useState(null);
   const [deleteTargetIndex, setDeleteTargetIndex] = useState(null);
+  const [deleteSchemeTargetIndex, setDeleteSchemeTargetIndex] = useState(null);
 
 
   //popups states
   const [isAddMember, setIsAddMember] = useState(false);
   const [isDeleteMember, setIsDeleteMember] = useState(false);
+  const [isDeleteScheme, setIsDeleteScheme] = useState(false);
   const [isEditMember, setIsEditMember] = useState(false);
+  const [isEditScheme, setIsEditScheme] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isAddSchemeModal, setAddSchemeModal] = useState(false);
+  const [isPaymentHistoryModal, setPaymentHistoryModal] = useState(false);
 
 
 
   const allMembers = [
     {
       memberName: "Sam",
-      totPaid: 750.00,
+      totPaid: 500.00,
       status: "Paid"
     },
     {
       memberName: "John",
-      totPaid: 120.00,
-      status: "Paid"
+      totPaid: 1120.00,
+      status: "Ahead"
     },
     {
       memberName: "Vivian",
-      totPaid: 5000.00,
-      status: "Paid"
+      totPaid: 0.00,
+      status: "Arrears"
     },
     {
       memberName: "Paul",
-      totPaid: 4250.00,
+      totPaid: 500.00,
       status: "Paid"
     }
   ]
   const allSchemes = [
     {
       scheme: "clubs",
-      monthlyContribution: 500.00
+      monthlyContribution: 500.00,
+      startingBal: 2000,
+      date: "2020-09-01"
     },
     {
       scheme: "Section 2 Society",
-      monthlyContribution: 2200.00
+      monthlyContribution: 2200.00,
+      startingBal: 2000,
+      date: "2020-09-01"
     },
     {
       scheme: "Billioniare Dream",
-      monthlyContribution: 10050.00
+      monthlyContribution: 10050.00,
+      startingBal: 2000,
+      date: "2020-09-01"
     }
   ]
 
   const [members, setMembers] = useState(() => allMembers);
   const [newMember, setNewMember] = useState("");
+  const [member, setMember] = useState("");
 
   const [schemes, setSchemes] = useState(() => allSchemes);
   const [newScheme, setNewScheme] = useState("");
   const [newSchemeAmount, setNewSchemeAmount] = useState();
+  const [newSchemeStartingBal, setNewSchemeStartingBal] = useState();
+  const [newSchemeDate, setNewSchemeDate] = useState("");
 
   const filteredMembers = members.filter((member) =>
     member.memberName.toLowerCase().includes(searchState.toLowerCase())
@@ -155,7 +172,12 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const handleSchemeAmountInputChange = (e) => {
     setNewSchemeAmount(e.target.value);
   };
-
+  const handleSchemeStartingBalInputChange = (e) => {
+    setNewSchemeStartingBal(e.target.value);
+  };
+  const handleSchemeDateInputChange = (e) => {
+    setNewSchemeDate(e.target.value);
+  };
   const handleInputChangeEdit = (e) => {
     setEditMember(e.target.value);
   };
@@ -182,7 +204,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
     const schemeToAdd = {
       scheme: newScheme.trim(),
-      monthlyContribution: newSchemeAmount
+      monthlyContribution: newSchemeAmount,
+      startingBal: newSchemeStartingBal,
+      date: newSchemeDate
     }
 
     allSchemes.push(schemeToAdd)
@@ -197,12 +221,18 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     setIsDeleteMember(true);
     setDeleteTargetIndex(idx);
   };
+  const deleteSchemeModal = (idx) => {
+    setIsDeleteScheme(true);
+    setDeleteSchemeTargetIndex(idx);
+  };
 
   const getStatusClass = (status) => {
     if (status === "Paid") {
       return "bg-green-100 text-green-800";
-    } else if (status === "Pending") {
+    } else if (status === "Ahead") {
       return "bg-blue-100 text-blue-800";
+    } else if (status === "Pending") {
+      return "bg-amber-100 text-amber-800";
     } else {
       return "bg-red-100 text-red-800";
     }
@@ -217,19 +247,41 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     setDeleteTargetIndex(null);
   };
 
+  const removeScheme = () => {
+    setIsDeleteScheme(false);
+    if (deleteSchemeTargetIndex === null) return;
+
+    const updatedSchemes = schemes.filter((_, index) => index !== deleteSchemeTargetIndex);
+    setSchemes(updatedSchemes);
+    setDeleteTargetIndex(null);
+  };
+
   const payingModal = (memberName) => {
     setIsPaying(true)
     setPayingMember(memberName)
   }
+
   const editModal = (memberName) => {
     setIsEditMember(true)
     setEditMember(memberName)
+  }
+
+  const editSchemeModal = (scheme, monthlyContribution, startingBal, date) => {
+    setIsEditScheme(true)
+    setEditSchemeName(scheme)
+    setEditSchemeAmount(monthlyContribution)
+    setEditSchemeStartingBal(startingBal)
+    setEditSchemeDate(date)
   }
 
   const addSchemeModal = () => {
     setAddSchemeModal(true)
   }
 
+  const paymentHistoryModal = (memberName) => {
+    setPaymentHistoryModal(true)
+    setMember(memberName)
+  }
 
 
   return (
@@ -276,16 +328,23 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                     <p className='text-[11px] text-white/70'>R{item.monthlyContribution}/mo</p>
                   </div>
                   <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1'>
+                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1'
+                      onClick={() => editSchemeModal(item.scheme, item.monthlyContribution, item.startingBal, item.date)}>
                       <i className="fa-regular fa-pen-to-square"></i>
                     </span>
-                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1'>
+                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1'
+                      onClick={() => deleteSchemeModal(idx)}>
                       <i className="fa-solid fa-trash"></i>
                     </span>
                   </div>
                 </div>
               </li>
             ))}
+            {schemes.length === 0 && (
+              <div>
+                <p className="py-10 text-center opacity-50">No scheme found</p>
+              </div>
+            )}
           </ul>
         </div>
 
@@ -325,7 +384,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 <tbody id='membersList'>
                   {filteredMembers.map((member, idx) => (
                     <tr key={idx} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`} id='memberRow'>
-                      <td className="py-4 px-2 align-middle font-medium truncate">
+                      <td className="py-4 px-2 align-middle font-medium truncate hover:text-white/70"
+                        onClick={() => paymentHistoryModal(member.memberName)}
+                        name={"View Payment History"}>
                         {idx + 1}. {member.memberName}
                       </td>
                       <td className="py-4 px-2 align-middle">R {member.totPaid}</td>
@@ -455,6 +516,29 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
         </div>
       }
 
+      {isDeleteScheme &&
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+            <h1 className='text-white text-2xl mb-4'>Delete Scheme?</h1>
+
+            <h1 className='text-white/90 text-md'>This will PERMANENTLY remove this scheme and all associated members and expenses.</h1>
+            <div className='flex justify-between align-center gap-4'>
+              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30' onClick={() => { setIsDeleteScheme(false) }}>
+                No
+              </button>
+              <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
+            hover:bg-red-400' onClick={() => { removeScheme() }}>
+                Yes
+              </button>
+            </div>
+
+          </div>
+        </div>
+      }
+
       {isEditMember &&
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
         bg-black/50 h-screen w-screen'>
@@ -490,6 +574,104 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             hover:bg-white/30'>
               Save
             </button>
+          </div>
+        </div>
+      }
+
+      {isEditScheme &&
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+            <div className='flex justify-between align-center w-full text-white mb-4'>
+              <h1 className='text-2xl'>Edit Scheme</h1>
+              <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsEditScheme(false)}>&times;</p>
+            </div>
+
+
+            <div className='mb-2 text-xs'>
+              <h4 className='text-white/85'>Scheme Name</h4>
+              <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+              focus:outline-white text-white' required placeholder={`e.g. Social Club ${new Date().getFullYear()}`} type='text'
+                onChange={handleSchemeNameInputChange} value={editSchemeName} />
+            </div>
+            <div className='mb-2 text-xs'>
+              <h4 className='text-white/85'>Default Monthly Contribution</h4>
+              <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+              focus:outline-white text-white ' required type='number' placeholder='R 0.00'
+                onChange={handleSchemeAmountInputChange} value={editSchemeAmount}
+              />
+              <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
+                This is the default amount you expect from each member every month.</p>
+            </div>
+
+            <div className="mb-3">
+              <label className="block text-xs font-bold uppercase text-white/60 mb-1">
+                Starting Balance (Optional)
+              </label>
+              <div className="flex mb-2">
+                <span className="flex items-center px-3 bg-white/60 border border-r-0 
+                border-gray-300 rounded-l-lg text-white">
+                  <i className="fas fa-coins"></i>
+                </span>
+                <input
+                  type="number"
+                  id="editSchemeStartingBalance"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-r-lg 
+                  text-white focus:outline-none focus:border-white"
+                  placeholder="R 0.00"
+                  value={editSchemeStartingBal}
+                />
+              </div>
+
+
+              <div className="flex">
+                <span className="flex items-center px-3 bg-white/60 border border-r-0 
+                border-gray-300 rounded-l-lg text-sm text-white">
+                  As Of
+                </span>
+                <select
+                  id="editSchemeSBMonth"
+                  defaultValue={new Date(editSchemeDate).getMonth()}
+                  className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
+                >
+                  {[
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                  ].map((month, index) => (
+                    <option key={index} value={index} className="text-black">
+                      {month}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  id="editSchemeSBYear"
+                  defaultValue={new Date().getFullYear()}
+                  className="w-25 bg-transparent px-3 py-2 text-white border 
+                  border-l-0 border-white/60 rounded-r-lg text-xs
+                  focus:outline-none focus:border-white scheme-dark"
+                >
+                  {Array.from({ length: 2027 - 2006 + 1 }, (_, index) => 2006 + index).map((year) => (
+                    <option key={year} value={year} className="text-black">
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <small className="block mt-2 text-[9px] text-white/60 leading-normal">
+                If you have existing funds from before using this app, enter the total
+                here and select the month/year it applies to.
+              </small>
+
+              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30' onClick={() => { setIsEditScheme(false) }}>
+                Save Scheme
+              </button>
+
+            </div>
+
           </div>
         </div>
       }
@@ -564,11 +746,11 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             <div className='mb-2 text-xs'>
               <h4 className='text-white/85'>Default Monthly Contribution</h4>
               <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white ' required type='number' placeholder='R 0.00' 
+              focus:outline-white text-white ' required type='number' placeholder='R 0.00'
                 onChange={handleSchemeAmountInputChange} value={newSchemeAmount}
               />
               <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
-              This is the default amount you expect from each member every month.</p>
+                This is the default amount you expect from each member every month.</p>
             </div>
 
             <div className="mb-3">
@@ -586,6 +768,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                   className="w-full px-4 py-2 border border-gray-300 rounded-r-lg 
                   text-white focus:outline-none focus:border-white"
                   placeholder="R 0.00"
+                  onChange={handleSchemeStartingBalInputChange}
+                  value={newSchemeStartingBal}
                 />
               </div>
 
@@ -598,6 +782,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 <select
                   id="editSchemeSBMonth"
                   defaultValue={new Date().getMonth()}
+                  onChange={handleSchemeDateInputChange}
+                  value={newSchemeDate}
                   className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
                 >
                   {[
@@ -636,6 +822,68 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               </button>
 
             </div>
+
+          </div>
+        </div>
+      }
+
+      {isPaymentHistoryModal &&
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+            <div className='flex justify-between align-center w-full text-white mb-4'>
+              <h1 className='text-2xl'>{member}</h1>
+              <p className='font-bold text-2xl cursor-pointer' onClick={() => setPaymentHistoryModal(false)}>&times;</p>
+            </div>
+
+            <div className='flex w-full gap-3 flex-col md:flex-row pb-4'>
+              <div className="flex align-center justify-around w-full">
+                <span className="flex items-center px-3 bg-white/60 border border-r-0 
+                border-gray-300 rounded-l-xl text-white">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input className='border border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
+              focus:outline-white text-white' type="text" placeholder='Search History...' />
+              </div>
+              <button className='bg-green-900 text-white text-md hover:bg-green-800 border-none 
+              outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full'>
+                <i className="fa-solid fa-file-csv"></i>
+                <span className='ml-2'>CSV</span>
+              </button>
+              <button className='bg-red-900 text-white text-md hover:bg-red-800 border-none 
+              outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full'>
+                <i className="fa-solid fa-file-csv"></i>
+                <span className='ml-2'>PDF Statement</span>
+              </button>
+            </div>
+
+            <button className='histAccordian flex justify-between align-center text-white bg-white/40 
+            w-full px-5 py-6 my-3 rounded-xl mb-2'>
+              <h1>
+              <i className="fa-solid fa-calendar-check"></i>
+                <span className='ml-2'>2026</span>
+              </h1>
+
+              <i className="fa-solid fa-chevron-down"></i>
+            </button>
+            <button className='histAccordian flex justify-between align-center text-white bg-white/40 
+            w-full px-5 py-6 my-3 rounded-xl mb-2'>
+              <h1>
+              <i className="fa-solid fa-calendar-check"></i>
+                <span className='ml-2'>2025</span>
+              </h1>
+              <i className="fa-solid fa-chevron-down"></i>
+            </button>
+            <button className='histAccordian flex justify-between align-center text-white bg-white/40 
+            w-full px-5 py-6 my-3 rounded-xl mb-2'>
+              <h1>
+              <i className="fa-solid fa-calendar-check"></i>
+                <span className='ml-2'>2024</span>
+              </h1>
+              <i className="fa-solid fa-chevron-down"></i>
+            </button>
+
 
           </div>
         </div>
