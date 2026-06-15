@@ -871,7 +871,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 border-gray-300 rounded-l-xl text-white">
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </span>
-                <input className='border max-w-80 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
+                <input className='border sm:w-full max-w-80 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
               focus:outline-white text-white' type="text" placeholder='Search History...' />
               </div>
               <button className='bg-green-900 text-white text-md hover:bg-green-800 border-none 
@@ -897,7 +897,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                     <button
                       onClick={() => toggleAccordion(index)}
                       className="histAccordian flex justify-between items-center text-white bg-white/40 
-                      w-full px-5 py-6 my-3 rounded-xl transition-all duration-200 hover:bg-white/50"
+                      w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50"
                     >
                       <h1 className="flex items-center">
                         <i className="fa-solid fa-calendar-check"></i>
