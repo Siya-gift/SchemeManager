@@ -871,7 +871,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 border-gray-300 rounded-l-xl text-white">
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </span>
-                <input className='border sm:w-full max-w-80 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
+                <input className='border w-full md:max-w-80 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
               focus:outline-white text-white' type="text" placeholder='Search History...' />
               </div>
               <button className='bg-green-900 text-white text-md hover:bg-green-800 border-none 
