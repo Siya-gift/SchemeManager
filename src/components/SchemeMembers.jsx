@@ -10,6 +10,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const [txtListState, setTxtListState] = useState(false);
   const [payingMember, setPayingMember] = useState(null);
   const [editMember, setEditMember] = useState(null);
+  const [deleteTargetIndex, setDeleteTargetIndex] = useState(null);
 
 
   //popups states
@@ -43,10 +44,27 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       status: "Paid"
     }
   ]
+  const allSchemes = [
+    {
+      scheme: "clubs",
+      monthlyContribution: 500.00
+    },
+    {
+      scheme: "Section 2 Society",
+      monthlyContribution: 2200.00
+    },
+    {
+      scheme: "Billioniare Dream",
+      monthlyContribution: 10050.00
+    }
+  ]
 
   const [members, setMembers] = useState(() => allMembers);
   const [newMember, setNewMember] = useState("");
 
+  const [schemes, setSchemes] = useState(() => allSchemes);
+  const [newScheme, setNewScheme] = useState("");
+  const [newSchemeAmount, setNewSchemeAmount] = useState(0);
 
   const filteredMembers = members.filter((member) =>
     member.memberName.toLowerCase().includes(searchState.toLowerCase())
@@ -55,7 +73,6 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const searchFunc = (e) => {
     setSearchState(e.target.value);
   };
-
 
   const scrollOnList = (event) => {
     const position = event.currentTarget.scrollTop;
@@ -99,7 +116,6 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     };
   }, [isAddMember]);
 
-
   const addMore = () => {
     window.removeEventListener('wheel', preventScroll);
     window.removeEventListener('touchmove', preventScroll);
@@ -130,10 +146,16 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     }
   }
 
-
   const handleInputChange = (e) => {
     setNewMember(e.target.value);
   };
+  const handleSchemeNameInputChange = (e) => {
+    setNewScheme(e.target.value);
+  };
+  const handleSchemeAmountInputChange = (e) => {
+    setNewSchemeAmount(e.target.value);
+  };
+
   const handleInputChangeEdit = (e) => {
     setEditMember(e.target.value);
   };
@@ -154,7 +176,21 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     setIsAddMember(false);
   };
 
-  const [deleteTargetIndex, setDeleteTargetIndex] = useState(null);
+  const saveScheme = () => {
+    if (!newScheme.trim()) return;
+
+    const schemeToAdd = {
+      scheme: newScheme.trim(),
+      monthlyContribution: newSchemeAmount
+    }
+
+    allSchemes.push(schemeToAdd)
+
+    setSchemes((prev) => [...prev, schemeToAdd]);
+    setNewScheme("");
+    setNewSchemeAmount("");
+    setAddSchemeModal(false);
+  }
 
   const deleteMember = (idx) => {
     setIsDeleteMember(true);
@@ -230,17 +266,13 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
           </div>
 
           <ul className='grow min-h-25 max-h-130 overflow-y-auto glass-scroll'>
-            {[
-              { scheme: "clubs" },
-              { scheme: "Cool" }
-
-            ].map((item, idx) => (
+            {schemes.map((item, idx) => (
               <li key={idx} className='py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
               my-2 rounded-xl mr-1.5'>
-                <div className='flex justify-between items-center'>
-                  <div className='flex justify-between flex-col max-w-[20%]'>
+                <div className='flex justify-between items-center gap-3'>
+                  <div className='flex justify-between flex-col leading-5'>
                     <h3 className='text-md font-bold'>{item.scheme}</h3>
-                    <p className='text-[11px] text-white/70'>R500/mo</p>
+                    <p className='text-[11px] text-white/70'>R{item.monthlyContribution}/mo</p>
                   </div>
                   <div className='flex gap-3 flex-end text-[11px] transition-transform'>
                     <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1'>
@@ -255,6 +287,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             ))}
           </ul>
         </div>
+
         <div className='glass p-6 text-white flex flex-col min-h-svh md:col-span-2'>
           <div className='flex items-left flex-col gap-y-3'>
             <h1 className='font-bold text-xl'>Members of club now</h1>
@@ -524,12 +557,15 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             <div className='mb-2 text-xs'>
               <h4 className='text-white/85'>Scheme Name</h4>
               <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white' placeholder={`e.g. Social Club ${new Date().getFullYear()}`} type='text' />
+              focus:outline-white text-white' placeholder={`e.g. Social Club ${new Date().getFullYear()}`} type='text'
+                onChange={handleSchemeNameInputChange} value={newScheme} />
             </div>
             <div className='mb-2 text-xs'>
               <h4 className='text-white/85'>Default Monthly Contribution</h4>
               <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white' type='number' placeholder='R 0.00' />
+              focus:outline-white text-white' type='number' placeholder='R 0.00' 
+                onChange={handleSchemeAmountInputChange} value={newSchemeAmount}
+              />
               <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>This is the default amount you expect from each member every month.</p>
             </div>
 
@@ -593,7 +629,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               </small>
 
               <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30' onClick={() => { setAddSchemeModal(false) }}>
+            hover:bg-white/30' onClick={() => { saveScheme() }}>
                 Save
               </button>
 
