@@ -897,8 +897,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                 else {
                   return item.year.toLowerCase().includes(searchHistory) ||
                     item.date.toLowerCase().includes(searchHistory) ||
-                    monthName.includes(searchHistory) ||
                     item.amount.toString().toLowerCase().replace(/[\s,.]/g, '').includes(searchHistory.toLowerCase()) ||
+                    monthName.includes(searchHistory) ||
                     item.details.toLowerCase().includes(searchHistory)
                 }
               }).map((item, index) => {
@@ -971,7 +971,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                             </div>
                             <div className="flex justify-between">
                               <span>Month:</span>
-                              <span className="text-gray-900 font-medium">{new Date(item.date).toLocaleString('default', { month: 'long' })}</span>
+                              <span className="text-gray-900 font-medium">{new Date(item.date).toLocaleString("default", { month: "long" })}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Amount:</span>
