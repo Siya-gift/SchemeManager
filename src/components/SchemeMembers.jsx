@@ -890,11 +890,11 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
             <div className="max-h-100 overflow-y-auto pr-2 glass-scroll">
               {accordionData.filter((item) => {
+                const monthName = item.date ? new Date(item.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
                 if (searchHistory.toLowerCase() === "") {
                   return item
                 }
                 else {
-                  const monthName = item.date ? new Date(item.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
                   return item.year.toLowerCase().includes(searchHistory) ||
                     item.date.toLowerCase().includes(searchHistory) ||
                     monthName.includes(searchHistory) ||
