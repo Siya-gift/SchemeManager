@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 function SchemeMembers({ toggleState, toggleMobileState, openCalender, formattedDate }) {
 
   const [searchState, setSearchState] = useState("");
+  const [schemeSelectedState, setSchemeSelectedState] = useState(null);
   const [isDotMenu, setisDotMenu] = useState(false);
   const [activeMenuIdx, setActiveMenuIdx] = useState(null);
   const [isDotMenuState, setisDotMenuState] = useState("hidden");
@@ -300,6 +301,10 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     setMember(memberName)
   }
 
+  const schemeSelected = (idx) => {
+    setSchemeSelectedState(idx)
+  }
+
   //Payment history Accordion
   //first payment should be january and if not it'll create empty properties
   //with no values, this is to ensure the accordion always has something to 
@@ -400,8 +405,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
           <ul className='grow min-h-25 max-h-130 overflow-y-auto glass-scroll'>
             {schemes.map((item, idx) => (
-              <li key={idx} className='py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
-              my-2 rounded-xl mr-1.5 focus:border-2'>
+              <li key={idx} className={`py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
+              my-2 rounded-xl mr-1.5 ${schemeSelectedState === idx ? "border-3 border-white-500" : ""}`} 
+              onClick={() => schemeSelected(idx)}>
                 <div className='flex justify-between items-center gap-3'>
                   <div className='flex justify-between flex-col leading-5'>
                     <h3 className='text-md font-bold'>{item.scheme}</h3>
