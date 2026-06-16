@@ -25,7 +25,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const [isDeleteScheme, setIsDeleteScheme] = useState(false);
   const [isEditMember, setIsEditMember] = useState(false);
   const [isEditScheme, setIsEditScheme] = useState(false);
+  const [isDeletePaymentHist, setIsDeletePaymentHist] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
+  const [isEditPaymentHist, setIsEditPaymentHist] = useState(false);
   const [isAddSchemeModal, setAddSchemeModal] = useState(false);
   const [isPaymentHistoryModal, setPaymentHistoryModal] = useState(false);
 
@@ -616,6 +618,28 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
           </div>
         </div>
       }
+      {isDeletePaymentHist &&
+        <div className='fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen z-100'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+            <h1 className='text-white text-2xl mb-4'>Remove Payment?</h1>
+
+            <h1 className='text-white/90 text-md'>Are you sure you want to remove this payment record?</h1>
+            <div className='flex justify-between align-center gap-4'>
+              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30' onClick={() => { setIsDeletePaymentHist(false) }}>
+                No
+              </button>
+              <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
+            hover:bg-red-400' onClick={() => { removePaymentHistory() }}>
+                Yes
+              </button>
+            </div>
+
+          </div>
+        </div>
+      }
 
       {isEditMember &&
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
@@ -756,6 +780,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
         </div>
       }
 
+
       {isPaying &&
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
         bg-black/50 h-screen w-screen'>
@@ -805,7 +830,55 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
         </div>
       }
+      {isEditPaymentHist &&
+        <div className='fixed z-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+            <div className='flex justify-between align-center w-full text-white'>
+              <h1 className='text-2xl'>Record Payment</h1>
+              <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsEditPaymentHist(false)}>&times;</p>
+            </div>
 
+            <div className='Username w-full bg-white/20 border border-white rounded-2xl mt-3 mb-6'>
+              <h2 className='p-2 text-white'>Sam</h2>
+            </div>
+            <div className='flex justify-between flex-col md:flex-row gap-4 align-center mb-2 text-xs'>
+              <div className='flex flex-col w-full'>
+                <h4 className='text-white/85' >Amount (R) </h4>
+                <input className='border-white mt-1 border rounded-xl p-3 focus:border-white 
+              focus:outline-white text-white' placeholder='R ' type='number' name='payAmount' />
+              </div>
+              <div className='flex flex-col w-full'>
+                <h4 className='text-white/85'>Date </h4>
+                <input
+                  className="border-white mt-1 border w-full rounded-xl p-3 bg-transparent text-white focus:border-white focus:outline-none scheme-dark"
+                  type="date"
+                  name="payDate"
+                />
+              </div>
+            </div>
+            <div className='my-3 text-xs'>
+              <h4 className='text-white/85'>Payment Method</h4>
+              <select className='p-2 border border-white rounded-xl w-full focus:border-white 
+              focus:outline-white text-white mt-1 bg-black/40'>
+                <option>Cash</option>
+                <option>EFT</option>
+                <option>Mobile Money</option>
+                <option>Direct Deposit</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30' onClick={() => { setIsEditPaymentHist(false) }}>
+              Save
+            </button>
+
+          </div>
+
+        </div>
+      }
       {isAddSchemeModal &&
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
         bg-black/50 h-screen w-screen'>
@@ -1013,10 +1086,12 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                                       </td>
                                       <td className="whitespace-nowrap px-6 py-4">
                                         <div className="flex gap-3 px-3 py-1 text-xs font-medium text-black-500 transition">
-                                          <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                          <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'
+                                            onClick={() => setIsEditPaymentHist(true)}>
                                             <i className="fa-regular fa-pen-to-square"></i>
                                           </span>
-                                          <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                          <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'
+                                            onClick={() => setIsDeletePaymentHist(true)}>
                                             <i className="fa-solid fa-trash"></i>
                                           </span>
                                         </div>
@@ -1070,10 +1145,12 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                                       </div>
                                       <div className="flex text-center justify-between items-center pt-2 border-t">
                                         <div className="flex gap-2 text-xs font-medium text-black-500">
-                                          <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer bg-gray-50 active:bg-gray-100'>
+                                          <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer 
+                                          bg-gray-50 active:bg-gray-100' onClick={() => setIsEditPaymentHist(true)}>
                                             <i className="fa-regular fa-pen-to-square mr-1"></i> Edit
                                           </span>
-                                          <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer bg-gray-50 active:bg-gray-100 text-red-600 border-red-100'>
+                                          <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer 
+                                          bg-gray-50 active:bg-gray-100 text-red-600 border-red-100' onClick={() => setIsDeletePaymentHist(true)}>
                                             <i className="fa-solid fa-trash mr-1"></i> Delete
                                           </span>
                                         </div>
