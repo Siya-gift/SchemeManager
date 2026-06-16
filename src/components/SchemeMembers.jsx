@@ -299,14 +299,65 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   }
 
   //Payment history Accordion
+  //first payment should be january and if not it'll create empty properties
+  //with no values, this is to ensure the accordion always has something to 
+  // map through and display even if no payments have been made in that year
   const [openIndex, setOpenIndex] = useState(null);
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
   const accordionData = [
-    { year: "2026", date: "2026-04-26", amount: "8 000.00", details: "Cash" },
-    { year: "2025", date: "2025-12-02", amount: "10 000.00", details: "EFT" },
-    { year: "2024", date: "2024-08-15", amount: "20 500.00", details: "Other" }
+    {
+      year: "2026",
+      yearHistory: [
+        {
+          date: "2026-01-26",
+          amount: "8 000.00",
+          details: "Cash"
+        },
+        {
+          date: "2026-02-26",
+          amount: "10 000.00",
+          details: "Other"
+        },
+        {
+          date: "2026-03-26",
+          amount: "7 500.00",
+          details: "Cash"
+        }
+      ]
+    },
+    {
+      year: "2025",
+      yearHistory: [
+        {
+          date: "2025-11-20",
+          amount: "10 000.10",
+          details: "EFT"
+        },
+        {
+          date: "2025-12-15",
+          amount: "9 999.50",
+          details: "EFT"
+        },
+      ]
+    },
+    {
+      year: "2024",
+      yearHistory: [{
+        date: "2024-08-15",
+        amount: "20 500.00",
+        details: "Other"
+      }]
+    },
+    {
+      year: "2023",
+      yearHistory: [{
+        date: "",
+        amount: "",
+        details: ""
+      }]
+    }
   ];
   //-------------------------------------------------------------------
 
@@ -887,124 +938,165 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               </button>
             </div>
 
-
             <div className="max-h-100 overflow-y-auto pr-2 glass-scroll">
               {accordionData.filter((item) => {
-                const monthName = item.date ? new Date(item.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
-                if (searchHistory.toLowerCase() === "") {
-                  return item
-                }
-                else {
-                  const query = searchHistory.toLowerCase();
+                const query = searchHistory.toLowerCase().trim();
 
-                  return item.year.toLowerCase().includes(query) ||
-                    item.date.toLowerCase().includes(query) ||
-                    item.amount.toString().toLowerCase().replace(/[\s,.]/g, '').includes(query) ||
+                if (query === "") {
+                  return true;
+                }
+                const yearMatches = item.year.toLowerCase().includes(query);
+
+                const historyMatches = item.yearHistory.some((history) => {
+
+                  const monthName = history.date ? new Date(history.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
+                  const cleanAmount = history.amount ? history.amount.toString().replace(/[\s,.]/g, '') : "";
+
+                  return (
+                    (history.date && history.date.toLowerCase().includes(query)) ||
+                    cleanAmount.includes(query) ||
                     monthName.includes(query) ||
-                    item.details.toLowerCase().includes(query);
-                }
-              }).map((item, index) => {
-                const isOpen = openIndex == index;
-
-                return (
-                  <div key={index} className="mb-2">
-
-                    <button
-                      onClick={() => toggleAccordion(index)}
-                      className="histAccordian flex justify-between items-center text-white bg-white/40 
+                    (history.details && history.details.toLowerCase().includes(query))
+                  );
+                });
+                return yearMatches || historyMatches;
+              })
+                .map((item, index) => {
+                  const isOpen = openIndex == index;
+                  return (
+                    <div key={index} className="mb-2">
+                      <button
+                        onClick={() => toggleAccordion(index)}
+                        className="histAccordian flex justify-between items-center text-white bg-white/40 
                       w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50
-                      focus:border cursor-pointer"
-                    >
-                      <h1 className="flex items-center">
-                        <i className="fa-solid fa-calendar-check"></i>
-                        <span className="ml-2 font-semibold">{item.year}</span>
-                      </h1>
-                      <div className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}>
-                        <i className='fa-solid fa-chevron-down'></i>
-                      </div>
-                    </button>
-
-                    {/* //content */}
-                    <div className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden 
-                    ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
-                      <div className="overflow-hidden text-white/90 text-sm">
-
-                        {/* Desktop Table View (Hidden on mobile) */}
-                        <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-                          <table className="min-w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500">
-                            <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700">
-                              <tr>
-                                <th scope="col" className="px-6 py-3">Date</th>
-                                <th scope="col" className="px-6 py-3">Month</th>
-                                <th scope="col" className="px-6 py-3">Amount</th>
-                                <th scope="col" className="px-6 py-3">Details</th>
-                                <th scope="col" className="px-6 py-3">Action</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                              <tr className="hover:bg-gray-50">
-                                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900">{item.date}</td>
-                                <td className="whitespace-nowrap px-6 py-4">{new Date(item.date).toLocaleString("default", { month: "long" })}</td>
-                                <td className="whitespace-nowrap px-6 py-4 text-gray-900 font-semibold">R{item.amount}</td>
-                                <td className="px-6 py-4">
-                                  <i className="fa-solid fa-money-bill-wave mr-2"></i>{item.details}
-                                </td>
-                                <td className="whitespace-nowrap px-6 py-4">
-                                  <div className="flex gap-3 px-3 py-1 text-xs font-medium text-black-500 transition">
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                      <i className="fa-regular fa-pen-to-square"></i>
-                                    </span>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                      <i className="fa-solid fa-trash"></i>
-                                    </span>
-                                  </div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                      focus:border cursor-pointer">
+                        <h1 className="flex items-center">
+                          <i className="fa-solid fa-calendar-check"></i>
+                          <span className="ml-2 font-semibold">{item.year}</span>
+                        </h1>
+                        <div className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}>
+                          <i className='fa-solid fa-chevron-down'></i>
                         </div>
+                      </button>
 
-                        {/* Mobile Block/Card View (Hidden on desktop) */}
-                        <div className="block md:hidden space-y-4">
-                          <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-gray-600 space-y-2">
-                            <div className="flex justify-between border-b pb-2">
-                              <span className="font-semibold text-gray-900">{item.date}</span>
-                              <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Date</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>Month:</span>
-                              <span className="text-gray-900 font-medium">{new Date(item.date).toLocaleString("default", { month: "long" })}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>Amount:</span>
-                              <span className="text-gray-900 font-bold">R{item.amount}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>Details:</span>
-                              <span className="text-gray-900">
-                                <i className="fa-solid fa-money-bill-wave mr-2"></i>{item.details}
-                              </span>
-                            </div>
-                            <div className="flex text-center justify-between items-center pt-2 border-t">
-                              <div className="flex gap-2 text-xs font-medium text-black-500">
-                                <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer bg-gray-50 active:bg-gray-100'>
-                                  <i className="fa-regular fa-pen-to-square mr-1"></i> Edit
-                                </span>
-                                <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer bg-gray-50 active:bg-gray-100 text-red-600 border-red-100'>
-                                  <i className="fa-solid fa-trash mr-1"></i> Delete
-                                </span>
-                              </div>
-                            </div>
+                      {/* //content */}
+                      <div className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden 
+                      ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
+                        <div className="overflow-hidden text-white/90 text-sm">
+
+                          {/* Desktop Table View (Hidden on mobile) */}
+                          <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                            <table className="min-w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500">
+                              <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700">
+                                <tr>
+                                  <th scope="col" className="px-6 py-3">Date</th>
+                                  <th scope="col" className="px-6 py-3">Month</th>
+                                  <th scope="col" className="px-6 py-3">Amount</th>
+                                  <th scope="col" className="px-6 py-3">Details</th>
+                                  <th scope="col" className="px-6 py-3">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-gray-200">
+                                {!(item.yearHistory.length === 1 && !item.yearHistory[0].date && !item.yearHistory[0].amount) &&
+                                  item.yearHistory.map((historyItem, index) => (
+                                    <tr className="hover:bg-gray-50" key={index}>
+                                      <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900">{historyItem.date}</td>
+                                      <td className="whitespace-nowrap px-6 py-4">
+                                        {historyItem.date ? new Date(historyItem.date).toLocaleString("default", { month: "long" }) : "-"}
+                                      </td>
+                                      <td className="whitespace-nowrap px-6 py-4 text-gray-900 font-semibold">
+                                        {historyItem.amount ? `R${historyItem.amount}` : "-"}
+                                      </td>
+                                      <td className="px-6 py-4">
+                                        {historyItem.details && <i className="fa-solid fa-money-bill-wave mr-2"></i>}
+                                        {historyItem.details || "-"}
+                                      </td>
+                                      <td className="whitespace-nowrap px-6 py-4">
+                                        <div className="flex gap-3 px-3 py-1 text-xs font-medium text-black-500 transition">
+                                          <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                            <i className="fa-regular fa-pen-to-square"></i>
+                                          </span>
+                                          <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                            <i className="fa-solid fa-trash"></i>
+                                          </span>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  ))
+                                }
+
+                                {(item.yearHistory.length === 0 ||
+                                  (item.yearHistory.length === 1 && !item.yearHistory[0].date && !item.yearHistory[0].amount)) && (
+                                    <tr>
+                                      <td colSpan={5} className="py-10 text-center opacity-50">
+                                        No History found
+                                      </td>
+                                    </tr>
+                                  )}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* Mobile Block/Card View (Hidden on desktop) */}
+                          <div className="block md:hidden space-y-4">
+                            {!(item.yearHistory.length === 1 && !item.yearHistory[0].date && !item.yearHistory[0].amount) &&
+                              item.yearHistory.map((historyItem, index) => (
+                                <ul key={index} className="space-y-4">
+                                  <li>
+                                    <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-gray-600 space-y-2">
+
+                                      <div className="flex justify-between border-b pb-2">
+                                        <span className="font-semibold text-gray-900">{historyItem.date || "-"}</span>
+                                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Date</span>
+                                      </div>
+                                      <div className="flex justify-between">
+                                        <span>Month:</span>
+                                        <span className="text-gray-900 font-medium">
+                                          {historyItem.date ? new Date(historyItem.date).toLocaleString("default", { month: "long" }) : "-"}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between">
+                                        <span>Amount:</span>
+                                        <span className="text-gray-900 font-bold">
+                                          {historyItem.amount ? `R${historyItem.amount}` : "-"}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between">
+                                        <span>Details:</span>
+                                        <span className="text-gray-900">
+                                          {historyItem.details && <i className="fa-solid fa-money-bill-wave mr-2"></i>}
+                                          {historyItem.details || "-"}
+                                        </span>
+                                      </div>
+                                      <div className="flex text-center justify-between items-center pt-2 border-t">
+                                        <div className="flex gap-2 text-xs font-medium text-black-500">
+                                          <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer bg-gray-50 active:bg-gray-100'>
+                                            <i className="fa-regular fa-pen-to-square mr-1"></i> Edit
+                                          </span>
+                                          <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer bg-gray-50 active:bg-gray-100 text-red-600 border-red-100'>
+                                            <i className="fa-solid fa-trash mr-1"></i> Delete
+                                          </span>
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                  </li>
+                                </ul>
+                              ))
+                            }
+                            {(item.yearHistory.length === 0 ||
+                              (item.yearHistory.length === 1 && !item.yearHistory[0].date && !item.yearHistory[0].amount)) && (
+                                <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+                                  <p className="py-10 text-center opacity-50 text-gray-600">No History found</p>
+                                </div>
+                              )}
+
                           </div>
                         </div>
-
                       </div>
                     </div>
-
-
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
 
 
