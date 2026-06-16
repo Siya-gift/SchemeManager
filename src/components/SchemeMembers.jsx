@@ -901,8 +901,6 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                     item.amount.toString().toLowerCase().replace(/[\s,.]/g, '').includes(searchHistory.toLowerCase()) ||
                     item.details.toLowerCase().includes(searchHistory)
                 }
-
-
               }).map((item, index) => {
                 const isOpen = openIndex == index;
 
