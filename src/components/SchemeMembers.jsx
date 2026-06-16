@@ -890,16 +890,18 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
             <div className="max-h-100 overflow-y-auto pr-2 glass-scroll">
               {accordionData.filter((item) => {
-                const monthName = item.date ? new Date(item.date).toLocaleString("default", { month: "long" }) : "";
+                const monthName = item.date ? new Date(item.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
                 if (searchHistory.toLowerCase() === "") {
                   return item
                 }
                 else {
-                  return item.year.toLowerCase().includes(searchHistory) ||
-                    item.date.toLowerCase().includes(searchHistory) ||
-                    item.amount.toString().toLowerCase().replace(/[\s,.]/g, '').includes(searchHistory.toLowerCase()) ||
-                    monthName.toString().toLowerCase().includes(searchHistory) ||
-                    item.details.toLowerCase().includes(searchHistory)
+                  const query = searchHistory.toLowerCase();
+
+                  return item.year.toLowerCase().includes(query) ||
+                    item.date.toLowerCase().includes(query) ||
+                    item.amount.toString().toLowerCase().replace(/[\s,.]/g, '').includes(query) ||
+                    monthName.includes(query) ||
+                    item.details.toLowerCase().includes(query);
                 }
               }).map((item, index) => {
                 const isOpen = openIndex == index;
@@ -971,7 +973,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                             </div>
                             <div className="flex justify-between">
                               <span>Month:</span>
-                              <p className="text-gray-900 font-medium">{new Date(item.date).toLocaleString("default", { month: "long" })}</p>
+                              <span className="text-gray-900 font-medium">{new Date(item.date).toLocaleString("default", { month: "long" })}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Amount:</span>
