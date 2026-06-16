@@ -971,7 +971,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                             </div>
                             <div className="flex justify-between">
                               <span>Month:</span>
-                              <span className="text-gray-900 font-medium">{new Date(item.date).toLocaleString("default", { month: "long" })}</span>
+                              <span className="text-gray-900 font-medium">{monthName}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Amount:</span>
