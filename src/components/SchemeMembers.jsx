@@ -7,6 +7,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const [activeMenuIdx, setActiveMenuIdx] = useState(null);
   const [isDotMenuState, setisDotMenuState] = useState("hidden");
   const [searchList, setsearchList] = useState("");
+  const [searchHistory, setSearchHistory] = useState("");
   const [txtListState, setTxtListState] = useState(false);
   const [payingMember, setPayingMember] = useState(null);
   const [editMember, setEditMember] = useState(null);
@@ -303,9 +304,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     setOpenIndex(openIndex === index ? null : index);
   };
   const accordionData = [
-    { year: "2026", content: "Your 2026 history data goes here..." },
-    { year: "2025", content: "Your 2025 history data goes here..." },
-    { year: "2024", content: "Your 2024 history data goes here..." }
+    { year: "2026", date: "2026-04-26", amount: "8 000.00", details: "Cash" },
+    { year: "2025", date: "2025-12-02", amount: "10 000.00", details: "EFT" },
+    { year: "2024", date: "2024-08-15", amount: "20 500.00", details: "Other" }
   ];
   //-------------------------------------------------------------------
 
@@ -872,7 +873,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </span>
                 <input className='border w-full md:w-50 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0
-              focus:outline-white text-white' type="text" placeholder='Search History...' />
+              focus:outline-white text-white' type="text" placeholder='Search History...' onChange={(e) => setSearchHistory(e.target.value)} />
               </div>
               <button className='bg-green-900 text-white text-md hover:bg-green-800 border-none 
               outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full'>
@@ -881,14 +882,28 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
               </button>
               <button className='bg-red-900 text-white text-md hover:bg-red-800 border-none 
               outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full'>
-                <i className="fa-solid fa-file-csv"></i>
+                <i className="fa-solid fa-file-pdf"></i>
                 <span className='ml-2'>PDF Statement</span>
               </button>
             </div>
 
 
             <div className="max-h-100 overflow-y-auto pr-2 glass-scroll">
-              {accordionData.map((item, index) => {
+              {accordionData.filter((item) => {
+                if (searchHistory.toLowerCase() === "") {
+                  return item
+                }
+                else {
+                  const monthName = item.date ? new Date(item.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
+                  return item.year.toLowerCase().includes(searchHistory) ||
+                    item.date.toLowerCase().includes(searchHistory) ||
+                    monthName.includes(searchHistory) ||
+                    item.amount.toString().toLowerCase().replace(/[\s,.]/g, '').includes(searchHistory.toLowerCase()) ||
+                    item.details.toLowerCase().includes(searchHistory)
+                }
+
+
+              }).map((item, index) => {
                 const isOpen = openIndex == index;
 
                 return (
@@ -911,7 +926,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
                     {/* //content */}
                     <div className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden 
-  ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
+                    ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
                       <div className="overflow-hidden text-white/90 text-sm">
 
                         {/* Desktop Table View (Hidden on mobile) */}
@@ -928,11 +943,11 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                             </thead>
                             <tbody className="divide-y divide-gray-200">
                               <tr className="hover:bg-gray-50">
-                                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900">2026-04-12</td>
-                                <td className="whitespace-nowrap px-6 py-4">April</td>
-                                <td className="whitespace-nowrap px-6 py-4 text-gray-900 font-semibold">R150.00</td>
+                                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900">{item.date}</td>
+                                <td className="whitespace-nowrap px-6 py-4">{new Date(item.date).toLocaleString("default", { month: "long" })}</td>
+                                <td className="whitespace-nowrap px-6 py-4 text-gray-900 font-semibold">R{item.amount}</td>
                                 <td className="px-6 py-4">
-                                  <i className="fa-solid fa-money-bill-wave mr-2"></i>Cash
+                                  <i className="fa-solid fa-money-bill-wave mr-2"></i>{item.details}
                                 </td>
                                 <td className="whitespace-nowrap px-6 py-4">
                                   <div className="flex gap-3 px-3 py-1 text-xs font-medium text-black-500 transition">
@@ -951,24 +966,23 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
                         {/* Mobile Block/Card View (Hidden on desktop) */}
                         <div className="block md:hidden space-y-4">
-                          {/* Card Instance */}
                           <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-gray-600 space-y-2">
                             <div className="flex justify-between border-b pb-2">
-                              <span className="font-semibold text-gray-900">2026-04-12</span>
+                              <span className="font-semibold text-gray-900">{item.date}</span>
                               <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Date</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Month:</span>
-                              <span className="text-gray-900 font-medium">April</span>
+                              <span className="text-gray-900 font-medium">{new Date(item.date).toLocaleString('default', { month: 'long' })}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Amount:</span>
-                              <span className="text-gray-900 font-bold">R150.00</span>
+                              <span className="text-gray-900 font-bold">R{item.amount}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Details:</span>
                               <span className="text-gray-900">
-                                <i className="fa-solid fa-money-bill-wave mr-2"></i>Cash
+                                <i className="fa-solid fa-money-bill-wave mr-2"></i>{item.details}
                               </span>
                             </div>
                             <div className="flex text-center justify-between items-center pt-2 border-t">
