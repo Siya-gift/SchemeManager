@@ -890,7 +890,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
             <div className="max-h-100 overflow-y-auto pr-2 glass-scroll">
               {accordionData.filter((item) => {
-                const monthName = item.date ? new Date(item.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
+                const monthName = item.date ? new Date(item.date).toLocaleString("default", { month: "long" }) : "";
                 if (searchHistory.toLowerCase() === "") {
                   return item
                 }
@@ -898,7 +898,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                   return item.year.toLowerCase().includes(searchHistory) ||
                     item.date.toLowerCase().includes(searchHistory) ||
                     item.amount.toString().toLowerCase().replace(/[\s,.]/g, '').includes(searchHistory.toLowerCase()) ||
-                    monthName.includes(searchHistory) ||
+                    monthName.toLowerCase().includes(searchHistory) ||
                     item.details.toLowerCase().includes(searchHistory)
                 }
               }).map((item, index) => {
