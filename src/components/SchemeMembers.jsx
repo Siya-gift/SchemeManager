@@ -898,7 +898,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                   return item.year.toLowerCase().includes(searchHistory) ||
                     item.date.toLowerCase().includes(searchHistory) ||
                     item.amount.toString().toLowerCase().replace(/[\s,.]/g, '').includes(searchHistory.toLowerCase()) ||
-                    monthName.toLowerCase().includes(searchHistory) ||
+                    monthName.toString().toLowerCase().includes(searchHistory) ||
                     item.details.toLowerCase().includes(searchHistory)
                 }
               }).map((item, index) => {
