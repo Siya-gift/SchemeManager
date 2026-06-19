@@ -3,8 +3,92 @@ import { useState } from 'react';
 
 function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender }) {
 
+    const expenses = [
+        {
+            id: 1,
+            date: "2026-04-16",
+            month: "June",
+            category: "Other",
+            description: "Tent",
+            amount: 1000
+        },
+        {
+            id: 2,
+            date: "2026-05-16",
+            month: "May",
+            category: "Sound System & Choir",
+            description: "Sound System",
+            amount: 500
+        },
+        {
+            id: 3,
+            date: "2026-06-16",
+            month: "April",
+            category: "Livestock / Slaughter",
+            description: "2 Cows",
+            amount: 20000
+        },
+    ]
+
 
     const [logExpense, setLogExpense] = useState(false);
+    const [txtListState, setTxtListState] = useState(false);
+
+    const [newExpenses, setExpenses] = useState(() => expenses);
+
+    const [newExpenseDesc, setNewExpenseDesc] = useState("");
+    const [newExpenseType, setNewExpenseType] = useState("Expense (Outflow)");
+    const [newExpenseCat, setNewExpenseCat] = useState("Other");
+    const [newExpenseDate, setNewExpenseDate] = useState(new Date().toISOString().split('T')[0]);
+    const [newExpenseAmount, setNewExpenseAmount] = useState("");
+
+    const scrollOnList = (event) => {
+        const position = event.currentTarget.scrollTop;
+        if (position > 0) {
+            setTxtListState(true);
+        } else {
+            setTxtListState(false);
+        }
+    };
+
+    const saveExpense = () => {
+        if (!newExpenseDesc.trim() || !newExpenseType.trim() || !newExpenseCat.trim() || !newExpenseDate.trim() || newExpenseAmount <= 0) return;
+
+        const expenseToAdd = {
+            id: newExpenses.length + 1,
+            description: newExpenseDesc.trim(),
+            type: newExpenseType.trim(),
+            category: newExpenseCat.trim(),
+            date: newExpenseDate.trim(),
+            month: new Date(newExpenseDate).toLocaleString('default', { month: 'long' }),
+            amount: newExpenseAmount
+        };
+
+        setExpenses((prev) => [...prev, expenseToAdd]);
+        setNewExpenseDesc("");
+        setNewExpenseDate(new Date().toISOString().split('T')[0]);
+        setNewExpenseAmount("");
+        setLogExpense(false);
+    };
+
+    const handleExpenseDescInputChange = (e) => {
+        setNewExpenseDesc(e.target.value);
+    };
+    const handleExpenseTypeInputChange = (e) => {
+        setNewExpenseType(e.target.value);
+    };
+    const handleExpenseCatInputChange = (e) => {
+        setNewExpenseCat(e.target.value);
+    };
+    const handleExpenseDateInputChange = (e) => {
+        setNewExpenseDate(e.target.value);
+    };
+    const handleExpenseAmountInputChange = (e) => {
+        const value = parseFloat(e.target.value);
+        if (!isNaN(value)) {
+            setNewExpenseAmount(value);
+        }
+    };
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 
@@ -126,74 +210,39 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
             </div>
 
             {/* Desktop view */}
-            <div className='mt-3 hidden md:block'>
+            <div className='mt-6 hidden md:block h-90 overflow-y-auto pr-2' onScroll={scrollOnList}>
                 <table className='w-full text-left text-sm text-white'>
-                    <thead className='text-xs uppercase text-white/65 bg-white/20 rounded-tl-xl rounded-tr-xl'>
+                    <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} text-md`}>
                         <tr>
-                            <th className='p-3'>Date</th>
-                            <th className='p-3'>Month</th>
-                            <th className='p-3'>Category</th>
-                            <th className='p-3'>Description</th>
-                            <th className='p-3'>Amount</th>
-                            <th className='p-3'>Action</th>
+                            <th className='p-3 sticky top-0 z-10 rounded-tl-xl'>Date</th>
+                            <th className='p-3 sticky top-0 z-10'>Month</th>
+                            <th className='p-3 sticky top-0 z-10'>Category</th>
+                            <th className='p-3 sticky top-0 z-10'>Description</th>
+                            <th className='p-3 sticky top-0 z-10'>Amount</th>
+                            <th className='p-3 sticky top-0 z-10 text-right rounded-tr-xl'>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className='border-b border-b-white/75'>
-                            <td className='p-3'>2026-06-16</td>
-                            <td className='p-3'>June</td>
-                            <td className='p-3'>Other</td>
-                            <td className='p-3'>Tent</td>
-                            <td className='p-3'>R 1,000</td>
-                            <td className='p-3 flex justify-end'>
-                                <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-regular fa-pen-to-square"></i>
-                                    </span>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-solid fa-trash"></i>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr className='border-b border-b-white/75'>
-                            <td className='p-3'>2026-06-16</td>
-                            <td className='p-3'>June</td>
-                            <td className='p-3'>Other</td>
-                            <td className='p-3'>Tent</td>
-                            <td className='p-3'>R 1,000</td>
-                            <td className='p-3 flex justify-end'>
-                                <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-regular fa-pen-to-square"></i>
-                                    </span>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-solid fa-trash"></i>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr className='border-b border-b-white/75'>
-                            <td className='p-3'>2026-06-16</td>
-                            <td className='p-3'>June</td>
-                            <td className='p-3'>
-                                <div className='rounded-xl w-fit p-1 text-gray-500 border border-gray-00 bg-gray-200'>
-                                    Other
-                                </div>
-                            </td>
-                            <td className='p-3'>Tent</td>
-                            <td className='p-3'>R 1,000</td>
-                            <td className='p-3 flex justify-end'>
-                                <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-regular fa-pen-to-square"></i>
-                                    </span>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-solid fa-trash"></i>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
+                        {newExpenses.map(expense => (
+                            <tr className='border-b border-b-white/75 cursor-pointer hover:bg-white/10 transition-colors'
+                                key={expense.id}>
+                                <td className='p-3'>{expense.date}</td>
+                                <td className='p-3'>{expense.month}</td>
+                                <td className='p-3'>{expense.category}</td>
+                                <td className='p-3'>{expense.description}</td>
+                                <td className='p-3'>R {expense.amount.toLocaleString()}</td>
+                                <td className='p-3 flex justify-end'>
+                                    <div className='flex gap-3 flex-end text-[11px] transition-transform'>
+                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                            <i className="fa-regular fa-pen-to-square"></i>
+                                        </span>
+                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                            <i className="fa-solid fa-trash"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
                         <tr className='border-b border-b-white/75 font-bold'>
                             <td colSpan="100%" className='p-3'>
                                 <div className='flex justify-between items-center w-full'>
@@ -203,98 +252,59 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                             </td>
                         </tr>
                     </tbody>
+
                 </table>
             </div>
 
             {/* mobile view */}
             <div className="block md:hidden space-y-4">
-                <ul className="space-y-4 p-3 bg-white rounded-xl mt-3 text-sm">
-                    <li>
-                        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
-                            <div className="flex justify-between border-b pb-2">
-                                <span className="font-semibold text-gray-900">Date</span>
-                                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">2026-06-16</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Month</span>
-                                <span className="text-gray-900 font-medium">
-                                    June
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Category</span>
-                                <span className="text-gray-900 font-medium border border-gray-300 rounded-full px-2 py-1 text-xs">
-                                    Other
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Description</span>
-                                <span className="text-gray-900 font-medium">
-                                    Tent
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Amount</span>
-                                <span className="text-red-900 font-medium">
-                                    - R 1 000,00
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Action</span>
-                                <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-regular fa-pen-to-square"></i>
-                                    </span>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-solid fa-trash"></i>
+                <ul className="space-y-4 p-3 bg-white rounded-xl mt-3 text-sm h-120 overflow-y-auto">
+                    {newExpenses.map(expense => (
+                        <li key={expense.id}>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
+                                <div className="flex justify-between border-b pb-2">
+                                    <span className="font-semibold text-gray-900">Date</span>
+                                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">{expense.date}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Month</span>
+                                    <span className="text-gray-900 font-medium">
+                                        {expense.month}
                                     </span>
                                 </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
-                            <div className="flex justify-between border-b pb-2">
-                                <span className="font-semibold text-gray-900">Date</span>
-                                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">2026-06-16</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Month</span>
-                                <span className="text-gray-900 font-medium">
-                                    June
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Category</span>
-                                <span className="text-gray-900 font-medium border border-gray-300 rounded-full px-2 py-1 text-xs">
-                                    Other
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Description</span>
-                                <span className="text-gray-900 font-medium">
-                                    Tent
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Amount</span>
-                                <span className="text-red-900 font-medium">
-                                    - R 1 000,00
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Action</span>
-                                <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-regular fa-pen-to-square"></i>
-                                    </span>
-                                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                        <i className="fa-solid fa-trash"></i>
+                                <div className="flex justify-between">
+                                    <span>Category</span>
+                                    <span className="text-gray-900 font-medium border border-gray-300 rounded-full px-2 py-1 text-xs">
+                                        {expense.category}
                                     </span>
                                 </div>
+                                <div className="flex justify-between">
+                                    <span>Description</span>
+                                    <span className="text-gray-900 font-medium">
+                                        {expense.description}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Amount</span>
+                                    <span className="text-red-900 font-medium">
+                                        - R {expense.amount.toLocaleString()}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Action</span>
+                                    <div className='flex gap-3 flex-end text-[11px] transition-transform'>
+                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                            <i className="fa-regular fa-pen-to-square"></i>
+                                        </span>
+                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                            <i className="fa-solid fa-trash"></i>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                    ))}
+
                     <li>
                         <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
                             <div className="flex justify-between border-b pb-2">
@@ -304,6 +314,12 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         </div>
                     </li>
                 </ul>
+            </div>
+
+            {/* footer */}
+            <div className='footer md:col-span-3 flex flex-col sm:flex-row 
+            justify-center items-center py-5 px-6 glass text-white mt-3'>
+                <p>All rights reserved &copy; 2026 </p>
             </div>
 
 
@@ -321,33 +337,35 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         <div className='mb-2 text-xs'>
                             <h4 className='text-white/85'>Description</h4>
                             <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-                            focus:outline-white text-white' required placeholder='e.g. KFC for AGM Meeting' type='text' />
+                            focus:outline-white text-white' required placeholder='e.g. KFC for AGM Meeting' type='text'
+                                onChange={handleExpenseDescInputChange} value={newExpenseDesc}
+                            />
                         </div>
                         <div className='flex justify-between gap-4 mb-2'>
                             <div className='text-xs w-full'>
                                 <h4 className='text-white/85'>Type</h4>
                                 <select className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-                                focus:outline-white text-white' required>
-                                    <option className="bg-white text-gray-900">Expense (Outflow)</option>
-                                    <option className="bg-white text-gray-900">Refund / Credit (Inflow)</option>
+                                focus:outline-white text-white' required onChange={handleExpenseTypeInputChange} value={newExpenseType}>
+                                    <option value={"Expense (Outflow)"} className="bg-white text-gray-900">Expense (Outflow)</option>
+                                    <option value={"Refund / Credit (Inflow)"} className="bg-white text-gray-900">Refund / Credit (Inflow)</option>
                                 </select>
                             </div>
                             <div className='text-xs w-full'>
                                 <h4 className='text-white/85'>Category</h4>
                                 <select className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-                                focus:outline-white text-white' required>
-                                    <option className="bg-white text-gray-900">Other</option>
-                                    <option className="bg-white text-gray-900">Refunds / Credits Only</option>
-                                    <option className="bg-white text-gray-900">Coffin & Casket</option>
-                                    <option className="bg-white text-gray-900">Catering & Groceries</option>
-                                    <option className="bg-white text-gray-900">Tent & Rentals</option>
-                                    <option className="bg-white text-gray-900">Hearse & Transport</option>
-                                    <option className="bg-white text-gray-900">Flowers & Decor</option>
-                                    <option className="bg-white text-gray-900">Grave Site & Digging</option>
-                                    <option className="bg-white text-gray-900">Death Certificate & Admin</option>
-                                    <option className="bg-white text-gray-900">Sound System & Choir</option>
-                                    <option className="bg-white text-gray-900">Livestock / Slaughter</option>
-                                    <option className="bg-white text-gray-900">Family Payout</option>
+                                focus:outline-white text-white' required onChange={handleExpenseCatInputChange} value={newExpenseCat}>
+                                    <option value={"Other"} className="bg-white text-gray-900">Other</option>
+                                    <option value={"Refunds / Credits Only"} className="bg-white text-gray-900">Refunds / Credits Only</option>
+                                    <option value={"Coffin & Casket"} className="bg-white text-gray-900">Coffin & Casket</option>
+                                    <option value={"Catering & Groceries"} className="bg-white text-gray-900">Catering & Groceries</option>
+                                    <option value={"Tent & Rentals"} className="bg-white text-gray-900">Tent & Rentals</option>
+                                    <option value={"Hearse & Transport"} className="bg-white text-gray-900">Hearse & Transport</option>
+                                    <option value={"Flowers & Decor"} className="bg-white text-gray-900">Flowers & Decor</option>
+                                    <option value={"Grave Site & Digging"} className="bg-white text-gray-900">Grave Site & Digging</option>
+                                    <option value={"Death Certificate & Admin"} className="bg-white text-gray-900">Death Certificate & Admin</option>
+                                    <option value={"Sound System & Choir"} className="bg-white text-gray-900">Sound System & Choir</option>
+                                    <option value={"Livestock / Slaughter"} className="bg-white text-gray-900">Livestock / Slaughter</option>
+                                    <option value={"Family Payout"} className="bg-white text-gray-900">Family Payout</option>
                                 </select>
                             </div>
                         </div>
@@ -358,27 +376,29 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                                 <input
                                     className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white'
                                     required
-                                    value={new Date().toISOString().split('T')[0]}
+                                    value={new Date(newExpenseDate).toISOString().split('T')[0]}
                                     type='date'
+                                    onChange={handleExpenseDateInputChange}
                                 />
                             </div>
                             <div className='text-xs w-full'>
                                 <h4 className='text-white/85'>Amount (R)</h4>
                                 <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-                            focus:outline-white text-white' required placeholder='R 0.00' type='number' />
+                                focus:outline-white text-white' required placeholder='R 0.00' type='number'
+                                    onChange={handleExpenseAmountInputChange} value={newExpenseAmount} />
                             </div>
                         </div>
 
                         <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-                        hover:bg-white/30'>
+                        hover:bg-white/30' onClick={() => saveExpense()}>
                             Save
                         </button>
 
                     </div>
                 </div>
             }
-
         </div>
+
     )
 }
 

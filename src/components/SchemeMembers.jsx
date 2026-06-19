@@ -461,16 +461,16 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
           <ul className='flex w-full mt-9 rounded-2xl'>
             <div
-              className="w-full h-auto max-h-150 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl z-1"
+              className="w-full h-auto max-h-150 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl z-1 pr-2"
               onScroll={scrollOnList}
             >
               <table className='w-full text-left border-collapse'>
                 <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full`}>
                   <tr className="border-b uppercase text-sm">
-                    <th className="sticky top-0 py-4 px-2">Name</th>
+                    <th className="sticky top-0 py-4 px-2 rounded-tl-xl">Name</th>
                     <th className="sticky top-0 py-4 px-2 truncate max-w-50">Total Paid</th>
                     <th className="sticky top-0 py-4 px-2">Status</th>
-                    <th className="sticky top-0 py-4 px-2 text-right">Action</th>
+                    <th className="sticky top-0 py-4 px-2 text-right rounded-tr-xl">Action</th>
                   </tr>
                 </thead>
 
