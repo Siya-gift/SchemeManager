@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender }) {
 
@@ -41,6 +41,8 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
     const [newExpenseCat, setNewExpenseCat] = useState("Other");
     const [newExpenseDate, setNewExpenseDate] = useState(new Date().toISOString().split('T')[0]);
     const [newExpenseAmount, setNewExpenseAmount] = useState("");
+    const [selectedMonth, setSelectedMonth] = useState("All Expenses (Year)");
+    const [selectedCat, setSelectedCat] = useState("All Categories");
 
     const scrollOnList = (event) => {
         const position = event.currentTarget.scrollTop;
@@ -89,6 +91,24 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
             setNewExpenseAmount(value);
         }
     };
+
+    const filteredExpenses = newExpenses.filter((expense) => {
+        const monthQuery = selectedMonth.toLowerCase().trim();
+        const catQuery = selectedCat.toLowerCase().trim();
+
+        const matchesMonth = monthQuery === "all expenses (year)" || expense.month.toLowerCase().includes(monthQuery);
+        const matchesCategory = catQuery === "all categories" || expense.category.toLowerCase().includes(catQuery);
+
+        return matchesMonth && matchesCategory;
+    });
+
+    // 2. Calculate the total for the items currently visible on screen
+    const filteredTotal = filteredExpenses.reduce((total, expense) => total + Number(expense.amount), 0);
+
+    // 3. Calculate the global total for absolutely all expenses combined 
+    const grandTotal = newExpenses.reduce((total, expense) => total + Number(expense.amount), 0);
+
+
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 
@@ -172,39 +192,45 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
             <div className='flex justify-between align-center mt-6 w-full flex-wrap gap-4'>
                 <h1 className='text-lg text-white'>Scheme Expenses</h1>
                 <div className='flex flex-wrap gap-3'>
-                    <select className='border border-white/50 rounded-xl p-2 text-white focus:outline-2 outline-white'>
-                        <option className="bg-white text-gray-900">All Expenses (Year)</option>
-                        <option className="bg-white text-gray-900">January</option>
-                        <option className="bg-white text-gray-900">February</option>
-                        <option className="bg-white text-gray-900">March</option>
-                        <option className="bg-white text-gray-900">April</option>
-                        <option className="bg-white text-gray-900">May</option>
-                        <option className="bg-white text-gray-900">June</option>
-                        <option className="bg-white text-gray-900">July</option>
-                        <option className="bg-white text-gray-900">August</option>
-                        <option className="bg-white text-gray-900">September</option>
-                        <option className="bg-white text-gray-900">October</option>
-                        <option className="bg-white text-gray-900">November</option>
-                        <option className="bg-white text-gray-900">December</option>
+                    <select className='border border-white/50 rounded-xl p-2 text-white focus:outline-2 outline-white'
+                        value={selectedMonth}
+                        onChange={(e) => setSelectedMonth(e.target.value)}
+                    >
+                        <option value={"All Expenses (Year)"} className="bg-white text-gray-900">All Expenses (Year)</option>
+                        <option value={"January"} className="bg-white text-gray-900">January</option>
+                        <option value={"February"} className="bg-white text-gray-900">February</option>
+                        <option value={"March"} className="bg-white text-gray-900">March</option>
+                        <option value={"April"} className="bg-white text-gray-900">April</option>
+                        <option value={"May"} className="bg-white text-gray-900">May</option>
+                        <option value={"June"} className="bg-white text-gray-900">June</option>
+                        <option value={"July"} className="bg-white text-gray-900">July</option>
+                        <option value={"August"} className="bg-white text-gray-900">August</option>
+                        <option value={"September"} className="bg-white text-gray-900">September</option>
+                        <option value={"October"} className="bg-white text-gray-900">October</option>
+                        <option value={"November"} className="bg-white text-gray-900">November</option>
+                        <option value={"December"} className="bg-white text-gray-900">December</option>
                     </select>
-                    <select className='border border-white/50 rounded-xl p-2 text-white focus:outline-2 outline-white'>
-                        <option className="bg-white text-gray-900">All Categories</option>
-                        <option className="bg-white text-gray-900">Refunds / Credits Only</option>
-                        <option className="bg-white text-gray-900">Coffin & Casket</option>
-                        <option className="bg-white text-gray-900">Catering & Groceries</option>
-                        <option className="bg-white text-gray-900">Tent & Rentals</option>
-                        <option className="bg-white text-gray-900">Hearse & Transport</option>
-                        <option className="bg-white text-gray-900">Flowers & Decor</option>
-                        <option className="bg-white text-gray-900">Grave Site & Digging</option>
-                        <option className="bg-white text-gray-900">Death Certificate & Admin</option>
-                        <option className="bg-white text-gray-900">Sound System & Choir</option>
-                        <option className="bg-white text-gray-900">Livestock / Slaughter</option>
-                        <option className="bg-white text-gray-900">Family Payout</option>
-                        <option className="bg-white text-gray-900">Other</option>
+                    <select className='border border-white/50 rounded-xl p-2 text-white focus:outline-2 outline-white'
+                        value={selectedCat}
+                        onChange={(e) => setSelectedCat(e.target.value)}
+                    >
+                        <option value={"All Categories"} className="bg-white text-gray-900">All Categories</option>
+                        <option value={"Refunds / Credits Only"} className="bg-white text-gray-900">Refunds / Credits Only</option>
+                        <option value={"Coffin & Casket"} className="bg-white text-gray-900">Coffin & Casket</option>
+                        <option value={"Catering & Groceries"} className="bg-white text-gray-900">Catering & Groceries</option>
+                        <option value={"Tent & Rentals"} className="bg-white text-gray-900">Tent & Rentals</option>
+                        <option value={"Hearse & Transport"} className="bg-white text-gray-900">Hearse & Transport</option>
+                        <option value={"Flowers & Decor"} className="bg-white text-gray-900">Flowers & Decor</option>
+                        <option value={"Grave Site & Digging"} className="bg-white text-gray-900">Grave Site & Digging</option>
+                        <option value={"Death Certificate & Admin"} className="bg-white text-gray-900">Death Certificate & Admin</option>
+                        <option value={"Sound System & Choir"} className="bg-white text-gray-900">Sound System & Choir</option>
+                        <option value={"Livestock / Slaughter"} className="bg-white text-gray-900">Livestock / Slaughter</option>
+                        <option value={"Family Payout"} className="bg-white text-gray-900">Family Payout</option>
+                        <option value={"Other"} className="bg-white text-gray-900">Other</option>
                     </select>
                     <button className='bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl focus:outline-2 
-                    outline-white cursor-pointer transition-colors duration-300' onClick={() => setLogExpense(true)}>
-                        Log Expense
+                    outline-white cursor-pointer transition-colors duration-300 text-md' onClick={() => setLogExpense(true)}>
+                        <i className="fa-solid fa-circle-minus"></i><span className="ml-2">Log Expense</span>
                     </button>
                 </div>
             </div>
@@ -223,31 +249,45 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         </tr>
                     </thead>
                     <tbody>
-                        {newExpenses.map(expense => (
-                            <tr className='border-b border-b-white/75 cursor-pointer hover:bg-white/10 transition-colors'
-                                key={expense.id}>
-                                <td className='p-3'>{expense.date}</td>
-                                <td className='p-3'>{expense.month}</td>
-                                <td className='p-3'>{expense.category}</td>
-                                <td className='p-3'>{expense.description}</td>
-                                <td className='p-3'>R {expense.amount.toLocaleString()}</td>
-                                <td className='p-3 flex justify-end'>
-                                    <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                            <i className="fa-regular fa-pen-to-square"></i>
-                                        </span>
-                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
-                                            <i className="fa-solid fa-trash"></i>
-                                        </span>
-                                    </div>
+                        {
+                            filteredExpenses.map(expense => (
+                                <tr className='border-b border-b-white/75 cursor-pointer hover:bg-white/10 transition-colors'
+                                    key={expense.id}>
+                                    <td className='p-3'>{expense.date}</td>
+                                    <td className='p-3'>{expense.month}</td>
+                                    <td className='p-3'>{expense.category}</td>
+                                    <td className='p-3'>{expense.description}</td>
+                                    <td className='p-3'>R {expense.amount.toLocaleString()}</td>
+                                    <td className='p-3 flex justify-end'>
+                                        <div className='flex gap-3 flex-end text-[11px] transition-transform'>
+                                            <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                                <i className="fa-regular fa-pen-to-square"></i>
+                                            </span>
+                                            <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                                <i className="fa-solid fa-trash"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        {filteredExpenses.length === 0 && (
+                            <tr>
+                                {/* Changed colSpan to 6 to account for your action buttons column */}
+                                <td colSpan="6" className="p-8 text-center text-white/50">
+                                    No recorded expenses found
+                                    {selectedMonth !== "All Expenses (Year)" && ` for ${selectedMonth}`}
+                                    {selectedCat !== "All Categories" && ` under ${selectedCat}`}
+                                    {selectedMonth === "All Expenses (Year)" && selectedCat === "All Categories" && " for this year"}
+                                    .
                                 </td>
                             </tr>
-                        ))}
+                        )}
+
                         <tr className='border-b border-b-white/75 font-bold'>
                             <td colSpan="100%" className='p-3'>
                                 <div className='flex justify-between items-center w-full'>
                                     <span className="text-white-900">Total for Period (Net):</span>
-                                    <span className="text-xs uppercase tracking-wider text-white-400">R 1 000,00</span>
+                                    <span className="text-xs uppercase tracking-wider text-white-400">R {filteredTotal.toLocaleString()}</span>
                                 </div>
                             </td>
                         </tr>
@@ -259,7 +299,7 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
             {/* mobile view */}
             <div className="block md:hidden space-y-4">
                 <ul className="space-y-4 p-3 bg-white rounded-xl mt-3 text-sm h-120 overflow-y-auto">
-                    {newExpenses.map(expense => (
+                    {filteredExpenses.map(expense => (
                         <li key={expense.id}>
                             <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
                                 <div className="flex justify-between border-b pb-2">
@@ -304,12 +344,24 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                             </div>
                         </li>
                     ))}
+                    {filteredExpenses.length === 0 && (
+                        <li>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
+                                <p className="text-center text-gray-500">No recorded expenses found for
+                                    {selectedMonth !== "All Expenses (Year)" && ` for ${selectedMonth}`}
+                                    {selectedCat !== "All Categories" && ` under ${selectedCat}`}
+                                    {selectedMonth === "All Expenses (Year)" && selectedCat === "All Categories" && " for this year"}
+                                    .
+                                </p>
+                            </div>
+                        </li>
+                    )}
 
                     <li>
                         <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
                             <div className="flex justify-between border-b pb-2">
                                 <span className="font-semibold text-gray-900">Total for Period (Net):</span>
-                                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">R 1 000,00</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">R {filteredTotal.toLocaleString()}</span>
                             </div>
                         </div>
                     </li>
