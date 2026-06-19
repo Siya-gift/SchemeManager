@@ -324,13 +324,48 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                             focus:outline-white text-white' required placeholder='e.g. KFC for AGM Meeting' type='text' />
                         </div>
                         <div className='flex justify-between gap-4 mb-2'>
-                            <div className='text-xs'>
+                            <div className='text-xs w-full'>
                                 <h4 className='text-white/85'>Type</h4>
                                 <select className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
                                 focus:outline-white text-white' required>
                                     <option className="bg-white text-gray-900">Expense (Outflow)</option>
                                     <option className="bg-white text-gray-900">Refund / Credit (Inflow)</option>
                                 </select>
+                            </div>
+                            <div className='text-xs w-full'>
+                                <h4 className='text-white/85'>Category</h4>
+                                <select className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+                                focus:outline-white text-white' required>
+                                    <option className="bg-white text-gray-900">Other</option>
+                                    <option className="bg-white text-gray-900">Refunds / Credits Only</option>
+                                    <option className="bg-white text-gray-900">Coffin & Casket</option>
+                                    <option className="bg-white text-gray-900">Catering & Groceries</option>
+                                    <option className="bg-white text-gray-900">Tent & Rentals</option>
+                                    <option className="bg-white text-gray-900">Hearse & Transport</option>
+                                    <option className="bg-white text-gray-900">Flowers & Decor</option>
+                                    <option className="bg-white text-gray-900">Grave Site & Digging</option>
+                                    <option className="bg-white text-gray-900">Death Certificate & Admin</option>
+                                    <option className="bg-white text-gray-900">Sound System & Choir</option>
+                                    <option className="bg-white text-gray-900">Livestock / Slaughter</option>
+                                    <option className="bg-white text-gray-900">Family Payout</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className='flex justify-between gap-4 mb-2'>
+                            <div className='text-xs w-full'>
+                                <h4 className='text-white/85'>Date</h4>
+                                <input
+                                    className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white'
+                                    required
+                                    value={new Date().toISOString().split('T')[0]}
+                                    type='date'
+                                />
+                            </div>
+                            <div className='text-xs w-full'>
+                                <h4 className='text-white/85'>Amount (R)</h4>
+                                <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+                            focus:outline-white text-white' required placeholder='R 0.00' type='number' />
                             </div>
                         </div>
 
