@@ -313,7 +313,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   //first payment should be january and if not it'll create empty properties
   //with no values, this is to ensure the accordion always has something to 
   // map through and display even if no payments have been made in that year
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(0);
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
