@@ -101,7 +101,7 @@ function App() {
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
           formattedDate={formattedDate}
         />
-        <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
+        <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate} />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
