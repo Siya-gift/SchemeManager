@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 
 function SchemeMembers({ toggleState, toggleMobileState, openCalender, formattedDate }) {
 
@@ -36,21 +36,25 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
 
   const allMembers = [
     {
+      id: 1,
       memberName: "Sam",
       totPaid: 500.00,
       status: "Paid"
     },
     {
+      id: 2,
       memberName: "John",
       totPaid: 1120.00,
       status: "Ahead"
     },
     {
+      id: 3,
       memberName: "Vivian",
       totPaid: 0.00,
       status: "Arrears"
     },
     {
+      id: 4,
       memberName: "Paul",
       totPaid: 500.00,
       status: "Paid"
@@ -315,6 +319,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   };
   const accordionData = [
     {
+      userId: 1,
       year: "2026",
       yearHistory: [
         {
@@ -335,6 +340,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       ]
     },
     {
+      userId: 2,
       year: "2025",
       yearHistory: [
         {
@@ -350,6 +356,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       ]
     },
     {
+      userId: 3,
       year: "2024",
       yearHistory: [{
         date: "2024-08-15",
@@ -358,6 +365,7 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       }]
     },
     {
+      userId: 4,
       year: "2023",
       yearHistory: [{
         date: "",
@@ -367,7 +375,6 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
     }
   ];
   //-------------------------------------------------------------------
-
 
   return (
     <div className={`schemeMembers w-full min-h-screen p-4 md:p-8 
@@ -406,8 +413,8 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
           <ul className='grow min-h-25 max-h-130 overflow-y-auto glass-scroll'>
             {schemes.map((item, idx) => (
               <li key={idx} className={`py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
-              my-2 rounded-xl mr-1.5 ${schemeSelectedState === idx ? "border-3 border-white-500" : ""}`} 
-              onClick={() => schemeSelected(idx)}>
+              my-2 rounded-xl mr-1.5 ${schemeSelectedState === idx ? "border-3 border-white-500" : ""}`}
+                onClick={() => schemeSelected(idx)}>
                 <div className='flex justify-between items-center gap-3'>
                   <div className='flex justify-between flex-col leading-5'>
                     <h3 className='text-md font-bold'>{item.scheme}</h3>
@@ -1018,37 +1025,53 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
             </div>
 
             <div className="max-h-100 overflow-y-auto pr-2 glass-scroll">
-              {accordionData.filter((item) => {
-                const query = searchHistory.toLowerCase().trim();
+              {accordionData
+                .filter((item) => {
+                  const query = searchHistory.toLowerCase().trim();
+                  if (query === "") return true;
 
-                if (query === "") {
-                  return true;
-                }
-                const yearMatches = item.year.toLowerCase().includes(query);
+                  const yearMatches = item.year.toLowerCase().includes(query);
+                  const historyMatches = item.yearHistory.some((history) => {
+                    const monthName = history.date ? new Date(history.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
+                    const cleanAmount = history.amount ? history.amount.toString().replace(/[\s,.]/g, '') : "";
 
-                const historyMatches = item.yearHistory.some((history) => {
-
-                  const monthName = history.date ? new Date(history.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
-                  const cleanAmount = history.amount ? history.amount.toString().replace(/[\s,.]/g, '') : "";
-
-                  return (
-                    (history.date && history.date.toLowerCase().includes(query)) ||
-                    cleanAmount.includes(query) ||
-                    monthName.includes(query) ||
-                    (history.details && history.details.toLowerCase().includes(query))
-                  );
-                });
-                return yearMatches || historyMatches;
-              })
+                    return (
+                      (history.date && history.date.toLowerCase().includes(query)) ||
+                      cleanAmount.includes(query) ||
+                      monthName.includes(query) ||
+                      (history.details && history.details.toLowerCase().includes(query))
+                    );
+                  });
+                  return yearMatches || historyMatches;
+                })
                 .map((item, index) => {
                   const isOpen = openIndex == index;
+                  const query = searchHistory.toLowerCase().trim();
+
+                  // Filter the internal history items for rendering
+                  const filteredHistory = item.yearHistory.filter((history) => {
+                    if (query === "" || item.year.toLowerCase().includes(query)) return true;
+
+                    const monthName = history.date ? new Date(history.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
+                    const cleanAmount = history.amount ? history.amount.toString().replace(/[\s,.]/g, '') : "";
+
+                    return (
+                      (history.date && history.date.toLowerCase().includes(query)) ||
+                      cleanAmount.includes(query) ||
+                      monthName.includes(query) ||
+                      (history.details && history.details.toLowerCase().includes(query))
+                    );
+                  });
+
+                  const hasHistory = filteredHistory.length > 0 && !(filteredHistory.length === 1 && !filteredHistory[0].date && !filteredHistory[0].amount);
+
                   return (
                     <div key={index} className="mb-2">
                       <button
                         onClick={() => toggleAccordion(index)}
                         className="histAccordian flex justify-between items-center text-white bg-white/40 
-                      w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50
-                      focus:border cursor-pointer">
+                        w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50
+                        focus:border cursor-pointer">
                         <h1 className="flex items-center">
                           <i className="fa-solid fa-calendar-check"></i>
                           <span className="ml-2 font-semibold">{item.year}</span>
@@ -1058,12 +1081,12 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                         </div>
                       </button>
 
-                      {/* //content */}
+                      {/* content */}
                       <div className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden 
-                      ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
+                       ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
                         <div className="overflow-hidden text-white/90 text-sm">
 
-                          {/* Desktop Table View (Hidden on mobile) */}
+                          {/* Desktop Table View */}
                           <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
                             <table className="min-w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500">
                               <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700">
@@ -1076,9 +1099,9 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200">
-                                {!(item.yearHistory.length === 1 && !item.yearHistory[0].date && !item.yearHistory[0].amount) &&
-                                  item.yearHistory.map((historyItem, index) => (
-                                    <tr className="hover:bg-gray-50" key={index}>
+                                {hasHistory &&
+                                  filteredHistory.map((historyItem, hIndex) => (
+                                    <tr className="hover:bg-gray-50" key={hIndex}>
                                       <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900">{historyItem.date}</td>
                                       <td className="whitespace-nowrap px-6 py-4">
                                         {historyItem.date ? new Date(historyItem.date).toLocaleString("default", { month: "long" }) : "-"}
@@ -1106,26 +1129,24 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                                   ))
                                 }
 
-                                {(item.yearHistory.length === 0 ||
-                                  (item.yearHistory.length === 1 && !item.yearHistory[0].date && !item.yearHistory[0].amount)) && (
-                                    <tr>
-                                      <td colSpan={5} className="py-10 text-center opacity-50">
-                                        No History found
-                                      </td>
-                                    </tr>
-                                  )}
+                                {!hasHistory && (
+                                  <tr>
+                                    <td colSpan={5} className="py-10 text-center opacity-50">
+                                      No History found
+                                    </td>
+                                  </tr>
+                                )}
                               </tbody>
                             </table>
                           </div>
 
-                          {/* Mobile Block/Card View (Hidden on desktop) */}
+                          {/* Mobile Block/Card View */}
                           <div className="block md:hidden space-y-4">
-                            {!(item.yearHistory.length === 1 && !item.yearHistory[0].date && !item.yearHistory[0].amount) &&
-                              item.yearHistory.map((historyItem, index) => (
-                                <ul key={index} className="space-y-4">
+                            {hasHistory ? (
+                              filteredHistory.map((historyItem, hIndex) => (
+                                <ul key={hIndex} className="space-y-4">
                                   <li>
                                     <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-gray-600 space-y-2">
-
                                       <div className="flex justify-between border-b pb-2">
                                         <span className="font-semibold text-gray-900">{historyItem.date || "-"}</span>
                                         <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Date</span>
@@ -1138,52 +1159,31 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
                                       </div>
                                       <div className="flex justify-between">
                                         <span>Amount:</span>
-                                        <span className="text-gray-900 font-bold">
+                                        <span className="text-gray-900 font-semibold">
                                           {historyItem.amount ? `R${historyItem.amount}` : "-"}
                                         </span>
                                       </div>
-                                      <div className="flex justify-between">
+                                      <div className="flex justify-between border-t pt-2">
                                         <span>Details:</span>
-                                        <span className="text-gray-900">
-                                          {historyItem.details && <i className="fa-solid fa-money-bill-wave mr-2"></i>}
-                                          {historyItem.details || "-"}
-                                        </span>
+                                        <span className="text-gray-900">{historyItem.details || "-"}</span>
                                       </div>
-                                      <div className="flex text-center justify-between items-center pt-2 border-t">
-                                        <div className="flex gap-2 text-xs font-medium text-black-500">
-                                          <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer 
-                                          bg-gray-50 active:bg-gray-100' onClick={() => setIsEditPaymentHist(true)}>
-                                            <i className="fa-regular fa-pen-to-square mr-1"></i> Edit
-                                          </span>
-                                          <span className='px-3 py-2 border rounded-lg inline-block cursor-pointer 
-                                          bg-gray-50 active:bg-gray-100 text-red-600 border-red-100' onClick={() => setIsDeletePaymentHist(true)}>
-                                            <i className="fa-solid fa-trash mr-1"></i> Delete
-                                          </span>
-                                        </div>
-                                      </div>
-
                                     </div>
                                   </li>
                                 </ul>
                               ))
-                            }
-                            {(item.yearHistory.length === 0 ||
-                              (item.yearHistory.length === 1 && !item.yearHistory[0].date && !item.yearHistory[0].amount)) && (
-                                <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-                                  <p className="py-10 text-center opacity-50 text-gray-600">No History found</p>
-                                </div>
-                              )}
-
+                            ) : (
+                              <div className="py-10 text-center opacity-50 bg-white rounded-lg text-gray-500">
+                                No History found
+                              </div>
+                            )}
                           </div>
+
                         </div>
                       </div>
                     </div>
                   );
                 })}
             </div>
-
-
-
 
           </div>
         </div>
