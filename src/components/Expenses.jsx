@@ -30,8 +30,8 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
         },
     ]
 
-
     const [logExpense, setLogExpense] = useState(false);
+    const [isDeleteExpense, setIsDeleteExpense] = useState(false);
     const [txtListState, setTxtListState] = useState(false);
 
     const [newExpenses, setExpenses] = useState(() => expenses);
@@ -43,6 +43,7 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
     const [newExpenseAmount, setNewExpenseAmount] = useState("");
     const [selectedMonth, setSelectedMonth] = useState("All Expenses (Year)");
     const [selectedCat, setSelectedCat] = useState("All Categories");
+    const [indexOfExpense, setIndexOfExpense] = useState(null)
 
     const scrollOnList = (event) => {
         const position = event.currentTarget.scrollTop;
@@ -102,13 +103,19 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
         return matchesMonth && matchesCategory;
     });
 
-    // 2. Calculate the total for the items currently visible on screen
     const filteredTotal = filteredExpenses.reduce((total, expense) => total + Number(expense.amount), 0);
 
-    // 3. Calculate the global total for absolutely all expenses combined 
     const grandTotal = newExpenses.reduce((total, expense) => total + Number(expense.amount), 0);
 
+    const deleteExpense = (id) => {
+        setIsDeleteExpense(true)
+        setIndexOfExpense(id)
+    }
 
+    const removeExpense = () => {
+        setExpenses((prev) => prev.filter(expense => expense.id !== indexOfExpense));
+        setIsDeleteExpense(false);
+    }
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 
@@ -263,7 +270,8 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                                             <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
                                                 <i className="fa-regular fa-pen-to-square"></i>
                                             </span>
-                                            <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                            <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'
+                                                onClick={() => deleteExpense(expense.id)}>
                                                 <i className="fa-solid fa-trash"></i>
                                             </span>
                                         </div>
@@ -336,7 +344,8 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                                         <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
                                             <i className="fa-regular fa-pen-to-square"></i>
                                         </span>
-                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'
+                                        onClick={() => deleteExpense(expense.id)}>
                                             <i className="fa-solid fa-trash"></i>
                                         </span>
                                     </div>
@@ -445,6 +454,29 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         hover:bg-white/30' onClick={() => saveExpense()}>
                             Save
                         </button>
+
+                    </div>
+                </div>
+            }
+
+            {isDeleteExpense &&
+                <div className='fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+                bg-black/50 h-screen w-screen z-100'>
+                    <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+                    w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+                        <h1 className='text-white text-2xl mb-4'>Delete Transaction?</h1>
+
+                        <h1 className='text-white/90 text-md'>Are you sure you want to remove this record?</h1>
+                        <div className='flex justify-between align-center gap-4'>
+                            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+                            hover:bg-white/30' onClick={() => { setIsDeleteExpense(false) }}>
+                                No
+                            </button>
+                            <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
+                             hover:bg-red-400' onClick={() => { removeExpense() }}>
+                                Yes
+                            </button>
+                        </div>
 
                     </div>
                 </div>
