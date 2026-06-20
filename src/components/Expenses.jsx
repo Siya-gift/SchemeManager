@@ -126,7 +126,7 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
         return matchesMonth && matchesCategory;
     });
 
- 
+
     const financialData = filteredExpenses.reduce((acc, expense) => {
         const type = expense.type ? expense.type.toLowerCase().trim() : "";
         const amount = Number(expense.amount) || 0;
@@ -139,7 +139,7 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
 
         return acc;
     }, { moneyIn: 0, moneyOut: 0 });
-    const netDifference = financialData.moneyIn - financialData.moneyOut;
+    const netDifference = financialData.moneyIn - financialData.moneyOut; 
     const totalColor = financialData.moneyIn > financialData.moneyOut ? "text-green-400" : "text-red-400";
 
 
@@ -449,7 +449,9 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                             <td colSpan="100%" className='p-3'>
                                 <div className='flex justify-between items-center w-full'>
                                     <span className="text-white-900">Total for Period (Net):</span>
-                                    <span className={`text-xs uppercase tracking-wider text-white-400 ${netDifference === 0 ? 'text-gray-400' : totalColor}`}>R {netDifference.toLocaleString()}</span>
+                                    <span className={`text-xs uppercase tracking-wider text-white-400 ${netDifference === 0 ? 'text-gray-400' : totalColor}`}>
+                                        R {financialData.moneyIn > financialData.moneyOut ? '+' : ''} {netDifference.toLocaleString()}
+                                    </span>
                                 </div>
                             </td>
                         </tr>
@@ -525,7 +527,9 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
                             <div className="flex justify-between border-b pb-2">
                                 <span className="font-semibold text-gray-900">Total for Period (Net):</span>
-                                <span className={`"text-xs font-semibold uppercase tracking-wider ${netDifference === 0 ? 'text-gray-400' : totalColor}`}>R {netDifference.toLocaleString()}</span>
+                                <span className={`"text-xs font-semibold uppercase tracking-wider ${netDifference === 0 ? 'text-gray-400' : totalColor}`}>
+                                    R {financialData.moneyIn > financialData.moneyOut ? '+' : ''} {netDifference.toLocaleString()}
+                                </span>
                             </div>
                         </div>
                     </li>
