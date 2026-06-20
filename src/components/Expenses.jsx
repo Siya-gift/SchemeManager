@@ -1,37 +1,50 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 
 function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender }) {
 
     const expenses = [
         {
             id: 1,
-            date: "2026-04-16",
-            month: "June",
-            category: "Other",
+            date: "2026-03-16",
+            month: "March",
+            category: "Refunds / Credits Only",
             description: "Tent",
-            amount: 1000
+            amount: 32500,
+            type: "Refund / Credit (Inflow)"
         },
         {
             id: 2,
+            date: "2026-04-16",
+            month: "April",
+            category: "Other",
+            description: "Tent",
+            amount: 1000,
+            type: "Expense (Outflow)"
+        },
+        {
+            id: 3,
             date: "2026-05-16",
             month: "May",
             category: "Sound System & Choir",
             description: "Sound System",
-            amount: 500
+            amount: 500,
+            type: "Expense (Outflow)"
         },
         {
-            id: 3,
+            id: 4,
             date: "2026-06-16",
-            month: "April",
+            month: "June",
             category: "Livestock / Slaughter",
             description: "2 Cows",
-            amount: 20000
+            amount: 20000,
+            type: "Expense (Outflow)"
         },
     ]
 
     const [logExpense, setLogExpense] = useState(false);
     const [isDeleteExpense, setIsDeleteExpense] = useState(false);
+    const [isEditExpense, setEditExpense] = useState(false);
     const [txtListState, setTxtListState] = useState(false);
 
     const [newExpenses, setExpenses] = useState(() => expenses);
@@ -43,7 +56,15 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
     const [newExpenseAmount, setNewExpenseAmount] = useState("");
     const [selectedMonth, setSelectedMonth] = useState("All Expenses (Year)");
     const [selectedCat, setSelectedCat] = useState("All Categories");
+
     const [indexOfExpense, setIndexOfExpense] = useState(null)
+    const [editExpenseDesc, setEditExpenseDesc] = useState(null)
+    const [editExpenseType, setEditExpenseType] = useState(null)
+    const [editExpenseCat, setEditExpenseCat] = useState(null)
+    const [editExpenseDate, setEditExpenseDate] = useState(null)
+    const [editExpenseAmount, setEditExpenseAmount] = useState(null)
+
+
 
     const scrollOnList = (event) => {
         const position = event.currentTarget.scrollTop;
@@ -66,6 +87,9 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
             month: new Date(newExpenseDate).toLocaleString('default', { month: 'long' }),
             amount: newExpenseAmount
         };
+
+        //setting the paid amount this month
+        setPayments((prevPayments) => [...prevPayments, expenseToAdd]);
 
         setExpenses((prev) => [...prev, expenseToAdd]);
         setNewExpenseDesc("");
@@ -96,14 +120,28 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
     const filteredExpenses = newExpenses.filter((expense) => {
         const monthQuery = selectedMonth.toLowerCase().trim();
         const catQuery = selectedCat.toLowerCase().trim();
-
         const matchesMonth = monthQuery === "all expenses (year)" || expense.month.toLowerCase().includes(monthQuery);
         const matchesCategory = catQuery === "all categories" || expense.category.toLowerCase().includes(catQuery);
 
         return matchesMonth && matchesCategory;
     });
 
-    const filteredTotal = filteredExpenses.reduce((total, expense) => total + Number(expense.amount), 0);
+ 
+    const financialData = filteredExpenses.reduce((acc, expense) => {
+        const type = expense.type ? expense.type.toLowerCase().trim() : "";
+        const amount = Number(expense.amount) || 0;
+
+        if (type === "refund / credit (inflow)") {
+            acc.moneyIn += amount;
+        } else {
+            acc.moneyOut += amount;
+        }
+
+        return acc;
+    }, { moneyIn: 0, moneyOut: 0 });
+    const netDifference = financialData.moneyIn - financialData.moneyOut;
+    const totalColor = financialData.moneyIn > financialData.moneyOut ? "text-green-400" : "text-red-400";
+
 
     const grandTotal = newExpenses.reduce((total, expense) => total + Number(expense.amount), 0);
 
@@ -116,6 +154,121 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
         setExpenses((prev) => prev.filter(expense => expense.id !== indexOfExpense));
         setIsDeleteExpense(false);
     }
+
+    const handleExpenseEditDesc = (e) => {
+        setEditExpenseDesc(e.target.value);
+    };
+    const handleExpenseEditType = (e) => {
+        setEditExpenseType(e.target.value);
+    };
+    const handleExpenseEditCat = (e) => {
+        setEditExpenseCat(e.target.value);
+    };
+    const handleExpenseEditDate = (e) => {
+        setEditExpenseDate(e.target.value);
+    };
+    const handleExpenseEditAmount = (e) => {
+        setEditExpenseAmount(e.target.value);
+    };
+
+    const editExpense = (desc, type, cat, date, amount) => {
+        setEditExpense(true)
+        setEditExpenseDesc(desc)
+        setEditExpenseType(type)
+        setEditExpenseCat(cat)
+        setEditExpenseDate(date)
+        setEditExpenseAmount(amount)
+    }
+
+    //OKRs
+    const [payments, setPayments] = useState(filteredExpenses);
+    const { totalSpentThisMonth, totalTransactionsThisMonth, totalSpentThisYear, totalTransactionsThisYear, topCategory, topCategoryAmount, topCategoryPercentage, totalSpentForRefundsAndCredits, totalTransactionsForRefundsAndCredits } = useMemo(() => {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth();
+
+        const thisMonthPayments = payments.filter((payment) => {
+            const paymentDate = new Date(payment.date);
+            const type = payment.type ? payment.type.trim().toLowerCase() : "";
+            return (
+                paymentDate.getFullYear() === currentYear &&
+                paymentDate.getMonth() === currentMonth &&
+                type !== "refund / credit (inflow)"
+            );
+        });
+        const thisYearPayments = payments.filter((payment) => {
+            const paymentDate = new Date(payment.date);
+            const type = payment.type ? payment.type.trim().toLowerCase() : "";
+            return (
+                paymentDate.getFullYear() === currentYear &&
+                type !== "refund / credit (inflow)"
+            );
+        });
+
+        // Count the occurrences of each category
+        const counts = payments.reduce((acc, payment) => {
+            const type = payment.type ? payment.type.trim().toLowerCase() : "";
+            const category = payment.category ? payment.category.trim() : "Unknown";
+
+            if (type === "refund / credit (inflow)") {
+                return acc;
+            }
+
+            acc[category] = (acc[category] || 0) + 1;
+
+            return acc;
+        }, {});
+
+
+        const totalAmountMonth = thisMonthPayments.reduce((sum, payment) => sum + payment.amount, 0);
+        const totalAmountYear = thisYearPayments.reduce((sum, payment) => sum + payment.amount, 0);
+        const totalCountMonth = thisMonthPayments.length;
+        const totalCountYear = thisYearPayments.length;
+        const topCat = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b); // Find the category key with the highest count
+
+
+        let topCatAmount = 0;
+        let grandTotal = 0;
+
+        payments.forEach((payment) => {
+            grandTotal += payment.amount;
+            if (payment.category === topCat) {
+                topCatAmount += payment.amount;
+            }
+        });
+
+        const topCatPercentage = ((topCatAmount / grandTotal) * 100).toFixed(2);
+
+        const refundsAndCreditsData = payments.reduce((acc, expense) => {
+            const query = expense.type ? expense.type.toLowerCase().trim() : "";
+
+            if (query === "refund / credit (inflow)") {
+                acc.totalSpent += (Number(expense.amount) || 0);
+                acc.count += 1;
+            }
+
+            return acc;
+        }, { totalSpent: 0, count: 0 });
+
+        const totSpentForRefundsAndCredits = refundsAndCreditsData.totalSpent;
+        const totTransactionsForRefundsAndCredits = refundsAndCreditsData.count;
+
+
+
+        return {
+            totalSpentThisYear: totalAmountYear,
+            totalSpentThisMonth: totalAmountMonth,
+            totalTransactionsThisMonth: totalCountMonth,
+            totalTransactionsThisYear: totalCountYear,
+            topCategory: topCat,
+            topCategoryAmount: topCatAmount,
+            topCategoryPercentage: topCatPercentage,
+            totalSpentForRefundsAndCredits: totSpentForRefundsAndCredits,
+            totalTransactionsForRefundsAndCredits: totTransactionsForRefundsAndCredits
+        };
+    }, [payments]);
+
+
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 
@@ -148,8 +301,8 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         <i className="fa-solid fa-calendar-days"></i>
                         <span className='ml-2'>Spent This Month</span>
                     </h3>
-                    <h1 className='text-xl font-bold'>R 1 000,00</h1>
-                    <h3 className='text-white/75 text-sm'>1 transaction</h3>
+                    <h1 className='text-xl font-bold'>R {totalSpentThisMonth.toLocaleString()}</h1>
+                    <h3 className='text-white/75 text-sm'>{totalTransactionsThisMonth} transaction</h3>
                 </div>
                 <div className='bg-[linear-gradient(135deg,#10b981_0%,#065f46_100%)] shadow-[0_5px_15px_rgba(16,185,129,0.2)] cursor-pointer
                 text-white p-3 rounded-xl flex flex-col gap-2 w-full md:w-60 hover:-translate-y-1 transition-translate duration-300'>
@@ -157,8 +310,8 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         <i className="fa-solid fa-calendar-check"></i>
                         <span className='ml-2'>Spent This Year</span>
                     </h3>
-                    <h1 className='text-xl font-bold'>R 1 000,00</h1>
-                    <h3 className='text-white/75 text-sm'>1 transaction</h3>
+                    <h1 className='text-xl font-bold'>R {totalSpentThisYear.toLocaleString()}</h1>
+                    <h3 className='text-white/75 text-sm'>{totalTransactionsThisYear} transaction</h3>
                 </div>
                 <div className='bg-[linear-gradient(135deg,#f59e0b_0%,#b45309_100%)] shadow-[0_5px_15px_rgba(245,158,11,0.2)] cursor-pointer
                 text-white p-3 rounded-xl flex flex-col gap-2 w-full md:w-60 hover:-translate-y-1 transition-translate duration-300'>
@@ -166,8 +319,8 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         <i className="fa-solid fa-star"></i>
                         <span className='ml-2'>Top Category</span>
                     </h3>
-                    <h1 className='text-xl font-bold'>Other</h1>
-                    <h3 className='text-white/75 text-sm'>R 1,000 (100%)</h3>
+                    <h1 className='text-xl font-bold'>{topCategory}</h1>
+                    <h3 className='text-white/75 text-sm'>R {topCategoryAmount.toLocaleString()} ({topCategoryPercentage}%)</h3>
                 </div>
                 <div className='bg-[linear-gradient(135deg,#06b6d4_0%,#0369a1_100%)] shadow-[0_5px_15px_rgba(6,182,212,0.2)] cursor-pointer
                 text-white p-3 rounded-xl flex flex-col gap-2 w-full md:w-60 hover:-translate-y-1 transition-translate duration-300'>
@@ -175,8 +328,8 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         <i className="fa-solid fa-hand-holding-dollar"></i>
                         <span className='ml-2'>Refunds & Credits</span>
                     </h3>
-                    <h1 className='text-xl font-bold'>R 0,00</h1>
-                    <h3 className='text-white/75 text-sm'>0 transaction</h3>
+                    <h1 className='text-xl font-bold'>R {totalSpentForRefundsAndCredits.toLocaleString()}</h1>
+                    <h3 className='text-white/75 text-sm'>{totalTransactionsForRefundsAndCredits} transaction</h3>
                 </div>
             </div>
 
@@ -264,10 +417,11 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                                     <td className='p-3'>{expense.month}</td>
                                     <td className='p-3'>{expense.category}</td>
                                     <td className='p-3'>{expense.description}</td>
-                                    <td className='p-3'>R {expense.amount.toLocaleString()}</td>
+                                    <td className={`p-3 ${expense.type === "Refund / Credit (Inflow)" ? 'text-green-400' : 'text-red-400'}`}>R {expense.amount.toLocaleString()}</td>
                                     <td className='p-3 flex justify-end'>
                                         <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                                            <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                            <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'
+                                                onClick={() => editExpense(expense.description, expense.type, expense.category, expense.date, expense.amount)}>
                                                 <i className="fa-regular fa-pen-to-square"></i>
                                             </span>
                                             <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'
@@ -295,7 +449,7 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                             <td colSpan="100%" className='p-3'>
                                 <div className='flex justify-between items-center w-full'>
                                     <span className="text-white-900">Total for Period (Net):</span>
-                                    <span className="text-xs uppercase tracking-wider text-white-400">R {filteredTotal.toLocaleString()}</span>
+                                    <span className={`text-xs uppercase tracking-wider text-white-400 ${netDifference === 0 ? 'text-gray-400' : totalColor}`}>R {netDifference.toLocaleString()}</span>
                                 </div>
                             </td>
                         </tr>
@@ -334,18 +488,19 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Amount</span>
-                                    <span className="text-red-900 font-medium">
-                                        - R {expense.amount.toLocaleString()}
+                                    <span className={`font-medium ${expense.type === "Refund / Credit (Inflow)" ? 'text-green-400' : 'text-red-400'}`}>
+                                        R {expense.amount.toLocaleString()}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Action</span>
                                     <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'>
+                                        <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'
+                                            onClick={() => editExpense(expense.description, expense.type, expense.category, expense.date, expense.amount)}>
                                             <i className="fa-regular fa-pen-to-square"></i>
                                         </span>
                                         <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'
-                                        onClick={() => deleteExpense(expense.id)}>
+                                            onClick={() => deleteExpense(expense.id)}>
                                             <i className="fa-solid fa-trash"></i>
                                         </span>
                                     </div>
@@ -370,7 +525,7 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                         <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
                             <div className="flex justify-between border-b pb-2">
                                 <span className="font-semibold text-gray-900">Total for Period (Net):</span>
-                                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">R {filteredTotal.toLocaleString()}</span>
+                                <span className={`"text-xs font-semibold uppercase tracking-wider ${netDifference === 0 ? 'text-gray-400' : totalColor}`}>R {netDifference.toLocaleString()}</span>
                             </div>
                         </div>
                     </li>
@@ -477,6 +632,81 @@ function Expenses({ toggleState, toggleMobileState, formattedDate, openCalender 
                                 Yes
                             </button>
                         </div>
+
+                    </div>
+                </div>
+            }
+
+            {isEditExpense &&
+                <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+                bg-black/50 h-screen w-screen'>
+                    <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+                    w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+                        <div className='flex justify-between align-center w-full text-white mb-4'>
+                            <h1 className='text-2xl'>Log Expense</h1>
+                            <p className='font-bold text-2xl cursor-pointer' onClick={() => setEditExpense(false)}>&times;</p>
+                        </div>
+
+
+                        <div className='mb-2 text-xs'>
+                            <h4 className='text-white/85'>Description</h4>
+                            <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+                            focus:outline-white text-white' required placeholder='e.g. KFC for AGM Meeting' type='text'
+                                onChange={handleExpenseEditDesc} value={editExpenseDesc}
+                            />
+                        </div>
+                        <div className='flex justify-between gap-4 mb-2'>
+                            <div className='text-xs w-full'>
+                                <h4 className='text-white/85'>Type</h4>
+                                <select className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+                                focus:outline-white text-white' required onChange={handleExpenseEditType} value={editExpenseType}>
+                                    <option value={"Expense (Outflow)"} className="bg-white text-gray-900">Expense (Outflow)</option>
+                                    <option value={"Refund / Credit (Inflow)"} className="bg-white text-gray-900">Refund / Credit (Inflow)</option>
+                                </select>
+                            </div>
+                            <div className='text-xs w-full'>
+                                <h4 className='text-white/85'>Category</h4>
+                                <select className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+                                focus:outline-white text-white' required onChange={handleExpenseEditCat} value={editExpenseCat}>
+                                    <option value={"Other"} className="bg-white text-gray-900">Other</option>
+                                    <option value={"Refunds / Credits Only"} className="bg-white text-gray-900">Refunds / Credits Only</option>
+                                    <option value={"Coffin & Casket"} className="bg-white text-gray-900">Coffin & Casket</option>
+                                    <option value={"Catering & Groceries"} className="bg-white text-gray-900">Catering & Groceries</option>
+                                    <option value={"Tent & Rentals"} className="bg-white text-gray-900">Tent & Rentals</option>
+                                    <option value={"Hearse & Transport"} className="bg-white text-gray-900">Hearse & Transport</option>
+                                    <option value={"Flowers & Decor"} className="bg-white text-gray-900">Flowers & Decor</option>
+                                    <option value={"Grave Site & Digging"} className="bg-white text-gray-900">Grave Site & Digging</option>
+                                    <option value={"Death Certificate & Admin"} className="bg-white text-gray-900">Death Certificate & Admin</option>
+                                    <option value={"Sound System & Choir"} className="bg-white text-gray-900">Sound System & Choir</option>
+                                    <option value={"Livestock / Slaughter"} className="bg-white text-gray-900">Livestock / Slaughter</option>
+                                    <option value={"Family Payout"} className="bg-white text-gray-900">Family Payout</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className='flex justify-between gap-4 mb-2'>
+                            <div className='text-xs w-full'>
+                                <h4 className='text-white/85'>Date</h4>
+                                <input
+                                    className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white'
+                                    required
+                                    value={new Date(editExpenseDate).toISOString().split('T')[0]}
+                                    type='date'
+                                    onChange={handleExpenseEditDate}
+                                />
+                            </div>
+                            <div className='text-xs w-full'>
+                                <h4 className='text-white/85'>Amount (R)</h4>
+                                <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+                                focus:outline-white text-white' required placeholder='R 0.00' type='number'
+                                    onChange={handleExpenseEditAmount} value={editExpenseAmount} />
+                            </div>
+                        </div>
+
+                        <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+                        hover:bg-white/30' onClick={() => setEditExpense(false)}>
+                            Save
+                        </button>
 
                     </div>
                 </div>
