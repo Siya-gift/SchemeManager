@@ -55,6 +55,8 @@ function App() {
     setCalenderState(false);
   }, [value]);
 
+  //props declared
+  const [schemeSelectedState, setSchemeSelectedState] = useState(0);
 
   //schemes
   const allSchemes = [
@@ -78,6 +80,10 @@ function App() {
     }
   ]
   const [schemes, setSchemes] = useState(() => allSchemes);
+  
+  const schemeSelected = (idx) => {
+    setSchemeSelectedState(idx)
+  }
 
   return (
     <>
@@ -120,10 +126,12 @@ function App() {
         <Profile toggleState={toggleState} />
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
           openCalender={openCalender} formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
+          schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState} setSchemeSelectedState={setSchemeSelectedState}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
-          formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
+          formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes} schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState}
+          setSchemeSelectedState={setSchemeSelectedState}
         />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate} />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />

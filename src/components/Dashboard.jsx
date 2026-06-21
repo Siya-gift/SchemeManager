@@ -9,20 +9,20 @@ function Dashboard({
     openCalender,
     formattedDate,
     schemes,
-    setSchemes
+    setSchemes,
+    schemeSelected,
+    schemeSelectedState,
+    setSchemeSelectedState
 }) {
 
+    const [isAddSchemeModal, setAddSchemeModal] = useState(false);
+
     const [YearMonthFilter, setYearMonthFilter] = useState(1)
-    const [schemeTabState, setschemeTabState] = useState(1)
 
     const [totalAmount, setTotalAmount] = useState(9900)
 
     const switchYearMonthFilter = (periodSelected) => {
         setYearMonthFilter(periodSelected)
-    }
-
-    const switchScheme = (schemeTabSelected) => {
-        setschemeTabState(schemeTabSelected)
     }
 
     // Numbers helper
@@ -39,7 +39,39 @@ function Dashboard({
         return result.replace('.0', '');
     };
 
+    //form input
+    const [newScheme, setNewScheme] = useState('');
+    const [newSchemeAmount, setNewSchemeAmount] = useState('');
+    const [newSchemeStartingBal, setNewSchemeStartingBal] = useState('');
+    const [newSchemeDate, setNewSchemeDate] = useState(new Date().getMonth());
+    const [newSchemeYear, setNewSchemeYear] = useState(new Date().getFullYear());
 
+    // Input handler functions
+    const handleSchemeNameInputChange = (e) => setNewScheme(e.target.value);
+    const handleSchemeAmountInputChange = (e) => setNewSchemeAmount(e.target.value);
+    const handleSchemeStartingBalInputChange = (e) => setNewSchemeStartingBal(e.target.value);
+    const handleSchemeDateInputChange = (e) => setNewSchemeDate(e.target.value);
+    const handleSchemeYearInputChange = (e) => setNewSchemeYear(e.target.value);
+
+    const saveScheme = () => {
+
+        if (!newScheme.trim()) return;
+        if (!newSchemeAmount) return;
+
+        const schemeToAdd = {
+            scheme: newScheme.trim(),
+            monthlyContribution: newSchemeAmount,
+            startingBal: newSchemeStartingBal,
+            date: newSchemeDate
+        }
+
+        setSchemes((prev) => [...prev, schemeToAdd]);
+        setNewScheme("");
+        setNewSchemeAmount("");
+
+
+        setAddSchemeModal(false);
+    };
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 md:p-8 
@@ -78,13 +110,15 @@ function Dashboard({
                     <li key={idx} className={`tab hover:bg-white/45 cursor-pointer 
                     text-white glass rounded-2xl px-4 py-1.5 font-bold 
                     text-sm whitespace-nowrap transition-all
-                    ${schemeTabState === idx + 1 ? "bg-white/45" : ""}`}
-                        onClick={() => switchScheme(idx + 1)}
+                    ${schemeSelectedState === idx ? "bg-white/45" : ""}`}
+                        onClick={() => setSchemeSelectedState(idx)}
                     >{scheme.scheme}</li>
                 ))}
 
 
-                <li className='group flex items-center tab hover:bg-white/20 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm transition-all mr-35'>
+                <li className='group flex items-center tab hover:bg-white/20 cursor-pointer 
+                text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm transition-all mr-35'
+                    onClick={() => setAddSchemeModal(true)}>
                     <span><i className="fa-solid fa-plus"></i></span>
                     <span className='max-w-0 opacity-0 overflow-hidden group-hover:max-w-xs
                      group-hover:opacity-100 group-hover:ml-2 transition-all duration-300 
@@ -259,6 +293,121 @@ function Dashboard({
             <div className='footer flex flex-col sm:flex-row justify-center items-center py-5 px-6 glass text-white'>
                 <p>All rights reserved &copy; 2026 </p>
             </div>
+
+            {isAddSchemeModal && (
+                <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen'>
+                    <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+
+                        {/* Header */}
+                        <div className='flex justify-between align-center w-full text-white mb-4'>
+                            <h1 className='text-2xl'>New Scheme</h1>
+                            <p className='font-bold text-2xl cursor-pointer' onClick={() => setAddSchemeModal(false)}>&times;</p>
+                        </div>
+
+                        {/* Scheme Name Input */}
+                        <div className='mb-2 text-xs'>
+                            <h4 className='text-white/85'>Scheme Name</h4>
+                            <input
+                                className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white'
+                                required
+                                placeholder={`e.g. Social Club ${new Date().getFullYear()}`}
+                                type='text'
+                                onChange={handleSchemeNameInputChange}
+                                value={newScheme}
+                            />
+                        </div>
+
+                        {/* Default Contribution Input */}
+                        <div className='mb-2 text-xs'>
+                            <h4 className='text-white/85'>Default Monthly Contribution</h4>
+                            <input
+                                className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white '
+                                required
+                                type='number'
+                                placeholder='R 0.00'
+                                onChange={handleSchemeAmountInputChange}
+                                value={newSchemeAmount}
+                            />
+                            <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
+                                This is the default amount you expect from each member every month.
+                            </p>
+                        </div>
+
+                        {/* Starting Balance Section */}
+                        <div className="mb-3">
+                            <label className="block text-xs font-bold uppercase text-white/60 mb-1">
+                                Starting Balance (Optional)
+                            </label>
+                            <div className="flex mb-2">
+                                <span className="flex items-center px-3 bg-white/60 border border-r-0 border-gray-300 rounded-l-lg text-white">
+                                    <i className="fas fa-coins"></i>
+                                </span>
+                                <input
+                                    type="number"
+                                    id="editSchemeStartingBalance"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-r-lg text-white focus:outline-none focus:border-white"
+                                    placeholder="R 0.00"
+                                    onChange={handleSchemeStartingBalInputChange}
+                                    value={newSchemeStartingBal}
+                                />
+                            </div>
+
+                            {/* Date Selection Dropdowns */}
+                            <div className="flex">
+                                <span className="flex items-center px-3 bg-white/60 border border-r-0 border-gray-300 rounded-l-lg text-sm text-white">
+                                    As Of
+                                </span>
+
+                                {/* Month Select */}
+                                <select
+                                    id="editSchemeSBMonth"
+                                    onChange={handleSchemeDateInputChange}
+                                    value={newSchemeDate}
+                                    className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
+                                >
+                                    {[
+                                        "January", "February", "March", "April", "May", "June",
+                                        "July", "August", "September", "October", "November", "December"
+                                    ].map((month, index) => (
+                                        <option key={index} value={index} className="text-black">
+                                            {month}
+                                        </option>
+                                    ))}
+                                </select>
+
+                                {/* Year Select */}
+                                <select
+                                    id="editSchemeSBYear"
+                                    onChange={handleSchemeYearInputChange}
+                                    value={newSchemeYear}
+                                    className="w-25 bg-transparent px-3 py-2 text-white border border-l-0 border-white/60 rounded-r-lg text-xs focus:outline-none focus:border-white scheme-dark"
+                                >
+                                    {Array.from({ length: 2027 - 2006 + 1 }, (_, index) => 2006 + index).map((year) => (
+                                        <option key={year} value={year} className="text-black">
+                                            {year}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <small className="block mt-2 text-[9px] text-white/60 leading-normal">
+                                If you have existing funds from before using this app, enter the total
+                                here and select the month/year it applies to.
+                            </small>
+
+                            {/* Save Button */}
+                            <button
+                                className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30'
+                                onClick={saveScheme}
+                            >
+                                Save
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }

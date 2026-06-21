@@ -1,9 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react'
 
-function SchemeMembers({ toggleState, toggleMobileState, openCalender, formattedDate, schemes, setSchemes }) {
+function SchemeMembers({ 
+  toggleState, 
+  toggleMobileState, 
+  openCalender, 
+  formattedDate, 
+  schemes, 
+  setSchemes,
+  schemeSelected,
+  schemeSelectedState
+}) {
 
   const [searchState, setSearchState] = useState("");
-  const [schemeSelectedState, setSchemeSelectedState] = useState(null);
   const [isDotMenu, setisDotMenu] = useState(false);
   const [activeMenuIdx, setActiveMenuIdx] = useState(null);
   const [isDotMenuState, setisDotMenuState] = useState("hidden");
@@ -282,10 +290,6 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
   const paymentHistoryModal = (memberName) => {
     setPaymentHistoryModal(true)
     setMember(memberName)
-  }
-
-  const schemeSelected = (idx) => {
-    setSchemeSelectedState(idx)
   }
 
   //Payment history Accordion
