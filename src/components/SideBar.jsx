@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 import luffyImg from '../images/Luffy_profile_pic.jpg';
 
-function SideBar({ toggleState, setToggleState }) {
-
-    let activeTab = (idx) => {
-        setToggleState(idx)
-    }
+function SideBar({ toggleState, setToggleState, activeTab }) {
 
     return (
         <div className='hidden md:block container w-auto m-5

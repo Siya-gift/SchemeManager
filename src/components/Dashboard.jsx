@@ -12,14 +12,17 @@ function Dashboard({
     setSchemes,
     schemeSelected,
     schemeSelectedState,
-    setSchemeSelectedState
+    setSchemeSelectedState,
+    totalSpentThisMonth,
+    activeTab,
+    openExpenseTab,
+    toggleTabMobile
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
 
     const [YearMonthFilter, setYearMonthFilter] = useState(1)
 
-    const [totalAmount, setTotalAmount] = useState(9900)
 
     const switchYearMonthFilter = (periodSelected) => {
         setYearMonthFilter(periodSelected)
@@ -72,6 +75,11 @@ function Dashboard({
 
         setAddSchemeModal(false);
     };
+
+    const openExpensePage = () => {
+        activeTab(3)
+        toggleTabMobile(3)
+    }
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 md:p-8 
@@ -141,7 +149,7 @@ function Dashboard({
 
                     <div className='mt-4'>
                         <h1 className="text-[clamp(1.5rem,10vw,3rem)] font-bold leading-none whitespace-nowrap">
-                            R -{formatShorthand(totalAmount)}
+                            R -{formatShorthand(100000)}
                         </h1>
 
 
@@ -152,12 +160,12 @@ function Dashboard({
 
                         <hr className='mb-2 mt-3 border-white/25' />
 
-                        <div className='flex justify-between items-center w-full whitespace-nowrap'>
+                        <div className='flex justify-between items-center w-full whitespace-nowrap' onClick={() => openExpensePage()}>
                             <h4 className='text-xs sm:text-sm lg:text-xs text-white/70 mt-2 cursor-pointer hover:text-white transition-all'>
                                 Spent This Month <span className='ml-1'>&rarr;</span>
                             </h4>
                             <h4 className='text-xs sm:text-sm lg:text-xs text-white/70 font-bold mt-2 cursor-pointer hover:text-white transition-all'>
-                                R 630.00
+                                R -{totalSpentThisMonth.toLocaleString()}
                             </h4>
                         </div>
                     </div>

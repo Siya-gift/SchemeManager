@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Draggable } from "gsap/Draggable";
 
-function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileState }) {
+function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileState, toggleTabMobile }) {
 
     const menuRef = useRef();
 
@@ -40,11 +40,6 @@ function MobileMenu({ isOpen, toggleMenu, toggleMobileState, settoggleMobileStat
 
     }, [isOpen]);
 
-
-
-    let toggleTabMobile = (idx) => {
-        settoggleMobileState(idx)
-    }
 
     return (
         <div ref={menuRef}
