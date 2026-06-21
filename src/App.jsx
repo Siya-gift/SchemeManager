@@ -55,6 +55,30 @@ function App() {
     setCalenderState(false);
   }, [value]);
 
+
+  //schemes
+  const allSchemes = [
+    {
+      scheme: "clubs",
+      monthlyContribution: 500.00,
+      startingBal: 2000,
+      date: "2020-09-01"
+    },
+    {
+      scheme: "Section 2 Society",
+      monthlyContribution: 2200.00,
+      startingBal: 2000,
+      date: "2020-09-01"
+    },
+    {
+      scheme: "Billioniare Dream",
+      monthlyContribution: 10050.00,
+      startingBal: 2000,
+      date: "2020-09-01"
+    }
+  ]
+  const [schemes, setSchemes] = useState(() => allSchemes);
+
   return (
     <>
       {/* crusty bg */}
@@ -95,11 +119,11 @@ function App() {
         <SideBar toggleState={toggleState} setToggleState={setToggleState} />
         <Profile toggleState={toggleState} />
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
-          openCalender={openCalender} formattedDate={formattedDate}
+          openCalender={openCalender} formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
-          formattedDate={formattedDate}
+          formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
         />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate} />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 
-function SchemeMembers({ toggleState, toggleMobileState, openCalender, formattedDate }) {
+function SchemeMembers({ toggleState, toggleMobileState, openCalender, formattedDate, schemes, setSchemes }) {
 
   const [searchState, setSearchState] = useState("");
   const [schemeSelectedState, setSchemeSelectedState] = useState(null);
@@ -60,32 +60,13 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       status: "Paid"
     }
   ]
-  const allSchemes = [
-    {
-      scheme: "clubs",
-      monthlyContribution: 500.00,
-      startingBal: 2000,
-      date: "2020-09-01"
-    },
-    {
-      scheme: "Section 2 Society",
-      monthlyContribution: 2200.00,
-      startingBal: 2000,
-      date: "2020-09-01"
-    },
-    {
-      scheme: "Billioniare Dream",
-      monthlyContribution: 10050.00,
-      startingBal: 2000,
-      date: "2020-09-01"
-    }
-  ]
+  
 
   const [members, setMembers] = useState(() => allMembers);
   const [newMember, setNewMember] = useState("");
   const [member, setMember] = useState("");
 
-  const [schemes, setSchemes] = useState(() => allSchemes);
+  
   const [newScheme, setNewScheme] = useState("");
   const [newSchemeAmount, setNewSchemeAmount] = useState();
   const [newSchemeStartingBal, setNewSchemeStartingBal] = useState();
@@ -230,8 +211,6 @@ function SchemeMembers({ toggleState, toggleMobileState, openCalender, formatted
       startingBal: newSchemeStartingBal,
       date: newSchemeDate
     }
-
-    allSchemes.push(schemeToAdd)
 
     setSchemes((prev) => [...prev, schemeToAdd]);
     setNewScheme("");

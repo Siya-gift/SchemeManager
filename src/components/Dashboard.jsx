@@ -1,7 +1,16 @@
 import React, { useState } from 'react'
 import Overlayer from './Overlayer'
 
-function Dashboard({ toggleState, toggleMobileState, overlayer, openCalender, formattedDate, }) {
+
+function Dashboard({
+    toggleState,
+    toggleMobileState,
+    overlayer,
+    openCalender,
+    formattedDate,
+    schemes,
+    setSchemes
+}) {
 
     const [YearMonthFilter, setYearMonthFilter] = useState(1)
     const [schemeTabState, setschemeTabState] = useState(1)
@@ -65,24 +74,15 @@ function Dashboard({ toggleState, toggleMobileState, overlayer, openCalender, fo
 
             {/* Tabs Scrollable on mobile */}
             <ul className='tabs glass-scroll flex gap-2 max-w-svw md:max-w-[70vw] overflow-x-auto pb-4 no-scrollbar'>
-                <li className={`tab hover:bg-white/45 cursor-pointer 
-                text-white glass rounded-2xl px-4 py-1.5 font-bold 
-                text-sm whitespace-nowrap transition-all
-                ${schemeTabState === 1 ? "bg-white/45" : ""}`}
-                    onClick={() => switchScheme(1)}
-                >VV</li>
-                <li className={`tab hover:bg-white/45 cursor-pointer 
-                text-white glass rounded-2xl px-4 py-1.5 font-bold 
-                text-sm whitespace-nowrap transition-all
-                ${schemeTabState === 2 ? "bg-white/45" : ""}`}
-                    onClick={() => switchScheme(2)}
-                >Clubs</li>
-                <li className={`tab hover:bg-white/45 cursor-pointer 
-                text-white glass rounded-2xl px-4 py-1.5 font-bold 
-                text-sm whitespace-nowrap transition-all
-                ${schemeTabState === 3 ? "bg-white/45" : ""}`}
-                    onClick={() => switchScheme(3)}
-                >Scheme2</li>
+                {schemes.map((scheme, idx) => (
+                    <li key={idx} className={`tab hover:bg-white/45 cursor-pointer 
+                    text-white glass rounded-2xl px-4 py-1.5 font-bold 
+                    text-sm whitespace-nowrap transition-all
+                    ${schemeTabState === idx + 1 ? "bg-white/45" : ""}`}
+                        onClick={() => switchScheme(idx + 1)}
+                    >{scheme.scheme}</li>
+                ))}
+
 
                 <li className='group flex items-center tab hover:bg-white/20 cursor-pointer text-white glass rounded-2xl px-4 py-1.5 font-bold text-sm transition-all mr-35'>
                     <span><i className="fa-solid fa-plus"></i></span>
