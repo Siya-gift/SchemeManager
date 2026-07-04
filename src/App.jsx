@@ -59,7 +59,6 @@ function App() {
   const [schemeSelectedState, setSchemeSelectedState] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState("All Expenses (Year)");
   const [selectedCat, setSelectedCat] = useState("All Categories");
-  const [selectedSchemeName, setSelectedSchemeName] = useState("")
 
   //schemes
   const allSchemes = [
@@ -132,9 +131,13 @@ function App() {
     return matchesMonth && matchesCategory;
   });
 
+  // Initialize with the first scheme's name or an empty string if no schemes exist
+  const [selectedSchemeName, setSelectedSchemeName] = useState(schemes[0]?.scheme || "");
+
+
   const schemeSelected = (idx, schemeName) => {
     setSchemeSelectedState(idx);
-    setSelectedSchemeName(schemeName || null);
+    setSelectedSchemeName(schemeName);
   }
 
   //OKRs
@@ -263,7 +266,7 @@ function App() {
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
           openCalender={openCalender} formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
           schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState} setSchemeSelectedState={setSchemeSelectedState}
-          totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} 
+          totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
@@ -280,7 +283,7 @@ function App() {
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
-      <MobileMenu isOpen={isOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} toggleTabMobile={toggleTabMobile}/>
+      <MobileMenu isOpen={isOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} toggleTabMobile={toggleTabMobile} />
     </>
   )
 }
