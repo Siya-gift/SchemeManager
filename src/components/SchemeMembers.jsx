@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react'
 
-function SchemeMembers({ 
-  toggleState, 
-  toggleMobileState, 
-  openCalender, 
-  formattedDate, 
-  schemes, 
+function SchemeMembers({
+  toggleState,
+  toggleMobileState,
+  openCalender,
+  formattedDate,
+  schemes,
   setSchemes,
   schemeSelected,
-  schemeSelectedState
+  schemeSelectedState,
+  selectedSchemeName
 }) {
 
   const [searchState, setSearchState] = useState("");
@@ -27,7 +28,6 @@ function SchemeMembers({
   const [deleteTargetIndex, setDeleteTargetIndex] = useState(null);
   const [deleteSchemeTargetIndex, setDeleteSchemeTargetIndex] = useState(null);
 
-
   //popups states
   const [isAddMember, setIsAddMember] = useState(false);
   const [isDeleteMember, setIsDeleteMember] = useState(false);
@@ -41,48 +41,54 @@ function SchemeMembers({
   const [isPaymentHistoryModal, setPaymentHistoryModal] = useState(false);
 
 
-
   const allMembers = [
     {
       id: 1,
       memberName: "Sam",
       totPaid: 500.00,
-      status: "Paid"
+      status: "Paid",
+      schemeName: "clubs"
     },
     {
       id: 2,
       memberName: "John",
       totPaid: 1120.00,
-      status: "Ahead"
+      status: "Ahead",
+      schemeName: "Section 2 Society"
     },
     {
       id: 3,
       memberName: "Vivian",
       totPaid: 0.00,
-      status: "Arrears"
+      status: "Arrears",
+      schemeName: "Section 2 Society"
     },
     {
       id: 4,
       memberName: "Paul",
       totPaid: 500.00,
-      status: "Paid"
+      status: "Paid",
+      schemeName: "Section 2 Society"
     }
   ]
-  
+
 
   const [members, setMembers] = useState(() => allMembers);
   const [newMember, setNewMember] = useState("");
   const [member, setMember] = useState("");
 
-  
+
   const [newScheme, setNewScheme] = useState("");
   const [newSchemeAmount, setNewSchemeAmount] = useState();
   const [newSchemeStartingBal, setNewSchemeStartingBal] = useState();
   const [newSchemeDate, setNewSchemeDate] = useState("");
 
-  const filteredMembers = members.filter((member) =>
-    member.memberName.toLowerCase().includes(searchState.toLowerCase())
-  );
+  const filteredMembers = members.filter((member) => {
+    return (
+      member.schemeName === selectedSchemeName &&
+      member.memberName.toLowerCase().includes(searchState.toLowerCase())
+    );
+  });
 
   const searchFunc = (e) => {
     setSearchState(e.target.value);
@@ -199,7 +205,8 @@ function SchemeMembers({
     const memberToAdd = {
       memberName: newMember.trim(),
       totPaid: 0,
-      status: "Pending"
+      status: "Pending",
+      schemeName: selectedSchemeName
     };
 
     allMembers.push(memberToAdd)
@@ -397,7 +404,7 @@ function SchemeMembers({
             {schemes.map((item, idx) => (
               <li key={idx} className={`py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
               my-2 rounded-xl mr-1.5 ${schemeSelectedState === idx ? "border-3 border-white-500" : ""}`}
-                onClick={() => schemeSelected(idx)}>
+                onClick={() => schemeSelected(idx, item.scheme)}>
                 <div className='flex justify-between items-center gap-3'>
                   <div className='flex justify-between flex-col leading-5'>
                     <h3 className='text-md font-bold'>{item.scheme}</h3>

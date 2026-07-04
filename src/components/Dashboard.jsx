@@ -119,7 +119,7 @@ function Dashboard({
                     text-white glass rounded-2xl px-4 py-1.5 font-bold 
                     text-sm whitespace-nowrap transition-all
                     ${schemeSelectedState === idx ? "bg-white/45" : ""}`}
-                        onClick={() => setSchemeSelectedState(idx)}
+                        onClick={() => schemeSelected(idx, scheme.scheme)}
                     >{scheme.scheme}</li>
                 ))}
 

@@ -59,6 +59,7 @@ function App() {
   const [schemeSelectedState, setSchemeSelectedState] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState("All Expenses (Year)");
   const [selectedCat, setSelectedCat] = useState("All Categories");
+  const [selectedSchemeName, setSelectedSchemeName] = useState("")
 
   //schemes
   const allSchemes = [
@@ -131,8 +132,9 @@ function App() {
     return matchesMonth && matchesCategory;
   });
 
-  const schemeSelected = (idx) => {
-    setSchemeSelectedState(idx)
+  const schemeSelected = (idx, schemeName) => {
+    setSchemeSelectedState(idx);
+    setSelectedSchemeName(schemeName || null);
   }
 
   //OKRs
@@ -266,8 +268,7 @@ function App() {
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
           formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes} schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState}
-          setSchemeSelectedState={setSchemeSelectedState}
-
+          setSchemeSelectedState={setSchemeSelectedState} selectedSchemeName={selectedSchemeName}
         />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate}
           newExpenses={newExpenses} setExpenses={setExpenses} filteredExpenses={filteredExpenses} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth}
