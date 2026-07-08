@@ -87,7 +87,7 @@ function App() {
       date: "2026-03-16",
       month: "March",
       category: "Refunds / Credits Only",
-      description: "Tent",
+      description: "Money Refund",
       amount: 32500,
       type: "Refund / Credit (Inflow)",
       schemeName: "Section 2 Society"
@@ -106,7 +106,7 @@ function App() {
       id: 3,
       date: "2026-05-16",
       month: "May",
-      category: "Sound System & Choir",
+      category: "Events, Venue & Equipment Hire",
       description: "Sound System",
       amount: 500,
       type: "Expense (Outflow)",
@@ -116,7 +116,7 @@ function App() {
       id: 4,
       date: "2026-06-16",
       month: "June",
-      category: "Livestock / Slaughter",
+      category: "Catering & Refreshments",
       description: "2 Cows",
       amount: 20000,
       type: "Expense (Outflow)",
@@ -127,9 +127,19 @@ function App() {
       id: 5,
       date: "2026-06-20",
       month: "June",
-      category: "Livestock / Slaughter",
+      category: "Catering & Refreshments",
       description: "12 Chickens",
       amount: 15000,
+      type: "Expense (Outflow)",
+      schemeName: "clubs"
+    },
+    {
+      id: 6,
+      date: "2026-06-26",
+      month: "June",
+      category: "Bulk Groceries & Goods Purchasing",
+      description: "12 Chickens and Groceries",
+      amount: 5430,
       type: "Expense (Outflow)",
       schemeName: "clubs"
     },
@@ -341,7 +351,7 @@ function App() {
           selectedCat={selectedCat} setSelectedCat={setSelectedCat} payments={payments} setPayments={setPayments} totalSpentThisMonth={totalSpentThisMonth}
           totalTransactionsThisMonth={totalTransactionsThisMonth} totalSpentThisYear={totalSpentThisYear} totalTransactionsThisYear={totalTransactionsThisYear} topCategory={topCategory}
           topCategoryAmount={topCategoryAmount} topCategoryPercentage={topCategoryPercentage} totalSpentForRefundsAndCredits={totalSpentForRefundsAndCredits} totalTransactionsForRefundsAndCredits={totalTransactionsForRefundsAndCredits}
-          selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference}
+          selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference} 
         />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />

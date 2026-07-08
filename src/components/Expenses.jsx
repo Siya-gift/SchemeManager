@@ -104,7 +104,7 @@ function Expenses({
 
 
 
-    
+
     const totalColor = financialData.moneyIn > financialData.moneyOut ? "text-green-400" : "text-red-400";
 
 
@@ -145,6 +145,54 @@ function Expenses({
         setEditExpenseAmount(amount)
     }
 
+
+    // 1. Calculate the grand total of all expenses (to calculate the 100% scale)
+    const grandTotalExpense = filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+    // 2. Group the expenses by category and sum up their amounts
+    const categoryTotals = filteredExpenses.reduce((acc, expense) => {
+        const cat = expense.category;
+
+        // If we haven't seen this category yet, initialize it at 0
+        if (!acc[cat]) {
+            acc[cat] = 0;
+        }
+
+        // Add the current expense amount to its category total
+        acc[cat] += expense.amount;
+
+        return acc;
+    }, {}); // Starts with an empty object {}
+
+    // 3. Convert that object back into an array so we can map over it in the UI
+    const aggregatedExpenses = Object.entries(categoryTotals).map(([category, totalAmount]) => {
+        // Calculate the percentage safely (prevent dividing by zero)
+        const percentage = grandTotalExpense > 0 ? Math.round((totalAmount / grandTotalExpense) * 100) : 0;
+
+        return {
+            category,
+            amount: totalAmount,
+            percentage
+        };
+    });
+
+    const colorPalette = [
+        'bg-[#FFD700]',
+        'bg-green-500',
+        'bg-blue-500',
+        'bg-teal-500',
+        'bg-orange-600',
+        'bg-yellow-500',
+        'bg-pink-500',
+        'bg-purple-500',
+        'bg-indigo-500',
+        'bg-cyan-500',
+        'bg-rose-500',
+        'bg-emerald-500',
+        'bg-slate-500',
+        'bg-black/20'
+
+    ];
 
 
     return (
@@ -210,19 +258,44 @@ function Expenses({
                 </div>
             </div>
 
+            {/* Breakdown */}
             <div className='flex flex-col p-3 glass mt-6 rounded-xl gap-4 text-white w-full'>
                 <h3>
                     <i className="fa-solid fa-chart-pie"></i>
                     <span className='ml-2'>Spending Breakdown by Category</span>
                 </h3>
-                <div className='w-full h-3 bg-gray-200 rounded-xl'></div>
+                <div className="w-full h-3 bg-gray-200 rounded-xl flex overflow-hidden">
+                    {aggregatedExpenses.map((expense, index) => {
+                        const colorClass = colorPalette[index % colorPalette.length];
+                        return (
+                            <div
+                                key={expense.category}
+                                className={`h-full ${colorClass}`}
+                                style={{ width: `${expense.percentage}%` }}
+                                title={`${expense.category} (${expense.percentage}%)`}
+                            ></div>
+                        )
+                    })}
+                </div>
+
+
 
                 <ul className='flex flex-wrap gap-2'>
-                    <li className='flex items-center gap-2 text-sm p-2 border border-white/20 rounded-xl
-                    hover:-translate-y-1 transition-transform duration-300 cursor-pointer'>
-                        <span className='w-3 h-3 bg-gray-200 rounded-full inline-block'></span>
-                        <span>Other - R 1,000 (100%)</span>
-                    </li>
+                    {aggregatedExpenses.map((expense, index) => {
+                        const colorClass = colorPalette[index % colorPalette.length];
+                        return (
+                            <li
+                                key={expense.category}
+                                className='flex items-center gap-2 text-sm p-2 border border-white/20 rounded-xl hover:-translate-y-1 transition-transform duration-300 cursor-pointer'
+                            >
+                                <span className={`w-3 h-3 ${colorClass} rounded-full inline-block`}></span>
+                                <span>
+                                    {/* Use .toLocaleString() to add commas to thousands automatically */}
+                                    {expense.category} - R {expense.amount.toLocaleString()} ({expense.percentage}%)
+                                </span>
+                            </li>
+                        )
+                    })}
                 </ul>
             </div>
 
@@ -253,16 +326,18 @@ function Expenses({
                     >
                         <option value={"All Categories"} className="bg-white text-gray-900">All Categories</option>
                         <option value={"Refunds / Credits Only"} className="bg-white text-gray-900">Refunds / Credits Only</option>
-                        <option value={"Coffin & Casket"} className="bg-white text-gray-900">Coffin & Casket</option>
-                        <option value={"Catering & Groceries"} className="bg-white text-gray-900">Catering & Groceries</option>
-                        <option value={"Tent & Rentals"} className="bg-white text-gray-900">Tent & Rentals</option>
-                        <option value={"Hearse & Transport"} className="bg-white text-gray-900">Hearse & Transport</option>
-                        <option value={"Flowers & Decor"} className="bg-white text-gray-900">Flowers & Decor</option>
-                        <option value={"Grave Site & Digging"} className="bg-white text-gray-900">Grave Site & Digging</option>
-                        <option value={"Death Certificate & Admin"} className="bg-white text-gray-900">Death Certificate & Admin</option>
-                        <option value={"Sound System & Choir"} className="bg-white text-gray-900">Sound System & Choir</option>
-                        <option value={"Livestock / Slaughter"} className="bg-white text-gray-900">Livestock / Slaughter</option>
-                        <option value={"Family Payout"} className="bg-white text-gray-900">Family Payout</option>
+                        <option value={"Member Payouts & Dividends"} className="bg-white text-gray-900">Member Payouts & Dividends</option>
+                        <option value={"Claims & Benefits (e.g. Burial, Medical)"} className="bg-white text-gray-900">Claims & Benefits (e.g. Burial, Medical)</option>
+                        <option value={"Investments & Savings"} className="bg-white text-gray-900">Investments & Savings</option>
+                        <option value={"Loans Issued & Emergency"} className="bg-white text-gray-900">Loans Issued & Emergency</option>
+                        <option value={"Bulk Groceries & Goods Purchasing"} className="bg-white text-gray-900">Bulk Groceries & Goods Purchasing</option>
+                        <option value={"Catering & Refreshments"} className="bg-white text-gray-900">Catering & Refreshments</option>
+                        <option value={"Events, Venue & Equipment Hire"} className="bg-white text-gray-900">Events, Venue & Equipment Hire</option>
+                        <option value={"Transport & Logistics"} className="bg-white text-gray-900">Transport & Logistics</option>
+                        <option value={"Bank & Transaction Fees"} className="bg-white text-gray-900">Bank & Transaction Fees</option>
+                        <option value={"Administration & Stationery"} className="bg-white text-gray-900">Administration & Stationery</option>
+                        <option value={"Legal, Compliance & Professional Fees"} className="bg-white text-gray-900">Legal, Compliance & Professional Fees</option>
+                        <option value={"General Operational Expenses"} className="bg-white text-gray-900">General Operational Expenses</option>
                         <option value={"Other"} className="bg-white text-gray-900">Other</option>
                     </select>
                     <button className='bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl focus:outline-2 
@@ -453,16 +528,18 @@ function Expenses({
                                 focus:outline-white text-white' required onChange={handleExpenseCatInputChange} value={newExpenseCat}>
                                     <option value={"Other"} className="bg-white text-gray-900">Other</option>
                                     <option value={"Refunds / Credits Only"} className="bg-white text-gray-900">Refunds / Credits Only</option>
-                                    <option value={"Coffin & Casket"} className="bg-white text-gray-900">Coffin & Casket</option>
-                                    <option value={"Catering & Groceries"} className="bg-white text-gray-900">Catering & Groceries</option>
-                                    <option value={"Tent & Rentals"} className="bg-white text-gray-900">Tent & Rentals</option>
-                                    <option value={"Hearse & Transport"} className="bg-white text-gray-900">Hearse & Transport</option>
-                                    <option value={"Flowers & Decor"} className="bg-white text-gray-900">Flowers & Decor</option>
-                                    <option value={"Grave Site & Digging"} className="bg-white text-gray-900">Grave Site & Digging</option>
-                                    <option value={"Death Certificate & Admin"} className="bg-white text-gray-900">Death Certificate & Admin</option>
-                                    <option value={"Sound System & Choir"} className="bg-white text-gray-900">Sound System & Choir</option>
-                                    <option value={"Livestock / Slaughter"} className="bg-white text-gray-900">Livestock / Slaughter</option>
-                                    <option value={"Family Payout"} className="bg-white text-gray-900">Family Payout</option>
+                                    <option value={"Member Payouts & Dividends"} className="bg-white text-gray-900">Member Payouts & Dividends</option>
+                                    <option value={"Claims & Benefits (e.g. Burial, Medical)"} className="bg-white text-gray-900">Claims & Benefits (e.g. Burial, Medical)</option>
+                                    <option value={"Investments & Savings"} className="bg-white text-gray-900">Investments & Savings</option>
+                                    <option value={"Loans Issued & Emergency"} className="bg-white text-gray-900">Loans Issued & Emergency</option>
+                                    <option value={"Bulk Groceries & Goods Purchasing"} className="bg-white text-gray-900">Bulk Groceries & Goods Purchasing</option>
+                                    <option value={"Catering & Refreshments"} className="bg-white text-gray-900">Catering & Refreshments</option>
+                                    <option value={"Events, Venue & Equipment Hire"} className="bg-white text-gray-900">Events, Venue & Equipment Hire</option>
+                                    <option value={"Transport & Logistics"} className="bg-white text-gray-900">Transport & Logistics</option>
+                                    <option value={"Bank & Transaction Fees"} className="bg-white text-gray-900">Bank & Transaction Fees</option>
+                                    <option value={"Administration & Stationery"} className="bg-white text-gray-900">Administration & Stationery</option>
+                                    <option value={"Legal, Compliance & Professional Fees"} className="bg-white text-gray-900">Legal, Compliance & Professional Fees</option>
+                                    <option value={"General Operational Expenses"} className="bg-white text-gray-900">General Operational Expenses</option>
                                 </select>
                             </div>
                         </div>
@@ -551,16 +628,18 @@ function Expenses({
                                 focus:outline-white text-white' required onChange={handleExpenseEditCat} value={editExpenseCat}>
                                     <option value={"Other"} className="bg-white text-gray-900">Other</option>
                                     <option value={"Refunds / Credits Only"} className="bg-white text-gray-900">Refunds / Credits Only</option>
-                                    <option value={"Coffin & Casket"} className="bg-white text-gray-900">Coffin & Casket</option>
-                                    <option value={"Catering & Groceries"} className="bg-white text-gray-900">Catering & Groceries</option>
-                                    <option value={"Tent & Rentals"} className="bg-white text-gray-900">Tent & Rentals</option>
-                                    <option value={"Hearse & Transport"} className="bg-white text-gray-900">Hearse & Transport</option>
-                                    <option value={"Flowers & Decor"} className="bg-white text-gray-900">Flowers & Decor</option>
-                                    <option value={"Grave Site & Digging"} className="bg-white text-gray-900">Grave Site & Digging</option>
-                                    <option value={"Death Certificate & Admin"} className="bg-white text-gray-900">Death Certificate & Admin</option>
-                                    <option value={"Sound System & Choir"} className="bg-white text-gray-900">Sound System & Choir</option>
-                                    <option value={"Livestock / Slaughter"} className="bg-white text-gray-900">Livestock / Slaughter</option>
-                                    <option value={"Family Payout"} className="bg-white text-gray-900">Family Payout</option>
+                                    <option value={"Member Payouts & Dividends"} className="bg-white text-gray-900">Member Payouts & Dividends</option>
+                                    <option value={"Claims & Benefits (e.g. Burial, Medical)"} className="bg-white text-gray-900">Claims & Benefits (e.g. Burial, Medical)</option>
+                                    <option value={"Investments & Savings"} className="bg-white text-gray-900">Investments & Savings</option>
+                                    <option value={"Loans Issued & Emergency"} className="bg-white text-gray-900">Loans Issued & Emergency</option>
+                                    <option value={"Bulk Groceries & Goods Purchasing"} className="bg-white text-gray-900">Bulk Groceries & Goods Purchasing</option>
+                                    <option value={"Catering & Refreshments"} className="bg-white text-gray-900">Catering & Refreshments</option>
+                                    <option value={"Events, Venue & Equipment Hire"} className="bg-white text-gray-900">Events, Venue & Equipment Hire</option>
+                                    <option value={"Transport & Logistics"} className="bg-white text-gray-900">Transport & Logistics</option>
+                                    <option value={"Bank & Transaction Fees"} className="bg-white text-gray-900">Bank & Transaction Fees</option>
+                                    <option value={"Administration & Stationery"} className="bg-white text-gray-900">Administration & Stationery</option>
+                                    <option value={"Legal, Compliance & Professional Fees"} className="bg-white text-gray-900">Legal, Compliance & Professional Fees</option>
+                                    <option value={"General Operational Expenses"} className="bg-white text-gray-900">General Operational Expenses</option>
                                 </select>
                             </div>
                         </div>
