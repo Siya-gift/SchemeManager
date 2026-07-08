@@ -3,7 +3,7 @@ import luffyImg from '../images/Luffy_profile_pic.jpg';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
-function MobileNav({ isOpen, toggleMenu, setOverlayer }) {
+function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
     const container = useRef();
 
     useGSAP(() => {
@@ -36,7 +36,7 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer }) {
                     </div>
                     <div>
                         <h1 className='text-white text-xl font-bold'>Vusi Nkosi</h1>
-                        <small className='text-[#abe9be] block'>Scheme Owner</small>
+                        <small className='text-[#abe9be] block'>Scheme: {selectedSchemeName}</small>
                     </div>
                 </div>
 

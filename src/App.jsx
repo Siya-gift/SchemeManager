@@ -89,7 +89,8 @@ function App() {
       category: "Refunds / Credits Only",
       description: "Tent",
       amount: 32500,
-      type: "Refund / Credit (Inflow)"
+      type: "Refund / Credit (Inflow)",
+      schemeName: "Section 2 Society"
     },
     {
       id: 2,
@@ -98,7 +99,8 @@ function App() {
       category: "Other",
       description: "Tent",
       amount: 1000,
-      type: "Expense (Outflow)"
+      type: "Expense (Outflow)",
+      schemeName: "Section 2 Society"
     },
     {
       id: 3,
@@ -107,7 +109,8 @@ function App() {
       category: "Sound System & Choir",
       description: "Sound System",
       amount: 500,
-      type: "Expense (Outflow)"
+      type: "Expense (Outflow)",
+      schemeName: "Section 2 Society"
     },
     {
       id: 4,
@@ -116,23 +119,26 @@ function App() {
       category: "Livestock / Slaughter",
       description: "2 Cows",
       amount: 20000,
-      type: "Expense (Outflow)"
+      type: "Expense (Outflow)",
+      schemeName: "Section 2 Society"
     },
   ]
   const [schemes, setSchemes] = useState(() => allSchemes);
   const [newExpenses, setExpenses] = useState(() => expenses);
+  // Initialize with the first scheme's name or an empty string if no schemes exist
+  const [selectedSchemeName, setSelectedSchemeName] = useState(schemes[0]?.scheme || "");
 
   const filteredExpenses = newExpenses.filter((expense) => {
     const monthQuery = selectedMonth.toLowerCase().trim();
     const catQuery = selectedCat.toLowerCase().trim();
+    const schemeNameQuery = selectedSchemeName;
+
     const matchesMonth = monthQuery === "all expenses (year)" || expense.month.toLowerCase().includes(monthQuery);
     const matchesCategory = catQuery === "all categories" || expense.category.toLowerCase().includes(catQuery);
+    const matchesSchemeName = expense.schemeName === schemeNameQuery;
 
-    return matchesMonth && matchesCategory;
+    return matchesMonth && matchesCategory && matchesSchemeName;
   });
-
-  // Initialize with the first scheme's name or an empty string if no schemes exist
-  const [selectedSchemeName, setSelectedSchemeName] = useState(schemes[0]?.scheme || "");
 
 
   const schemeSelected = (idx, schemeName) => {
@@ -142,91 +148,123 @@ function App() {
 
   //OKRs
   const [payments, setPayments] = useState(filteredExpenses);
-  const { totalSpentThisMonth, totalTransactionsThisMonth, totalSpentThisYear, totalTransactionsThisYear, topCategory, topCategoryAmount, topCategoryPercentage, totalSpentForRefundsAndCredits, totalTransactionsForRefundsAndCredits } = useMemo(() => {
+  const {
+    totalSpentThisMonth,
+    totalTransactionsThisMonth,
+    totalSpentThisYear,
+    totalTransactionsThisYear,
+    topCategory,
+    topCategoryAmount,
+    topCategoryPercentage,
+    totalSpentForRefundsAndCredits,
+    totalTransactionsForRefundsAndCredits,
+  } = useMemo(() => {
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
 
-    const thisMonthPayments = payments.filter((payment) => {
-      const paymentDate = new Date(payment.date);
+    // Helper function to safely convert amounts to numbers (prevents string concatenation bugs like "10" + "20" = "1020")
+    // Assuming your object has an 'amount' property. If it's named something else, change 'payment.amount' below.
+    const getAmount = (val) => {
+      const num = parseFloat(val);
+      return isNaN(num) ? 0 : num;
+    };
+
+    // --- 1. SEPARATE REFUNDS/CREDITS VS REGULAR EXPENSES ---
+    const refundPayments = filteredExpenses.filter((payment) => {
       const type = payment.type ? payment.type.trim().toLowerCase() : "";
-      return (
-        paymentDate.getFullYear() === currentYear &&
-        paymentDate.getMonth() === currentMonth &&
-        type !== "refund / credit (inflow)"
-      );
-    });
-    const thisYearPayments = payments.filter((payment) => {
-      const paymentDate = new Date(payment.date);
-      const type = payment.type ? payment.type.trim().toLowerCase() : "";
-      return (
-        paymentDate.getFullYear() === currentYear &&
-        type !== "refund / credit (inflow)"
-      );
+      return type === "refund / credit (inflow)";
     });
 
-    // Count the occurrences of each category
-    const counts = payments.reduce((acc, payment) => {
+    const regularPayments = filteredExpenses.filter((payment) => {
       const type = payment.type ? payment.type.trim().toLowerCase() : "";
+      return type !== "refund / credit (inflow)";
+    });
+
+    // --- 2. CALCULATE REFUNDS/CREDITS ---
+    const totalTransactionsForRefundsAndCredits = refundPayments.length;
+    const totalSpentForRefundsAndCredits = refundPayments.reduce(
+      (sum, payment) => sum + getAmount(payment.amount),
+      0
+    );
+
+    // --- 3. CALCULATE MONTH & YEAR TOTALS (Using regularPayments) ---
+    const thisMonthPayments = regularPayments.filter((payment) => {
+      const paymentDate = new Date(payment.date);
+      return paymentDate.getFullYear() === currentYear && paymentDate.getMonth() === currentMonth;
+    });
+
+    const totalTransactionsThisMonth = thisMonthPayments.length;
+    const totalSpentThisMonth = thisMonthPayments.reduce(
+      (sum, payment) => sum + getAmount(payment.amount),
+      0
+    );
+
+    const thisYearPayments = regularPayments.filter((payment) => {
+      const paymentDate = new Date(payment.date);
+      return paymentDate.getFullYear() === currentYear;
+    });
+
+    const totalTransactionsThisYear = thisYearPayments.length;
+    const totalSpentThisYear = thisYearPayments.reduce(
+      (sum, payment) => sum + getAmount(payment.amount),
+      0
+    );
+
+    // --- 4. CALCULATE TOP CATEGORY (Occurrences, Amounts, and Percentages) ---
+    // We group both 'count' and 'amount' into a single object per category
+    const categoryStats = regularPayments.reduce((acc, payment) => {
       const category = payment.category ? payment.category.trim() : "Unknown";
+      const amount = getAmount(payment.amount);
 
-      if (type === "refund / credit (inflow)") {
-        return acc;
+      if (!acc[category]) {
+        acc[category] = { count: 0, amount: 0 };
       }
 
-      acc[category] = (acc[category] || 0) + 1;
+      acc[category].count += 1;
+      acc[category].amount += amount;
 
       return acc;
     }, {});
 
+    // Set safe defaults in case there is no data
+    let topCategory = "No Data";
+    let topCategoryAmount = 0;
+    let topCategoryPercentage = 0;
 
-    const totalAmountMonth = thisMonthPayments.reduce((sum, payment) => sum + payment.amount, 0);
-    const totalAmountYear = thisYearPayments.reduce((sum, payment) => sum + payment.amount, 0);
-    const totalCountMonth = thisMonthPayments.length;
-    const totalCountYear = thisYearPayments.length;
-    const topCat = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b); // Find the category key with the highest count
+    const categories = Object.keys(categoryStats);
 
+    // The safeguard we discussed: only run reduce if categories exist!
+    if (categories.length > 0) {
+      // Find the top category based on occurrences (count)
+      topCategory = categories.reduce((a, b) =>
+        categoryStats[a].count > categoryStats[b].count ? a : b
+      );
 
-    let topCatAmount = 0;
-    let grandTotal = 0;
+      topCategoryAmount = categoryStats[topCategory].amount;
 
-    payments.forEach((payment) => {
-      grandTotal += payment.amount;
-      if (payment.category === topCat) {
-        topCatAmount += payment.amount;
+      // Calculate total spent across all regular payments to find the percentage
+      const totalRegularSpent = regularPayments.reduce((sum, payment) => sum + getAmount(payment.amount), 0);
+
+      if (totalRegularSpent > 0) {
+        // Calculate percentage and round to 2 decimal places
+        topCategoryPercentage = Number(((topCategoryAmount / totalRegularSpent) * 100).toFixed(2));
       }
-    });
+    }
 
-    const topCatPercentage = ((topCatAmount / grandTotal) * 100).toFixed(2);
-
-    const refundsAndCreditsData = payments.reduce((acc, expense) => {
-      const query = expense.type ? expense.type.toLowerCase().trim() : "";
-
-      if (query === "refund / credit (inflow)") {
-        acc.totalSpent += (Number(expense.amount) || 0);
-        acc.count += 1;
-      }
-
-      return acc;
-    }, { totalSpent: 0, count: 0 });
-
-    const totSpentForRefundsAndCredits = refundsAndCreditsData.totalSpent;
-    const totTransactionsForRefundsAndCredits = refundsAndCreditsData.count;
-
-
-
+    // --- 5. RETURN ALL CALCULATED VALUES ---
     return {
-      totalSpentThisYear: totalAmountYear,
-      totalSpentThisMonth: totalAmountMonth,
-      totalTransactionsThisMonth: totalCountMonth,
-      totalTransactionsThisYear: totalCountYear,
-      topCategory: topCat,
-      topCategoryAmount: topCatAmount,
-      topCategoryPercentage: topCatPercentage,
-      totalSpentForRefundsAndCredits: totSpentForRefundsAndCredits,
-      totalTransactionsForRefundsAndCredits: totTransactionsForRefundsAndCredits
+      totalSpentThisMonth,
+      totalTransactionsThisMonth,
+      totalSpentThisYear,
+      totalTransactionsThisYear,
+      topCategory,
+      topCategoryAmount,
+      topCategoryPercentage,
+      totalSpentForRefundsAndCredits,
+      totalTransactionsForRefundsAndCredits,
     };
-  }, [payments]);
+  }, [filteredExpenses]);
 
   let activeTab = (idx) => {
     setToggleState(idx)
@@ -234,6 +272,20 @@ function App() {
   let toggleTabMobile = (idx) => {
     settoggleMobileState(idx)
   }
+
+  const financialData = filteredExpenses.reduce((acc, expense) => {
+    const type = expense.type ? expense.type.toLowerCase().trim() : "";
+    const amount = Number(expense.amount) || 0;
+
+    if (type === "refund / credit (inflow)") {
+      acc.moneyIn += amount;
+    } else {
+      acc.moneyOut += amount;
+    }
+
+    return acc;
+  }, { moneyIn: 0, moneyOut: 0 });
+  const netDifference = financialData.moneyIn - financialData.moneyOut;
 
   return (
     <>
@@ -259,14 +311,14 @@ function App() {
 
 
 
-      <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} />
+      <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} selectedSchemeName={selectedSchemeName} />
       <div className='flex overflow-hidden'>
-        <SideBar toggleState={toggleState} setToggleState={setToggleState} activeTab={activeTab} />
+        <SideBar toggleState={toggleState} setToggleState={setToggleState} activeTab={activeTab} selectedSchemeName={selectedSchemeName} />
         <Profile toggleState={toggleState} />
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
           openCalender={openCalender} formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
           schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState} setSchemeSelectedState={setSchemeSelectedState}
-          totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile}
+          totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} financialData={financialData} netDifference={netDifference}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
@@ -278,6 +330,7 @@ function App() {
           selectedCat={selectedCat} setSelectedCat={setSelectedCat} payments={payments} setPayments={setPayments} totalSpentThisMonth={totalSpentThisMonth}
           totalTransactionsThisMonth={totalTransactionsThisMonth} totalSpentThisYear={totalSpentThisYear} totalTransactionsThisYear={totalTransactionsThisYear} topCategory={topCategory}
           topCategoryAmount={topCategoryAmount} topCategoryPercentage={topCategoryPercentage} totalSpentForRefundsAndCredits={totalSpentForRefundsAndCredits} totalTransactionsForRefundsAndCredits={totalTransactionsForRefundsAndCredits}
+          selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference}
         />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />

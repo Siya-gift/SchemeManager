@@ -15,13 +15,16 @@ function Expenses({
     filteredExpenses,
     setPayments,
     totalSpentThisMonth,
-    totalTransactionsThisMonth, 
-    totalSpentThisYear, 
-    totalTransactionsThisYear, 
-    topCategory, topCategoryAmount, 
-    topCategoryPercentage, 
-    totalSpentForRefundsAndCredits, 
-    totalTransactionsForRefundsAndCredits
+    totalTransactionsThisMonth,
+    totalSpentThisYear,
+    totalTransactionsThisYear,
+    topCategory, topCategoryAmount,
+    topCategoryPercentage,
+    totalSpentForRefundsAndCredits,
+    totalTransactionsForRefundsAndCredits,
+    financialData,
+    netDifference,
+    selectedSchemeName
 
 }) {
 
@@ -65,7 +68,8 @@ function Expenses({
             category: newExpenseCat.trim(),
             date: newExpenseDate.trim(),
             month: new Date(newExpenseDate).toLocaleString('default', { month: 'long' }),
-            amount: newExpenseAmount
+            amount: newExpenseAmount,
+            schemeName: selectedSchemeName
         };
 
         //setting the paid amount this month
@@ -97,22 +101,10 @@ function Expenses({
         }
     };
 
+
+
+
     
-
-
-    const financialData = filteredExpenses.reduce((acc, expense) => {
-        const type = expense.type ? expense.type.toLowerCase().trim() : "";
-        const amount = Number(expense.amount) || 0;
-
-        if (type === "refund / credit (inflow)") {
-            acc.moneyIn += amount;
-        } else {
-            acc.moneyOut += amount;
-        }
-
-        return acc;
-    }, { moneyIn: 0, moneyOut: 0 });
-    const netDifference = financialData.moneyIn - financialData.moneyOut;
     const totalColor = financialData.moneyIn > financialData.moneyOut ? "text-green-400" : "text-red-400";
 
 

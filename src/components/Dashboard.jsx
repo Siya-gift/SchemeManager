@@ -16,7 +16,9 @@ function Dashboard({
     totalSpentThisMonth,
     activeTab,
     openExpenseTab,
-    toggleTabMobile
+    toggleTabMobile,
+    financialData,
+    netDifference
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
@@ -149,7 +151,7 @@ function Dashboard({
 
                     <div className='mt-4'>
                         <h1 className="text-[clamp(1.5rem,10vw,3rem)] font-bold leading-none whitespace-nowrap">
-                            R -{formatShorthand(100000)}
+                            R {financialData.moneyIn > financialData.moneyOut ? '+' : ''}{formatShorthand(netDifference)}
                         </h1>
 
 

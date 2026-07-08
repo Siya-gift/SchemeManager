@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import luffyImg from '../images/Luffy_profile_pic.jpg';
 
-function SideBar({ toggleState, setToggleState, activeTab }) {
+function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName }) {
 
     return (
         <div className='hidden md:block container w-auto m-5
@@ -15,7 +15,7 @@ function SideBar({ toggleState, setToggleState, activeTab }) {
                     <img src={luffyImg} className="h-full w-full object-cover" />
                 </div>
                 <h1 className='text-white text-3xl font-bold'>Vusi Nkosi</h1>
-                <small className='text-[#abe9be]'>Scheme Owner</small>
+                <small className='text-[#abe9be]'>Scheme : {selectedSchemeName}</small>
             </div>
             <div className='glass p-5 mt-5'>
                 <h3 className="text-white text-sm font-semibold mb-3 uppercase tracking-wider opacity-70">
