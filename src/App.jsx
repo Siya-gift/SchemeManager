@@ -128,7 +128,7 @@ function App() {
       date: "2026-06-20",
       month: "June",
       category: "Livestock / Slaughter",
-      description: "2 Chickens",
+      description: "12 Chickens",
       amount: 15000,
       type: "Expense (Outflow)",
       schemeName: "clubs"
