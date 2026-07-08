@@ -122,6 +122,17 @@ function App() {
       type: "Expense (Outflow)",
       schemeName: "Section 2 Society"
     },
+
+    {
+      id: 5,
+      date: "2026-06-20",
+      month: "June",
+      category: "Livestock / Slaughter",
+      description: "2 Chickens",
+      amount: 15000,
+      type: "Expense (Outflow)",
+      schemeName: "clubs"
+    },
   ]
   const [schemes, setSchemes] = useState(() => allSchemes);
   const [newExpenses, setExpenses] = useState(() => expenses);
