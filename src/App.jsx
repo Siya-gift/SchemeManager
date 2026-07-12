@@ -143,11 +143,93 @@ function App() {
       type: "Expense (Outflow)",
       schemeName: "clubs"
     },
+    {
+      id: 7,
+      date: "2026-07-26",
+      month: "June",
+      category: "Bulk Groceries & Goods Purchasing",
+      description: "12 Chickens and Groceries",
+      amount: 2230,
+      type: "Expense (Outflow)",
+      schemeName: "clubs"
+    }
   ]
+
+  const allMembers = [
+    {
+      id: 1,
+      memberName: "Sam",
+      totPaid: 500.00,
+      status: "Paid",
+      schemeName: "clubs",
+      paymentDate: "2026-03-16"
+    },
+    {
+      id: 2,
+      memberName: "John",
+      totPaid: 1120.00,
+      status: "Ahead",
+      schemeName: "Section 2 Society",
+      paymentDate: "2026-03-16"
+    },
+    {
+      id: 3,
+      memberName: "Vivian",
+      totPaid: 0.00,
+      status: "Arrears",
+      schemeName: "Section 2 Society",
+      paymentDate: "2026-03-16"
+    },
+    {
+      id: 4,
+      memberName: "Paul",
+      totPaid: 500.00,
+      status: "Paid",
+      schemeName: "Section 2 Society",
+      paymentDate: "2026-03-16"
+    }
+  ]
+
+  // Add setAccordionData and wrap the array in useState
+  const [accordionData, setAccordionData] = useState([
+    {
+      userName: "Sam",
+      year: "2026",
+      yearHistory: [
+        { date: "2026-01-26", amount: "8000.00", details: "Cash" },
+        { date: "2026-02-26", amount: "10000.00", details: "Other" },
+        { date: "2026-03-26", amount: "7500.00", details: "Cash" }
+      ]
+    },
+    {
+      userName: "john",
+      year: "2025",
+      yearHistory: [
+        { date: "2025-11-20", amount: "10000.10", details: "EFT" },
+        { date: "2025-12-15", amount: "9999.50", details: "EFT" }
+      ]
+    },
+    {
+      userName: "John",
+      year: "2024",
+      yearHistory: [
+        { date: "2024-08-15", amount: "20500.00", details: "Other" }
+      ]
+    }
+  ]);
+
+
   const [schemes, setSchemes] = useState(() => allSchemes);
   const [newExpenses, setExpenses] = useState(() => expenses);
   // Initialize with the first scheme's name or an empty string if no schemes exist
   const [selectedSchemeName, setSelectedSchemeName] = useState(schemes[0]?.scheme || "");
+  const [members, setMembers] = useState(() => allMembers);
+
+  const [searchState, setSearchState] = useState("");
+  const [payingMember, setPayingMember] = useState(null);
+  const [newMember, setNewMember] = useState("");
+  const [isAddMember, setIsAddMember] = useState(false);
+
 
   const filteredExpenses = newExpenses.filter((expense) => {
     const monthQuery = selectedMonth.toLowerCase().trim();
@@ -161,11 +243,34 @@ function App() {
     return matchesMonth && matchesCategory && matchesSchemeName;
   });
 
+  const filteredMembers = members.filter((member) => {
+    return (
+      member.schemeName === selectedSchemeName &&
+      member.memberName.toLowerCase().includes(searchState.toLowerCase())
+    );
+  });
+
 
   const schemeSelected = (idx, schemeName) => {
     setSchemeSelectedState(idx);
     setSelectedSchemeName(schemeName);
   }
+
+  const saveMember = () => {
+    if (!newMember.trim()) return;
+
+    const memberToAdd = {
+      memberName: newMember.trim(),
+      totPaid: 0,
+      status: "Pending",
+      schemeName: selectedSchemeName,
+      paymentDate: new Date().toISOString().split('T')[0]
+    };
+
+    setMembers((prev) => [...prev, memberToAdd]);
+    setNewMember("");
+    setIsAddMember(false);
+  };
 
   //OKRs
   const [payments, setPayments] = useState(filteredExpenses);
@@ -308,6 +413,111 @@ function App() {
   }, { moneyIn: 0, moneyOut: 0 });
   const netDifference = financialData.moneyIn - financialData.moneyOut;
 
+  const handleConfirmPayment = (amount, method, date) => {
+    const numericAmount = parseFloat(amount);
+    const paymentYear = date.split('-')[0]; // Extracts "YYYY" from "YYYY-MM-DD"
+
+    // 1. Update the main Members table (Total Paid)
+    setMembers(prevMembers =>
+      prevMembers.map(m =>
+        m.memberName === payingMember
+          ? {
+            ...m,
+            totPaid: m.totPaid + numericAmount,
+            transactions: [...(m.transactions || []), { amount: numericAmount, method, date }],
+            paymentDate: date // Update the payment date to today
+          }
+          : m
+      )
+    );
+
+    // 2. Update the Accordion History Data
+    setAccordionData(prevData => {
+      // Check if the user already has a history array for this specific year
+      const existingYearIndex = prevData.findIndex(
+        item => (item.userName || "").toLowerCase() === payingMember.toLowerCase() && item.year === paymentYear
+      );
+
+      const newTransaction = {
+        date: date,
+        amount: numericAmount.toFixed(2),
+        details: method
+      };
+
+      if (existingYearIndex >= 0) {
+        // The year already exists, push the new transaction into its yearHistory
+        const updatedData = [...prevData];
+        updatedData[existingYearIndex] = {
+          ...updatedData[existingYearIndex],
+          yearHistory: [newTransaction, ...updatedData[existingYearIndex].yearHistory] // Adds to top of list
+        };
+        return updatedData;
+      } else {
+        return [
+          {
+            userName: payingMember,
+            year: paymentYear,
+            yearHistory: [newTransaction]
+          },
+          ...prevData
+        ];
+      }
+    });
+  };
+
+  const [totalSchemeYearlyContribution, setTotalSchemeYearlyContribution] = useState(0);
+  useEffect(() => {
+    const currentYear = new Date().getFullYear()
+    setTotalSchemeYearlyContribution(
+      members.filter((member) => {
+        const memberYear = new Date(member.paymentDate).getFullYear();
+        return memberYear === currentYear && member.schemeName === selectedSchemeName;
+      }).reduce((total, curr) => total + curr.totPaid, 0)
+    )
+  }, [handleConfirmPayment])
+
+  const [totalSchemeMonthlyContribution, setTotalSchemeMonthlyContribution] = useState(0);
+  useEffect(() => {
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+
+    const total = members
+      .filter(member => member.schemeName === selectedSchemeName)
+      .reduce((sum, member) => {
+        const monthlyTotal = (member.transactions || []).reduce((txSum, tx) => {
+          const txDate = new Date(tx.date);
+
+          if (
+            txDate.getMonth() === currentMonth &&
+            txDate.getFullYear() === currentYear
+          ) {
+            return txSum + Number(tx.amount);
+          }
+
+          return txSum;
+        }, 0);
+
+        return sum + monthlyTotal;
+      }, 0);
+
+    setTotalSchemeMonthlyContribution(total);
+  }, [members, selectedSchemeName]);
+
+  const [yearlyTarget, setYearlyTarget] = useState(0);
+  useEffect(() => {
+    setYearlyTarget(
+      (schemes.find(scheme => scheme.scheme === selectedSchemeName)?.monthlyContribution * filteredMembers.length * 12)
+    );
+  }, [saveMember, handleConfirmPayment, selectedSchemeName, filteredMembers.length]);
+
+  const [monthlyTarget, setMonthlyTarget] = useState(0);
+  useEffect(() => {
+    setMonthlyTarget(
+      (schemes.find(scheme => scheme.scheme === selectedSchemeName)?.monthlyContribution * filteredMembers.length)
+    );
+  }, [saveMember, handleConfirmPayment, selectedSchemeName, filteredMembers.length]);
+
+
   return (
     <>
       {/* calender */}
@@ -340,18 +550,22 @@ function App() {
           openCalender={openCalender} formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
           schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState} setSchemeSelectedState={setSchemeSelectedState}
           totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} financialData={financialData} netDifference={netDifference}
+          totalSchemeYearlyContribution={totalSchemeYearlyContribution} totalSchemeMonthlyContribution={totalSchemeMonthlyContribution} yearlyTarget={yearlyTarget} monthlyTarget={monthlyTarget}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
           formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes} schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState}
-          setSchemeSelectedState={setSchemeSelectedState} selectedSchemeName={selectedSchemeName}
+          setSchemeSelectedState={setSchemeSelectedState} selectedSchemeName={selectedSchemeName} allMembers={allMembers} handleConfirmPayment={handleConfirmPayment}
+          totalSchemeYearlyContribution={totalSchemeYearlyContribution} filteredMembers={filteredMembers} members={members} setMembers={setMembers} searchState={searchState}
+          setSearchState={setSearchState} payingMember={payingMember} setPayingMember={setPayingMember} accordionData={accordionData} setAccordionData={setAccordionData}
+          saveMember={saveMember} newMember={newMember} setNewMember={setNewMember} isAddMember={isAddMember} setIsAddMember={setIsAddMember}
         />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate}
           newExpenses={newExpenses} setExpenses={setExpenses} filteredExpenses={filteredExpenses} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth}
           selectedCat={selectedCat} setSelectedCat={setSelectedCat} payments={payments} setPayments={setPayments} totalSpentThisMonth={totalSpentThisMonth}
           totalTransactionsThisMonth={totalTransactionsThisMonth} totalSpentThisYear={totalSpentThisYear} totalTransactionsThisYear={totalTransactionsThisYear} topCategory={topCategory}
           topCategoryAmount={topCategoryAmount} topCategoryPercentage={topCategoryPercentage} totalSpentForRefundsAndCredits={totalSpentForRefundsAndCredits} totalTransactionsForRefundsAndCredits={totalTransactionsForRefundsAndCredits}
-          selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference} 
+          selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference}
         />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />

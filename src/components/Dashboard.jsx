@@ -18,7 +18,11 @@ function Dashboard({
     openExpenseTab,
     toggleTabMobile,
     financialData,
-    netDifference
+    netDifference,
+    totalSchemeYearlyContribution,
+    totalSchemeMonthlyContribution,
+    yearlyTarget,
+    monthlyTarget
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
@@ -192,7 +196,9 @@ function Dashboard({
                         </ul>
                     </div>
 
-                    <h1 className='text-[clamp(2rem,10vw,3rem)] font-bold my-4'>R 40 000.00</h1>
+                    <h1 className='text-[clamp(2rem,10vw,3rem)] font-bold my-4'>
+                        R {YearMonthFilter === 1 ? totalSchemeYearlyContribution.toFixed(2) : totalSchemeMonthlyContribution.toFixed(2)}
+                    </h1>
 
                     <div className='space-y-4'>
                         <ul className='flex flex-wrap gap-4 text-xs opacity-80'>
@@ -203,7 +209,7 @@ function Dashboard({
                         <div className='w-full h-2 bg-white/20 rounded-full overflow-hidden'>
                             <div className='h-full bg-white w-[40%]'></div>
                         </div>
-                        <h5 className='text-xs font-bold'>Target: R 100 000</h5>
+                        <h5 className='text-xs font-bold'>Target: R {YearMonthFilter === 1 ? yearlyTarget.toLocaleString() : monthlyTarget.toLocaleString()}</h5>
                     </div>
                 </div>
 

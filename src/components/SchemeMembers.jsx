@@ -9,17 +9,32 @@ function SchemeMembers({
   setSchemes,
   schemeSelected,
   schemeSelectedState,
-  selectedSchemeName
+  selectedSchemeName,
+  allMembers,
+  handleConfirmPayment,
+  filteredMembers,
+  members,
+  setMembers,
+  searchState,
+  setSearchState,
+  totalSchemeYearlyContribution,
+  payingMember,
+  setPayingMember,
+  accordionData,
+  setAccordionData,
+  saveMember,
+  setNewMember,
+  newMember,
+  setIsAddMember,
+  isAddMember
 }) {
 
-  const [searchState, setSearchState] = useState("");
   const [isDotMenu, setisDotMenu] = useState(false);
   const [activeMenuIdx, setActiveMenuIdx] = useState(null);
   const [isDotMenuState, setisDotMenuState] = useState("hidden");
   const [searchList, setsearchList] = useState("");
   const [searchHistory, setSearchHistory] = useState("");
   const [txtListState, setTxtListState] = useState(false);
-  const [payingMember, setPayingMember] = useState(null);
   const [editMember, setEditMember] = useState(null);
   const [editSchemeName, setEditSchemeName] = useState(null);
   const [editSchemeAmount, setEditSchemeAmount] = useState(null);
@@ -29,7 +44,6 @@ function SchemeMembers({
   const [deleteSchemeTargetIndex, setDeleteSchemeTargetIndex] = useState(null);
 
   //popups states
-  const [isAddMember, setIsAddMember] = useState(false);
   const [isDeleteMember, setIsDeleteMember] = useState(false);
   const [isDeleteScheme, setIsDeleteScheme] = useState(false);
   const [isEditMember, setIsEditMember] = useState(false);
@@ -40,41 +54,6 @@ function SchemeMembers({
   const [isAddSchemeModal, setAddSchemeModal] = useState(false);
   const [isPaymentHistoryModal, setPaymentHistoryModal] = useState(false);
 
-
-  const allMembers = [
-    {
-      id: 1,
-      memberName: "Sam",
-      totPaid: 500.00,
-      status: "Paid",
-      schemeName: "clubs"
-    },
-    {
-      id: 2,
-      memberName: "John",
-      totPaid: 1120.00,
-      status: "Ahead",
-      schemeName: "Section 2 Society"
-    },
-    {
-      id: 3,
-      memberName: "Vivian",
-      totPaid: 0.00,
-      status: "Arrears",
-      schemeName: "Section 2 Society"
-    },
-    {
-      id: 4,
-      memberName: "Paul",
-      totPaid: 500.00,
-      status: "Paid",
-      schemeName: "Section 2 Society"
-    }
-  ]
-
-
-  const [members, setMembers] = useState(() => allMembers);
-  const [newMember, setNewMember] = useState("");
   const [member, setMember] = useState("");
 
 
@@ -83,12 +62,6 @@ function SchemeMembers({
   const [newSchemeStartingBal, setNewSchemeStartingBal] = useState();
   const [newSchemeDate, setNewSchemeDate] = useState("");
 
-  const filteredMembers = members.filter((member) => {
-    return (
-      member.schemeName === selectedSchemeName &&
-      member.memberName.toLowerCase().includes(searchState.toLowerCase())
-    );
-  });
 
   const searchFunc = (e) => {
     setSearchState(e.target.value);
@@ -122,8 +95,6 @@ function SchemeMembers({
     e.preventDefault();
   };
   useEffect(() => {
-
-
     if (isAddMember) {
       // Blocks mouse wheel, trackpad, and touch scrolling
       window.addEventListener('wheel', preventScroll, { passive: false });
@@ -169,6 +140,7 @@ function SchemeMembers({
   const handleInputChange = (e) => {
     setNewMember(e.target.value);
   };
+
   const handleSchemeNameInputChange = (e) => {
     setNewScheme(e.target.value);
   };
@@ -199,23 +171,6 @@ function SchemeMembers({
     setEditSchemeDate(e.target.value);
   };
 
-  const saveMember = () => {
-    if (!newMember.trim()) return;
-
-    const memberToAdd = {
-      memberName: newMember.trim(),
-      totPaid: 0,
-      status: "Pending",
-      schemeName: selectedSchemeName
-    };
-
-    allMembers.push(memberToAdd)
-
-    setMembers((prev) => [...prev, memberToAdd]);
-    setNewMember("");
-    setIsAddMember(false);
-  };
-
   const saveScheme = () => {
     if (!newScheme.trim()) return;
     if (!newSchemeAmount) return;
@@ -237,6 +192,7 @@ function SchemeMembers({
     setIsDeleteMember(true);
     setDeleteTargetIndex(idx);
   };
+
   const deleteSchemeModal = (idx) => {
     setIsDeleteScheme(true);
     setDeleteSchemeTargetIndex(idx);
@@ -310,33 +266,7 @@ function SchemeMembers({
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-  // Add setAccordionData and wrap the array in useState
-  const [accordionData, setAccordionData] = useState([
-    {
-      userName: "Sam",
-      year: "2026",
-      yearHistory: [
-        { date: "2026-01-26", amount: "8000.00", details: "Cash" },
-        { date: "2026-02-26", amount: "10000.00", details: "Other" },
-        { date: "2026-03-26", amount: "7500.00", details: "Cash" }
-      ]
-    },
-    {
-      userName: "john",
-      year: "2025",
-      yearHistory: [
-        { date: "2025-11-20", amount: "10000.10", details: "EFT" },
-        { date: "2025-12-15", amount: "9999.50", details: "EFT" }
-      ]
-    },
-    {
-      userName: "John",
-      year: "2024",
-      yearHistory: [
-        { date: "2024-08-15", amount: "20500.00", details: "Other" }
-      ]
-    }
-  ]);
+
 
   // Inside your PaymentHistoryModal component
   const filteredData = accordionData.filter(
@@ -344,64 +274,14 @@ function SchemeMembers({
   );
   //-------------------------------------------------------------------
 
-
-  const handleConfirmPayment = (amount, method, date) => {
-    const numericAmount = parseFloat(amount);
-    const paymentYear = date.split('-')[0]; // Extracts "YYYY" from "YYYY-MM-DD"
-
-    // 1. Update the main Members table (Total Paid)
-    setMembers(prevMembers =>
-      prevMembers.map(m =>
-        m.memberName === payingMember
-          ? {
-            ...m,
-            totPaid: m.totPaid + numericAmount,
-            transactions: [...(m.transactions || []), { amount: numericAmount, method, date }]
-          }
-          : m
-      )
-    );
-
-    // 2. Update the Accordion History Data
-    setAccordionData(prevData => {
-      // Check if the user already has a history array for this specific year
-      const existingYearIndex = prevData.findIndex(
-        item => (item.userName || "").toLowerCase() === payingMember.toLowerCase() && item.year === paymentYear
-      );
-
-      const newTransaction = {
-        date: date,
-        amount: numericAmount.toFixed(2), // Formats "500" to "500.00" to match your UI
-        details: method
-      };
-
-      if (existingYearIndex >= 0) {
-        // The year already exists, push the new transaction into its yearHistory
-        const updatedData = [...prevData];
-        updatedData[existingYearIndex] = {
-          ...updatedData[existingYearIndex],
-          yearHistory: [newTransaction, ...updatedData[existingYearIndex].yearHistory] // Adds to top of list
-        };
-        return updatedData;
-      } else {
-        // The year doesn't exist for this user yet, create a new accordion block
-        return [
-          {
-            userName: payingMember,
-            year: paymentYear,
-            yearHistory: [newTransaction]
-          },
-          ...prevData
-        ];
-      }
-    });
-  };
-
   const formatDate = (dateString, format = { month: 'long' }) => {
     if (!dateString || dateString === "") return "-";
     const date = new Date(dateString);
     return isNaN(date.getTime()) ? "-" : date.toLocaleString("default", format);
   };
+
+
+
 
   return (
     <div className={`schemeMembers w-full min-h-screen p-4 md:p-8 
@@ -503,7 +383,7 @@ function SchemeMembers({
 
                 <tbody id='membersList'>
                   {filteredMembers.map((member, idx) => (
-                    <tr key={idx} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`} id='memberRow'>
+                    <tr key={member.id} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`} id='memberRow'>
                       <td className="py-4 px-2 align-middle font-medium truncate hover:text-white/70"
                         onClick={() => paymentHistoryModal(member.memberName)}
                         name={"View Payment History"}>
