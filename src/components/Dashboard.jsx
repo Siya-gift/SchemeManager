@@ -87,6 +87,8 @@ function Dashboard({
         toggleTabMobile(3)
     }
 
+    const progressPercentage = YearMonthFilter === 1 ? (totalSchemeYearlyContribution / yearlyTarget) * 100 : (totalSchemeMonthlyContribution / monthlyTarget) * 100;
+
     return (
         <div className={`dashboard w-full min-h-screen p-4 md:p-8 
         /* Mobile Logic: Only hide if mobile state isn't 1 */
@@ -183,7 +185,7 @@ function Dashboard({
                     <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
                         <h2 className='text-xl flex items-center gap-3'>
                             <i className="fa-solid fa-piggy-bank"></i>
-                            Total Collected This Year
+                            Total Collected This {YearMonthFilter === 1 ? "Year" : "Month"}
                         </h2>
                         <ul className='YearMonthFilter border flex items-center text-xs overflow-hidden rounded'>
                             <li className={`${YearMonthFilter === 1 ? "bg-white/40" : ""} px-3 py-1.5 cursor-pointer w-full hover:bg-white/60`}
@@ -207,7 +209,10 @@ function Dashboard({
                             <li><i className="fa-solid fa-wallet mr-2"></i>Other: R10k</li>
                         </ul>
                         <div className='w-full h-2 bg-white/20 rounded-full overflow-hidden'>
-                            <div className='h-full bg-white w-[40%]'></div>
+                            <div
+                                className='h-full bg-white transition-all duration-300'
+                                style={{ width: `${Math.min(100, progressPercentage)}%` }}
+                            ></div>
                         </div>
                         <h5 className='text-xs font-bold'>Target: R {YearMonthFilter === 1 ? yearlyTarget.toLocaleString() : monthlyTarget.toLocaleString()}</h5>
                     </div>

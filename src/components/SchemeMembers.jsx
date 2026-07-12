@@ -189,6 +189,7 @@ function SchemeMembers({
   }
 
   const deleteMember = (idx) => {
+    setActiveMenuIdx(null)
     setIsDeleteMember(true);
     setDeleteTargetIndex(idx);
   };
@@ -232,11 +233,13 @@ function SchemeMembers({
   };
 
   const payingModal = (memberName) => {
+    setActiveMenuIdx(null)
     setIsPaying(true)
     setPayingMember(memberName)
   }
 
   const editModal = (memberName) => {
+    setActiveMenuIdx(null)
     setIsEditMember(true)
     setEditMember(memberName)
   }
