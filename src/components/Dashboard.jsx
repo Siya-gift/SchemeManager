@@ -22,7 +22,14 @@ function Dashboard({
     totalSchemeYearlyContribution,
     totalSchemeMonthlyContribution,
     yearlyTarget,
-    monthlyTarget
+    monthlyTarget,
+    totalCash,
+    totalEFT,
+    totalOther,
+    members,
+    selectedSchemeName,
+    getMemberStatus,
+    filteredMembers
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
@@ -204,9 +211,9 @@ function Dashboard({
 
                     <div className='space-y-4'>
                         <ul className='flex flex-wrap gap-4 text-xs opacity-80'>
-                            <li><i className="fa-solid fa-money-bill-wave mr-2"></i>Cash: R25k</li>
-                            <li><i className="fa-solid fa-building-columns mr-2"></i>EFT: R5k</li>
-                            <li><i className="fa-solid fa-wallet mr-2"></i>Other: R10k</li>
+                            <li><i className="fa-solid fa-money-bill-wave mr-2"></i>Cash: R{YearMonthFilter === 1 ? formatShorthand(totalCash.yearly) : formatShorthand(totalCash.monthly)}</li>
+                            <li><i className="fa-solid fa-building-columns mr-2"></i>EFT: R{YearMonthFilter === 1 ? formatShorthand(totalEFT.yearly) : formatShorthand(totalEFT.monthly)}</li>
+                            <li><i className="fa-solid fa-wallet mr-2"></i>Other: R{YearMonthFilter === 1 ? formatShorthand(totalOther.yearly) : formatShorthand(totalOther.monthly)}</li>
                         </ul>
                         <div className='w-full h-2 bg-white/20 rounded-full overflow-hidden'>
                             <div
@@ -266,13 +273,15 @@ function Dashboard({
                     </h2>
                     <ul className='glass-scroll text-md h-full overflow-y-auto'>
                         <div className='flex-1 overflow-hidden'>
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 9].map((_, i) => (
-                                <li key={i} className='flex justify-around items-center border-b border-white/10 py-4 mr-2
+                            {members.filter((member) => member.schemeName === selectedSchemeName && 
+        (member.status === "Arrears" || member.status === "Partially Paid")).map((member, i) => (
+                                member.status === "Arrears" && (
+                                <li key={member.id || member.memberName} className='flex justify-around items-center border-b border-white/10 py-4 mr-2
                             hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'>
-                                    <span className='text-white'>John</span>
-                                    <span className='text-red-500 font-bold block'>R 500</span>
+                                    <span className='text-white'>{member.memberName} - {member.status}</span>
+                                    <span className='text-red-500 font-bold block'>R {member.totPaid.toFixed(2)}</span>
                                 </li>
-                            ))}
+                            )))}
                         </div>
                     </ul>
                 </div>

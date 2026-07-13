@@ -193,8 +193,7 @@ function Expenses({
         'bg-black/20'
 
     ];
-
-
+    
     return (
         <div className={`dashboard w-full min-h-screen p-4 
         md:p-8 ${toggleMobileState === 3 ? "block" : "hidden"}

@@ -162,7 +162,10 @@ function App() {
       totPaid: 500.00,
       status: "Paid",
       schemeName: "clubs",
-      paymentDate: "2026-03-16"
+      paymentDate: "2026-07-16",
+      transactions: [
+        { amount: 500, method: "Cash", date: "2026-07-16" }
+      ]
     },
     {
       id: 2,
@@ -170,7 +173,10 @@ function App() {
       totPaid: 1120.00,
       status: "Ahead",
       schemeName: "Section 2 Society",
-      paymentDate: "2026-03-16"
+      paymentDate: "2026-03-16",
+      transactions: [
+        { amount: 1120, method: "Cash", date: "2026-03-16" }
+      ]
     },
     {
       id: 3,
@@ -178,7 +184,10 @@ function App() {
       totPaid: 0.00,
       status: "Arrears",
       schemeName: "Section 2 Society",
-      paymentDate: "2026-03-16"
+      paymentDate: "2026-03-16",
+      transactions: [
+        { amount: 0, method: "Cash", date: "2026-03-16" }
+      ]
     },
     {
       id: 4,
@@ -186,7 +195,10 @@ function App() {
       totPaid: 500.00,
       status: "Paid",
       schemeName: "Section 2 Society",
-      paymentDate: "2026-03-16"
+      paymentDate: "2026-03-16",
+      transactions: [
+        { amount: 500, method: "Cash", date: "2026-03-16" }
+      ]
     }
   ]
 
@@ -255,22 +267,6 @@ function App() {
     setSchemeSelectedState(idx);
     setSelectedSchemeName(schemeName);
   }
-
-  const saveMember = () => {
-    if (!newMember.trim()) return;
-
-    const memberToAdd = {
-      memberName: newMember.trim(),
-      totPaid: 0,
-      status: "Pending",
-      schemeName: selectedSchemeName,
-      paymentDate: new Date().toISOString().split('T')[0]
-    };
-
-    setMembers((prev) => [...prev, memberToAdd]);
-    setNewMember("");
-    setIsAddMember(false);
-  };
 
   //OKRs
   const [payments, setPayments] = useState(filteredExpenses);
@@ -465,6 +461,74 @@ function App() {
     });
   };
 
+  const [paymentMethod, setPaymentMethod] = useState("");
+  let memberIndex = 0;
+
+  const addMore = () => {
+
+    let members = document.getElementById('AddMoreMembers');
+    memberIndex++;
+
+    members.innerHTML += `<div class="flex gap-2 items-center flex-row mt-3 w-full" id="member-${memberIndex}">
+  <input class="border-white border rounded-xl p-3 
+  focus:border-white focus:outline-white text-white 
+  w-full member-name-input" type="text" placeholder="Enter Member Name" />
+  <p class="border border-white rounded-xl w-12 h-12 
+  grid place-content-center text-white shrink-0 hover:-translate-y-1
+  cursor-pointer" onclick="this.parentElement.remove()">
+      <i class="fa-solid fa-trash"></i>
+  </p>
+  </div>`;
+  };
+
+  const saveMember = () => {
+    const dynamicInputs = document.querySelectorAll('.member-name-input');
+    const dynamicNames = Array.from(dynamicInputs)
+      .map(input => input.value.trim())
+      .filter(name => name !== "");
+
+    const membersToAdd = [];
+
+    if (newMember.trim()) {
+      membersToAdd.push({
+        id: `new-${Date.now()}-${Math.random()}`,
+        memberName: newMember.trim(),
+        totPaid: 0,
+        status: "Pending",
+        schemeName: selectedSchemeName,
+        paymentDate: new Date().toISOString().split('T')[0],
+        transactions: [
+          { amount: 0, method: paymentMethod, date: new Date().toISOString().split('T')[0] }
+        ]
+      });
+    }
+
+    dynamicNames.forEach((name, idx) => {
+      membersToAdd.push({
+        id: `dynamic-${Date.now()}-${idx}`,
+        memberName: name,
+        totPaid: 0,
+        status: "Pending",
+        schemeName: selectedSchemeName,
+        paymentDate: new Date().toISOString().split('T')[0],
+        transactions: [
+          { amount: 0, method: paymentMethod, date: new Date().toISOString().split('T')[0] }
+        ]
+      });
+    });
+
+    if (membersToAdd.length === 0) return;
+
+    setMembers((prev) => [...prev, ...membersToAdd]);
+    setNewMember("");
+    setIsAddMember(false);
+
+    const membersContainer = document.getElementById('AddMoreMembers');
+    if (membersContainer) membersContainer.innerHTML = "";
+    memberIndex = 0;
+  };
+
+
   const [totalSchemeYearlyContribution, setTotalSchemeYearlyContribution] = useState(0);
   useEffect(() => {
     const currentYear = new Date().getFullYear()
@@ -517,7 +581,135 @@ function App() {
     );
   }, [saveMember, handleConfirmPayment, selectedSchemeName, filteredMembers.length]);
 
+  const [totalCash, setTotalCash] = useState({ monthly: 0, yearly: 0 });
+  const [totalEFT, setTotalEFT] = useState({ monthly: 0, yearly: 0 });
+  const [totalOther, setTotalOther] = useState({ monthly: 0, yearly: 0 });
 
+  useEffect(() => {
+    const filteredPaymentMethodAmount = () => {
+      const currYear = new Date().getFullYear();
+      const currMonth = new Date().getMonth();
+
+      return members
+        .filter((member) => member.schemeName === selectedSchemeName)
+        .reduce((sums, member) => {
+          member.transactions
+            .filter((tx) => tx.method === "Cash")
+            .forEach((tx) => {
+              const txDate = new Date(tx.date);
+              if (txDate.getFullYear() === currYear) {
+                sums.yearly += tx.amount;
+                if (txDate.getMonth() === currMonth) {
+                  sums.monthly += tx.amount;
+                }
+              }
+            });
+          return sums;
+        }, { monthly: 0, yearly: 0 });
+    };
+    setTotalCash(filteredPaymentMethodAmount());
+  }, [members, selectedSchemeName]);
+
+  useEffect(() => {
+    const filteredPaymentMethodAmount = () => {
+      const currYear = new Date().getFullYear();
+      const currMonth = new Date().getMonth();
+
+      return members
+        .filter((member) => member.schemeName === selectedSchemeName)
+        .reduce((sums, member) => {
+          member.transactions
+            .filter((tx) => tx.method === "EFT")
+            .forEach((tx) => {
+              const txDate = new Date(tx.date);
+              if (txDate.getFullYear() === currYear) {
+                sums.yearly += tx.amount;
+                if (txDate.getMonth() === currMonth) {
+                  sums.monthly += tx.amount;
+                }
+              }
+            });
+          return sums;
+        }, { monthly: 0, yearly: 0 });
+    };
+    setTotalEFT(filteredPaymentMethodAmount());
+  }, [members, selectedSchemeName]);
+
+  useEffect(() => {
+    const filteredPaymentMethodAmount = () => {
+      const currYear = new Date().getFullYear();
+      const currMonth = new Date().getMonth();
+
+      return members
+        .filter((member) => member.schemeName === selectedSchemeName)
+        .reduce((sums, member) => {
+          member.transactions
+            .filter((tx) => tx.method === "Other" || tx.method === "Mobile Money" || tx.method === "Direct Deposit")
+            .forEach((tx) => {
+              const txDate = new Date(tx.date);
+              if (txDate.getFullYear() === currYear) {
+                sums.yearly += tx.amount;
+                if (txDate.getMonth() === currMonth) {
+                  sums.monthly += tx.amount;
+                }
+              }
+            });
+          return sums;
+        }, { monthly: 0, yearly: 0 });
+    };
+    setTotalOther(filteredPaymentMethodAmount());
+  }, [members, selectedSchemeName]);
+
+
+  const getMemberStatus = (member, scheme) => {
+    if (!member || !scheme || typeof scheme.monthlyContribution === 'undefined') {
+      return "Pending";
+    }
+
+    const totPaid = member.totPaid || 0;
+    const monthlyFee = scheme.monthlyContribution;
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth(); 
+
+    // total amount paid ONLY during this current month
+    const transactions = member.transactions || [];
+    const paidThisMonth = transactions
+      .filter(tx => {
+        if (!tx.date) return false;
+        const txDate = new Date(tx.date);
+        return txDate.getFullYear() === currentYear && txDate.getMonth() === currentMonth;
+      })
+      .reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0);
+
+    if (totPaid === 0) {
+      return "Pending";
+    }
+
+    // Calculate how long they have been a member
+    const startDateStr = member.paymentDate || new Date().toISOString().split('T')[0];
+    const startDate = new Date(startDateStr);
+    const monthsElapsed = (currentYear - startDate.getFullYear()) * 12 + (currentMonth - startDate.getMonth());
+
+    if (monthsElapsed >= 2 && paidThisMonth === 0) {
+      return "Arrears";
+    }
+
+    if (paidThisMonth > monthlyFee) {
+      return "Ahead";
+    }
+
+    if (paidThisMonth === monthlyFee && monthlyFee > 0) {
+      return "Paid";
+    }
+
+    return "Partially Paid";
+  };
+
+
+
+  
   return (
     <>
       {/* calender */}
@@ -551,6 +743,8 @@ function App() {
           schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState} setSchemeSelectedState={setSchemeSelectedState}
           totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} financialData={financialData} netDifference={netDifference}
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} totalSchemeMonthlyContribution={totalSchemeMonthlyContribution} yearlyTarget={yearlyTarget} monthlyTarget={monthlyTarget}
+          totalCash={totalCash} totalEFT={totalEFT} totalOther={totalOther} members={members} selectedSchemeName={selectedSchemeName} getMemberStatus={getMemberStatus} allMembers={allMembers}
+          filteredMembers={filteredMembers} 
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
@@ -558,7 +752,8 @@ function App() {
           setSchemeSelectedState={setSchemeSelectedState} selectedSchemeName={selectedSchemeName} allMembers={allMembers} handleConfirmPayment={handleConfirmPayment}
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} filteredMembers={filteredMembers} members={members} setMembers={setMembers} searchState={searchState}
           setSearchState={setSearchState} payingMember={payingMember} setPayingMember={setPayingMember} accordionData={accordionData} setAccordionData={setAccordionData}
-          saveMember={saveMember} newMember={newMember} setNewMember={setNewMember} isAddMember={isAddMember} setIsAddMember={setIsAddMember}
+          saveMember={saveMember} addMore={addMore} newMember={newMember} setNewMember={setNewMember} isAddMember={isAddMember} setIsAddMember={setIsAddMember} setPaymentMethod={setPaymentMethod}
+          getMemberStatus={getMemberStatus}
         />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate}
           newExpenses={newExpenses} setExpenses={setExpenses} filteredExpenses={filteredExpenses} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth}

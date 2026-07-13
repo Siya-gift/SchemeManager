@@ -15,6 +15,7 @@ function SchemeMembers({
   filteredMembers,
   members,
   setMembers,
+  addMore,
   searchState,
   setSearchState,
   totalSchemeYearlyContribution,
@@ -26,7 +27,9 @@ function SchemeMembers({
   setNewMember,
   newMember,
   setIsAddMember,
-  isAddMember
+  isAddMember,
+  setPaymentMethod,
+  getMemberStatus
 }) {
 
   const [isDotMenu, setisDotMenu] = useState(false);
@@ -107,27 +110,7 @@ function SchemeMembers({
     };
   }, [isAddMember]);
 
-  const addMore = () => {
-    window.removeEventListener('wheel', preventScroll);
-    window.removeEventListener('touchmove', preventScroll);
 
-
-
-    let members = document.getElementById('AddMoreMembers');
-    let memberIndex = 0
-    memberIndex++;
-    members.innerHTML += `<div class="flex gap-2 items-center flex-row mt-3 w-full" id="member-${memberIndex}">
-    <input class="border-white border rounded-xl p-3 
-    focus:border-white focus:outline-white text-white 
-    w-full" type="text" id="NameOfMember" placeholder="Enter Member Name" />
-    <p class="border border-white rounded-xl w-12 h-12 
-    grid place-content-center text-white shrink-0 hover:-translate-y-1
-    cursor-pointer" onclick="deleteMemberCan(${memberIndex})">
-        <i class="fa-solid fa-trash"></i>
-    </p>
-    </div>`
-
-  }
 
   window.deleteMemberCan = (idx) => {
     const memberElement = document.getElementById(`member-${idx}`);
@@ -188,10 +171,10 @@ function SchemeMembers({
     setAddSchemeModal(false);
   }
 
-  const deleteMember = (idx) => {
-    setActiveMenuIdx(null)
+  const deleteMember = (id) => {
+    setActiveMenuIdx(null);
     setIsDeleteMember(true);
-    setDeleteTargetIndex(idx);
+    setDeleteTargetIndex(id);
   };
 
   const deleteSchemeModal = (idx) => {
@@ -199,7 +182,7 @@ function SchemeMembers({
     setDeleteSchemeTargetIndex(idx);
   };
 
-  const getStatusClass = (status) => {
+  const getStatusBadgeClass = (status) => {
     if (status === "Paid") {
       return "bg-green-100 text-green-800";
     } else if (status === "Ahead") {
@@ -211,11 +194,12 @@ function SchemeMembers({
     }
   };
 
+
   const removeMember = () => {
     setIsDeleteMember(false);
     if (deleteTargetIndex === null) return;
 
-    const updatedMembers = members.filter((_, index) => index !== deleteTargetIndex);
+    const updatedMembers = members.filter((member) => member.id !== deleteTargetIndex);
     setMembers(updatedMembers);
     setDeleteTargetIndex(null);
   };
@@ -385,66 +369,70 @@ function SchemeMembers({
                 </thead>
 
                 <tbody id='membersList'>
-                  {filteredMembers.map((member, idx) => (
-                    <tr key={member.id} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`} id='memberRow'>
-                      <td className="py-4 px-2 align-middle font-medium truncate hover:text-white/70"
-                        onClick={() => paymentHistoryModal(member.memberName)}
-                        name={"View Payment History"}>
-                        {idx + 1}. {member.memberName}
-                      </td>
-                      <td className="py-4 px-2 align-middle">R {member.totPaid}</td>
-                      <td className="py-4 px-2 align-middle">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full 
-                      text-xs font-medium ${getStatusClass(member.status)}`}>
-                          {member.status}
-                        </span>
-                      </td>
-                      <td className="relative md:hidden py-4 px-2 align-middle text-right">
-                        <span
-                          className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1 cursor-pointer'
-                          onClick={() => { toggleDotMenu(idx) }}
-                        >
-                          <i className="fa-solid fa-ellipsis-vertical"></i>
-                        </span>
+                  {filteredMembers.map((member, idx) => {
+                    const currentStatus = getMemberStatus(member, schemes[schemeSelectedState]);
+                    const badgeStyle = getStatusBadgeClass(currentStatus);
+                    return (
+                      <tr key={member.id || member.memberName} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`} id='memberRow'>
+                        <td className="py-4 px-2 align-middle font-medium truncate hover:text-white/70"
+                          onClick={() => paymentHistoryModal(member.memberName)}
+                          name={"View Payment History"}>
+                          {idx + 1}. {member.memberName}
+                        </td>
+                        <td className="py-4 px-2 align-middle">R {member.totPaid}</td>
+                        <td className="py-4 px-2 align-middle">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full 
+                          text-xs font-medium ${badgeStyle}`}>
+                            {currentStatus}
+                          </span>
+                        </td>
+                        <td className="relative md:hidden py-4 px-2 align-middle text-right">
+                          <span
+                            className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1 cursor-pointer'
+                            onClick={() => { toggleDotMenu(idx) }}
+                          >
+                            <i className="fa-solid fa-ellipsis-vertical"></i>
+                          </span>
 
-                        {activeMenuIdx === idx && (
-                          <div className="md:hidden glass bg-white absolute -bottom-30 right-0 
+                          {activeMenuIdx === idx && (
+                            <div className="md:hidden glass bg-white absolute -bottom-30 right-0 
                           py-2.5 px-5 text-sm text-left text-black/70 z-9
                           after:content-[''] after:absolute after:bottom-full after:right-5
                           after:border-8 after:border-transparent after:border-b-white">
 
-                            <p className='border-white-400 flex gap-2 align-center py-2'
-                              onClick={() => editModal(member.memberName)}>
-                              <i className="fa-regular fa-pen-to-square"></i> Edit
-                            </p><hr />
-                            <p className='border-white-400 flex gap-2 align-center py-2'
-                              onClick={() => deleteMember(idx)}>
-                              <i className="fa-solid fa-trash"></i> Delete
-                            </p><hr />
-                            <p className='border-white-400 flex gap-2 align-center py-2'
-                              onClick={() => payingModal(member.memberName)}>
-                              <i className="fa-regular fa-credit-card"></i> Pay
-                            </p>
-                          </div>
-                        )}
+                              <p className='border-white-400 flex gap-2 align-center py-2'
+                                onClick={() => editModal(member.memberName)}>
+                                <i className="fa-regular fa-pen-to-square"></i> Edit
+                              </p><hr />
+                              <p className='border-white-400 flex gap-2 align-center py-2'
+                                onClick={() => deleteMember(member.id)}>
+                                <i className="fa-solid fa-trash"></i> Delete
+                              </p><hr />
+                              <p className='border-white-400 flex gap-2 align-center py-2'
+                                onClick={() => payingModal(member.memberName)}>
+                                <i className="fa-regular fa-credit-card"></i> Pay
+                              </p>
+                            </div>
+                          )}
 
-                      </td>
-                      <td className="hidden md:block py-4 px-2 align-middle text-right">
-                        <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'
-                          onClick={() => editModal(member.memberName)}>
-                          <i className="fa-regular fa-pen-to-square"></i>
-                        </span>
-                        <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1'
-                          onClick={() => deleteMember(idx)}>
-                          <i className="fa-solid fa-trash"></i>
-                        </span>
-                        <button className='px-3 py-2 mr-2 transition-transform inline-block hover:-translate-y-1
+                        </td>
+                        <td className="hidden md:block py-4 px-2 align-middle text-right">
+                          <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'
+                            onClick={() => editModal(member.memberName)}>
+                            <i className="fa-regular fa-pen-to-square"></i>
+                          </span>
+                          <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1'
+                            onClick={() => deleteMember(member.id)}>
+                            <i className="fa-solid fa-trash"></i>
+                          </span>
+                          <button className='px-3 py-2 mr-2 transition-transform inline-block hover:-translate-y-1
                         bg-white text-black text-xs rounded-xl cursor-pointer' onClick={() => payingModal(member.memberName)}>
-                          Pay
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                            Pay
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })}
                   {filteredMembers.length === 0 && (
                     <tr>
                       <td colSpan="4" className="py-10 text-center opacity-50">No members found</td>
@@ -757,6 +745,7 @@ function SchemeMembers({
 
                 if (amount > 0) {
                   handleConfirmPayment(amount, method, date);
+                  setPaymentMethod(method);
                   setIsPaying(false);
                 } else {
                   alert("Please enter a valid amount");
