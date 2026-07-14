@@ -29,7 +29,8 @@ function Dashboard({
     members,
     selectedSchemeName,
     getMemberStatus,
-    filteredMembers
+    filteredMembers,
+    membersBehindStatus
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
@@ -95,7 +96,12 @@ function Dashboard({
     }
 
     const progressPercentage = YearMonthFilter === 1 ? (totalSchemeYearlyContribution / yearlyTarget) * 100 : (totalSchemeMonthlyContribution / monthlyTarget) * 100;
-
+    const TotalCollectionsMinusMonthlyExpenses = filteredMembers.reduce((sum, member) => sum + member.totPaid, 0) - (financialData.moneyOut) + (financialData.moneyIn);
+    const membersInArrears = members.filter((member) => {
+        if (member.schemeName !== selectedSchemeName) return false;
+        const activeScheme = schemes.find(s => s.scheme === selectedSchemeName);
+        return getMemberStatus(member, activeScheme) === "Arrears";
+    });
     return (
         <div className={`dashboard w-full min-h-screen p-4 md:p-8 
         /* Mobile Logic: Only hide if mobile state isn't 1 */
@@ -159,12 +165,12 @@ function Dashboard({
                 <div className='glass p-6 text-white flex flex-col justify-between min-h-50 md:col-span-2 lg:col-span-1 h-full w-full'>
                     <h2 className='text-[clamp(1rem,4vw,1.25rem)] flex items-start gap-3 leading-tight'>
                         <i className="fa-solid fa-wallet mt-1"></i>
-                        <span>Total collections(YTD) - Monthly Expenses</span>
+                        <span>Total collections(YTD) Minus Monthly Expenses</span>
                     </h2>
 
                     <div className='mt-4'>
                         <h1 className="text-[clamp(1.5rem,10vw,3rem)] font-bold leading-none whitespace-nowrap">
-                            R {financialData.moneyIn > financialData.moneyOut ? '+' : ''}{formatShorthand(netDifference)}
+                            R {formatShorthand(TotalCollectionsMinusMonthlyExpenses)}
                         </h1>
 
 
@@ -180,7 +186,7 @@ function Dashboard({
                                 Spent This Month <span className='ml-1'>&rarr;</span>
                             </h4>
                             <h4 className='text-xs sm:text-sm lg:text-xs text-white/70 font-bold mt-2 cursor-pointer hover:text-white transition-all'>
-                                R -{totalSpentThisMonth.toLocaleString()}
+                                R {totalSpentThisMonth.toLocaleString()}
                             </h4>
                         </div>
                     </div>
@@ -240,7 +246,7 @@ function Dashboard({
                                 { d: '18 Feb 26', c: 'Payment', v: 'R 2500' },
                                 { d: '18 Feb 26', c: 'Payment', v: 'R 10 500' },
                                 { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
-                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
+                                { d: '18 Feb 26', c: 'Member Added', v: 'Sam' },
                                 { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
                                 { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
                                 { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
@@ -273,15 +279,29 @@ function Dashboard({
                     </h2>
                     <ul className='glass-scroll text-md h-full overflow-y-auto'>
                         <div className='flex-1 overflow-hidden'>
-                            {members.filter((member) => member.schemeName === selectedSchemeName && 
-        (member.status === "Arrears" || member.status === "Partially Paid")).map((member, i) => (
-                                member.status === "Arrears" && (
-                                <li key={member.id || member.memberName} className='flex justify-around items-center border-b border-white/10 py-4 mr-2
-                            hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'>
-                                    <span className='text-white'>{member.memberName} - {member.status}</span>
-                                    <span className='text-red-500 font-bold block'>R {member.totPaid.toFixed(2)}</span>
-                                </li>
-                            )))}
+                            {membersInArrears.length === 0 ? (
+                                <div className='text-center text-white/50 py-10'>
+                                    <p>No members behind on payment</p>
+                                </div>
+                            ) : (
+                                membersInArrears.map((member) => {
+                                    const arrearsValue = member.arrearsTotal || 0;
+
+                                    return (
+                                        <li
+                                            key={member.id || member.memberName}
+                                            className='flex justify-around items-center border-b border-white/10 py-4 mr-2 hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'
+                                        >
+                                            <span className='text-white'>{member.memberName}</span>
+                                            <span className='text-red-500 font-bold block'>
+                                                R {arrearsValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            </span>
+                                        </li>
+                                    );
+                                })
+                            )}
+
+
                         </div>
                     </ul>
                 </div>

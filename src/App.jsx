@@ -162,9 +162,9 @@ function App() {
       totPaid: 500.00,
       status: "Paid",
       schemeName: "clubs",
-      paymentDate: "2026-07-16",
+      paymentDate: "2026-05-16",
       transactions: [
-        { amount: 500, method: "Cash", date: "2026-07-16" }
+        { amount: 500, method: "Cash", date: "2026-05-16" }
       ]
     },
     {
@@ -181,12 +181,12 @@ function App() {
     {
       id: 3,
       memberName: "Vivian",
-      totPaid: 0.00,
-      status: "Arrears",
+      totPaid: 2200.00,
+      status: "Ahead",
       schemeName: "Section 2 Society",
       paymentDate: "2026-03-16",
       transactions: [
-        { amount: 0, method: "Cash", date: "2026-03-16" }
+        { amount: 2200, method: "Cash", date: "2026-03-16" }
       ]
     },
     {
@@ -202,30 +202,33 @@ function App() {
     }
   ]
 
-  // Add setAccordionData and wrap the array in useState
   const [accordionData, setAccordionData] = useState([
     {
       userName: "Sam",
       year: "2026",
       yearHistory: [
-        { date: "2026-01-26", amount: "8000.00", details: "Cash" },
-        { date: "2026-02-26", amount: "10000.00", details: "Other" },
-        { date: "2026-03-26", amount: "7500.00", details: "Cash" }
-      ]
-    },
-    {
-      userName: "john",
-      year: "2025",
-      yearHistory: [
-        { date: "2025-11-20", amount: "10000.10", details: "EFT" },
-        { date: "2025-12-15", amount: "9999.50", details: "EFT" }
+        { date: "2026-05-16", amount: "500.00", details: "Cash" }
       ]
     },
     {
       userName: "John",
-      year: "2024",
+      year: "2026",
       yearHistory: [
-        { date: "2024-08-15", amount: "20500.00", details: "Other" }
+        { date: "2026-03-16", amount: "1120.00", details: "Cash" }
+      ]
+    },
+    {
+      userName: "Vivian",
+      year: "2026",
+      yearHistory: [
+        { date: "2026-03-16", amount: "2200.00", details: "Cash" }
+      ]
+    },
+    {
+      userName: "Paul",
+      year: "2026",
+      yearHistory: [
+        { date: "2026-03-16", amount: "500.00", details: "Cash" }
       ]
     }
   ]);
@@ -241,6 +244,7 @@ function App() {
   const [payingMember, setPayingMember] = useState(null);
   const [newMember, setNewMember] = useState("");
   const [isAddMember, setIsAddMember] = useState(false);
+  const [membersBehindStatus, setMembersBehindStatus] = useState("");
 
 
   const filteredExpenses = newExpenses.filter((expense) => {
@@ -671,7 +675,7 @@ function App() {
 
     const today = new Date();
     const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth(); 
+    const currentMonth = today.getMonth();
 
     // total amount paid ONLY during this current month
     const transactions = member.transactions || [];
@@ -693,6 +697,10 @@ function App() {
     const monthsElapsed = (currentYear - startDate.getFullYear()) * 12 + (currentMonth - startDate.getMonth());
 
     if (monthsElapsed >= 2 && paidThisMonth === 0) {
+      // Expected total since joining vs what they have actually paid in total lifetime
+      const expectedTotalPaid = monthsElapsed * monthlyFee;
+      member.arrearsTotal = Math.max(0, expectedTotalPaid - totPaid);
+
       return "Arrears";
     }
 
@@ -709,7 +717,7 @@ function App() {
 
 
 
-  
+
   return (
     <>
       {/* calender */}
@@ -744,7 +752,7 @@ function App() {
           totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} financialData={financialData} netDifference={netDifference}
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} totalSchemeMonthlyContribution={totalSchemeMonthlyContribution} yearlyTarget={yearlyTarget} monthlyTarget={monthlyTarget}
           totalCash={totalCash} totalEFT={totalEFT} totalOther={totalOther} members={members} selectedSchemeName={selectedSchemeName} getMemberStatus={getMemberStatus} allMembers={allMembers}
-          filteredMembers={filteredMembers} 
+          filteredMembers={filteredMembers} membersBehindStatus={membersBehindStatus}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
