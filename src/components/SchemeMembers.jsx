@@ -45,6 +45,7 @@ function SchemeMembers({
   const [editSchemeDate, setEditSchemeDate] = useState(null);
   const [deleteTargetIndex, setDeleteTargetIndex] = useState(null);
   const [deleteSchemeTargetIndex, setDeleteSchemeTargetIndex] = useState(null);
+  const [editingMember, setEditingMember] = useState(null);
 
   //popups states
   const [isDeleteMember, setIsDeleteMember] = useState(false);
@@ -222,10 +223,13 @@ function SchemeMembers({
     setPayingMember(memberName)
   }
 
-  const editModal = (memberName) => {
+  const [editingId, setEditingId] = useState(null);
+  const editModal = (id, memberName) => {
     setActiveMenuIdx(null)
     setIsEditMember(true)
     setEditMember(memberName)
+    setEditingId(id)
+    console.log(id)
   }
 
   const editSchemeModal = (scheme, monthlyContribution, startingBal, date) => {
@@ -244,6 +248,23 @@ function SchemeMembers({
     setPayingMember(memberName);
     setPaymentHistoryModal(true);
   };
+
+  const updateMember = (edtID, edtNm) => {
+    console.log("ID sent to update:", edtID);
+    console.log("Data sent to update:", edtNm);
+
+    setMembers(prevMembers =>
+      prevMembers.map(member =>
+        // FIXED: Merge old member data with the new edits so properties don't disappear
+        member.id === edtID ? { ...member, ...edtNm } : member
+      )
+    );
+
+    setIsEditMember(false);
+  };
+
+
+
 
   //Payment history Accordion
   //first payment should be january and if not it'll create empty properties
@@ -309,7 +330,7 @@ function SchemeMembers({
               <li key={idx} className={`py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
               my-2 rounded-xl mr-1.5 ${schemeSelectedState === idx ? "border-3 border-white-500" : ""}`}
                 onClick={() => schemeSelected(idx, item.scheme)}>
-                <div className='flex justify-between items-center gap-3'>
+                <div className='flex justify-between items-center gap-3 flex-col lg:flex-row'>
                   <div className='flex justify-between flex-col leading-5'>
                     <h3 className='text-md font-bold'>{item.scheme}</h3>
                     <p className='text-[11px] text-white/70'>R{item.monthlyContribution}/mo</p>
@@ -401,7 +422,7 @@ function SchemeMembers({
                           after:border-8 after:border-transparent after:border-b-white">
 
                               <p className='border-white-400 flex gap-2 align-center py-2'
-                                onClick={() => editModal(member.memberName)}>
+                                onClick={() => editModal(member.id, member.memberName)}>
                                 <i className="fa-regular fa-pen-to-square"></i> Edit
                               </p><hr />
                               <p className='border-white-400 flex gap-2 align-center py-2'
@@ -418,7 +439,7 @@ function SchemeMembers({
                         </td>
                         <td className="hidden md:block py-4 px-2 align-middle text-right">
                           <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'
-                            onClick={() => editModal(member.memberName)}>
+                            onClick={() => editModal(member.id, member.memberName)}>
                             <i className="fa-regular fa-pen-to-square"></i>
                           </span>
                           <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1'
@@ -469,7 +490,7 @@ function SchemeMembers({
             </div>
 
             <ul className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
-              <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
+              <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white member-name-input
               focus:outline-white text-white' type='text' placeholder='Enter Member Name' id='inputName'
                 onChange={handleInputChange}
                 value={newMember}
@@ -554,37 +575,49 @@ function SchemeMembers({
 
       {isEditMember &&
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-        bg-black/50 h-screen w-screen'>
+  bg-black/50 h-screen w-screen'>
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+     w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
 
             <div className='flex justify-between align-center w-full text-white'>
               <h1 className='text-2xl'>Edit Member</h1>
               <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsEditMember(false)}>&times;</p>
             </div>
             <div className='flex start align-center w-full text-white mt-6
-            text-sm'>
+      text-sm'>
               <h3 className='text-white'>Name</h3>
             </div>
 
             <div className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
               <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
-              focus:outline-white text-white' type='text' value={editMember} onChange={handleInputChangeEdit}
+        focus:outline-white text-white' type='text' value={editMember} onChange={handleInputChangeEdit}
               />
             </div>
             <div className='flex start align-center w-full text-white mt-5
-            text-sm'>
+      text-sm'>
               <h3 className='text-white'>Monthly Contribution</h3>
             </div>
 
-            <div className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
-              <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
-              focus:outline-white text-white' type='number' placeholder='Default'
+            <div className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers-Contribution'>
+              {/* Added state binding to your monthly contribution input */}
+              <input
+                className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white focus:outline-white text-white'
+                type='number'
+                placeholder='Default'
               />
             </div>
 
-            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30'>
+            {/* Fixed the button to use editMemberId and pass both your state values */}
+            <button
+              className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30'
+              onClick={() => {
+                if (!editingId) return;
+
+                // Call the fixed updateMember function
+                updateMember(editingId, { memberName: editMember });
+              }}
+
+            >
               Save
             </button>
           </div>

@@ -471,6 +471,7 @@ function App() {
   const addMore = () => {
 
     let members = document.getElementById('AddMoreMembers');
+    setDynamicMembers(prev => [...prev, ""]);
     memberIndex++;
 
     members.innerHTML += `<div class="flex gap-2 items-center flex-row mt-3 w-full" id="member-${memberIndex}">
@@ -492,45 +493,50 @@ function App() {
       .filter(name => name !== "");
 
     const membersToAdd = [];
+    const currentDate = new Date().toISOString().split('T')[0];
 
-    if (newMember.trim()) {
+    const mainMemberName = newMember.trim();
+    if (mainMemberName) {
       membersToAdd.push({
         id: `new-${Date.now()}-${Math.random()}`,
-        memberName: newMember.trim(),
+        memberName: mainMemberName,
         totPaid: 0,
         status: "Pending",
         schemeName: selectedSchemeName,
-        paymentDate: new Date().toISOString().split('T')[0],
-        transactions: [
-          { amount: 0, method: paymentMethod, date: new Date().toISOString().split('T')[0] }
-        ]
+        paymentDate: currentDate,
+        transactions: [{ amount: 0, method: paymentMethod, date: currentDate }]
       });
     }
 
     dynamicNames.forEach((name, idx) => {
       membersToAdd.push({
-        id: `dynamic-${Date.now()}-${idx}`,
+        id: `dynamic-${Date.now()}-${idx}-${Math.random()}`,
         memberName: name,
         totPaid: 0,
         status: "Pending",
         schemeName: selectedSchemeName,
-        paymentDate: new Date().toISOString().split('T')[0],
-        transactions: [
-          { amount: 0, method: paymentMethod, date: new Date().toISOString().split('T')[0] }
-        ]
+        paymentDate: currentDate,
+        transactions: [{ amount: 0, method: paymentMethod, date: currentDate }]
       });
     });
 
     if (membersToAdd.length === 0) return;
 
     setMembers((prev) => [...prev, ...membersToAdd]);
+
+    // Reset states
     setNewMember("");
     setIsAddMember(false);
 
+    // Clear inputs safely
+    dynamicInputs.forEach(input => { input.value = ""; });
+
     const membersContainer = document.getElementById('AddMoreMembers');
-    if (membersContainer) membersContainer.innerHTML = "";
-    memberIndex = 0;
+    if (membersContainer) {
+      membersContainer.innerHTML = ""; // Warning: Try replacing this container with a mapped state array later
+    }
   };
+
 
 
   const [totalSchemeYearlyContribution, setTotalSchemeYearlyContribution] = useState(0);
@@ -712,7 +718,11 @@ function App() {
       return "Paid";
     }
 
-    return "Partially Paid";
+    if (paidThisMonth < monthlyFee && monthlyFee > 0) {
+      return "Partially Paid";
+    }
+
+    return "Paid";
   };
 
 
