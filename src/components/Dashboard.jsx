@@ -317,7 +317,7 @@ function Dashboard({
                     <div className='flex-1 overflow-hidden'>
                         <ul className='glass-scroll text-md h-full overflow-y-auto'>
                             <li className='flex gap-3'><p>*</p>
-                                <p>Create new Scheme using the plus sign</p>
+                                <p>Create new Scheme using the plus sign.</p>
                             </li>
                             <li className='flex gap-3'><p>*</p>
                                 <p>Change the Month & Year to look at past

@@ -475,15 +475,15 @@ function App() {
     memberIndex++;
 
     members.innerHTML += `<div class="flex gap-2 items-center flex-row mt-3 w-full" id="member-${memberIndex}">
-  <input class="border-white border rounded-xl p-3 
-  focus:border-white focus:outline-white text-white 
-  w-full member-name-input" type="text" placeholder="Enter Member Name" />
-  <p class="border border-white rounded-xl w-12 h-12 
-  grid place-content-center text-white shrink-0 hover:-translate-y-1
-  cursor-pointer" onclick="this.parentElement.remove()">
+    <input class="border-white border rounded-xl p-3 
+    focus:border-white focus:outline-white text-white 
+    w-full member-name-input" type="text" placeholder="Enter Member Name" />
+    <p class="border border-white rounded-xl w-12 h-12 
+    grid place-content-center text-white shrink-0 hover:-translate-y-1
+    cursor-pointer" onclick="this.parentElement.remove()">
       <i class="fa-solid fa-trash"></i>
-  </p>
-  </div>`;
+    </p>
+    </div>`;
   };
 
   const saveMember = (e) => {
@@ -700,7 +700,7 @@ function App() {
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
 
-    // total amount paid ONLY during this current month
+    // Total amount paid ONLY during this current month
     const transactions = member.transactions || [];
     const paidThisMonth = transactions
       .filter(tx => {
@@ -714,16 +714,24 @@ function App() {
       return "Pending";
     }
 
-    // Calculate how long they have been a member
+    // Calculate total calendar months active (including the current month)
     const startDateStr = member.paymentDate || new Date().toISOString().split('T')[0];
     const startDate = new Date(startDateStr);
     const monthsElapsed = (currentYear - startDate.getFullYear()) * 12 + (currentMonth - startDate.getMonth());
+    const totalMonthsExpected = monthsElapsed + 1;
 
-    if (monthsElapsed >= 2 && paidThisMonth === 0) {
-      // Expected total since joining vs what they have actually paid in total lifetime
-      const expectedTotalPaid = monthsElapsed * monthlyFee;
+    // Lifetime amount the member should have paid by now
+    const expectedTotalPaid = totalMonthsExpected * monthlyFee;
+
+    // CRITICAL FIX: Lifetime shortage ALWAYS forces Arrears, overriding current month success
+    if (totPaid < expectedTotalPaid) {
       member.arrearsTotal = Math.max(0, expectedTotalPaid - totPaid);
+      return "Arrears";
+    }
 
+    // Immediate 1st-of-month check: paid overall but hasn't paid for this new month yet
+    if (paidThisMonth === 0) {
+      member.arrearsTotal = Math.max(0, expectedTotalPaid - totPaid);
       return "Arrears";
     }
 
@@ -741,6 +749,7 @@ function App() {
 
     return "Paid";
   };
+
 
 
 
@@ -801,7 +810,7 @@ function App() {
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
-      <MobileMenu isOpen={isOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} toggleTabMobile={toggleTabMobile} />
+      <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} toggleTabMobile={toggleTabMobile} />
     </>
   )
 }
