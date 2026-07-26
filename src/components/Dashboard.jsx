@@ -165,7 +165,10 @@ function Dashboard({
                 <div className='glass p-6 text-white flex flex-col justify-between min-h-50 md:col-span-2 lg:col-span-1 h-full w-full'>
                     <h2 className='text-[clamp(1rem,4vw,1.25rem)] flex items-start gap-3 leading-tight'>
                         <i className="fa-solid fa-wallet mt-1"></i>
-                        <span>Total collections(YTD) Minus Monthly Expenses</span>
+                        <span>Savings </span>
+                        <div className='text-white/50 text-sm text-center' title='Total collections(YTD) Minus Monthly Expenses'>
+                        <i className="fa-solid fa-circle-info"></i>
+                        </div>
                     </h2>
 
                     <div className='mt-4'>

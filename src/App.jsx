@@ -471,7 +471,7 @@ function App() {
   const addMore = () => {
 
     let members = document.getElementById('AddMoreMembers');
-    setDynamicMembers(prev => [...prev, ""]);
+    // setDynamicMembers(prev => [...prev, ""]);
     memberIndex++;
 
     members.innerHTML += `<div class="flex gap-2 items-center flex-row mt-3 w-full" id="member-${memberIndex}">
@@ -486,17 +486,25 @@ function App() {
   </div>`;
   };
 
-  const saveMember = () => {
+  const saveMember = (e) => {
+    e.preventDefault();
+
+    const existingNamesSet = new Set(
+      members.map((m) => m.memberName.trim().toLowerCase())
+    );
+
     const dynamicInputs = document.querySelectorAll('.member-name-input');
+
     const dynamicNames = Array.from(dynamicInputs)
-      .map(input => input.value.trim())
-      .filter(name => name !== "");
+      .map((input) => input.value.trim())
+      .filter((name) => name !== "" && !existingNamesSet.has(name.toLowerCase()));
 
     const membersToAdd = [];
     const currentDate = new Date().toISOString().split('T')[0];
 
     const mainMemberName = newMember.trim();
-    if (mainMemberName) {
+
+    if (mainMemberName && !existingNamesSet.has(mainMemberName.toLowerCase())) {
       membersToAdd.push({
         id: `new-${Date.now()}-${Math.random()}`,
         memberName: mainMemberName,
@@ -506,18 +514,25 @@ function App() {
         paymentDate: currentDate,
         transactions: [{ amount: 0, method: paymentMethod, date: currentDate }]
       });
+
+      existingNamesSet.add(mainMemberName.toLowerCase());
     }
 
     dynamicNames.forEach((name, idx) => {
-      membersToAdd.push({
-        id: `dynamic-${Date.now()}-${idx}-${Math.random()}`,
-        memberName: name,
-        totPaid: 0,
-        status: "Pending",
-        schemeName: selectedSchemeName,
-        paymentDate: currentDate,
-        transactions: [{ amount: 0, method: paymentMethod, date: currentDate }]
-      });
+      const lowerName = name.toLowerCase();
+      if (!existingNamesSet.has(lowerName)) {
+        membersToAdd.push({
+          id: `dynamic-${Date.now()}-${idx}-${Math.random()}`,
+          memberName: name,
+          totPaid: 0,
+          status: "Pending",
+          schemeName: selectedSchemeName,
+          paymentDate: currentDate,
+          transactions: [{ amount: 0, method: paymentMethod, date: currentDate }]
+        });
+
+        existingNamesSet.add(lowerName);
+      }
     });
 
     if (membersToAdd.length === 0) return;
@@ -529,11 +544,13 @@ function App() {
     setIsAddMember(false);
 
     // Clear inputs safely
-    dynamicInputs.forEach(input => { input.value = ""; });
+    dynamicInputs.forEach((input) => {
+      input.value = "";
+    });
 
     const membersContainer = document.getElementById('AddMoreMembers');
     if (membersContainer) {
-      membersContainer.innerHTML = ""; // Warning: Try replacing this container with a mapped state array later
+      membersContainer.innerHTML = "";
     }
   };
 

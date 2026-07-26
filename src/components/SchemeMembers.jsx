@@ -98,18 +98,18 @@ function SchemeMembers({
   const preventScroll = (e) => {
     e.preventDefault();
   };
-  useEffect(() => {
-    if (isAddMember) {
-      // Blocks mouse wheel, trackpad, and touch scrolling
-      window.addEventListener('wheel', preventScroll, { passive: false });
-      window.addEventListener('touchmove', preventScroll, { passive: false });
-    }
+  // useEffect(() => {
+  //   if (isAddMember) {
+  //     // Blocks mouse wheel, trackpad, and touch scrolling
+  //     window.addEventListener('wheel', preventScroll, { passive: false });
+  //     window.addEventListener('touchmove', preventScroll, { passive: false });
+  //   }
 
-    return () => {
-      window.removeEventListener('wheel', preventScroll);
-      window.removeEventListener('touchmove', preventScroll);
-    };
-  }, [isAddMember]);
+  //   return () => {
+  //     window.removeEventListener('wheel', preventScroll);
+  //     window.removeEventListener('touchmove', preventScroll);
+  //   };
+  // }, [isAddMember]);
 
 
 
@@ -330,7 +330,7 @@ function SchemeMembers({
               <li key={idx} className={`py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
               my-2 rounded-xl mr-1.5 ${schemeSelectedState === idx ? "border-3 border-white-500" : ""}`}
                 onClick={() => schemeSelected(idx, item.scheme)}>
-                <div className='flex justify-between items-center gap-3 flex-col lg:flex-row'>
+                <div className='flex justify-between items-center gap-3 flex-row md:flex-col lg:flex-row'>
                   <div className='flex justify-between flex-col leading-5'>
                     <h3 className='text-md font-bold'>{item.scheme}</h3>
                     <p className='text-[11px] text-white/70'>R{item.monthlyContribution}/mo</p>
@@ -482,16 +482,16 @@ function SchemeMembers({
               <p className='font-bold text-2xl cursor-pointer' onClick={openAddMember}>&times;</p>
             </div>
             <div className='flex justify-between align-center w-full text-white mt-10
-          text-sm'>
+            text-sm'>
               <h3 className='text-white'>Name</h3>
               <p className='cursor-pointer text-xs align-center hover:text-white/75' onClick={() => { addMore() }}>
                 <i className="fa-solid fa-plus"></i> Add More
               </p>
             </div>
 
-            <ul className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
+            <ul className='max-h-60 overflow-y-auto glass-scroll pr-3' id='AddMoreMembers'>
               <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white member-name-input
-              focus:outline-white text-white' type='text' placeholder='Enter Member Name' id='inputName'
+              focus:outline-white text-white' type='text' placeholder='Enter Member Name' 
                 onChange={handleInputChange}
                 value={newMember}
               />
