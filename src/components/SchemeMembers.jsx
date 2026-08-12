@@ -400,7 +400,9 @@ function SchemeMembers({
                           name={"View Payment History"}>
                           {idx + 1}. {member.memberName}
                         </td>
-                        <td className="py-4 px-2 align-middle">R {member.totPaid}</td>
+                        <td className="py-4 px-2 align-middle">R {member.transactions
+                          ?.reduce((total, tx) => total + (Number(tx.amount) || 0), 0)
+                          .toFixed(2)}</td>
                         <td className="py-4 px-2 align-middle">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full 
                           text-xs font-medium ${badgeStyle}`}>
@@ -491,7 +493,7 @@ function SchemeMembers({
 
             <ul className='max-h-60 overflow-y-auto glass-scroll pr-3' id='AddMoreMembers'>
               <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white member-name-input
-              focus:outline-white text-white' type='text' placeholder='Enter Member Name' 
+              focus:outline-white text-white' type='text' placeholder='Enter Member Name'
                 onChange={handleInputChange}
                 value={newMember}
               />

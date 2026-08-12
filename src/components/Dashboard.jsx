@@ -30,7 +30,8 @@ function Dashboard({
     selectedSchemeName,
     getMemberStatus,
     filteredMembers,
-    membersBehindStatus
+    membersBehindStatus,
+    getMemberArrears
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
@@ -97,11 +98,20 @@ function Dashboard({
 
     const progressPercentage = YearMonthFilter === 1 ? (totalSchemeYearlyContribution / yearlyTarget) * 100 : (totalSchemeMonthlyContribution / monthlyTarget) * 100;
     const TotalCollectionsMinusMonthlyExpenses = filteredMembers.reduce((sum, member) => sum + member.totPaid, 0) - (financialData.moneyOut) + (financialData.moneyIn);
-    const membersInArrears = members.filter((member) => {
-        if (member.schemeName !== selectedSchemeName) return false;
-        const activeScheme = schemes.find(s => s.scheme === selectedSchemeName);
-        return getMemberStatus(member, activeScheme) === "Arrears";
-    });
+    const activeScheme = schemes.find(
+        s => s.scheme === selectedSchemeName
+    );
+
+    const membersInArrears = activeScheme
+        ? members.filter(member => {
+            if (member.schemeName !== selectedSchemeName) {
+                return false;
+            }
+
+            return getMemberStatus(member, activeScheme) === "Arrears";
+        })
+        : [];
+
     return (
         <div className={`dashboard w-full min-h-screen p-4 md:p-8 
         /* Mobile Logic: Only hide if mobile state isn't 1 */
@@ -167,7 +177,7 @@ function Dashboard({
                         <i className="fa-solid fa-wallet mt-1"></i>
                         <span>Savings </span>
                         <div className='text-white/50 text-sm text-center' title='Total collections(YTD) Minus Monthly Expenses'>
-                        <i className="fa-solid fa-circle-info"></i>
+                            <i className="fa-solid fa-circle-info"></i>
                         </div>
                     </h2>
 
@@ -283,21 +293,32 @@ function Dashboard({
                     <ul className='glass-scroll text-md h-full overflow-y-auto'>
                         <div className='flex-1 overflow-hidden'>
                             {membersInArrears.length === 0 ? (
-                                <div className='text-center text-white/50 py-10'>
+                                <div className="text-center text-white/50 py-10">
                                     <p>No members behind on payment</p>
                                 </div>
                             ) : (
                                 membersInArrears.map((member) => {
-                                    const arrearsValue = member.arrearsTotal || 0;
+
+                                    const arrearsValue = getMemberArrears(
+                                        member,
+                                        activeScheme
+                                    );
 
                                     return (
                                         <li
                                             key={member.id || member.memberName}
-                                            className='flex justify-around items-center border-b border-white/10 py-4 mr-2 hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'
+                                            className="flex justify-around items-center border-b border-white/10 py-4 mr-2 hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg"
                                         >
-                                            <span className='text-white'>{member.memberName}</span>
-                                            <span className='text-red-500 font-bold block'>
-                                                R {arrearsValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            <span className="text-white">
+                                                {member.memberName}
+                                            </span>
+
+                                            <span className="text-red-500 font-bold block">
+                                                R{" "}
+                                                {arrearsValue.toLocaleString("en-US", {
+                                                    minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2
+                                                })}
                                             </span>
                                         </li>
                                     );

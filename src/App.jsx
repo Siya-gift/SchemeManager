@@ -66,19 +66,19 @@ function App() {
       scheme: "clubs",
       monthlyContribution: 500.00,
       startingBal: 2000,
-      date: "2020-09-01"
+      date: "2026-01-01"
     },
     {
       scheme: "Section 2 Society",
       monthlyContribution: 2200.00,
       startingBal: 2000,
-      date: "2020-09-01"
+      date: "2026-01-02"
     },
     {
       scheme: "Billioniare Dream",
       monthlyContribution: 10050.00,
       startingBal: 2000,
-      date: "2020-09-01"
+      date: "2026-01-03"
     }
   ]
   const expenses = [
@@ -164,7 +164,9 @@ function App() {
       schemeName: "clubs",
       paymentDate: "2026-05-16",
       transactions: [
-        { amount: 500, method: "Cash", date: "2026-05-16" }
+        { amount: 500, method: "Cash", date: "2026-05-16" },
+        { amount: 500, method: "Cash", date: "2026-06-16" },
+        { amount: 500, method: "Cash", date: "2026-07-16" }
       ]
     },
     {
@@ -415,27 +417,53 @@ function App() {
 
   const handleConfirmPayment = (amount, method, date) => {
     const numericAmount = parseFloat(amount);
-    const paymentYear = date.split('-')[0]; // Extracts "YYYY" from "YYYY-MM-DD"
 
-    // 1. Update the main Members table (Total Paid)
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+      return;
+    }
+
+    const paymentYear = date.split("-")[0];
+
+    // 1. Update Members table
     setMembers(prevMembers =>
-      prevMembers.map(m =>
-        m.memberName === payingMember
-          ? {
-            ...m,
-            totPaid: m.totPaid + numericAmount,
-            transactions: [...(m.transactions || []), { amount: numericAmount, method, date }],
-            paymentDate: date // Update the payment date to today
+      prevMembers.map(member => {
+
+        if (
+          member.memberName.toLowerCase() !==
+          payingMember.toLowerCase()
+        ) {
+          return member;
+        }
+
+        const updatedTransactions = [
+          ...(member.transactions || []),
+          {
+            amount: numericAmount,
+            method,
+            date
           }
-          : m
-      )
+        ];
+
+        const updatedTotPaid =
+          (Number(member.totPaid) || 0) + numericAmount;
+
+        return {
+          ...member,
+          totPaid: updatedTotPaid,
+          transactions: updatedTransactions
+        };
+      })
     );
 
-    // 2. Update the Accordion History Data
+
+    // 2. Update Accordion History
     setAccordionData(prevData => {
-      // Check if the user already has a history array for this specific year
+
       const existingYearIndex = prevData.findIndex(
-        item => (item.userName || "").toLowerCase() === payingMember.toLowerCase() && item.year === paymentYear
+        item =>
+          (item.userName || "").toLowerCase() ===
+          payingMember.toLowerCase() &&
+          item.year === paymentYear
       );
 
       const newTransaction = {
@@ -444,24 +472,34 @@ function App() {
         details: method
       };
 
+
+      // Year already exists
       if (existingYearIndex >= 0) {
-        // The year already exists, push the new transaction into its yearHistory
+
         const updatedData = [...prevData];
+
         updatedData[existingYearIndex] = {
           ...updatedData[existingYearIndex],
-          yearHistory: [newTransaction, ...updatedData[existingYearIndex].yearHistory] // Adds to top of list
+
+          yearHistory: [
+            newTransaction,
+            ...(updatedData[existingYearIndex].yearHistory || [])
+          ]
         };
+
         return updatedData;
-      } else {
-        return [
-          {
-            userName: payingMember,
-            year: paymentYear,
-            yearHistory: [newTransaction]
-          },
-          ...prevData
-        ];
       }
+
+
+      // New year
+      return [
+        {
+          userName: payingMember,
+          year: paymentYear,
+          yearHistory: [newTransaction]
+        },
+        ...prevData
+      ];
     });
   };
 
@@ -689,65 +727,265 @@ function App() {
 
 
   const getMemberStatus = (member, scheme) => {
-    if (!member || !scheme || typeof scheme.monthlyContribution === 'undefined') {
+
+    if (
+      !member ||
+      !scheme ||
+      typeof scheme.monthlyContribution === "undefined"
+    ) {
       return "Pending";
     }
 
-    const totPaid = member.totPaid || 0;
-    const monthlyFee = scheme.monthlyContribution;
+    const monthlyFee = Number(scheme.monthlyContribution) || 0;
+
+    if (monthlyFee <= 0) {
+      return "Pending";
+    }
+
+    const transactions = member.transactions || [];
 
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
 
-    // Total amount paid ONLY during this current month
-    const transactions = member.transactions || [];
-    const paidThisMonth = transactions
+
+    // =========================================================
+    // 1. SORT TRANSACTIONS FROM OLDEST -> NEWEST
+    // =========================================================
+
+    const sortedTransactions = [...transactions]
+      .filter(tx => tx.date)
+      .sort((a, b) => {
+        return new Date(a.date) - new Date(b.date);
+      });
+
+
+    // =========================================================
+    // 2. TOTAL PAID
+    // =========================================================
+
+    const totPaid = sortedTransactions.reduce(
+      (sum, tx) => sum + (Number(tx.amount) || 0),
+      0
+    );
+
+
+    // =========================================================
+    // 3. MEMBER'S FIRST PAYMENT
+    // =========================================================
+
+    const firstPayment = sortedTransactions.length
+      ? sortedTransactions[0]
+      : null;
+
+
+    const firstPaymentDate = firstPayment
+      ? new Date(firstPayment.date)
+      : new Date();
+
+
+    const startYear = firstPaymentDate.getFullYear();
+    const startMonth = firstPaymentDate.getMonth();
+
+
+    // =========================================================
+    // 4. NUMBER OF MONTHS INCLUDING CURRENT MONTH
+    // =========================================================
+
+    const monthsElapsed =
+      (currentYear - startYear) * 12 +
+      (currentMonth - startMonth);
+
+    const totalMonthsExpected =
+      Math.max(1, monthsElapsed + 1);
+
+
+    // =========================================================
+    // 5. TOTAL CONTRIBUTION THAT SHOULD HAVE BEEN PAID
+    // =========================================================
+
+    const expectedTotal =
+      totalMonthsExpected * monthlyFee;
+
+
+    // =========================================================
+    // 6. CURRENT MONTH PAYMENT
+    // =========================================================
+
+    const paidThisMonth = sortedTransactions
       .filter(tx => {
-        if (!tx.date) return false;
         const txDate = new Date(tx.date);
-        return txDate.getFullYear() === currentYear && txDate.getMonth() === currentMonth;
+
+        return (
+          txDate.getFullYear() === currentYear &&
+          txDate.getMonth() === currentMonth
+        );
       })
-      .reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0);
+      .reduce(
+        (sum, tx) => sum + (Number(tx.amount) || 0),
+        0
+      );
+
+
+    // =========================================================
+    // 7. PREVIOUS PAYMENTS
+    // =========================================================
+
+    const paidBeforeCurrentMonth = sortedTransactions
+      .filter(tx => {
+        const txDate = new Date(tx.date);
+
+        return (
+          txDate.getFullYear() < currentYear ||
+          (
+            txDate.getFullYear() === currentYear &&
+            txDate.getMonth() < currentMonth
+          )
+        );
+      })
+      .reduce(
+        (sum, tx) => sum + (Number(tx.amount) || 0),
+        0
+      );
+
+
+    // =========================================================
+    // 8. WHAT SHOULD HAVE BEEN PAID BEFORE THIS MONTH
+    // =========================================================
+
+    const previousMonthsCount =
+      Math.max(0, totalMonthsExpected - 1);
+
+    const expectedBeforeCurrentMonth =
+      previousMonthsCount * monthlyFee;
+
+
+    // =========================================================
+    // 9. OLD ARREARS
+    // =========================================================
+
+    const previousArrears = Math.max(
+      0,
+      expectedBeforeCurrentMonth - paidBeforeCurrentMonth
+    );
+
+
+    member.arrearsTotal = previousArrears;
+
+
+    // =========================================================
+    // 10. NO PAYMENT
+    // =========================================================
 
     if (totPaid === 0) {
       return "Pending";
     }
 
-    // Calculate total calendar months active (including the current month)
-    const startDateStr = member.paymentDate || new Date().toISOString().split('T')[0];
-    const startDate = new Date(startDateStr);
-    const monthsElapsed = (currentYear - startDate.getFullYear()) * 12 + (currentMonth - startDate.getMonth());
-    const totalMonthsExpected = monthsElapsed + 1;
 
-    // Lifetime amount the member should have paid by now
-    const expectedTotalPaid = totalMonthsExpected * monthlyFee;
+    // =========================================================
+    // 11. MEMBER STILL HAS OLD ARREARS
+    // =========================================================
 
-    // CRITICAL FIX: Lifetime shortage ALWAYS forces Arrears, overriding current month success
-    if (totPaid < expectedTotalPaid) {
-      member.arrearsTotal = Math.max(0, expectedTotalPaid - totPaid);
-      return "Arrears";
+    if (previousArrears > 0) {
+
+      // Current month's payment may be used to clear
+      // arrears first. Until the arrears + current
+      // contribution are both covered, remain Arrears.
+
+      const amountNeededToBecomePaid =
+        previousArrears + monthlyFee;
+
+      if (paidThisMonth < amountNeededToBecomePaid) {
+        return "Arrears";
+      }
+
+      // They have cleared old arrears AND paid
+      // the current month's contribution.
+      if (paidThisMonth === amountNeededToBecomePaid) {
+        return "Paid";
+      }
+
+      // Anything beyond arrears + current contribution
+      // means they are ahead.
+      if (paidThisMonth > amountNeededToBecomePaid) {
+        return "Ahead";
+      }
     }
 
-    // Immediate 1st-of-month check: paid overall but hasn't paid for this new month yet
-    if (paidThisMonth === 0) {
-      member.arrearsTotal = Math.max(0, expectedTotalPaid - totPaid);
-      return "Arrears";
+
+    // =========================================================
+    // 12. NO OLD ARREARS
+    // =========================================================
+
+    if (previousArrears === 0) {
+
+      if (paidThisMonth === 0) {
+        return "Arrears";
+      }
+
+      if (paidThisMonth < monthlyFee) {
+        return "Partially Paid";
+      }
+
+      if (paidThisMonth === monthlyFee) {
+        return "Paid";
+      }
+
+      if (paidThisMonth > monthlyFee) {
+        return "Ahead";
+      }
     }
 
-    if (paidThisMonth > monthlyFee) {
-      return "Ahead";
+
+    return "Pending";
+  };
+
+  const getMemberArrears = (member, scheme) => {
+    if (!member || !scheme) {
+      return 0;
     }
 
-    if (paidThisMonth === monthlyFee && monthlyFee > 0) {
-      return "Paid";
+    const monthlyFee = Number(scheme.monthlyContribution) || 0;
+
+    if (monthlyFee <= 0) {
+      return 0;
     }
 
-    if (paidThisMonth < monthlyFee && monthlyFee > 0) {
-      return "Partially Paid";
+    const transactions = member.transactions || [];
+
+    const sortedTransactions = [...transactions]
+      .filter(tx => tx.date)
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    if (sortedTransactions.length === 0) {
+      return 0;
     }
 
-    return "Paid";
+    const firstPaymentDate = new Date(sortedTransactions[0].date);
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+
+    const startYear = firstPaymentDate.getFullYear();
+    const startMonth = firstPaymentDate.getMonth();
+
+    const monthsElapsed =
+      (currentYear - startYear) * 12 +
+      (currentMonth - startMonth);
+
+    const totalMonthsExpected =
+      Math.max(1, monthsElapsed + 1);
+
+    const expectedTotal =
+      totalMonthsExpected * monthlyFee;
+
+    const totalPaid = transactions.reduce(
+      (sum, tx) => sum + (Number(tx.amount) || 0),
+      0
+    );
+
+    return Math.max(0, expectedTotal - totalPaid);
   };
 
 
@@ -788,7 +1026,7 @@ function App() {
           totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} financialData={financialData} netDifference={netDifference}
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} totalSchemeMonthlyContribution={totalSchemeMonthlyContribution} yearlyTarget={yearlyTarget} monthlyTarget={monthlyTarget}
           totalCash={totalCash} totalEFT={totalEFT} totalOther={totalOther} members={members} selectedSchemeName={selectedSchemeName} getMemberStatus={getMemberStatus} allMembers={allMembers}
-          filteredMembers={filteredMembers} membersBehindStatus={membersBehindStatus}
+          filteredMembers={filteredMembers} membersBehindStatus={membersBehindStatus} getMemberArrears={getMemberArrears}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
