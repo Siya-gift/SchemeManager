@@ -159,14 +159,14 @@ function App() {
     {
       id: 1,
       memberName: "Sam",
-      totPaid: 500.00,
+      totPaid: 1500.00,
       status: "Paid",
       schemeName: "clubs",
-      paymentDate: "2026-05-16",
+      joinedDate: "2026-05-16",
       transactions: [
         { amount: 500, method: "Cash", date: "2026-05-16" },
         { amount: 500, method: "Cash", date: "2026-06-16" },
-        { amount: 500, method: "Cash", date: "2026-07-16" }
+        { amount: 500, method: "Cash", date: "2026-07-16" },
       ]
     },
     {
@@ -175,7 +175,7 @@ function App() {
       totPaid: 1120.00,
       status: "Ahead",
       schemeName: "Section 2 Society",
-      paymentDate: "2026-03-16",
+      joinedDate: "2026-03-16",
       transactions: [
         { amount: 1120, method: "Cash", date: "2026-03-16" }
       ]
@@ -186,7 +186,7 @@ function App() {
       totPaid: 2200.00,
       status: "Ahead",
       schemeName: "Section 2 Society",
-      paymentDate: "2026-03-16",
+      joinedDate: "2026-03-16",
       transactions: [
         { amount: 2200, method: "Cash", date: "2026-03-16" }
       ]
@@ -197,9 +197,20 @@ function App() {
       totPaid: 500.00,
       status: "Paid",
       schemeName: "Section 2 Society",
-      paymentDate: "2026-03-16",
+      joinedDate: "2026-03-16",
       transactions: [
         { amount: 500, method: "Cash", date: "2026-03-16" }
+      ]
+    },
+    {
+      id: 5,
+      memberName: "Jol",
+      totPaid: 500.00,
+      status: "Arrears",
+      schemeName: "clubs",
+      joinedDate: "2020-12-16",
+      transactions: [
+        { amount: 500, method: "Cash", date: "2026-12-16" }
       ]
     }
   ]
@@ -209,7 +220,9 @@ function App() {
       userName: "Sam",
       year: "2026",
       yearHistory: [
-        { date: "2026-05-16", amount: "500.00", details: "Cash" }
+        { date: "2026-05-16", amount: "500.00", details: "Cash" },
+        { date: "2026-06-16", amount: "500.00", details: "Cash" },
+        { date: "2026-07-16", amount: "500.00", details: "Cash" }
       ]
     },
     {
@@ -232,6 +245,18 @@ function App() {
       yearHistory: [
         { date: "2026-03-16", amount: "500.00", details: "Cash" }
       ]
+    },
+    {
+      userName: "Jol",
+      year: "2025",
+      yearHistory: [
+        { date: "2025-12-16", amount: "500.00", details: "Cash" }
+      ]
+    },
+    {
+      userName: "Jol",
+      year: "2026",
+      yearHistory: []
     }
   ]);
 
@@ -318,8 +343,8 @@ function App() {
 
     // --- 3. CALCULATE MONTH & YEAR TOTALS (Using regularPayments) ---
     const thisMonthPayments = regularPayments.filter((payment) => {
-      const paymentDate = new Date(payment.date);
-      return paymentDate.getFullYear() === currentYear && paymentDate.getMonth() === currentMonth;
+      const joinedDate = new Date(payment.date);
+      return joinedDate.getFullYear() === currentYear && joinedDate.getMonth() === currentMonth;
     });
 
     const totalTransactionsThisMonth = thisMonthPayments.length;
@@ -329,8 +354,8 @@ function App() {
     );
 
     const thisYearPayments = regularPayments.filter((payment) => {
-      const paymentDate = new Date(payment.date);
-      return paymentDate.getFullYear() === currentYear;
+      const joinedDate = new Date(payment.date);
+      return joinedDate.getFullYear() === currentYear;
     });
 
     const totalTransactionsThisYear = thisYearPayments.length;
@@ -528,65 +553,146 @@ function App() {
     e.preventDefault();
 
     const existingNamesSet = new Set(
-      members.map((m) => m.memberName.trim().toLowerCase())
+      members.map((m) =>
+        m.memberName.trim().toLowerCase()
+      )
     );
 
-    const dynamicInputs = document.querySelectorAll('.member-name-input');
+    const dynamicInputs =
+      document.querySelectorAll('.member-name-input');
 
     const dynamicNames = Array.from(dynamicInputs)
       .map((input) => input.value.trim())
-      .filter((name) => name !== "" && !existingNamesSet.has(name.toLowerCase()));
+      .filter(
+        (name) =>
+          name !== "" &&
+          !existingNamesSet.has(name.toLowerCase())
+      );
 
     const membersToAdd = [];
-    const currentDate = new Date().toISOString().split('T')[0];
+
+    const currentDate =
+      new Date().toISOString().split("T")[0];
+
+    const currentYear =
+      currentDate.split("-")[0];
 
     const mainMemberName = newMember.trim();
 
-    if (mainMemberName && !existingNamesSet.has(mainMemberName.toLowerCase())) {
+
+    // ==================================================
+    // MAIN MEMBER
+    // ==================================================
+
+    if (
+      mainMemberName &&
+      !existingNamesSet.has(mainMemberName.toLowerCase())
+    ) {
       membersToAdd.push({
         id: `new-${Date.now()}-${Math.random()}`,
         memberName: mainMemberName,
         totPaid: 0,
         status: "Pending",
         schemeName: selectedSchemeName,
-        paymentDate: currentDate,
-        transactions: [{ amount: 0, method: paymentMethod, date: currentDate }]
+        joinedDate: currentDate,
+        transactions: [
+          {
+            amount: 0,
+            method: paymentMethod,
+            date: currentDate
+          }
+        ]
       });
 
-      existingNamesSet.add(mainMemberName.toLowerCase());
+      existingNamesSet.add(
+        mainMemberName.toLowerCase()
+      );
     }
 
+
+    // ==================================================
+    // DYNAMIC MEMBERS
+    // ==================================================
+
     dynamicNames.forEach((name, idx) => {
+
       const lowerName = name.toLowerCase();
+
       if (!existingNamesSet.has(lowerName)) {
+
         membersToAdd.push({
           id: `dynamic-${Date.now()}-${idx}-${Math.random()}`,
           memberName: name,
           totPaid: 0,
           status: "Pending",
           schemeName: selectedSchemeName,
-          paymentDate: currentDate,
-          transactions: [{ amount: 0, method: paymentMethod, date: currentDate }]
+          joinedDate: currentDate,
+          transactions: [
+            {
+              amount: 0,
+              method: paymentMethod,
+              date: currentDate
+            }
+          ]
         });
 
         existingNamesSet.add(lowerName);
       }
     });
 
-    if (membersToAdd.length === 0) return;
 
-    setMembers((prev) => [...prev, ...membersToAdd]);
+    // Nothing new to add
+    if (membersToAdd.length === 0) {
+      return;
+    }
 
-    // Reset states
+
+    // ==================================================
+    // UPDATE MEMBERS
+    // ==================================================
+
+    setMembers((prev) => [
+      ...prev,
+      ...membersToAdd
+    ]);
+
+
+    // ==================================================
+    // UPDATE ACCORDION DATA
+    // ==================================================
+
+    setAccordionData((prev) => {
+
+      const newHistory = membersToAdd.map((newMember) => ({
+        userName: newMember.memberName,
+        year: currentYear,
+        yearHistory: []
+      }));
+
+      return [
+        ...prev,
+        ...newHistory
+      ];
+    });
+
+
+    // ==================================================
+    // RESET FORM
+    // ==================================================
+
     setNewMember("");
     setIsAddMember(false);
 
-    // Clear inputs safely
+
+    // Clear dynamic inputs
     dynamicInputs.forEach((input) => {
       input.value = "";
     });
 
-    const membersContainer = document.getElementById('AddMoreMembers');
+
+    const membersContainer =
+      document.getElementById("AddMoreMembers");
+
     if (membersContainer) {
       membersContainer.innerHTML = "";
     }
@@ -599,7 +705,7 @@ function App() {
     const currentYear = new Date().getFullYear()
     setTotalSchemeYearlyContribution(
       members.filter((member) => {
-        const memberYear = new Date(member.paymentDate).getFullYear();
+        const memberYear = new Date(member.joinedDate).getFullYear();
         return memberYear === currentYear && member.schemeName === selectedSchemeName;
       }).reduce((total, curr) => total + curr.totPaid, 0)
     )
@@ -727,7 +833,6 @@ function App() {
 
 
   const getMemberStatus = (member, scheme) => {
-
     if (
       !member ||
       !scheme ||
@@ -736,7 +841,8 @@ function App() {
       return "Pending";
     }
 
-    const monthlyFee = Number(scheme.monthlyContribution) || 0;
+    const monthlyFee =
+      Number(scheme.monthlyContribution) || 0;
 
     if (monthlyFee <= 0) {
       return "Pending";
@@ -745,94 +851,64 @@ function App() {
     const transactions = member.transactions || [];
 
     const today = new Date();
+
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
 
-
     // =========================================================
-    // 1. SORT TRANSACTIONS FROM OLDEST -> NEWEST
-    // =========================================================
-
-    const sortedTransactions = [...transactions]
-      .filter(tx => tx.date)
-      .sort((a, b) => {
-        return new Date(a.date) - new Date(b.date);
-      });
-
-
-    // =========================================================
-    // 2. TOTAL PAID
+    // 1. MEMBER JOINED DATE
     // =========================================================
 
-    const totPaid = sortedTransactions.reduce(
-      (sum, tx) => sum + (Number(tx.amount) || 0),
-      0
+    if (!member.joinedDate) {
+      return "Pending";
+    }
+
+    const joinedDate = new Date(member.joinedDate);
+
+    if (isNaN(joinedDate.getTime())) {
+      return "Pending";
+    }
+
+    const startYear = joinedDate.getFullYear();
+    const startMonth = joinedDate.getMonth();
+
+
+    // =========================================================
+    // 2. MONTHS COMPLETED BEFORE CURRENT MONTH
+    //
+    // Example:
+    // Joined: May
+    // Current: August
+    //
+    // Completed months:
+    // May, June, July = 3
+    //
+    // August is NOT included yet.
+    // =========================================================
+
+    const previousMonthsCount = Math.max(
+      0,
+      (currentYear - startYear) * 12 +
+      (currentMonth - startMonth)
     );
 
 
     // =========================================================
-    // 3. MEMBER'S FIRST PAYMENT
+    // 3. EXPECTED PAYMENT FOR PREVIOUS MONTHS
     // =========================================================
 
-    const firstPayment = sortedTransactions.length
-      ? sortedTransactions[0]
-      : null;
-
-
-    const firstPaymentDate = firstPayment
-      ? new Date(firstPayment.date)
-      : new Date();
-
-
-    const startYear = firstPaymentDate.getFullYear();
-    const startMonth = firstPaymentDate.getMonth();
+    const expectedBeforeCurrentMonth =
+      previousMonthsCount * monthlyFee;
 
 
     // =========================================================
-    // 4. NUMBER OF MONTHS INCLUDING CURRENT MONTH
+    // 4. TOTAL PAID BEFORE CURRENT MONTH
     // =========================================================
 
-    const monthsElapsed =
-      (currentYear - startYear) * 12 +
-      (currentMonth - startMonth);
-
-    const totalMonthsExpected =
-      Math.max(1, monthsElapsed + 1);
-
-
-    // =========================================================
-    // 5. TOTAL CONTRIBUTION THAT SHOULD HAVE BEEN PAID
-    // =========================================================
-
-    const expectedTotal =
-      totalMonthsExpected * monthlyFee;
-
-
-    // =========================================================
-    // 6. CURRENT MONTH PAYMENT
-    // =========================================================
-
-    const paidThisMonth = sortedTransactions
+    const paidBeforeCurrentMonth = transactions
       .filter(tx => {
-        const txDate = new Date(tx.date);
+        if (!tx.date) return false;
 
-        return (
-          txDate.getFullYear() === currentYear &&
-          txDate.getMonth() === currentMonth
-        );
-      })
-      .reduce(
-        (sum, tx) => sum + (Number(tx.amount) || 0),
-        0
-      );
-
-
-    // =========================================================
-    // 7. PREVIOUS PAYMENTS
-    // =========================================================
-
-    const paidBeforeCurrentMonth = sortedTransactions
-      .filter(tx => {
         const txDate = new Date(tx.date);
 
         return (
@@ -844,83 +920,55 @@ function App() {
         );
       })
       .reduce(
-        (sum, tx) => sum + (Number(tx.amount) || 0),
+        (sum, tx) =>
+          sum + (Number(tx.amount) || 0),
         0
       );
 
 
     // =========================================================
-    // 8. WHAT SHOULD HAVE BEEN PAID BEFORE THIS MONTH
-    // =========================================================
-
-    const previousMonthsCount =
-      Math.max(0, totalMonthsExpected - 1);
-
-    const expectedBeforeCurrentMonth =
-      previousMonthsCount * monthlyFee;
-
-
-    // =========================================================
-    // 9. OLD ARREARS
+    // 5. PREVIOUS ARREARS
+    //
+    // Current month is NOT included here.
     // =========================================================
 
     const previousArrears = Math.max(
       0,
-      expectedBeforeCurrentMonth - paidBeforeCurrentMonth
+      expectedBeforeCurrentMonth -
+      paidBeforeCurrentMonth
     );
 
 
-    member.arrearsTotal = previousArrears;
+    // =========================================================
+    // 6. CURRENT MONTH PAYMENT
+    // =========================================================
+
+    const paidThisMonth = transactions
+      .filter(tx => {
+        if (!tx.date) return false;
+
+        const txDate = new Date(tx.date);
+
+        return (
+          txDate.getFullYear() === currentYear &&
+          txDate.getMonth() === currentMonth
+        );
+      })
+      .reduce(
+        (sum, tx) =>
+          sum + (Number(tx.amount) || 0),
+        0
+      );
 
 
     // =========================================================
-    // 10. NO PAYMENT
-    // =========================================================
-
-    if (totPaid === 0) {
-      return "Pending";
-    }
-
-
-    // =========================================================
-    // 11. MEMBER STILL HAS OLD ARREARS
-    // =========================================================
-
-    if (previousArrears > 0) {
-
-      // Current month's payment may be used to clear
-      // arrears first. Until the arrears + current
-      // contribution are both covered, remain Arrears.
-
-      const amountNeededToBecomePaid =
-        previousArrears + monthlyFee;
-
-      if (paidThisMonth < amountNeededToBecomePaid) {
-        return "Arrears";
-      }
-
-      // They have cleared old arrears AND paid
-      // the current month's contribution.
-      if (paidThisMonth === amountNeededToBecomePaid) {
-        return "Paid";
-      }
-
-      // Anything beyond arrears + current contribution
-      // means they are ahead.
-      if (paidThisMonth > amountNeededToBecomePaid) {
-        return "Ahead";
-      }
-    }
-
-
-    // =========================================================
-    // 12. NO OLD ARREARS
+    // 7. NO PREVIOUS ARREARS
     // =========================================================
 
     if (previousArrears === 0) {
 
       if (paidThisMonth === 0) {
-        return "Arrears";
+        return "Awaiting Payment";
       }
 
       if (paidThisMonth < monthlyFee) {
@@ -937,6 +985,35 @@ function App() {
     }
 
 
+    // =========================================================
+    // 8. PREVIOUS ARREARS EXIST
+    //
+    // Current month's payment must first clear the
+    // old arrears, then satisfy the current month.
+    // =========================================================
+
+    const amountNeededToBecomePaid =
+      previousArrears + monthlyFee;
+
+
+    // Still clearing old arrears/current contribution
+    if (paidThisMonth < amountNeededToBecomePaid) {
+      return "Arrears";
+    }
+
+
+    // Old arrears cleared + current month paid
+    if (paidThisMonth === amountNeededToBecomePaid) {
+      return "Paid";
+    }
+
+
+    // More than everything required
+    if (paidThisMonth > amountNeededToBecomePaid) {
+      return "Ahead";
+    }
+
+
     return "Pending";
   };
 
@@ -945,47 +1022,87 @@ function App() {
       return 0;
     }
 
-    const monthlyFee = Number(scheme.monthlyContribution) || 0;
+    const monthlyFee =
+      Number(scheme.monthlyContribution) || 0;
 
     if (monthlyFee <= 0) {
       return 0;
     }
 
-    const transactions = member.transactions || [];
-
-    const sortedTransactions = [...transactions]
-      .filter(tx => tx.date)
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    if (sortedTransactions.length === 0) {
+    if (!member.joinedDate) {
       return 0;
     }
 
-    const firstPaymentDate = new Date(sortedTransactions[0].date);
+    const joinedDate = new Date(member.joinedDate);
+
+    if (isNaN(joinedDate.getTime())) {
+      return 0;
+    }
+
+    const transactions = member.transactions || [];
 
     const today = new Date();
+
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
 
-    const startYear = firstPaymentDate.getFullYear();
-    const startMonth = firstPaymentDate.getMonth();
+    const startYear = joinedDate.getFullYear();
+    const startMonth = joinedDate.getMonth();
 
-    const monthsElapsed =
+
+    // =========================================================
+    // COMPLETED MONTHS BEFORE CURRENT MONTH
+    // =========================================================
+
+    const previousMonthsCount = Math.max(
+      0,
       (currentYear - startYear) * 12 +
-      (currentMonth - startMonth);
-
-    const totalMonthsExpected =
-      Math.max(1, monthsElapsed + 1);
-
-    const expectedTotal =
-      totalMonthsExpected * monthlyFee;
-
-    const totalPaid = transactions.reduce(
-      (sum, tx) => sum + (Number(tx.amount) || 0),
-      0
+      (currentMonth - startMonth)
     );
 
-    return Math.max(0, expectedTotal - totalPaid);
+
+    // =========================================================
+    // EXPECTED FOR COMPLETED MONTHS
+    // =========================================================
+
+    const expectedBeforeCurrentMonth =
+      previousMonthsCount * monthlyFee;
+
+
+    // =========================================================
+    // ACTUAL PAYMENTS BEFORE CURRENT MONTH
+    // =========================================================
+
+    const paidBeforeCurrentMonth = transactions
+      .filter(tx => {
+        if (!tx.date) return false;
+
+        const txDate = new Date(tx.date);
+
+        return (
+          txDate.getFullYear() < currentYear ||
+          (
+            txDate.getFullYear() === currentYear &&
+            txDate.getMonth() < currentMonth
+          )
+        );
+      })
+      .reduce(
+        (sum, tx) =>
+          sum + (Number(tx.amount) || 0),
+        0
+      );
+
+
+    // =========================================================
+    // PREVIOUS ARREARS ONLY
+    // =========================================================
+
+    return Math.max(
+      0,
+      expectedBeforeCurrentMonth -
+      paidBeforeCurrentMonth
+    );
   };
 
 

@@ -193,10 +193,10 @@ function Expenses({
         'bg-black/20'
 
     ];
-    
+
     return (
         <div className={`dashboard w-full min-h-screen p-4 
-        md:p-8 ${toggleMobileState === 3 ? "block" : "hidden"}
+        md:p-5 ${toggleMobileState === 3 ? "block" : "hidden"}
          ${toggleState === 3 ? "md:block" : "md:hidden"}
         `}>
 
@@ -412,7 +412,7 @@ function Expenses({
             </div>
 
             {/* mobile view */}
-            <div className="block md:hidden space-y-4">
+            <div className="block md:hidden space-y-4 mb-6">
                 <ul className="space-y-4 p-3 bg-white rounded-xl mt-3 text-sm h-120 overflow-y-auto">
                     {filteredExpenses.map(expense => (
                         <li key={expense.id}>
@@ -488,8 +488,8 @@ function Expenses({
             </div>
 
             {/* footer */}
-            <div className='footer md:col-span-3 flex flex-col sm:flex-row 
-            justify-center items-center py-5 px-6 glass text-white mt-3'>
+            <div className='footer md:col-span-3 flex grow flex-col sm:flex-row 
+            justify-center items-center py-5 px-6 glass text-white mt-auto'>
                 <p>All rights reserved &copy; 2026 </p>
             </div>
 

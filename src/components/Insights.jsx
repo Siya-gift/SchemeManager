@@ -3,7 +3,7 @@ import React from 'react'
 function Insights({ toggleState, toggleMobileState, formattedDate }) {
   return (
     <div className={`Insights w-full min-h-screen p-4 
-        md:p-8 ${toggleMobileState === 4 ? "block" : "hidden"}
+        md:p-5 ${toggleMobileState === 4 ? "block" : "hidden"}
          ${toggleState === 4 ? "md:block" : "md:hidden"}
         `}>
 
@@ -22,6 +22,10 @@ function Insights({ toggleState, toggleMobileState, formattedDate }) {
             <i className="fa-solid fa-calendar-days"></i>
           </span>
         </div>
+      </div>
+      <div className='footer md:col-span-3 flex grow flex-col sm:flex-row 
+        justify-center items-center py-5 px-6 glass text-white mt-auto'>
+        <p>All rights reserved &copy; 2026 </p>
       </div>
     </div>
   )

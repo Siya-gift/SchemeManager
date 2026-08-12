@@ -32,6 +32,7 @@ function SchemeMembers({
   getMemberStatus
 }) {
 
+
   const [isDotMenu, setisDotMenu] = useState(false);
   const [activeMenuIdx, setActiveMenuIdx] = useState(null);
   const [isDotMenuState, setisDotMenuState] = useState("hidden");
@@ -184,17 +185,19 @@ function SchemeMembers({
   };
 
   const getStatusBadgeClass = (status) => {
-    if (status === "Paid") {
-      return "bg-green-100 text-green-800";
-    } else if (status === "Ahead") {
-      return "bg-blue-100 text-blue-800";
-    } else if (status === "Pending") {
-      return "bg-amber-100 text-amber-800";
-    } else {
-      return "bg-red-100 text-red-800";
+    switch (status) {
+      case "Paid":
+        return "bg-green-100 text-green-800";
+      case "Ahead":
+        return "bg-blue-100 text-blue-800";
+      case "Awaiting Payment":
+        return "bg-amber-100 text-amber-800";
+      case "Pending":
+        return "bg-slate-100 text-slate-700";
+      default:
+        return "bg-red-100 text-red-800";
     }
   };
-
 
   const removeMember = () => {
     setIsDeleteMember(false);
@@ -292,7 +295,7 @@ function SchemeMembers({
 
 
   return (
-    <div className={`schemeMembers w-full min-h-screen p-4 md:p-8 
+    <div className={`schemeMembers w-full min-h-screen p-4 md:p-5
         ${toggleMobileState === 2 ? "block" : "hidden"} 
         ${toggleState === 2 ? "md:block" : "md:hidden"}
         `}>
@@ -358,7 +361,7 @@ function SchemeMembers({
 
         <div className='glass p-6 text-white flex flex-col min-h-svh md:col-span-2'>
           <div className='flex items-left flex-col gap-y-3'>
-            <h1 className='font-bold text-xl'>Members of club now</h1>
+            <h1 className='font-bold text-xl'>Members of {selectedSchemeName}</h1>
             <div className='flex flex-col xl:flex-row gap-3 sm:w-full md:w-auto'>
               <input className='py-2.5 px-2 border rounded-xl w-full focus:border-white 
               focus:outline-white' type='text' value={searchState} onChange={searchFunc}
@@ -466,10 +469,11 @@ function SchemeMembers({
             </div>
           </ul>
         </div>
-        <div className='footer md:col-span-3 flex flex-col sm:flex-row 
-        justify-center items-center py-5 px-6 glass text-white'>
+        <div className='footer md:col-span-3 flex grow flex-col sm:flex-row 
+        justify-center items-center py-5 px-6 glass text-white mt-auto'>
           <p>All rights reserved &copy; 2026 </p>
         </div>
+
       </div>
 
 
@@ -973,125 +977,381 @@ function SchemeMembers({
             </div>
 
             <div className="max-h-100 overflow-y-auto pr-2 glass-scroll">
-              {accordionData
-                .filter(item => (item.userName || "").toLowerCase() === (payingMember || "").toLowerCase())
-                .map((item, index) => {
+
+              {(() => {
+                const memberHistory = accordionData.filter(
+                  item =>
+                    (item.userName || "").toLowerCase() ===
+                    (payingMember || "").toLowerCase()
+                );
+
+                const hasTransactions = memberHistory.some(
+                  item =>
+                    item.yearHistory &&
+                    item.yearHistory.length > 0
+                );
+
+                // No history at all for this member
+                if (!hasTransactions) {
+                  return (
+                    <div className="flex flex-col items-center justify-center py-16 text-white/50">
+                      <i className="fa-solid fa-clock-rotate-left text-5xl mb-4"></i>
+
+                      <p className="text-lg font-medium">
+                        Transaction not found
+                      </p>
+                    </div>
+                  );
+                }
+
+                return memberHistory.map((item, index) => {
+
                   const query = searchHistory.toLowerCase().trim();
                   const isOpen = openIndex === index;
 
-                  // Filter the rows for this specific year based on query
-                  const visibleRows = item.yearHistory.filter((h) => {
-                    if (query === "") return true;
-                    const month = h.date ? new Date(h.date).toLocaleString("default", { month: "long" }).toLowerCase() : "";
-                    const amount = (h.amount || "").toString().replace(/[\s,.]/g, '');
-                    const details = (h.details || "").toLowerCase();
-                    return month.includes(query) || amount.includes(query) || details.includes(query) || (h.date || "").includes(query);
+                  // Filter rows based on search
+                  const visibleRows = (item.yearHistory || []).filter((h) => {
+
+                    if (query === "") {
+                      return true;
+                    }
+
+                    const month = h.date
+                      ? new Date(h.date)
+                        .toLocaleString("default", {
+                          month: "long"
+                        })
+                        .toLowerCase()
+                      : "";
+
+                    const amount = (h.amount || "")
+                      .toString()
+                      .replace(/[\s,.]/g, "");
+
+                    const details = (h.details || "")
+                      .toLowerCase();
+
+                    return (
+                      month.includes(query) ||
+                      amount.includes(query) ||
+                      details.includes(query) ||
+                      (h.date || "").includes(query)
+                    );
                   });
 
-                  // Only show the accordion if it matches the name filter (or if searching, show if rows match)
-                  if (query !== "" && visibleRows.length === 0) return null;
+                  // If searching and nothing matches
+                  if (
+                    query !== "" &&
+                    visibleRows.length === 0
+                  ) {
+                    return null;
+                  }
 
                   return (
-                    <div key={item.year} className="mb-2">
+                    <div
+                      key={item.year}
+                      className="mb-2"
+                    >
+
                       <button
-                        onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                        className="histAccordian flex justify-between items-center text-white bg-white/40 w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50 focus:border cursor-pointer">
+                        onClick={() =>
+                          setOpenIndex(
+                            openIndex === index
+                              ? null
+                              : index
+                          )
+                        }
+                        className="histAccordian flex justify-between items-center text-white bg-white/40 w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50 focus:border cursor-pointer"
+                      >
+
                         <h1 className="flex items-center">
                           <i className="fa-solid fa-calendar-check"></i>
-                          <span className="ml-2 font-semibold">{item.year}</span>
+
+                          <span className="ml-2 font-semibold">
+                            {item.year}
+                          </span>
                         </h1>
-                        <div className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}>
-                          <i className='fa-solid fa-chevron-down'></i>
+
+                        <div
+                          className={`transition-transform duration-300 ${isOpen
+                            ? "rotate-180"
+                            : "rotate-0"
+                            }`}
+                        >
+                          <i className="fa-solid fa-chevron-down"></i>
                         </div>
+
                       </button>
 
-                      <div className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden ${isOpen ? 'grid-rows-[1fr] py-4 my-1 opacity-100' : 'grid-rows-[0fr] py-0 my-0 opacity-0'}`}>
+
+                      <div
+                        className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden ${isOpen
+                          ? "grid-rows-[1fr] py-4 my-1 opacity-100"
+                          : "grid-rows-[0fr] py-0 my-0 opacity-0"
+                          }`}
+                      >
+
                         <div className="overflow-hidden text-white/90 text-sm">
 
-                          {/* --- DESKTOP TABLE VIEW --- */}
+
+                          {/* DESKTOP TABLE */}
                           <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 shadow-sm mt-2">
+
                             <table className="min-w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500">
+
                               <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700">
+
                                 <tr>
-                                  <th className="px-6 py-3">Date</th>
-                                  <th className="px-6 py-3">Month</th>
-                                  <th className="px-6 py-3">Amount</th>
-                                  <th className="px-6 py-3">Details</th>
-                                  <th className="px-6 py-3">Action</th>
+                                  <th className="px-6 py-3">
+                                    Date
+                                  </th>
+
+                                  <th className="px-6 py-3">
+                                    Month
+                                  </th>
+
+                                  <th className="px-6 py-3">
+                                    Amount
+                                  </th>
+
+                                  <th className="px-6 py-3">
+                                    Details
+                                  </th>
+
+                                  <th className="px-6 py-3">
+                                    Action
+                                  </th>
                                 </tr>
+
                               </thead>
+
+
                               <tbody className="divide-y divide-gray-200">
+
                                 {visibleRows.length > 0 ? (
+
                                   visibleRows.map((h, i) => (
-                                    <tr key={i} className="hover:bg-gray-50 text-gray-900">
-                                      <td className="px-6 py-4">{h.date || "-"}</td>
-                                      <td className="px-6 py-4">{h.date ? new Date(h.date).toLocaleString("default", { month: "long" }) : "-"}</td>
-                                      <td className="px-6 py-4 font-semibold">{h.amount ? `R ${h.amount}` : "-"}</td>
+
+                                    <tr
+                                      key={i}
+                                      className="hover:bg-gray-50 text-gray-900"
+                                    >
+
                                       <td className="px-6 py-4">
-                                        {h.details && <i className="fa-solid fa-money-bill-wave mr-2"></i>}
+                                        {h.date || "-"}
+                                      </td>
+
+                                      <td className="px-6 py-4">
+                                        {h.date
+                                          ? new Date(
+                                            h.date
+                                          ).toLocaleString(
+                                            "default",
+                                            {
+                                              month: "long"
+                                            }
+                                          )
+                                          : "-"
+                                        }
+                                      </td>
+
+                                      <td className="px-6 py-4 font-semibold">
+                                        {h.amount
+                                          ? `R ${h.amount}`
+                                          : "-"
+                                        }
+                                      </td>
+
+                                      <td className="px-6 py-4">
+
+                                        {h.details && (
+                                          <i className="fa-solid fa-money-bill-wave mr-2"></i>
+                                        )}
+
                                         {h.details || "-"}
+
                                       </td>
+
                                       <td className="px-6 py-4">
+
                                         <div className="flex gap-2 text-gray-500">
-                                          <span onClick={() => setIsEditPaymentHist(true)} className="cursor-pointer hover:-translate-y-1 transition-transform border px-2 py-1 rounded-lg"><i className="fa-regular fa-pen-to-square"></i></span>
-                                          <span onClick={() => setIsDeletePaymentHist(true)} className="cursor-pointer hover:-translate-y-1 transition-transform border px-2 py-1 rounded-lg"><i className="fa-solid fa-trash"></i></span>
+
+                                          <span
+                                            onClick={() =>
+                                              setIsEditPaymentHist(true)
+                                            }
+                                            className="cursor-pointer hover:-translate-y-1 transition-transform border px-2 py-1 rounded-lg"
+                                          >
+                                            <i className="fa-regular fa-pen-to-square"></i>
+                                          </span>
+
+                                          <span
+                                            onClick={() =>
+                                              setIsDeletePaymentHist(true)
+                                            }
+                                            className="cursor-pointer hover:-translate-y-1 transition-transform border px-2 py-1 rounded-lg"
+                                          >
+                                            <i className="fa-solid fa-trash"></i>
+                                          </span>
+
                                         </div>
+
                                       </td>
+
                                     </tr>
+
                                   ))
+
                                 ) : (
-                                  <tr><td colSpan={5} className="py-10 text-center text-gray-400">No matching records found.</td></tr>
+
+                                  <tr>
+                                    <td
+                                      colSpan={5}
+                                      className="py-10 text-center text-gray-400"
+                                    >
+                                      No matching records found.
+                                    </td>
+                                  </tr>
+
                                 )}
+
                               </tbody>
+
                             </table>
+
                           </div>
 
-                          {/* --- MOBILE BLOCK/CARD VIEW --- */}
+
+                          {/* MOBILE CARDS */}
                           <div className="block md:hidden space-y-4 mt-2 mb-2">
+
                             {visibleRows.length > 0 ? (
+
                               visibleRows.map((h, i) => (
-                                <div key={i} className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-gray-600 space-y-2">
+
+                                <div
+                                  key={i}
+                                  className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-gray-600 space-y-2"
+                                >
+
                                   <div className="flex justify-between border-b pb-2">
-                                    <span className="font-semibold text-gray-900">{h.date || "-"}</span>
-                                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Date</span>
+
+                                    <span className="font-semibold text-gray-900">
+                                      {h.date || "-"}
+                                    </span>
+
+                                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                                      Date
+                                    </span>
+
                                   </div>
+
+
                                   <div className="flex justify-between">
-                                    <span>Month:</span>
+
+                                    <span>
+                                      Month:
+                                    </span>
+
                                     <span className="text-gray-900 font-medium">
-                                      {h.date ? new Date(h.date).toLocaleString("default", { month: "long" }) : "-"}
+
+                                      {h.date
+                                        ? new Date(
+                                          h.date
+                                        ).toLocaleString(
+                                          "default",
+                                          {
+                                            month: "long"
+                                          }
+                                        )
+                                        : "-"
+                                      }
+
                                     </span>
+
                                   </div>
+
+
                                   <div className="flex justify-between">
-                                    <span>Amount:</span>
+
+                                    <span>
+                                      Amount:
+                                    </span>
+
                                     <span className="text-gray-900 font-semibold">
-                                      {h.amount ? `R ${h.amount}` : "-"}
+                                      {h.amount
+                                        ? `R ${h.amount}`
+                                        : "-"
+                                      }
                                     </span>
+
                                   </div>
+
+
                                   <div className="flex justify-between border-t pt-2">
-                                    <span>Details:</span>
-                                    <span className="text-gray-900">
-                                      {h.details && <i className="fa-solid fa-money-bill-wave mr-2"></i>}
-                                      {h.details || "-"}
+
+                                    <span>
+                                      Details:
                                     </span>
+
+                                    <span className="text-gray-900">
+
+                                      {h.details && (
+                                        <i className="fa-solid fa-money-bill-wave mr-2"></i>
+                                      )}
+
+                                      {h.details || "-"}
+
+                                    </span>
+
                                   </div>
+
+
                                   <div className="flex justify-end gap-3 pt-3">
-                                    <span onClick={() => setIsEditPaymentHist(true)} className="px-3 py-1 border rounded-lg hover:-translate-y-1 transition-transform cursor-pointer text-gray-500"><i className="fa-regular fa-pen-to-square"></i></span>
-                                    <span onClick={() => setIsDeletePaymentHist(true)} className="px-3 py-1 border rounded-lg hover:-translate-y-1 transition-transform cursor-pointer text-gray-500"><i className="fa-solid fa-trash"></i></span>
+
+                                    <span
+                                      onClick={() =>
+                                        setIsEditPaymentHist(true)
+                                      }
+                                      className="px-3 py-1 border rounded-lg hover:-translate-y-1 transition-transform cursor-pointer text-gray-500"
+                                    >
+                                      <i className="fa-regular fa-pen-to-square"></i>
+                                    </span>
+
+                                    <span
+                                      onClick={() =>
+                                        setIsDeletePaymentHist(true)
+                                      }
+                                      className="px-3 py-1 border rounded-lg hover:-translate-y-1 transition-transform cursor-pointer text-gray-500"
+                                    >
+                                      <i className="fa-solid fa-trash"></i>
+                                    </span>
+
                                   </div>
+
                                 </div>
+
                               ))
+
                             ) : (
+
                               <div className="py-8 text-center bg-white rounded-lg text-gray-500 shadow-sm">
                                 No matching records found.
                               </div>
+
                             )}
+
                           </div>
 
                         </div>
+
                       </div>
+
                     </div>
                   );
-                })}
+                });
+              })()}
+
             </div>
           </div>
         </div>

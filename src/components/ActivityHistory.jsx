@@ -3,7 +3,7 @@ import React from 'react'
 function ActivityHistory({ toggleState, toggleMobileState, formattedDate }) {
   return (
     <div className={`ActivityHistory w-full min-h-screen p-4 
-        md:p-8 ${toggleMobileState === 5 ? "block" : "hidden"}
+        md:p-5 ${toggleMobileState === 5 ? "block" : "hidden"}
          ${toggleState === 5 ? "md:block" : "md:hidden"}
         `}>
 
@@ -23,6 +23,12 @@ function ActivityHistory({ toggleState, toggleMobileState, formattedDate }) {
           </span>
         </div>
       </div>
+
+      <div className='footer md:col-span-3 flex grow flex-col sm:flex-row 
+      justify-center items-center py-5 px-6 glass text-white mt-auto'>
+        <p>All rights reserved &copy; 2026 </p>
+      </div>
+
 
     </div>
   )

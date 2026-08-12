@@ -4,7 +4,7 @@ import luffyImg from '../images/Luffy_profile_pic.jpg';
 function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName }) {
 
     return (
-        <div className='hidden md:block container w-auto m-5
+        <div className='hidden md:block container w-80 m-5
             p-5 glass'>
             <div
                 onClick={() => activeTab(0)}
@@ -15,7 +15,10 @@ function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName })
                     <img src={luffyImg} className="h-full w-full object-cover" />
                 </div>
                 <h1 className='text-white text-3xl font-bold'>Vusi Nkosi</h1>
-                <small className='text-[#abe9be]'>Scheme : {selectedSchemeName}</small>
+                <small className='text-[#abe9be] block min-w-55 max-w-55 truncate'>
+                    Scheme : {selectedSchemeName}
+                </small>
+
             </div>
             <div className='glass p-5 mt-5'>
                 <h3 className="text-white text-sm font-semibold mb-3 uppercase tracking-wider opacity-70">

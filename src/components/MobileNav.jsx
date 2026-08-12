@@ -28,7 +28,7 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
 
     return (
         <div ref={container}>
-            <div className='profile w-[95%] max-w-125 mx-auto p-6 glass flex md:hidden 
+            <div className=' mx-4 p-6 glass flex md:hidden 
             justify-between items-center mt-3 rounded-2xl cursor-pointer hover:bg-white/45'>
                 <div className='pp flex items-center gap-3'>
                     <div className="ppic w-10 h-10 rounded-full overflow-hidden border border-white/20">
