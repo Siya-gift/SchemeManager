@@ -379,7 +379,7 @@ function SchemeMembers({
 
           <ul className='flex w-full mt-9 rounded-2xl'>
             <div
-              className="w-full h-auto max-h-150 md:max-h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl z-1 pr-2"
+              className="w-full h-150 md:h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl z-1 pr-2"
               onScroll={scrollOnList}
             >
               <table className='w-full text-left border-collapse'>
@@ -581,16 +581,16 @@ function SchemeMembers({
 
       {isEditMember &&
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-  bg-black/50 h-screen w-screen'>
+          bg-black/50 h-screen w-screen'>
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-     w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+          w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
 
             <div className='flex justify-between align-center w-full text-white'>
               <h1 className='text-2xl'>Edit Member</h1>
               <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsEditMember(false)}>&times;</p>
             </div>
             <div className='flex start align-center w-full text-white mt-6
-      text-sm'>
+          text-sm'>
               <h3 className='text-white'>Name</h3>
             </div>
 

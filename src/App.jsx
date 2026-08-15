@@ -1,5 +1,6 @@
 import './App.css'
 import { useEffect, useState, useRef, useMemo } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Calendar from 'react-calendar';
@@ -526,6 +527,8 @@ function App() {
         ...prevData
       ];
     });
+
+    toast.success("Payment successful", { className: 'notifier_bg' });
   };
 
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -643,6 +646,7 @@ function App() {
 
     // Nothing new to add
     if (membersToAdd.length === 0) {
+      toast.error("Nothing to save", { className: 'notifier_bg' });
       return;
     }
 
@@ -696,6 +700,10 @@ function App() {
     if (membersContainer) {
       membersContainer.innerHTML = "";
     }
+
+    //notify success
+    toast.success('Saved successfully', { className: 'notifier_bg'});
+
   };
 
 
@@ -1131,7 +1139,7 @@ function App() {
         </div>
       )}
 
-
+<Toaster  />
 
       <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} selectedSchemeName={selectedSchemeName} />
       <div className='flex overflow-hidden'>
