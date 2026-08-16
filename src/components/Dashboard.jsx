@@ -273,7 +273,7 @@ function Dashboard({
 
                                             <div className='flex justify-between items-center w-full gap-4'>
                                                 <span className='font-medium'>{item.description}</span>
-                                                <span className='font-bold tabular-nums truncate max-w-20 text-right'>{item.amount}</span>
+                                                <span className='font-bold tabular-nums truncate max-w-25 text-right'>{item.amount}</span>
                                             </div>
                                         </li>
 

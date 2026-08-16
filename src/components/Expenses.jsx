@@ -221,9 +221,9 @@ function Expenses({
                 </div>
             </div>
 
-            <div className='okrContainer flex flex-wrap gap-4 w-full transition-all duration-300'>
+            <div className='okrContainer flex flex-col md:flex-row gap-4 w-full transition-all duration-300'>
                 <div className='bg-[linear-gradient(135deg,#4f46e5_0%,#3730a3_100%)] shadow-[0_5px_15px_rgba(79,70,229,0.2)] cursor-pointer
-                text-white p-3 rounded-xl flex flex-col gap-2 w-full md:w-60 hover:-translate-y-1 transition-translate duration-300'>
+                text-white p-3 rounded-xl flex flex-col gap-2 w-full hover:-translate-y-1 transition-translate duration-300'>
                     <h3 className='text-white/75 text-sm'>
                         <i className="fa-solid fa-calendar-days"></i>
                         <span className='ml-2'>Spent This Month</span>
@@ -232,7 +232,7 @@ function Expenses({
                     <h3 className='text-white/75 text-sm'>{totalTransactionsThisMonth} transaction</h3>
                 </div>
                 <div className='bg-[linear-gradient(135deg,#10b981_0%,#065f46_100%)] shadow-[0_5px_15px_rgba(16,185,129,0.2)] cursor-pointer
-                text-white p-3 rounded-xl flex flex-col gap-2 w-full md:w-60 hover:-translate-y-1 transition-translate duration-300'>
+                text-white p-3 rounded-xl flex flex-col gap-2 w-full hover:-translate-y-1 transition-translate duration-300'>
                     <h3 className='text-white/75 text-sm'>
                         <i className="fa-solid fa-calendar-check"></i>
                         <span className='ml-2'>Spent This Year</span>
@@ -241,7 +241,7 @@ function Expenses({
                     <h3 className='text-white/75 text-sm'>{totalTransactionsThisYear} transaction</h3>
                 </div>
                 <div className='bg-[linear-gradient(135deg,#f59e0b_0%,#b45309_100%)] shadow-[0_5px_15px_rgba(245,158,11,0.2)] cursor-pointer
-                text-white p-3 rounded-xl flex flex-col gap-2 w-full md:w-60 hover:-translate-y-1 transition-translate duration-300'>
+                text-white p-3 rounded-xl flex flex-col gap-2 w-full hover:-translate-y-1 transition-translate duration-300'>
                     <h3 className='text-white/75 text-sm'>
                         <i className="fa-solid fa-star"></i>
                         <span className='ml-2'>Top Category</span>
@@ -250,7 +250,7 @@ function Expenses({
                     <h3 className='text-white/75 text-sm'>R {topCategoryAmount.toLocaleString()} ({topCategoryPercentage}%)</h3>
                 </div>
                 <div className='bg-[linear-gradient(135deg,#06b6d4_0%,#0369a1_100%)] shadow-[0_5px_15px_rgba(6,182,212,0.2)] cursor-pointer
-                text-white p-3 rounded-xl flex flex-col gap-2 w-full md:w-60 hover:-translate-y-1 transition-translate duration-300'>
+                text-white p-3 rounded-xl flex flex-col gap-2 w-full hover:-translate-y-1 transition-translate duration-300'>
                     <h3 className='text-white/75 text-sm'>
                         <i className="fa-solid fa-hand-holding-dollar"></i>
                         <span className='ml-2'>Refunds & Credits</span>
@@ -350,7 +350,7 @@ function Expenses({
             </div>
 
             {/* Desktop view */}
-            <div className='mt-6 hidden md:block h-90 overflow-y-auto pr-2' onScroll={scrollOnList}>
+            <div className='mt-6 hidden md:block h-90 overflow-y-auto pr-2 mb-3' onScroll={scrollOnList}>
                 <table className='w-full text-left text-sm text-white'>
                     <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} text-md`}>
                         <tr>
@@ -399,8 +399,8 @@ function Expenses({
                             </tr>
                         )}
 
-                        <tr className='border-b border-b-white/75 font-bold'>
-                            <td colSpan="100%" className='p-3'>
+                        <tr className='font-bold sticky bottom-0 bg-white text-black/70 rounded-bl-xl'>
+                            <td colSpan="100%" className='p-3 rounded-bl-xl rounded-br-xl'>
                                 <div className='flex justify-between items-center w-full'>
                                     <span className="text-white-900">Total for Period (Net):</span>
                                     <span className={`text-xs uppercase tracking-wider text-white-400 ${netDifference === 0 ? 'text-gray-400' : totalColor}`}>
@@ -477,7 +477,7 @@ function Expenses({
                         </li>
                     )}
 
-                    <li>
+                    <li className='sticky bottom-0'>
                         <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-md text-gray-600 space-y-2 mb-2">
                             <div className="flex justify-between border-b pb-2">
                                 <span className="font-semibold text-gray-900">Total for Period (Net):</span>
