@@ -31,7 +31,8 @@ function Dashboard({
     getMemberStatus,
     filteredMembers,
     membersBehindStatus,
-    getMemberArrears
+    getMemberArrears,
+    LatestTransactions
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
@@ -111,6 +112,8 @@ function Dashboard({
             return getMemberStatus(member, activeScheme) === "Arrears";
         })
         : [];
+
+    const LatestTransactionsForSelectedScheme = LatestTransactions.filter(transaction => transaction.transactionScheme === selectedSchemeName);
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 md:p-5
@@ -253,32 +256,29 @@ function Dashboard({
                     {/* flex-1 inside h-90 ensures the list fills the remaining card height */}
                     <div className='flex-1 overflow-hidden'>
                         <ul className='glass-scroll text-md h-full overflow-auto pr-2'>
-                            {[
-                                { d: '18 Feb 26', c: 'Expense', v: 'R 500' },
-                                { d: '18 Feb 26', c: 'Payment', v: 'R 300' },
-                                { d: '18 Feb 26', c: 'Payment', v: 'R 2500' },
-                                { d: '18 Feb 26', c: 'Payment', v: 'R 10 500' },
-                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
-                                { d: '18 Feb 26', c: 'Member Added', v: 'Sam' },
-                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
-                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
-                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
-                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' },
-                                { d: '18 Feb 26', c: 'Expense', v: 'R 50' }
-                            ].map((item, i) => (
-                                <li key={i} className='flex justify-between items-center 
-                                border-b border-white/10 py-3 
-                                min-w-87.5 w-full whitespace-nowrap
-                                hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'>
+                            {
+                                LatestTransactionsForSelectedScheme.length === 0 ?
+                                    (
+                                        <div className="text-center text-white/50 py-10 w-full h-full flex justify-center items-center flex-col gap-2">
+                                            <div className='text-6xl'><i className="fa-solid fa-clock-rotate-left "></i></div>
+                                            <p>No transactions <br /> available</p>
+                                        </div>
+                                    ) :
+                                    LatestTransactionsForSelectedScheme.map((item, i) => (
+                                        <li key={i} className='flex justify-between items-center 
+                                        border-b border-white/10 py-3 
+                                        min-w-87.5 w-full whitespace-nowrap
+                                        hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'>
+                                            <span className='opacity-70 w-32 shrink-0'>{item.date}</span>
 
-                                    <span className='opacity-70 w-32 shrink-0'>{item.d}</span>
+                                            <div className='flex justify-between items-center w-full gap-4'>
+                                                <span className='font-medium'>{item.description}</span>
+                                                <span className='font-bold tabular-nums truncate max-w-20 text-right'>{item.amount}</span>
+                                            </div>
+                                        </li>
 
-                                    <div className='flex justify-between items-center w-full gap-4'>
-                                        <span className='font-medium'>{item.c}</span>
-                                        <span className='font-bold tabular-nums'>{item.v}</span>
-                                    </div>
-                                </li>
-                            ))}
+                                    ))
+                            }
                         </ul>
                     </div>
                 </div>
@@ -290,43 +290,111 @@ function Dashboard({
                         <i className='fa-solid fa-triangle-exclamation text-yellow-400'></i>
                         <span>Members Behind on Payment</span>
                     </h2>
-                    <ul className='glass-scroll text-md h-full overflow-y-auto'>
-                        <div className='flex-1 overflow-hidden'>
-                            {membersInArrears.length === 0 ? (
-                                <div className="text-center text-white/50 py-10">
-                                    <p>No members behind on payment</p>
+                    <ul className="glass-scroll text-md h-full overflow-y-auto">
+                        {membersInArrears.length === 0 ? (
+                            <div className="text-center text-white/50 py-10 w-full h-full flex justify-center items-center flex-col gap-2">
+                                <div className="text-6xl">
+                                    <i className="fa-solid fa-coins"></i>
                                 </div>
-                            ) : (
-                                membersInArrears.map((member) => {
 
-                                    const arrearsValue = getMemberArrears(
-                                        member,
-                                        activeScheme
-                                    );
+                                <p>
+                                    No members behind on <br />
+                                    payment
+                                </p>
+                            </div>
+                        ) : (
+                            membersInArrears.map((member) => {
 
-                                    return (
-                                        <li
-                                            key={member.id || member.memberName}
-                                            className="flex justify-around items-center border-b border-white/10 py-4 mr-2 hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg"
-                                        >
-                                            <span className="text-white">
-                                                {member.memberName}
-                                            </span>
+                                const arrearsValue = getMemberArrears(
+                                    member,
+                                    activeScheme
+                                );
 
-                                            <span className="text-red-500 font-bold block">
-                                                R{" "}
-                                                {arrearsValue.toLocaleString("en-US", {
-                                                    minimumFractionDigits: 2,
-                                                    maximumFractionDigits: 2
-                                                })}
-                                            </span>
-                                        </li>
-                                    );
-                                })
-                            )}
+                                const today = new Date();
 
+                                // 3 months ago
+                                const threeMonthsAgo = new Date(today);
+                                threeMonthsAgo.setMonth(
+                                    today.getMonth() - 3
+                                );
 
-                        </div>
+                                // Required contribution for 3 months
+                                const arrearsThreshold = activeScheme
+                                    ? activeScheme.monthlyContribution * 3
+                                    : 0;
+
+                                // Find latest payment
+                                const latestPaymentDate = member.transactions?.length
+                                    ? new Date(
+                                        Math.max(
+                                            ...member.transactions.map(t =>
+                                                new Date(t.date).getTime()
+                                            )
+                                        )
+                                    )
+                                    : null;
+
+                                // Total actually paid during the last 3 months
+                                const paidLastThreeMonths = member.transactions
+                                    ?.filter(t => {
+                                        const transactionDate = new Date(t.date);
+
+                                        return transactionDate >= threeMonthsAgo &&
+                                            transactionDate <= today;
+                                    })
+                                    .reduce(
+                                        (total, t) => total + Number(t.amount || 0),
+                                        0
+                                    ) || 0;
+
+                                // No payment for 3+ months
+                                const noPaymentForThreeMonths =
+                                    !latestPaymentDate ||
+                                    latestPaymentDate <= threeMonthsAgo;
+
+                                // Has not paid the required 3-month amount
+                                const belowThreeMonthThreshold =
+                                    paidLastThreeMonths < arrearsThreshold;
+
+                                // Risk
+                                const isRisk =
+                                    noPaymentForThreeMonths &&
+                                    belowThreeMonthThreshold;
+
+                                return (
+                                    <li
+                                        key={member.id || member.memberName}
+                                        className="flex justify-around items-center border-b border-white/10 py-4 mr-2 hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg"
+                                    >
+                                        <span className="text-white">
+                                            {isRisk ? (
+                                                <div className="flex flex-row gap-2 items-center">
+
+                                                    <p className="bg-red-300 text-red-900 p-1 rounded-md">
+                                                        Risk
+                                                    </p>
+
+                                                    <p>
+                                                        {member.memberName}
+                                                    </p>
+
+                                                </div>
+                                            ) : (
+                                                member.memberName
+                                            )}
+                                        </span>
+
+                                        <span className="text-red-500 font-bold block">
+                                            R{" "}
+                                            {arrearsValue.toLocaleString("en-US", {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            })}
+                                        </span>
+                                    </li>
+                                );
+                            })
+                        )}
                     </ul>
                 </div>
 

@@ -29,7 +29,9 @@ function SchemeMembers({
   setIsAddMember,
   isAddMember,
   setPaymentMethod,
-  getMemberStatus
+  getMemberStatus,
+  toast,
+  setLatestTransactions
 }) {
 
 
@@ -171,6 +173,7 @@ function SchemeMembers({
     setNewScheme("");
     setNewSchemeAmount("");
     setAddSchemeModal(false);
+    toast.success("Scheme Added", { className: 'notifier_bg' });
   }
 
   const deleteMember = (id) => {
@@ -206,6 +209,29 @@ function SchemeMembers({
     const updatedMembers = members.filter((member) => member.id !== deleteTargetIndex);
     setMembers(updatedMembers);
     setDeleteTargetIndex(null);
+    toast.success("Deleted Member", { className: 'notifier_bg' });
+
+    // ==================================================
+    // UPDATE LATEST TRANSACTIONS
+    // ==================================================
+    const memberToDelete = members.find((member) => member.id === deleteTargetIndex);
+    if (memberToDelete) {
+      setLatestTransactions(prevTransactions => [
+        {
+          memberName: memberToDelete.memberName || "N/A",
+          transactionScheme: selectedSchemeName,
+          date: new Date().toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          }),
+          description: "Deleted Member",
+          amount: memberToDelete.memberName || "N/A"
+        },
+        ...prevTransactions
+      ]);
+    }
+
   };
 
   const removeScheme = () => {
@@ -218,6 +244,26 @@ function SchemeMembers({
     };
     setSchemes(updatedSchemes);
     setDeleteTargetIndex(null);
+    toast.success("Deleted Scheme", { className: 'notifier_bg' });
+
+    // ==================================================
+    // UPDATE LATEST TRANSACTIONS
+    // ==================================================
+    
+      setLatestTransactions(prevTransactions => [
+        {
+          transactionScheme: selectedSchemeName,
+          date: new Date().toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          }),
+          description: "Deleted Scheme",
+          amount: selectedSchemeName || "N/A"
+        },
+        ...prevTransactions
+      ]);
+    
   };
 
   const payingModal = (memberName) => {
@@ -232,7 +278,6 @@ function SchemeMembers({
     setIsEditMember(true)
     setEditMember(memberName)
     setEditingId(id)
-    console.log(id)
   }
 
   const editSchemeModal = (scheme, monthlyContribution, startingBal, date) => {
@@ -253,8 +298,6 @@ function SchemeMembers({
   };
 
   const updateMember = (edtID, edtNm) => {
-    console.log("ID sent to update:", edtID);
-    console.log("Data sent to update:", edtNm);
 
     setMembers(prevMembers =>
       prevMembers.map(member =>
@@ -264,6 +307,7 @@ function SchemeMembers({
     );
 
     setIsEditMember(false);
+    toast.success("Updated Member", { className: 'notifier_bg' });
   };
 
 

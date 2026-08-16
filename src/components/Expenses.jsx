@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 function Expenses({
     toggleState,
@@ -80,6 +81,8 @@ function Expenses({
         setNewExpenseDate(new Date().toISOString().split('T')[0]);
         setNewExpenseAmount("");
         setLogExpense(false);
+
+        toast.success("Expense Logged", { className: 'notifier_bg' })
     };
 
     const handleExpenseDescInputChange = (e) => {

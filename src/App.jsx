@@ -165,7 +165,7 @@ function App() {
       schemeName: "clubs",
       joinedDate: "2026-05-16",
       transactions: [
-        { amount: 500, method: "Cash", date: "2026-05-16" },
+        
         { amount: 500, method: "Cash", date: "2026-06-16" },
         { amount: 500, method: "Cash", date: "2026-07-16" },
       ]
@@ -211,7 +211,7 @@ function App() {
       schemeName: "clubs",
       joinedDate: "2020-12-16",
       transactions: [
-        { amount: 500, method: "Cash", date: "2026-12-16" }
+        { amount: 500, method: "Cash", date: "2025-12-16" }
       ]
     }
   ]
@@ -258,6 +258,23 @@ function App() {
       userName: "Jol",
       year: "2026",
       yearHistory: []
+    }
+  ]);
+
+  const [LatestTransactions, setLatestTransactions] = useState([
+    {
+      memberName: "Jol",
+      transactionScheme: "clubs",
+      date: "18 Jul 2026",
+      description: "Payment",
+      amount: `R ${500.00}`
+    },
+    {
+      memberName: "Jol",
+      transactionScheme: "clubs",
+      date: "18 Jul 2026",
+      description: "Payment",
+      amount: `R ${400.00}`
     }
   ]);
 
@@ -481,8 +498,22 @@ function App() {
       })
     );
 
+    //2 update Latest Transactions
+    setLatestTransactions(prevTransactions => [
+      {
+        transactionScheme: selectedSchemeName,
+        date: new Date(date).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        }),
+        description: `Payment`,
+        amount: `R ${numericAmount.toFixed(2)}`
+      },
+      ...prevTransactions
+    ]);
 
-    // 2. Update Accordion History
+    // 3. Update Accordion History
     setAccordionData(prevData => {
 
       const existingYearIndex = prevData.findIndex(
@@ -617,9 +648,12 @@ function App() {
     // DYNAMIC MEMBERS
     // ==================================================
 
+    let transactionsIdx = 0;
+
     dynamicNames.forEach((name, idx) => {
 
       const lowerName = name.toLowerCase();
+      transactionsIdx = idx;
 
       if (!existingNamesSet.has(lowerName)) {
 
@@ -642,6 +676,24 @@ function App() {
         existingNamesSet.add(lowerName);
       }
     });
+
+    // ==================================================
+    // UPDATE LATEST TRANSACTIONS
+    // ==================================================
+    setLatestTransactions(prevTransactions => [
+      {
+        memberName: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`,
+        transactionScheme: selectedSchemeName,
+        date: new Date(currentDate).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        }),
+        description: `New Member`,
+        amount: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`
+      },
+      ...prevTransactions
+    ]);
 
 
     // Nothing new to add
@@ -1151,7 +1203,7 @@ function App() {
           totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} financialData={financialData} netDifference={netDifference}
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} totalSchemeMonthlyContribution={totalSchemeMonthlyContribution} yearlyTarget={yearlyTarget} monthlyTarget={monthlyTarget}
           totalCash={totalCash} totalEFT={totalEFT} totalOther={totalOther} members={members} selectedSchemeName={selectedSchemeName} getMemberStatus={getMemberStatus} allMembers={allMembers}
-          filteredMembers={filteredMembers} membersBehindStatus={membersBehindStatus} getMemberArrears={getMemberArrears}
+          filteredMembers={filteredMembers} membersBehindStatus={membersBehindStatus} getMemberArrears={getMemberArrears} LatestTransactions={LatestTransactions}
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
@@ -1160,7 +1212,7 @@ function App() {
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} filteredMembers={filteredMembers} members={members} setMembers={setMembers} searchState={searchState}
           setSearchState={setSearchState} payingMember={payingMember} setPayingMember={setPayingMember} accordionData={accordionData} setAccordionData={setAccordionData}
           saveMember={saveMember} addMore={addMore} newMember={newMember} setNewMember={setNewMember} isAddMember={isAddMember} setIsAddMember={setIsAddMember} setPaymentMethod={setPaymentMethod}
-          getMemberStatus={getMemberStatus}
+          getMemberStatus={getMemberStatus} toast={toast} setLatestTransactions={setLatestTransactions}
         />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate}
           newExpenses={newExpenses} setExpenses={setExpenses} filteredExpenses={filteredExpenses} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth}
