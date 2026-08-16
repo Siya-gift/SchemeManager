@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import Overlayer from './Overlayer'
 
 
@@ -32,10 +32,12 @@ function Dashboard({
     filteredMembers,
     membersBehindStatus,
     getMemberArrears,
-    LatestTransactions
+    LatestTransactions,
+    handleConfirmPayment
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
+    const [logDetailsModal, setLogDetailsModal] = useState(false);
 
     const [YearMonthFilter, setYearMonthFilter] = useState(1)
 
@@ -113,7 +115,56 @@ function Dashboard({
         })
         : [];
 
-    const LatestTransactionsForSelectedScheme = LatestTransactions.filter(transaction => transaction.transactionScheme === selectedSchemeName);
+    const LatestTransactionsForSelectedScheme = () => LatestTransactions.filter(transaction => transaction.transactionScheme === selectedSchemeName);
+
+    const [logDetailsDate, setLogDetailsDate] = useState();
+    const [logDetailsDescription, setLogDetailsDescription] = useState();
+    const [logDetailsAmount, setLogDetailsAmount] = useState();
+
+    const logDetails = (date, description, amount) => {
+        setLogDetailsModal(true);
+        setLogDetailsDate(date);
+        setLogDetailsDescription(description);
+        setLogDetailsAmount(amount);
+    }
+
+    // 1. Move calculations into useMemo at the top of your component
+    const computedMembers = useMemo(() => {
+        const today = new Date();
+        const threeMonthsAgo = new Date(today);
+        threeMonthsAgo.setMonth(today.getMonth() - 3);
+
+        const arrearsThreshold = activeScheme ? activeScheme.monthlyContribution * 3 : 0;
+
+        return membersInArrears.map((member) => {
+            // Calculate arrears value
+            const arrearsValue = getMemberArrears(member, activeScheme);
+
+            // Find latest payment
+            const latestPaymentDate = member.transactions?.length
+                ? new Date(Math.max(...member.transactions.map(t => new Date(t.date).getTime())))
+                : null;
+
+            // Total actually paid during the last 3 months
+            const paidLastThreeMonths = member.transactions
+                ?.filter(t => {
+                    const transactionDate = new Date(t.date);
+                    return transactionDate >= threeMonthsAgo && transactionDate <= today;
+                })
+                .reduce((total, t) => total + Number(t.amount || 0), 0) || 0;
+
+            // Flags
+            const noPaymentForThreeMonths = !latestPaymentDate || latestPaymentDate <= threeMonthsAgo;
+            const belowThreeMonthThreshold = paidLastThreeMonths < arrearsThreshold;
+            const isRisk = noPaymentForThreeMonths && belowThreeMonthThreshold;
+
+            return {
+                ...member,
+                arrearsValue,
+                isRisk
+            };
+        });
+    }, [membersInArrears, activeScheme, handleConfirmPayment]);
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 md:p-5
@@ -268,7 +319,8 @@ function Dashboard({
                                         <li key={i} className='flex justify-between items-center 
                                         border-b border-white/10 py-3 
                                         min-w-87.5 w-full whitespace-nowrap
-                                        hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'>
+                                        hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'
+                                            onClick={() => logDetails(item.date, item.description, item.amount)}>
                                             <span className='opacity-70 w-32 shrink-0'>{item.date}</span>
 
                                             <div className='flex justify-between items-center w-full gap-4'>
@@ -291,109 +343,41 @@ function Dashboard({
                         <span>Members Behind on Payment</span>
                     </h2>
                     <ul className="glass-scroll text-md h-full overflow-y-auto">
-                        {membersInArrears.length === 0 ? (
+                        {computedMembers.length === 0 ? (
                             <div className="text-center text-white/50 py-10 w-full h-full flex justify-center items-center flex-col gap-2">
                                 <div className="text-6xl">
                                     <i className="fa-solid fa-coins"></i>
                                 </div>
-
-                                <p>
-                                    No members behind on <br />
-                                    payment
-                                </p>
+                                <p>No members behind on <br /> payment</p>
                             </div>
                         ) : (
-                            membersInArrears.map((member) => {
+                            computedMembers.map((member) => (
+                                <li
+                                    key={member.id || member.memberName}
+                                    className="flex justify-around items-center border-b border-white/10 py-4 mr-2 hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg"
+                                >
+                                    <span className="text-white">
+                                        {member.isRisk ? (
+                                            <div className="flex flex-row gap-2 items-center">
+                                                <p className="bg-red-300 text-red-900 p-1 rounded-md text-xs font-semibold">
+                                                    Risk
+                                                </p>
+                                                <p>{member.memberName}</p>
+                                            </div>
+                                        ) : (
+                                            member.memberName
+                                        )}
+                                    </span>
 
-                                const arrearsValue = getMemberArrears(
-                                    member,
-                                    activeScheme
-                                );
-
-                                const today = new Date();
-
-                                // 3 months ago
-                                const threeMonthsAgo = new Date(today);
-                                threeMonthsAgo.setMonth(
-                                    today.getMonth() - 3
-                                );
-
-                                // Required contribution for 3 months
-                                const arrearsThreshold = activeScheme
-                                    ? activeScheme.monthlyContribution * 3
-                                    : 0;
-
-                                // Find latest payment
-                                const latestPaymentDate = member.transactions?.length
-                                    ? new Date(
-                                        Math.max(
-                                            ...member.transactions.map(t =>
-                                                new Date(t.date).getTime()
-                                            )
-                                        )
-                                    )
-                                    : null;
-
-                                // Total actually paid during the last 3 months
-                                const paidLastThreeMonths = member.transactions
-                                    ?.filter(t => {
-                                        const transactionDate = new Date(t.date);
-
-                                        return transactionDate >= threeMonthsAgo &&
-                                            transactionDate <= today;
-                                    })
-                                    .reduce(
-                                        (total, t) => total + Number(t.amount || 0),
-                                        0
-                                    ) || 0;
-
-                                // No payment for 3+ months
-                                const noPaymentForThreeMonths =
-                                    !latestPaymentDate ||
-                                    latestPaymentDate <= threeMonthsAgo;
-
-                                // Has not paid the required 3-month amount
-                                const belowThreeMonthThreshold =
-                                    paidLastThreeMonths < arrearsThreshold;
-
-                                // Risk
-                                const isRisk =
-                                    noPaymentForThreeMonths &&
-                                    belowThreeMonthThreshold;
-
-                                return (
-                                    <li
-                                        key={member.id || member.memberName}
-                                        className="flex justify-around items-center border-b border-white/10 py-4 mr-2 hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg"
-                                    >
-                                        <span className="text-white">
-                                            {isRisk ? (
-                                                <div className="flex flex-row gap-2 items-center">
-
-                                                    <p className="bg-red-300 text-red-900 p-1 rounded-md">
-                                                        Risk
-                                                    </p>
-
-                                                    <p>
-                                                        {member.memberName}
-                                                    </p>
-
-                                                </div>
-                                            ) : (
-                                                member.memberName
-                                            )}
-                                        </span>
-
-                                        <span className="text-red-500 font-bold block">
-                                            R{" "}
-                                            {arrearsValue.toLocaleString("en-US", {
-                                                minimumFractionDigits: 2,
-                                                maximumFractionDigits: 2
-                                            })}
-                                        </span>
-                                    </li>
-                                );
-                            })
+                                    <span className="text-red-500 font-bold block">
+                                        R{" "}
+                                        {member.arrearsValue.toLocaleString("en-ZA", {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        })}
+                                    </span>
+                                </li>
+                            ))
                         )}
                     </ul>
                 </div>
@@ -546,6 +530,69 @@ function Dashboard({
                             </button>
 
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {logDetailsModal && (
+                <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen'>
+                    <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+                        <div className='flex justify-between align-center w-full text-white'>
+                            <h1 className='text-2xl'>Log Details</h1>
+                            <p className='font-bold text-2xl cursor-pointer' onClick={() => setLogDetailsModal(false)}>&times;</p>
+                        </div>
+
+                        <div className='Username  bg-white/20 border border-white rounded-2xl mt-6 mb-3 p-3'>
+                            <div className='w-full flex justify-between mb-3'>
+                                <div className='flex flex-col'>
+                                    <h2 className='text-md text-white/80'>Sam</h2>
+                                    <p className='text-xs text-white/70'><span className='font-bold'>Description:</span> {logDetailsDescription}</p>
+                                    <p className='text-xs text-white/70'><span className='font-bold'>Amount:</span> {logDetailsAmount}</p>
+
+                                </div>
+                                <p className='text-xs text-white/70'>{new Date(logDetailsDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).replace(/ /g, ' ') + ', ' + new Date(logDetailsDate).getHours() + ':' + new Date(logDetailsDate).getMinutes()}</p>
+                            </div>
+                            <table className='w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500 rounded-xl'>
+                                <tr>
+                                    <th className='bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700 p-3 rounded-tl-xl'><td>Property</td></th>
+                                    <th className='bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700 p-3'><td>Old Value</td></th>
+                                    <th className='bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700 p-3 rounded-tr-xl'><td>New Value</td></th>
+                                </tr>
+                                <tbody>
+                                    <td>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Amount</td></tr>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Date</td></tr>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Method</td></tr>
+                                    </td>
+                                    <td>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
+                                    </td>
+                                    <td>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{'R 500.00' || 'None'}</td></tr>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{logDetailsDate || '2023 Aug 15'}</td></tr>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{'Cash'}</td></tr>
+                                    </td>
+                                </tbody>
+                            </table>
+
+
+                            {/* <h2 className='p-2 text-white'>Sam</h2>
+                            <p className='p-2 text-white'>Description: {logDetailsDescription}</p>
+                            <p className='p-2 text-white'>Amount: ${logDetailsAmount}</p>
+                            <p className='p-2 text-white'>Date: {logDetailsDate}</p> */}
+                        </div>
+
+
+
+
+
+                        <button
+                            className='w-full py-3 rounded-xl text-white mt-2 bg-white/40 cursor-pointer hover:bg-white/30'
+                            onClick={() => setLogDetailsModal(false)} >
+                            Close
+                        </button>
                     </div>
                 </div>
             )}
