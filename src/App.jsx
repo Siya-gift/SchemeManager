@@ -165,7 +165,7 @@ function App() {
       schemeName: "clubs",
       joinedDate: "2026-05-16",
       transactions: [
-        
+        { amount: 500, method: "Cash", date: "2026-05-16" },
         { amount: 500, method: "Cash", date: "2026-06-16" },
         { amount: 500, method: "Cash", date: "2026-07-16" },
       ]
@@ -267,14 +267,14 @@ function App() {
       transactionScheme: "clubs",
       date: "18 Jul 2026",
       description: "Payment",
-      amount: `R ${500.00}`
+      amount: 500.00
     },
     {
       memberName: "Jol",
       transactionScheme: "clubs",
       date: "18 Jul 2026",
       description: "Payment",
-      amount: `R ${400.00}`
+      amount: 400.00
     }
   ]);
 
@@ -501,6 +501,15 @@ function App() {
     //2 update Latest Transactions
     setLatestTransactions(prevTransactions => [
       {
+        occuredPeriod: new Date().toLocaleString('en-US', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        }),
+        memberName: payingMember,
         transactionScheme: selectedSchemeName,
         date: new Date(date).toLocaleDateString('en-GB', {
           day: '2-digit',
@@ -508,7 +517,8 @@ function App() {
           year: 'numeric'
         }),
         description: `Payment`,
-        amount: `R ${numericAmount.toFixed(2)}`
+        amount: `R ${numericAmount.toFixed(2)}`,
+        method: method
       },
       ...prevTransactions
     ]);
@@ -682,15 +692,24 @@ function App() {
     // ==================================================
     setLatestTransactions(prevTransactions => [
       {
+        occuredPeriod: new Date().toLocaleString('en-US', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        }),
         memberName: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`,
         transactionScheme: selectedSchemeName,
         date: new Date(currentDate).toLocaleDateString('en-GB', {
           day: '2-digit',
           month: 'short',
-          year: 'numeric'
+          year: 'numeric',
         }),
         description: `New Member`,
-        amount: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`
+        amount: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`,
+        method: ""
       },
       ...prevTransactions
     ]);
@@ -754,11 +773,9 @@ function App() {
     }
 
     //notify success
-    toast.success('Saved successfully', { className: 'notifier_bg'});
+    toast.success('Saved successfully', { className: 'notifier_bg' });
 
   };
-
-
 
   const [totalSchemeYearlyContribution, setTotalSchemeYearlyContribution] = useState(0);
   useEffect(() => {
@@ -1165,10 +1182,6 @@ function App() {
     );
   };
 
-
-
-
-
   return (
     <>
       {/* calender */}
@@ -1191,7 +1204,7 @@ function App() {
         </div>
       )}
 
-<Toaster  />
+      <Toaster />
 
       <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} selectedSchemeName={selectedSchemeName} />
       <div className='flex overflow-hidden'>

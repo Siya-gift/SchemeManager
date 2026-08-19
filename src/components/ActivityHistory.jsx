@@ -37,7 +37,7 @@ function ActivityHistory({ toggleState, toggleMobileState, formattedDate, openCa
               {date: "2024-06-04,    14:45", description: "Payment", amount: "R 300.00"},
               {date: "2024-06-05,    16:20", description: "Payment", amount: "R 150.00"},]
               .map((transaction, index) => (
-            <li className='flex justify-between items-center border-b border-white/10 py-3 min-w-87.5 w-full whitespace-nowrap
+            <li key={index} className='flex justify-between items-center border-b border-white/10 py-3 min-w-87.5 w-full whitespace-nowrap
             hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg hover:text-white'>
               <p className='text-white/70 text-sm'>{transaction.date}</p>
               <p className='text-white/90 text-sm'>{transaction.description}</p>

@@ -792,7 +792,7 @@ function SchemeMembers({
                 <h4 className='text-white/85'>Amount (R)</h4>
                 <input
                   className='border-white mt-1 border rounded-xl p-3 focus:outline-none text-white'
-                  placeholder='0.00'
+                  placeholder={` ${schemes[schemeSelectedState]?.monthlyContribution.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' }) || 0}`}
                   type='number'
                   id='payAmount'
                 />

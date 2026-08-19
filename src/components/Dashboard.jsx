@@ -115,20 +115,26 @@ function Dashboard({
         })
         : [];
 
-    const LatestTransactionsForSelectedScheme = () => LatestTransactions.filter(transaction => transaction.transactionScheme === selectedSchemeName);
+    const LatestTransactionsForSelectedScheme = () => LatestTransactions.filter(transaction => transaction.transactionScheme.toLowerCase() === selectedSchemeName.toLowerCase());
 
+
+    const [logDetailsMemberName, setLogDetailsMemberName] = useState();
+    const [logDetailsOccuredPeriod, setLogDetailsOccuredPeriod] = useState();
     const [logDetailsDate, setLogDetailsDate] = useState();
     const [logDetailsDescription, setLogDetailsDescription] = useState();
     const [logDetailsAmount, setLogDetailsAmount] = useState();
+    const [logDetailsMethod, setLogDetailsMethod] = useState();
 
-    const logDetails = (date, description, amount) => {
+    const logDetails = (occuredPeriod, memberName, date, description, amount, method) => {
         setLogDetailsModal(true);
+        setLogDetailsMemberName(memberName);
         setLogDetailsDate(date);
         setLogDetailsDescription(description);
         setLogDetailsAmount(amount);
+        setLogDetailsMethod(method);
+        setLogDetailsOccuredPeriod(occuredPeriod);
     }
 
-    // 1. Move calculations into useMemo at the top of your component
     const computedMembers = useMemo(() => {
         const today = new Date();
         const threeMonthsAgo = new Date(today);
@@ -165,6 +171,8 @@ function Dashboard({
             };
         });
     }, [membersInArrears, activeScheme, handleConfirmPayment]);
+
+    const startingBalance = schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.startingBal;
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 md:p-5
@@ -237,13 +245,16 @@ function Dashboard({
 
                     <div className='mt-4'>
                         <h1 className="text-[clamp(1.5rem,10vw,3rem)] font-bold leading-none whitespace-nowrap">
-                            R {formatShorthand(TotalCollectionsMinusMonthlyExpenses)}
+                            R {formatShorthand(TotalCollectionsMinusMonthlyExpenses + schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.startingBal)}
                         </h1>
 
 
-                        <h3 className="text-[clamp(0.7rem,2vw,0.9rem)] my-3 font-2 opacity-80">
+                        <h3 className={`text-[clamp(0.7rem,2vw,0.9rem)] my-3 font-2 opacity-80 ${!startingBalance ? 'invisible' : ''}`}>
                             <i className="fa-solid fa-flag-checkered mr-1"></i>
-                            Starting Balance: R 1,000 (April 2026)
+                            Starting Balance: {
+                                (startingBalance ?? 0).toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
+                            } <br />
+                            (April 2026)
                         </h3>
 
                         <hr className='mb-2 mt-3 border-white/25' />
@@ -308,24 +319,29 @@ function Dashboard({
                     <div className='flex-1 overflow-hidden'>
                         <ul className='glass-scroll text-md h-full overflow-auto pr-2'>
                             {
-                                LatestTransactionsForSelectedScheme.length === 0 ?
+                                LatestTransactionsForSelectedScheme().length === 0 ?
                                     (
                                         <div className="text-center text-white/50 py-10 w-full h-full flex justify-center items-center flex-col gap-2">
                                             <div className='text-6xl'><i className="fa-solid fa-clock-rotate-left "></i></div>
                                             <p>No transactions <br /> available</p>
                                         </div>
                                     ) :
-                                    LatestTransactionsForSelectedScheme.map((item, i) => (
+                                    LatestTransactionsForSelectedScheme().map((item, i) => (
                                         <li key={i} className='flex justify-between items-center 
                                         border-b border-white/10 py-3 
                                         min-w-87.5 w-full whitespace-nowrap
                                         hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'
-                                            onClick={() => logDetails(item.date, item.description, item.amount)}>
+                                            onClick={() => logDetails(item.occuredPeriod, item.memberName, item.date, item.description, item.amount, item.method)}>
                                             <span className='opacity-70 w-32 shrink-0'>{item.date}</span>
 
                                             <div className='flex justify-between items-center w-full gap-4'>
                                                 <span className='font-medium'>{item.description}</span>
-                                                <span className='font-bold tabular-nums truncate max-w-25 text-right'>{item.amount}</span>
+                                                <span className='font-bold tabular-nums truncate max-w-25 text-right'>
+                                                    {typeof item.amount === 'number' && !isNaN(item.amount)
+                                                        ? item.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
+                                                        : (item.amount || item.memberName || 'N/A')
+                                                    }
+                                                </span>
                                             </div>
                                         </li>
 
@@ -545,12 +561,26 @@ function Dashboard({
                         <div className='Username  bg-white/20 border border-white rounded-2xl mt-6 mb-3 p-3'>
                             <div className='w-full flex justify-between mb-3'>
                                 <div className='flex flex-col'>
-                                    <h2 className='text-md text-white/80'>Sam</h2>
+                                    <h2 className='text-md text-white/80'>{logDetailsMemberName}</h2>
                                     <p className='text-xs text-white/70'><span className='font-bold'>Description:</span> {logDetailsDescription}</p>
-                                    <p className='text-xs text-white/70'><span className='font-bold'>Amount:</span> {logDetailsAmount}</p>
+                                    <p className='text-xs text-white/70'>
+                                        <span className='font-bold'>Amount: </span>
+                                        {(() => {
+                                            if (!logDetailsAmount) return "None";
+
+                                            const cleanedAmount = String(logDetailsAmount).replace(/[^0-9.-]/g, '');
+                                            const num = Number(cleanedAmount);
+
+                                            if (!isNaN(num) && cleanedAmount !== '') {
+                                                return num.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+                                            }
+
+                                            return "None";
+                                        })()}
+                                    </p>
 
                                 </div>
-                                <p className='text-xs text-white/70'>{new Date(logDetailsDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).replace(/ /g, ' ') + ', ' + new Date(logDetailsDate).getHours() + ':' + new Date(logDetailsDate).getMinutes()}</p>
+                                <p className='text-xs text-white/70 text-right'>{logDetailsOccuredPeriod}</p>
                             </div>
                             <table className='w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500 rounded-xl'>
                                 <tr>
@@ -570,9 +600,22 @@ function Dashboard({
                                         <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
                                     </td>
                                     <td>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{'R 500.00' || 'None'}</td></tr>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{logDetailsDate || '2023 Aug 15'}</td></tr>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{'Cash'}</td></tr>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>
+                                            {(() => {
+                                                if (!logDetailsAmount) return "None";
+
+                                                const cleanedAmount = String(logDetailsAmount).replace(/[^0-9.-]/g, '');
+                                                const num = Number(cleanedAmount);
+
+                                                if (!isNaN(num) && cleanedAmount !== '') {
+                                                    return num.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+                                                }
+
+                                                return "None";
+                                            })()}
+                                        </td></tr>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{new Date(logDetailsOccuredPeriod).toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'long', year: 'numeric' })}</td></tr>
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{logDetailsMethod === "" ? "None" : logDetailsMethod}</td></tr>
                                     </td>
                                 </tbody>
                             </table>
