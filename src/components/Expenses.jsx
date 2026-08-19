@@ -25,7 +25,8 @@ function Expenses({
     totalTransactionsForRefundsAndCredits,
     financialData,
     netDifference,
-    selectedSchemeName
+    selectedSchemeName,
+    setLatestTransactions
 
 }) {
 
@@ -75,6 +76,31 @@ function Expenses({
 
         //setting the paid amount this month
         setPayments((prevPayments) => [...prevPayments, expenseToAdd]);
+
+        setLatestTransactions(prevTransactions => [
+            {
+                occuredPeriod: new Date().toLocaleString('en-US', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                }),
+                memberName: `${selectedSchemeName}`,
+                transactionScheme: selectedSchemeName,
+                date: new Date(expenseToAdd.date).toLocaleDateString('en-ZA', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                }),
+                description: `New Expense (${expenseToAdd.category})`,
+                amount: `${expenseToAdd.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}`,
+                method: "",
+                joinedDate: `${expenseToAdd.date}`
+            },
+            ...prevTransactions
+        ]);
 
         setExpenses((prev) => [...prev, expenseToAdd]);
         setNewExpenseDesc("");

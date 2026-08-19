@@ -249,21 +249,21 @@ function SchemeMembers({
     // ==================================================
     // UPDATE LATEST TRANSACTIONS
     // ==================================================
-    
-      setLatestTransactions(prevTransactions => [
-        {
-          transactionScheme: selectedSchemeName,
-          date: new Date().toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-          }),
-          description: "Deleted Scheme",
-          amount: selectedSchemeName || "N/A"
-        },
-        ...prevTransactions
-      ]);
-    
+
+    setLatestTransactions(prevTransactions => [
+      {
+        transactionScheme: selectedSchemeName,
+        date: new Date().toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        }),
+        description: "Deleted Scheme",
+        amount: selectedSchemeName || "N/A"
+      },
+      ...prevTransactions
+    ]);
+
   };
 
   const payingModal = (memberName) => {
@@ -447,9 +447,9 @@ function SchemeMembers({
                           name={"View Payment History"}>
                           {idx + 1}. {member.memberName}
                         </td>
-                        <td className="py-4 px-2 align-middle">R {member.transactions
+                        <td className="py-4 px-2 align-middle">{member.transactions
                           ?.reduce((total, tx) => total + (Number(tx.amount) || 0), 0)
-                          .toFixed(2)}</td>
+                          .toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}</td>
                         <td className="py-4 px-2 align-middle">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full 
                           text-xs font-medium ${badgeStyle}`}>
@@ -1048,7 +1048,7 @@ function SchemeMembers({
                   );
                 }
 
-                return memberHistory.map((item, index) => {
+                return memberHistory.slice().reverse().map((item, index) => {
 
                   const query = searchHistory.toLowerCase().trim();
                   const isOpen = openIndex === index;

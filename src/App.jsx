@@ -189,7 +189,7 @@ function App() {
       schemeName: "Section 2 Society",
       joinedDate: "2026-03-16",
       transactions: [
-        { amount: 2200, method: "Cash", date: "2026-03-16" }
+        { amount: 2200.00, method: "Cash", date: "2026-03-16" }
       ]
     },
     {
@@ -209,9 +209,9 @@ function App() {
       totPaid: 500.00,
       status: "Arrears",
       schemeName: "clubs",
-      joinedDate: "2020-12-16",
+      joinedDate: "2024-12-16",
       transactions: [
-        { amount: 500, method: "Cash", date: "2025-12-16" }
+        { amount: 500, method: "Cash", date: "2024-12-16" }
       ]
     }
   ]
@@ -221,9 +221,9 @@ function App() {
       userName: "Sam",
       year: "2026",
       yearHistory: [
+        { date: "2026-07-16", amount: "500.00", details: "Cash" },
         { date: "2026-05-16", amount: "500.00", details: "Cash" },
-        { date: "2026-06-16", amount: "500.00", details: "Cash" },
-        { date: "2026-07-16", amount: "500.00", details: "Cash" }
+        { date: "2026-04-16", amount: "500.00", details: "Cash" }
       ]
     },
     {
@@ -267,14 +267,16 @@ function App() {
       transactionScheme: "clubs",
       date: "18 Jul 2026",
       description: "Payment",
-      amount: 500.00
+      amount: 500.00,
+      joinedDate: "2024-12-16"
     },
     {
       memberName: "Jol",
       transactionScheme: "clubs",
       date: "18 Jul 2026",
       description: "Payment",
-      amount: 400.00
+      amount: 400.00,
+      joinedDate: "2024-12-16"
     }
   ]);
 
@@ -518,7 +520,8 @@ function App() {
         }),
         description: `Payment`,
         amount: `R ${numericAmount.toFixed(2)}`,
-        method: method
+        method: method,
+        joinedDate: members.find(member => member.memberName.toLowerCase() === payingMember.toLowerCase())?.joinedDate || "N/A"
       },
       ...prevTransactions
     ]);
@@ -709,7 +712,8 @@ function App() {
         }),
         description: `New Member`,
         amount: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`,
-        method: ""
+        method: "",
+        joinedDate: `${membersToAdd.map(m => m.joinedDate).join(", ") || currentDate}`
       },
       ...prevTransactions
     ]);
@@ -1095,91 +1099,46 @@ function App() {
   };
 
   const getMemberArrears = (member, scheme) => {
-    if (!member || !scheme) {
-      return 0;
-    }
+    if (!member || !scheme) { return 0; }
 
-    const monthlyFee =
-      Number(scheme.monthlyContribution) || 0;
-
-    if (monthlyFee <= 0) {
-      return 0;
-    }
-
-    if (!member.joinedDate) {
-      return 0;
-    }
+    const monthlyFee = Number(scheme.monthlyContribution) || 0;
+    if (monthlyFee <= 0) { return 0; }
+    if (!member.joinedDate) { return 0; }
 
     const joinedDate = new Date(member.joinedDate);
-
-    if (isNaN(joinedDate.getTime())) {
-      return 0;
-    }
+    if (isNaN(joinedDate.getTime())) { return 0; }
 
     const transactions = member.transactions || [];
-
     const today = new Date();
 
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
-
     const startYear = joinedDate.getFullYear();
     const startMonth = joinedDate.getMonth();
 
-
-    // =========================================================
-    // COMPLETED MONTHS BEFORE CURRENT MONTH
-    // =========================================================
-
-    const previousMonthsCount = Math.max(
+    // 1. Include the current month in the expected count
+    const totalMonthsCount = Math.max(
       0,
-      (currentYear - startYear) * 12 +
-      (currentMonth - startMonth)
+      (currentYear - startYear) * 12 + (currentMonth - startMonth) + 1
     );
 
+    // 2. Total expected fees up to right now
+    const totalExpected = totalMonthsCount * monthlyFee;
 
-    // =========================================================
-    // EXPECTED FOR COMPLETED MONTHS
-    // =========================================================
-
-    const expectedBeforeCurrentMonth =
-      previousMonthsCount * monthlyFee;
-
-
-    // =========================================================
-    // ACTUAL PAYMENTS BEFORE CURRENT MONTH
-    // =========================================================
-
-    const paidBeforeCurrentMonth = transactions
+    // 3. Sum ALL payments made up to today (including current month)
+    const totalPaid = transactions
       .filter(tx => {
         if (!tx.date) return false;
-
         const txDate = new Date(tx.date);
-
-        return (
-          txDate.getFullYear() < currentYear ||
-          (
-            txDate.getFullYear() === currentYear &&
-            txDate.getMonth() < currentMonth
-          )
-        );
+        // Keep all transactions up to today
+        return txDate <= today;
       })
-      .reduce(
-        (sum, tx) =>
-          sum + (Number(tx.amount) || 0),
-        0
-      );
+      .reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0);
 
+    // 4. Calculate real-time arrears
+    const currentArrears = Math.max(0, totalExpected - totalPaid);
 
-    // =========================================================
-    // PREVIOUS ARREARS ONLY
-    // =========================================================
-
-    return Math.max(
-      0,
-      expectedBeforeCurrentMonth -
-      paidBeforeCurrentMonth
-    );
+    return currentArrears;
   };
 
   return (
@@ -1232,7 +1191,7 @@ function App() {
           selectedCat={selectedCat} setSelectedCat={setSelectedCat} payments={payments} setPayments={setPayments} totalSpentThisMonth={totalSpentThisMonth}
           totalTransactionsThisMonth={totalTransactionsThisMonth} totalSpentThisYear={totalSpentThisYear} totalTransactionsThisYear={totalTransactionsThisYear} topCategory={topCategory}
           topCategoryAmount={topCategoryAmount} topCategoryPercentage={topCategoryPercentage} totalSpentForRefundsAndCredits={totalSpentForRefundsAndCredits} totalTransactionsForRefundsAndCredits={totalTransactionsForRefundsAndCredits}
-          selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference}
+          selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference} setLatestTransactions={setLatestTransactions}
         />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} />
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} />

@@ -124,8 +124,9 @@ function Dashboard({
     const [logDetailsDescription, setLogDetailsDescription] = useState();
     const [logDetailsAmount, setLogDetailsAmount] = useState();
     const [logDetailsMethod, setLogDetailsMethod] = useState();
+    const [logDetailsJoinedDate, setLogDetailsJoinedDate] = useState();
 
-    const logDetails = (occuredPeriod, memberName, date, description, amount, method) => {
+    const logDetails = (occuredPeriod, memberName, date, description, amount, method, joinedDate) => {
         setLogDetailsModal(true);
         setLogDetailsMemberName(memberName);
         setLogDetailsDate(date);
@@ -133,6 +134,7 @@ function Dashboard({
         setLogDetailsAmount(amount);
         setLogDetailsMethod(method);
         setLogDetailsOccuredPeriod(occuredPeriod);
+        setLogDetailsJoinedDate(joinedDate);
     }
 
     const computedMembers = useMemo(() => {
@@ -143,15 +145,12 @@ function Dashboard({
         const arrearsThreshold = activeScheme ? activeScheme.monthlyContribution * 3 : 0;
 
         return membersInArrears.map((member) => {
-            // Calculate arrears value
             const arrearsValue = getMemberArrears(member, activeScheme);
 
-            // Find latest payment
             const latestPaymentDate = member.transactions?.length
                 ? new Date(Math.max(...member.transactions.map(t => new Date(t.date).getTime())))
                 : null;
 
-            // Total actually paid during the last 3 months
             const paidLastThreeMonths = member.transactions
                 ?.filter(t => {
                     const transactionDate = new Date(t.date);
@@ -159,10 +158,13 @@ function Dashboard({
                 })
                 .reduce((total, t) => total + Number(t.amount || 0), 0) || 0;
 
-            // Flags
+            // FIX: A member is at risk if they haven't paid for 3 months OR if their total payments are still under the 3-month threshold
             const noPaymentForThreeMonths = !latestPaymentDate || latestPaymentDate <= threeMonthsAgo;
             const belowThreeMonthThreshold = paidLastThreeMonths < arrearsThreshold;
-            const isRisk = noPaymentForThreeMonths && belowThreeMonthThreshold;
+
+            // A member is at risk purely because they owe 3 months or more of debt
+            const isRisk = arrearsValue >= arrearsThreshold;
+
 
             return {
                 ...member,
@@ -170,7 +172,8 @@ function Dashboard({
                 isRisk
             };
         });
-    }, [membersInArrears, activeScheme, handleConfirmPayment]);
+    }, [membersInArrears, activeScheme]);
+
 
     const startingBalance = schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.startingBal;
 
@@ -327,23 +330,22 @@ function Dashboard({
                                         </div>
                                     ) :
                                     LatestTransactionsForSelectedScheme().map((item, i) => (
-                                        <li key={i} className='flex justify-between items-center 
+                                        <li key={i} className='flex  items-center 
                                         border-b border-white/10 py-3 
-                                        min-w-87.5 w-full whitespace-nowrap
+                                        min-w-87.5 w-fit whitespace-nowrap
                                         hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'
-                                            onClick={() => logDetails(item.occuredPeriod, item.memberName, item.date, item.description, item.amount, item.method)}>
+                                            onClick={() => logDetails(item.occuredPeriod, item.memberName, item.date, item.description, item.amount, item.method, item.joinedDate)}>
                                             <span className='opacity-70 w-32 shrink-0'>{item.date}</span>
 
-                                            <div className='flex justify-between items-center w-full gap-4'>
-                                                <span className='font-medium'>{item.description}</span>
-                                                <span className='font-bold tabular-nums truncate max-w-25 text-right'>
+                                                <span className='font-medium w-30 truncate'>{item.description}</span>
+                                                <span className='font-bold tabular-nums truncate max-w-25 text-right ml-3'>
                                                     {typeof item.amount === 'number' && !isNaN(item.amount)
                                                         ? item.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
                                                         : (item.amount || item.memberName || 'N/A')
                                                     }
                                                 </span>
-                                            </div>
                                         </li>
+
 
                                     ))
                             }
@@ -386,10 +388,9 @@ function Dashboard({
                                     </span>
 
                                     <span className="text-red-500 font-bold block">
-                                        R{" "}
                                         {member.arrearsValue.toLocaleString("en-ZA", {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2
+                                            currency: "ZAR",
+                                            style: "currency"
                                         })}
                                     </span>
                                 </li>
@@ -578,6 +579,11 @@ function Dashboard({
                                             return "None";
                                         })()}
                                     </p>
+                                    <p className='text-xs text-white/70'><span className='font-bold'>joinedDate:</span> {new Date(logDetailsJoinedDate).toLocaleDateString('en-ZA', {
+                                        day: 'numeric',
+                                        month: 'long',
+                                        year: 'numeric'
+                                    })}</p>
 
                                 </div>
                                 <p className='text-xs text-white/70 text-right'>{logDetailsOccuredPeriod}</p>
