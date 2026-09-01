@@ -48,16 +48,10 @@ function Dashboard({
 
     // Numbers helper
     const formatShorthand = (num) => {
-        const abs = Math.abs(num);
-        let result;
-
-        if (abs >= 1e12) result = (num / 1e12).toFixed(1) + 't';
-        else if (abs >= 1e6) result = (num / 1e6).toFixed(1) + 'm';
-        else if (abs >= 1e3) result = (num / 1e3).toFixed(1) + 'k';
-        else result = num.toString();
-
-        // Removes unnecessary 0's
-        return result.replace('.0', '');
+        return new Intl.NumberFormat('en-ZA', {
+            notation: 'compact',
+            maximumFractionDigits: 1,
+        }).format(num).toLowerCase(); // remove .toLowerCase() if you prefer '2K' over '2k'
     };
 
     //form input
@@ -87,6 +81,7 @@ function Dashboard({
         }
 
         setSchemes((prev) => [...prev, schemeToAdd]);
+        schemeSelected(schemes.length, newScheme);
         setNewScheme("");
         setNewSchemeAmount("");
 
@@ -176,6 +171,7 @@ function Dashboard({
 
 
     const startingBalance = schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.startingBal;
+    const asOfDate = new Date(schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.date);
 
     return (
         <div className={`dashboard w-full min-h-screen p-4 md:p-5
@@ -237,7 +233,7 @@ function Dashboard({
                 {/* Card 1: Total Collections (Spans 1 col) */}
                 {/* Card 1: Allow it to be wider if needed */}
 
-                <div className='glass p-6 text-white flex flex-col justify-between min-h-50 md:col-span-2 lg:col-span-1 h-full w-full'>
+                <div className='glass p-6 text-white flex flex-col justify-between min-h-50 md:col-span-2 lg:col-span-1 h-full w-full overflow-hidden'>
                     <h2 className='text-[clamp(1rem,4vw,1.25rem)] flex items-start gap-3 leading-tight'>
                         <i className="fa-solid fa-wallet mt-1"></i>
                         <span>Savings </span>
@@ -247,8 +243,11 @@ function Dashboard({
                     </h2>
 
                     <div className='mt-4'>
-                        <h1 className="text-[clamp(1.5rem,10vw,3rem)] font-bold leading-none whitespace-nowrap">
-                            R {formatShorthand(TotalCollectionsMinusMonthlyExpenses + schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.startingBal)}
+                        <h1 className="text-[clamp(1.25rem,5vw,2.5rem)] w-full font-bold leading-none whitespace-nowrap overflow-hidden text-ellipsis">
+                            {(TotalCollectionsMinusMonthlyExpenses + (schemes.find((s) => s.scheme === selectedSchemeName)?.startingBal || 0)).toLocaleString('en-ZA', {
+                                currency: "ZAR",
+                                style: "currency"
+                            })}
                         </h1>
 
 
@@ -257,7 +256,10 @@ function Dashboard({
                             Starting Balance: {
                                 (startingBalance ?? 0).toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
                             } <br />
-                            (April 2026)
+                            {asOfDate.toLocaleDateString('en-ZA', {
+                                month: 'long',
+                                year: 'numeric'
+                            })}
                         </h3>
 
                         <hr className='mb-2 mt-3 border-white/25' />
@@ -267,7 +269,10 @@ function Dashboard({
                                 Spent This Month <span className='ml-1'>&rarr;</span>
                             </h4>
                             <h4 className='text-xs sm:text-sm lg:text-xs text-white/70 font-bold mt-2 cursor-pointer hover:text-white transition-all'>
-                                R {totalSpentThisMonth.toLocaleString()}
+                                {((totalSpentThisMonth || 0).toLocaleString('en-ZA', {
+                                    currency: "ZAR",
+                                    style: "currency"
+                                }))}
                             </h4>
                         </div>
                     </div>
@@ -292,8 +297,14 @@ function Dashboard({
                         </ul>
                     </div>
 
-                    <h1 className='text-[clamp(2rem,10vw,3rem)] font-bold my-4'>
-                        R {YearMonthFilter === 1 ? totalSchemeYearlyContribution.toFixed(2) : totalSchemeMonthlyContribution.toFixed(2)}
+                    <h1 className='text-[clamp(1.25rem,5vw,2.5rem)] w-full font-bold leading-none whitespace-nowrap overflow-hidden text-ellipsis mb-4 mt-4 md:mt-0'>
+                        {YearMonthFilter === 1 ? totalSchemeYearlyContribution.toLocaleString('en-ZA', {
+                            currency: "ZAR",
+                            style: "currency"
+                        }) : totalSchemeMonthlyContribution.toLocaleString('en-ZA', {
+                            currency: "ZAR",
+                            style: "currency"
+                        })}
                     </h1>
 
                     <div className='space-y-4'>
@@ -308,7 +319,7 @@ function Dashboard({
                                 style={{ width: `${Math.min(100, progressPercentage)}%` }}
                             ></div>
                         </div>
-                        <h5 className='text-xs font-bold'>Target: R {YearMonthFilter === 1 ? yearlyTarget.toLocaleString() : monthlyTarget.toLocaleString()}</h5>
+                        <h5 className='text-xs font-bold'>Target: {YearMonthFilter === 1 ? yearlyTarget.toLocaleString() : monthlyTarget.toLocaleString()}</h5>
                     </div>
                 </div>
 
@@ -337,13 +348,13 @@ function Dashboard({
                                             onClick={() => logDetails(item.occuredPeriod, item.memberName, item.date, item.description, item.amount, item.method, item.joinedDate)}>
                                             <span className='opacity-70 w-32 shrink-0'>{item.date}</span>
 
-                                                <span className='font-medium w-30 truncate'>{item.description}</span>
-                                                <span className='font-bold tabular-nums truncate max-w-25 text-right ml-3'>
-                                                    {typeof item.amount === 'number' && !isNaN(item.amount)
-                                                        ? item.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
-                                                        : (item.amount || item.memberName || 'N/A')
-                                                    }
-                                                </span>
+                                            <span className='font-medium w-30 truncate'>{item.description}</span>
+                                            <span className='font-bold tabular-nums truncate max-w-25 text-right ml-3'>
+                                                {typeof item.amount === 'number' && !isNaN(item.amount)
+                                                    ? item.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
+                                                    : (item.amount || item.memberName || 'N/A')
+                                                }
+                                            </span>
                                         </li>
 
 
@@ -573,7 +584,7 @@ function Dashboard({
                                             const num = Number(cleanedAmount);
 
                                             if (!isNaN(num) && cleanedAmount !== '') {
-                                                return num.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+                                                return logDetailsAmount;
                                             }
 
                                             return "None";
@@ -614,7 +625,7 @@ function Dashboard({
                                                 const num = Number(cleanedAmount);
 
                                                 if (!isNaN(num) && cleanedAmount !== '') {
-                                                    return num.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+                                                    return logDetailsAmount;
                                                 }
 
                                                 return "None";

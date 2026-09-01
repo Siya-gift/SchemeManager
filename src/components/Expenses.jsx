@@ -96,7 +96,7 @@ function Expenses({
                 }),
                 description: `New Expense (${expenseToAdd.category})`,
                 amount: `${expenseToAdd.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}`,
-                method: "",
+                method: `${expenseToAdd.type}`,
                 joinedDate: `${expenseToAdd.date}`
             },
             ...prevTransactions

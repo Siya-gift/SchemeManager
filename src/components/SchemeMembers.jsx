@@ -170,6 +170,7 @@ function SchemeMembers({
     }
 
     setSchemes((prev) => [...prev, schemeToAdd]);
+    schemeSelected(schemes.length, newScheme.trim());
     setNewScheme("");
     setNewSchemeAmount("");
     setAddSchemeModal(false);
