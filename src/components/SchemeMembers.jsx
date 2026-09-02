@@ -219,6 +219,14 @@ function SchemeMembers({
     if (memberToDelete) {
       setLatestTransactions(prevTransactions => [
         {
+          occuredPeriod: new Date().toLocaleString('en-US', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+          }),
           memberName: memberToDelete.memberName || "N/A",
           transactionScheme: selectedSchemeName,
           date: new Date().toLocaleDateString('en-GB', {
@@ -302,10 +310,29 @@ function SchemeMembers({
 
     setMembers(prevMembers =>
       prevMembers.map(member =>
-        // FIXED: Merge old member data with the new edits so properties don't disappear
         member.id === edtID ? { ...member, ...edtNm } : member
       )
     );
+
+    setLatestTransactions(prevTransactions => [
+      {
+        occuredPeriod: new Date().toLocaleString('en-US', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        }),
+        memberName: edtNm.memberName || "N/A",
+        transactionScheme: selectedSchemeName,
+        description: `edited member details`,
+        amount: edtNm.memberName || "N/A",
+        joinedDate: members.find(member => member.id === edtID)?.joinedDate || "N/A",
+        method: "None"
+      },
+      ...prevTransactions
+    ]);
 
     setIsEditMember(false);
     toast.success("Updated Member", { className: 'notifier_bg' });
@@ -432,7 +459,7 @@ function SchemeMembers({
                   <tr className="border-b uppercase text-sm">
                     <th className="sticky top-0 py-4 px-2 rounded-tl-xl">Name</th>
                     <th className="sticky top-0 py-4 px-2 truncate max-w-50">Total Paid</th>
-                    <th className="sticky top-0 py-4 px-2">Status</th>
+                    <th className="sticky top-0 py-4 px-2 text-center">Status</th>
                     <th className="sticky top-0 py-4 px-2 text-right rounded-tr-xl">Action</th>
                   </tr>
                 </thead>
@@ -442,8 +469,8 @@ function SchemeMembers({
                     const currentStatus = getMemberStatus(member, schemes[schemeSelectedState]);
                     const badgeStyle = getStatusBadgeClass(currentStatus);
                     return (
-                      <tr key={member.id || member.memberName} className={`border-b hover:bg-white/30 transition-colors cursor-pointer ${searchList}`} id='memberRow'>
-                        <td className="py-4 px-2 align-middle font-medium truncate hover:text-white/70"
+                      <tr key={member.id || member.memberName} className={`border-b hover:bg-white/30 transition-colors ${searchList}`} id='memberRow'>
+                        <td className="py-4 px-2 align-middle font-medium truncate hover:text-white/70 cursor-pointer"
                           onClick={() => paymentHistoryModal(member.memberName)}
                           name={"View Payment History"}>
                           {idx + 1}. {member.memberName}
@@ -451,9 +478,9 @@ function SchemeMembers({
                         <td className="py-4 px-2 align-middle">{member.transactions
                           ?.reduce((total, tx) => total + (Number(tx.amount) || 0), 0)
                           .toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}</td>
-                        <td className="py-4 px-2 align-middle">
+                        <td className="py-4 px-2 align-middle text-center">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full 
-                          text-xs font-medium ${badgeStyle}`}>
+                          text-xs/3 font-medium text-center ${badgeStyle}`}>
                             {currentStatus}
                           </span>
                         </td>
@@ -488,11 +515,11 @@ function SchemeMembers({
 
                         </td>
                         <td className="hidden md:block py-4 px-2 align-middle text-right">
-                          <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1'
+                          <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1 cursor-pointer'
                             onClick={() => editModal(member.id, member.memberName)}>
                             <i className="fa-regular fa-pen-to-square"></i>
                           </span>
-                          <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1'
+                          <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1 cursor-pointer'
                             onClick={() => deleteMember(member.id)}>
                             <i className="fa-solid fa-trash"></i>
                           </span>

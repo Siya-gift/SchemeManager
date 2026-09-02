@@ -1,6 +1,13 @@
 import React from 'react'
 
-function ActivityHistory({ toggleState, toggleMobileState, formattedDate, openCalender }) {
+function ActivityHistory(
+  { toggleState,
+    toggleMobileState,
+    formattedDate,
+    openCalender,
+    LatestTransactions
+  }
+) {
   return (
     <div className={`ActivityHistory w-full min-h-screen p-4 
         md:p-5 ${toggleMobileState === 5 ? "block" : "hidden"}
@@ -19,7 +26,7 @@ function ActivityHistory({ toggleState, toggleMobileState, formattedDate, openCa
             {formattedDate}
           </h3>
           <span className='cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]'
-          onClick={openCalender}>
+            onClick={openCalender}>
             <i className="fa-solid fa-calendar-days"></i>
           </span>
         </div>
@@ -31,19 +38,29 @@ function ActivityHistory({ toggleState, toggleMobileState, formattedDate, openCa
         </h2>
         <div className='flex-1 overflow-hidden'>
           <ul className='glass-scroll text-md h-full overflow-auto pr-2'>
-            {[{date: "2024-06-01,    02:07", description: "Payment", amount: "R 500.00"},
-              {date: "2024-06-02,    03:15", description: "Payment", amount: "R 200.00"},
-              {date: "2024-06-03,    11:30", description: "New Member", amount: "John Doe"},
-              {date: "2024-06-04,    14:45", description: "Payment", amount: "R 300.00"},
-              {date: "2024-06-05,    16:20", description: "Payment", amount: "R 150.00"},]
+            {LatestTransactions
               .map((transaction, index) => (
-            <li key={index} className='flex justify-between items-center border-b border-white/10 py-3 min-w-87.5 w-full whitespace-nowrap
-            hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg hover:text-white'>
-              <p className='text-white/70 text-sm'>{transaction.date}</p>
-              <p className='text-white/90 text-sm'>{transaction.description}</p>
-              <p className='text-white/90 text-sm'>{transaction.amount}</p>
-            </li>
-            ))}
+                <li key={index} className='flex items-center justify-between border-b border-white/10 py-3 w-full hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg hover:text-white gap-2'>
+
+                  {/* Date: shrink-0 prevents it from getting squished, w-24 gives it a fixed base width on mobile */}
+                  <p className='text-white/70 text-sm w-24 md:w-1/4 shrink-0 text-left'>
+                    {transaction.occuredPeriod}
+                  </p>
+
+                  {/* Description: flex-1 takes remaining space. 'truncate' adds "..." if text is too long for mobile */}
+                  <p className='text-white/90 text-sm text-left flex-1 truncate'>
+                    {transaction.description}
+                  </p>
+
+                  {/* Amount: shrink-0 protects it, auto width lets it size to the number naturally */}
+                  <p className='text-white/90 text-sm shrink-0 text-right whitespace-nowrap'>
+                    {
+                      transaction.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
+                    }
+                  </p>
+
+                </li>
+              ))}
           </ul>
         </div>
       </div>

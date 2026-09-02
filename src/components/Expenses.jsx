@@ -40,7 +40,7 @@ function Expenses({
     const [newExpenseType, setNewExpenseType] = useState("Expense (Outflow)");
     const [newExpenseCat, setNewExpenseCat] = useState("Other");
     const [newExpenseDate, setNewExpenseDate] = useState(new Date().toISOString().split('T')[0]);
-    const [newExpenseAmount, setNewExpenseAmount] = useState("");
+    const [newExpenseAmount, setNewExpenseAmount] = useState();
 
     const [indexOfExpense, setIndexOfExpense] = useState(null)
     const [editExpenseDesc, setEditExpenseDesc] = useState(null)
@@ -70,7 +70,7 @@ function Expenses({
             category: newExpenseCat.trim(),
             date: newExpenseDate.trim(),
             month: new Date(newExpenseDate).toLocaleString('default', { month: 'long' }),
-            amount: newExpenseAmount,
+            amount: newExpenseAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' }),
             schemeName: selectedSchemeName
         };
 
@@ -397,7 +397,7 @@ function Expenses({
                                     <td className='p-3'>{expense.month}</td>
                                     <td className='p-3'>{expense.category}</td>
                                     <td className='p-3'>{expense.description}</td>
-                                    <td className={`p-3 ${expense.type === "Refund / Credit (Inflow)" ? 'text-green-400' : 'text-red-400'}`}>R {expense.amount.toLocaleString()}</td>
+                                    <td className={`p-3 ${expense.type === "Refund / Credit (Inflow)" ? 'text-green-400' : 'text-red-400'}`}>{expense.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}</td>
                                     <td className='p-3 flex justify-end'>
                                         <div className='flex gap-3 flex-end text-[11px] transition-transform'>
                                             <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1 cursor-pointer'

@@ -57,7 +57,7 @@ function Dashboard({
     //form input
     const [newScheme, setNewScheme] = useState('');
     const [newSchemeAmount, setNewSchemeAmount] = useState('');
-    const [newSchemeStartingBal, setNewSchemeStartingBal] = useState('');
+    const [newSchemeStartingBal, setNewSchemeStartingBal] = useState();
     const [newSchemeDate, setNewSchemeDate] = useState(new Date().getMonth());
     const [newSchemeYear, setNewSchemeYear] = useState(new Date().getFullYear());
 
@@ -69,23 +69,25 @@ function Dashboard({
     const handleSchemeYearInputChange = (e) => setNewSchemeYear(e.target.value);
 
     const saveScheme = () => {
-
         if (!newScheme.trim()) return;
         if (!newSchemeAmount) return;
+
+        const fullDate = new Date(newSchemeYear, newSchemeDate, 1);
 
         const schemeToAdd = {
             scheme: newScheme.trim(),
             monthlyContribution: newSchemeAmount,
             startingBal: newSchemeStartingBal,
-            date: newSchemeDate
+            date: fullDate.toISOString()
         }
 
         setSchemes((prev) => [...prev, schemeToAdd]);
         schemeSelected(schemes.length, newScheme);
         setNewScheme("");
         setNewSchemeAmount("");
-
-
+        setNewSchemeStartingBal("");
+        setNewSchemeDate(new Date().getMonth());
+        setNewSchemeYear(new Date().getFullYear());
         setAddSchemeModal(false);
     };
 
@@ -170,7 +172,7 @@ function Dashboard({
     }, [membersInArrears, activeScheme]);
 
 
-    const startingBalance = schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.startingBal;
+    const startingBalance = Number(schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.startingBal);
     const asOfDate = new Date(schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.date);
 
     return (
@@ -244,19 +246,27 @@ function Dashboard({
 
                     <div className='mt-4'>
                         <h1 className="text-[clamp(1.25rem,5vw,2.5rem)] w-full font-bold leading-none whitespace-nowrap overflow-hidden text-ellipsis">
-                            {(TotalCollectionsMinusMonthlyExpenses + (schemes.find((s) => s.scheme === selectedSchemeName)?.startingBal || 0)).toLocaleString('en-ZA', {
-                                currency: "ZAR",
-                                style: "currency"
-                            })}
+                            {
+                                (
+                                    Number(TotalCollectionsMinusMonthlyExpenses) +
+                                    Number(schemes.find((s) => s.scheme === selectedSchemeName)?.startingBal || 0)
+                                ).toLocaleString('en-ZA', {
+                                    currency: "ZAR",
+                                    style: "currency"
+                                })
+                            }
                         </h1>
 
 
                         <h3 className={`text-[clamp(0.7rem,2vw,0.9rem)] my-3 font-2 opacity-80 ${!startingBalance ? 'invisible' : ''}`}>
                             <i className="fa-solid fa-flag-checkered mr-1"></i>
                             Starting Balance: {
-                                (startingBalance ?? 0).toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
+                                (startingBalance || 0).toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
                             } <br />
-                            {asOfDate.toLocaleDateString('en-ZA', {
+                            {(asOfDate && asOfDate !== 0 && asOfDate !== "0"
+                                ? new Date(asOfDate)
+                                : new Date()
+                            ).toLocaleDateString('en-ZA', {
                                 month: 'long',
                                 year: 'numeric'
                             })}
@@ -346,7 +356,7 @@ function Dashboard({
                                         min-w-87.5 w-fit whitespace-nowrap
                                         hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'
                                             onClick={() => logDetails(item.occuredPeriod, item.memberName, item.date, item.description, item.amount, item.method, item.joinedDate)}>
-                                            <span className='opacity-70 w-32 shrink-0'>{item.date}</span>
+                                            <span className='opacity-70 w-32 shrink-0'>{new Date(item.occuredPeriod).toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'short', year: 'numeric' })}</span>
 
                                             <span className='font-medium w-30 truncate'>{item.description}</span>
                                             <span className='font-bold tabular-nums truncate max-w-25 text-right ml-3'>
@@ -584,7 +594,7 @@ function Dashboard({
                                             const num = Number(cleanedAmount);
 
                                             if (!isNaN(num) && cleanedAmount !== '') {
-                                                return logDetailsAmount;
+                                                return logDetailsAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
                                             }
 
                                             return "None";
@@ -625,7 +635,7 @@ function Dashboard({
                                                 const num = Number(cleanedAmount);
 
                                                 if (!isNaN(num) && cleanedAmount !== '') {
-                                                    return logDetailsAmount;
+                                                    return logDetailsAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
                                                 }
 
                                                 return "None";

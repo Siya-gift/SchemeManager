@@ -263,20 +263,24 @@ function App() {
 
   const [LatestTransactions, setLatestTransactions] = useState([
     {
+      occuredPeriod: "Jul 18, 2026, 10:30 AM",
       memberName: "Jol",
       transactionScheme: "clubs",
       date: "18 Jul 2026",
       description: "Payment",
       amount: 500.00,
-      joinedDate: "2024-12-16"
+      joinedDate: "2024-12-16", 
+      method: "Cash"
     },
     {
+      occuredPeriod: "Jul 18, 2026, 10:30 AM",
       memberName: "Jol",
       transactionScheme: "clubs",
       date: "18 Jul 2026",
       description: "Payment",
       amount: 400.00,
-      joinedDate: "2024-12-16"
+      joinedDate: "2024-12-16",
+      method: "Cash"
     }
   ]);
 
@@ -519,7 +523,7 @@ function App() {
           year: 'numeric'
         }),
         description: `Payment`,
-        amount: `R ${numericAmount.toFixed(2)}`,
+        amount: `${numericAmount.toLocaleString('en-ZA',{currency:'ZAR', style:'currency'})}`,
         method: method,
         joinedDate: members.find(member => member.memberName.toLowerCase() === payingMember.toLowerCase())?.joinedDate || "N/A"
       },
@@ -710,7 +714,7 @@ function App() {
           month: 'short',
           year: 'numeric',
         }),
-        description: `New Member`,
+        description: `${membersToAdd.length === 1 ? "New Member" : "New Members"} Added`,
         amount: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`,
         method: "",
         joinedDate: `${membersToAdd.map(m => m.joinedDate).join(", ") || currentDate}`
@@ -1194,7 +1198,7 @@ function App() {
           selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference} setLatestTransactions={setLatestTransactions}
         />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} />
-        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} />
+        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} LatestTransactions={LatestTransactions} />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
       <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} toggleTabMobile={toggleTabMobile} />
