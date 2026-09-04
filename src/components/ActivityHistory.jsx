@@ -5,9 +5,12 @@ function ActivityHistory(
     toggleMobileState,
     formattedDate,
     openCalender,
-    LatestTransactions
+    LatestTransactions,
+    selectedSchemeName
   }
 ) {
+
+  const LatestTransactionsForSelectedScheme = () => LatestTransactions.filter(transaction => transaction.transactionScheme === selectedSchemeName);
   return (
     <div className={`ActivityHistory w-full min-h-screen p-4 
         md:p-5 ${toggleMobileState === 5 ? "block" : "hidden"}
@@ -38,29 +41,35 @@ function ActivityHistory(
         </h2>
         <div className='flex-1 overflow-hidden'>
           <ul className='glass-scroll text-md h-full overflow-auto pr-2'>
-            {LatestTransactions
-              .map((transaction, index) => (
-                <li key={index} className='flex items-center justify-between border-b border-white/10 py-3 w-full hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg hover:text-white gap-2'>
+            {
+              LatestTransactionsForSelectedScheme().length === 0 ?
+                (
+                  <div className="text-center text-white/50 py-10 w-full h-full flex justify-center items-center flex-col gap-2">
+                    <div className='text-9xl'><i className="fa-solid fa-hourglass-start"></i></div>
+                    <p>No transactions <br /> available</p>
+                  </div>
+                ) :
+                LatestTransactionsForSelectedScheme().map((transaction, index) => (
+                  <li key={index} className='flex items-center justify-between border-b border-white/10 py-3 w-full hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg hover:text-white gap-2'>
 
-                  {/* Date: shrink-0 prevents it from getting squished, w-24 gives it a fixed base width on mobile */}
-                  <p className='text-white/70 text-sm w-24 md:w-1/4 shrink-0 text-left'>
-                    {transaction.occuredPeriod}
-                  </p>
+                    <p className='text-white/70 text-sm w-24 md:w-1/4 shrink-0 text-left'>
+                      {transaction.occuredPeriod}
+                    </p>
 
-                  {/* Description: flex-1 takes remaining space. 'truncate' adds "..." if text is too long for mobile */}
-                  <p className='text-white/90 text-sm text-left flex-1 truncate'>
-                    {transaction.description}
-                  </p>
+                    <p className='text-white/90 text-sm text-left flex-1 truncate'>
+                      {transaction.description}
+                    </p>
 
-                  {/* Amount: shrink-0 protects it, auto width lets it size to the number naturally */}
-                  <p className='text-white/90 text-sm shrink-0 text-right whitespace-nowrap'>
-                    {
-                      transaction.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
-                    }
-                  </p>
+                    <p className='text-white/90 text-sm shrink-0 text-right whitespace-nowrap'>
+                      {
+                        transaction.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
+                      }
+                    </p>
 
-                </li>
-              ))}
+                  </li>
+                ))
+
+            }
           </ul>
         </div>
       </div>

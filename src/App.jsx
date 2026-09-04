@@ -716,7 +716,7 @@ function App() {
         }),
         description: `${membersToAdd.length === 1 ? "New Member" : "New Members"} Added`,
         amount: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`,
-        method: "",
+        method: `${payingMethod}`,
         joinedDate: `${membersToAdd.map(m => m.joinedDate).join(", ") || currentDate}`
       },
       ...prevTransactions
@@ -1198,7 +1198,9 @@ function App() {
           selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference} setLatestTransactions={setLatestTransactions}
         />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} />
-        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} LatestTransactions={LatestTransactions} />
+        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} LatestTransactions={LatestTransactions} 
+          selectedSchemeName={selectedSchemeName}
+        />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
       <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} toggleTabMobile={toggleTabMobile} />
