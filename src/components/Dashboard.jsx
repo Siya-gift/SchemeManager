@@ -33,11 +33,20 @@ function Dashboard({
     membersBehindStatus,
     getMemberArrears,
     LatestTransactions,
-    handleConfirmPayment
+    handleConfirmPayment,
+    logDetails,
+    logDetailsModal,
+    setLogDetailsModal,
+    logDetailsMemberName,
+    logDetailsDate,
+    logDetailsDescription,
+    logDetailsAmount,
+    logDetailsMethod,
+    logDetailsOccuredPeriod,
+    logDetailsJoinedDate
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
-    const [logDetailsModal, setLogDetailsModal] = useState(false);
 
     const [YearMonthFilter, setYearMonthFilter] = useState(1)
 
@@ -113,26 +122,6 @@ function Dashboard({
         : [];
 
     const LatestTransactionsForSelectedScheme = () => LatestTransactions.filter(transaction => transaction.transactionScheme.toLowerCase() === selectedSchemeName.toLowerCase());
-
-
-    const [logDetailsMemberName, setLogDetailsMemberName] = useState();
-    const [logDetailsOccuredPeriod, setLogDetailsOccuredPeriod] = useState();
-    const [logDetailsDate, setLogDetailsDate] = useState();
-    const [logDetailsDescription, setLogDetailsDescription] = useState();
-    const [logDetailsAmount, setLogDetailsAmount] = useState();
-    const [logDetailsMethod, setLogDetailsMethod] = useState();
-    const [logDetailsJoinedDate, setLogDetailsJoinedDate] = useState();
-
-    const logDetails = (occuredPeriod, memberName, date, description, amount, method, joinedDate) => {
-        setLogDetailsModal(true);
-        setLogDetailsMemberName(memberName);
-        setLogDetailsDate(date);
-        setLogDetailsDescription(description);
-        setLogDetailsAmount(amount);
-        setLogDetailsMethod(method);
-        setLogDetailsOccuredPeriod(occuredPeriod);
-        setLogDetailsJoinedDate(joinedDate);
-    }
 
     const computedMembers = useMemo(() => {
         const today = new Date();
@@ -352,14 +341,14 @@ function Dashboard({
                                     ) :
                                     LatestTransactionsForSelectedScheme().map((item, i) => (
                                         <li key={i} className='flex  items-center 
-                                        border-b border-white/10 py-3 
+                                        border-b border-white/10 py-3 w-full
                                         min-w-87.5 w-fit whitespace-nowrap
                                         hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'
                                             onClick={() => logDetails(item.occuredPeriod, item.memberName, item.date, item.description, item.amount, item.method, item.joinedDate)}>
                                             <span className='opacity-70 w-32 shrink-0'>{new Date(item.occuredPeriod).toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'short', year: 'numeric' })}</span>
 
                                             <span className='font-medium w-30 truncate'>{item.description}</span>
-                                            <span className='font-bold tabular-nums truncate max-w-25 text-right ml-3'>
+                                            <span className='font-bold tabular-nums truncate max-w-25 text-right ml-3 flex-1'>
                                                 {typeof item.amount === 'number' && !isNaN(item.amount)
                                                     ? item.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })
                                                     : (item.amount || item.memberName || 'N/A')
@@ -585,26 +574,33 @@ function Dashboard({
                                 <div className='flex flex-col'>
                                     <h2 className='text-md text-white/80'>{logDetailsMemberName}</h2>
                                     <p className='text-xs text-white/70'><span className='font-bold'>Description:</span> {logDetailsDescription}</p>
-                                    <p className='text-xs text-white/70'>
-                                        <span className='font-bold'>Amount: </span>
-                                        {(() => {
-                                            if (!logDetailsAmount) return "None";
 
-                                            const cleanedAmount = String(logDetailsAmount).replace(/[^0-9.-]/g, '');
-                                            const num = Number(cleanedAmount);
+                                    {(logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ?
 
-                                            if (!isNaN(num) && cleanedAmount !== '') {
-                                                return logDetailsAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
-                                            }
+                                        <p className='text-xs text-white/70'>
+                                            <span className='font-bold'>Amount: </span>
+                                            {logDetailsAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}
+                                        </p>
+                                        : <p></p>)
+                                    }
 
-                                            return "None";
-                                        })()}
-                                    </p>
-                                    <p className='text-xs text-white/70'><span className='font-bold'>joinedDate:</span> {new Date(logDetailsJoinedDate).toLocaleDateString('en-ZA', {
-                                        day: 'numeric',
-                                        month: 'long',
-                                        year: 'numeric'
-                                    })}</p>
+                                    <div>
+                                        <p className='sm:hidden text-xs text-white/70'>
+                                            <span className='font-bold'>joinedDate:</span> {new Date(logDetailsJoinedDate).toLocaleDateString('en-ZA', {
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            })}
+                                        </p>
+                                        <p className='hidden sm:inline text-xs text-white/70'>
+                                            <span className='font-bold'>joinedDate:</span> {new Date(logDetailsJoinedDate).toLocaleDateString('en-ZA', {
+                                                day: 'numeric',
+                                                month: 'long',
+                                                year: 'numeric'
+                                            })}
+                                        </p>
+                                    </div>
+
 
                                 </div>
                                 <p className='text-xs text-white/70 text-right'>{logDetailsOccuredPeriod}</p>
@@ -617,46 +613,51 @@ function Dashboard({
                                 </tr>
                                 <tbody>
                                     <td>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Amount</td></tr>
+                                        {logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ? (
+                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Amount</td></tr>
+                                        ) : (<tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Value</td></tr>)}
                                         <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Date</td></tr>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Method</td></tr>
+                                        {logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ? (
+                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Method</td></tr>
+                                        ) : (<tr></tr>)}
                                     </td>
                                     <td>
                                         <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
                                         <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
+                                        {logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ? (
+                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
+                                        ) : (<tr></tr>)}
                                     </td>
                                     <td>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>
-                                            {(() => {
-                                                if (!logDetailsAmount) return "None";
+                                        {logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ? (
+                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>
+                                                {(() => {
+                                                    if (!logDetailsAmount) return "None";
 
-                                                const cleanedAmount = String(logDetailsAmount).replace(/[^0-9.-]/g, '');
-                                                const num = Number(cleanedAmount);
+                                                    const cleanedAmount = String(logDetailsAmount).replace(/[^0-9.-]/g, '');
+                                                    const num = Number(cleanedAmount);
 
-                                                if (!isNaN(num) && cleanedAmount !== '') {
-                                                    return logDetailsAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
-                                                }
+                                                    if (!isNaN(num) && cleanedAmount !== '') {
+                                                        return logDetailsAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+                                                    }
 
-                                                return "None";
-                                            })()}
-                                        </td></tr>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{new Date(logDetailsOccuredPeriod).toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'long', year: 'numeric' })}</td></tr>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{logDetailsMethod === "" ? "None" : logDetailsMethod}</td></tr>
+                                                    return "None";
+                                                })()}
+                                            </td></tr>
+                                        ) : (<tr className='hover:bg-gray-50 text-gray-900 cursor-pointer'><td className='p-3'>{logDetailsMemberName}</td></tr>)}
+                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer h-full">
+                                            <td className='p-3'>
+                                                <td className='sm:hidden'>{new Date(logDetailsOccuredPeriod).toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                                                <td className='hidden sm:inline'>{new Date(logDetailsOccuredPeriod).toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                                            </td>
+                                        </tr>
+                                        {logDetailsAmount && logDetailsMethod !== "N/A" && logDetailsMethod !== "None" && logDetailsMethod !== "" ? (
+                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{logDetailsMethod === "" ? "None" : logDetailsMethod}</td></tr>
+                                        ) : (<tr></tr>)}
                                     </td>
                                 </tbody>
                             </table>
-
-
-                            {/* <h2 className='p-2 text-white'>Sam</h2>
-                            <p className='p-2 text-white'>Description: {logDetailsDescription}</p>
-                            <p className='p-2 text-white'>Amount: ${logDetailsAmount}</p>
-                            <p className='p-2 text-white'>Date: {logDetailsDate}</p> */}
                         </div>
-
-
-
-
 
                         <button
                             className='w-full py-3 rounded-xl text-white mt-2 bg-white/40 cursor-pointer hover:bg-white/30'

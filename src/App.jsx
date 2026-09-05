@@ -61,6 +61,16 @@ function App() {
   const [selectedMonth, setSelectedMonth] = useState("All Expenses (Year)");
   const [selectedCat, setSelectedCat] = useState("All Categories");
 
+
+  const [logDetailsModal, setLogDetailsModal] = useState(false);
+  const [logDetailsMemberName, setLogDetailsMemberName] = useState();
+  const [logDetailsOccuredPeriod, setLogDetailsOccuredPeriod] = useState();
+  const [logDetailsDate, setLogDetailsDate] = useState();
+  const [logDetailsDescription, setLogDetailsDescription] = useState();
+  const [logDetailsAmount, setLogDetailsAmount] = useState();
+  const [logDetailsMethod, setLogDetailsMethod] = useState();
+  const [logDetailsJoinedDate, setLogDetailsJoinedDate] = useState();
+
   //schemes
   const allSchemes = [
     {
@@ -269,7 +279,7 @@ function App() {
       date: "18 Jul 2026",
       description: "Payment",
       amount: 500.00,
-      joinedDate: "2024-12-16", 
+      joinedDate: "2024-12-16",
       method: "Cash"
     },
     {
@@ -523,7 +533,7 @@ function App() {
           year: 'numeric'
         }),
         description: `Payment`,
-        amount: `${numericAmount.toLocaleString('en-ZA',{currency:'ZAR', style:'currency'})}`,
+        amount: `${numericAmount.toLocaleString('en-ZA', { currency: 'ZAR', style: 'currency' })}`,
         method: method,
         joinedDate: members.find(member => member.memberName.toLowerCase() === payingMember.toLowerCase())?.joinedDate || "N/A"
       },
@@ -622,11 +632,9 @@ function App() {
 
     const membersToAdd = [];
 
-    const currentDate =
-      new Date().toISOString().split("T")[0];
+    const currentDate = new Date().toISOString().split("T")[0];
 
-    const currentYear =
-      currentDate.split("-")[0];
+    const currentYear = currentDate.split("-")[0];
 
     const mainMemberName = newMember.trim();
 
@@ -716,12 +724,11 @@ function App() {
         }),
         description: `${membersToAdd.length === 1 ? "New Member" : "New Members"} Added`,
         amount: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`,
-        method: `${payingMethod}`,
-        joinedDate: `${membersToAdd.map(m => m.joinedDate).join(", ") || currentDate}`
+        joinedDate: `${membersToAdd.map(m => m.joinedDate).join(", ") || currentDate}`,
+        method: `${paymentMethod}`
       },
       ...prevTransactions
     ]);
-
 
     // Nothing new to add
     if (membersToAdd.length === 0) {
@@ -1145,6 +1152,17 @@ function App() {
     return currentArrears;
   };
 
+  const logDetails = (occuredPeriod, memberName, date, description, amount, method, joinedDate) => {
+    setLogDetailsModal(true);
+    setLogDetailsMemberName(memberName);
+    setLogDetailsDate(date);
+    setLogDetailsDescription(description);
+    setLogDetailsAmount(amount);
+    setLogDetailsMethod(method);
+    setLogDetailsOccuredPeriod(occuredPeriod);
+    setLogDetailsJoinedDate(joinedDate);
+  }
+
   return (
     <>
       {/* calender */}
@@ -1180,6 +1198,11 @@ function App() {
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} totalSchemeMonthlyContribution={totalSchemeMonthlyContribution} yearlyTarget={yearlyTarget} monthlyTarget={monthlyTarget}
           totalCash={totalCash} totalEFT={totalEFT} totalOther={totalOther} members={members} selectedSchemeName={selectedSchemeName} getMemberStatus={getMemberStatus} allMembers={allMembers}
           filteredMembers={filteredMembers} membersBehindStatus={membersBehindStatus} getMemberArrears={getMemberArrears} LatestTransactions={LatestTransactions}
+          logDetails={logDetails} setLogDetailsModal={setLogDetailsModal} logDetailsModal={logDetailsModal} setLogDetailsMemberName={setLogDetailsMemberName} setLogDetailsDate={setLogDetailsDate} setLogDetailsDescription={setLogDetailsDescription}
+          setLogDetailsAmount={setLogDetailsAmount} setLogDetailsMethod={setLogDetailsMethod} setLogDetailsOccuredPeriod={setLogDetailsOccuredPeriod} setLogDetailsJoinedDate={setLogDetailsJoinedDate}
+          logDetailsMemberName={logDetailsMemberName} logDetailsDate={logDetailsDate} logDetailsDescription={logDetailsDescription} logDetailsAmount={logDetailsAmount} logDetailsMethod={logDetailsMethod} 
+          logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate}
+
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
@@ -1198,8 +1221,11 @@ function App() {
           selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference} setLatestTransactions={setLatestTransactions}
         />
         <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} />
-        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} LatestTransactions={LatestTransactions} 
-          selectedSchemeName={selectedSchemeName}
+        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} LatestTransactions={LatestTransactions}
+          selectedSchemeName={selectedSchemeName} logDetails={logDetails} setLogDetailsModal={setLogDetailsModal} logDetailsModal={logDetailsModal} setLogDetailsMemberName={setLogDetailsMemberName} setLogDetailsDate={setLogDetailsDate} setLogDetailsDescription={setLogDetailsDescription}
+          setLogDetailsAmount={setLogDetailsAmount} setLogDetailsMethod={setLogDetailsMethod} setLogDetailsOccuredPeriod={setLogDetailsOccuredPeriod} setLogDetailsJoinedDate={setLogDetailsJoinedDate}
+          logDetailsMemberName={logDetailsMemberName} logDetailsDate={logDetailsDate} logDetailsDescription={logDetailsDescription} logDetailsAmount={logDetailsAmount} logDetailsMethod={logDetailsMethod} 
+          logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate}
         />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>

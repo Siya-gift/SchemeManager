@@ -326,8 +326,8 @@ function SchemeMembers({
         }),
         memberName: edtNm.memberName || "N/A",
         transactionScheme: selectedSchemeName,
-        description: `edited member details`,
-        amount: edtNm.memberName || "N/A",
+        description: `Edited Member Details`,
+        amount: "None",
         joinedDate: members.find(member => member.id === edtID)?.joinedDate || "N/A",
         method: "None"
       },
