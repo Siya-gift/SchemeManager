@@ -24,6 +24,7 @@ function SchemeMembers({
   accordionData,
   setAccordionData,
   saveMember,
+  updateMember,
   setNewMember,
   newMember,
   setIsAddMember,
@@ -31,7 +32,9 @@ function SchemeMembers({
   setPaymentMethod,
   getMemberStatus,
   toast,
-  setLatestTransactions
+  setLatestTransactions,
+  isEditMember,
+  setIsEditMember,
 }) {
 
 
@@ -53,7 +56,6 @@ function SchemeMembers({
   //popups states
   const [isDeleteMember, setIsDeleteMember] = useState(false);
   const [isDeleteScheme, setIsDeleteScheme] = useState(false);
-  const [isEditMember, setIsEditMember] = useState(false);
   const [isEditScheme, setIsEditScheme] = useState(false);
   const [isDeletePaymentHist, setIsDeletePaymentHist] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
@@ -306,37 +308,7 @@ function SchemeMembers({
     setPaymentHistoryModal(true);
   };
 
-  const updateMember = (edtID, edtNm) => {
-
-    setMembers(prevMembers =>
-      prevMembers.map(member =>
-        member.id === edtID ? { ...member, ...edtNm } : member
-      )
-    );
-
-    setLatestTransactions(prevTransactions => [
-      {
-        occuredPeriod: new Date().toLocaleString('en-US', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        }),
-        memberName: edtNm.memberName || "N/A",
-        transactionScheme: selectedSchemeName,
-        description: `Edited Member Details`,
-        amount: "None",
-        joinedDate: members.find(member => member.id === edtID)?.joinedDate || "N/A",
-        method: "None"
-      },
-      ...prevTransactions
-    ]);
-
-    setIsEditMember(false);
-    toast.success("Updated Member", { className: 'notifier_bg' });
-  };
+  
 
 
 

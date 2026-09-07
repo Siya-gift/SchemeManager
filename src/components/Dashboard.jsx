@@ -43,7 +43,14 @@ function Dashboard({
     logDetailsAmount,
     logDetailsMethod,
     logDetailsOccuredPeriod,
-    logDetailsJoinedDate
+    logDetailsJoinedDate,
+    latestTransactionsForSelectedScheme,
+    logDetailsModalWithValues,
+    currentActivity,
+    previousActivity,
+    hasValue,
+    formatAmount,
+    formatDate
 }) {
 
     const [isAddSchemeModal, setAddSchemeModal] = useState(false);
@@ -332,19 +339,21 @@ function Dashboard({
                     <div className='flex-1 overflow-hidden'>
                         <ul className='glass-scroll text-md h-full overflow-auto pr-2'>
                             {
-                                LatestTransactionsForSelectedScheme().length === 0 ?
+                                latestTransactionsForSelectedScheme.length === 0 ?
                                     (
                                         <div className="text-center text-white/50 py-10 w-full h-full flex justify-center items-center flex-col gap-2">
                                             <div className='text-6xl'><i className="fa-solid fa-clock-rotate-left "></i></div>
                                             <p>No transactions <br /> available</p>
                                         </div>
                                     ) :
-                                    LatestTransactionsForSelectedScheme().map((item, i) => (
+                                    latestTransactionsForSelectedScheme.map((item, i) => (
                                         <li key={i} className='flex  items-center 
                                         border-b border-white/10 py-3 w-full
-                                        min-w-87.5 w-fit whitespace-nowrap
+                                        min-w-87.5 whitespace-nowrap
                                         hover:bg-white/10 transition-all cursor-pointer px-2 rounded-lg'
-                                            onClick={() => logDetails(item.occuredPeriod, item.memberName, item.date, item.description, item.amount, item.method, item.joinedDate)}>
+                                            onClick={() => logDetailsModalWithValues(
+                                                item
+                                            )}>
                                             <span className='opacity-70 w-32 shrink-0'>{new Date(item.occuredPeriod).toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'short', year: 'numeric' })}</span>
 
                                             <span className='font-medium w-30 truncate'>{item.description}</span>
@@ -562,108 +571,366 @@ function Dashboard({
             )}
 
             {logDetailsModal && (
-                <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen'>
-                    <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-                        <div className='flex justify-between align-center w-full text-white'>
-                            <h1 className='text-2xl'>Log Details</h1>
-                            <p className='font-bold text-2xl cursor-pointer' onClick={() => setLogDetailsModal(false)}>&times;</p>
+
+                <div
+                    className="fixed z-50 top-0 left-0
+                    bg-black/50 h-screen w-screen"
+                >
+
+                    <div
+                        className="fixed top-1/2 left-1/2
+                        -translate-y-1/2
+                        -translate-x-1/2
+                        w-[90%] md:w-185
+                        max-h-[90vh]
+                        overflow-auto
+                        glass px-3 py-5
+                        bg-white/30
+                        backdrop-blur-md
+                        z-9999"
+                    >
+
+                        {/* =================================================
+                            MODAL HEADER
+                        ================================================= */}
+
+                        <div
+                            className="flex justify-between
+                             items-center w-full text-white"
+                        >
+
+                            <h1 className="text-2xl">
+                                Log Details
+                            </h1>
+
+                            <p
+                                className="font-bold text-2xl
+                                cursor-pointer"
+                                onClick={() =>
+                                    setLogDetailsModal(false)
+                                }
+                            >
+                                &times;
+                            </p>
+
                         </div>
 
-                        <div className='Username  bg-white/20 border border-white rounded-2xl mt-6 mb-3 p-3'>
-                            <div className='w-full flex justify-between mb-3'>
-                                <div className='flex flex-col'>
-                                    <h2 className='text-md text-white/80'>{logDetailsMemberName}</h2>
-                                    <p className='text-xs text-white/70'><span className='font-bold'>Description:</span> {logDetailsDescription}</p>
+                        {/* =================================================
+                            TRANSACTION DETAILS
+                        ================================================= */}
 
-                                    {(logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ?
+                        <div
+                            className="bg-white/20
+                            border border-white
+                            rounded-2xl
+                            mt-6 mb-3 p-3"
+                        >
 
-                                        <p className='text-xs text-white/70'>
-                                            <span className='font-bold'>Amount: </span>
-                                            {logDetailsAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}
-                                        </p>
-                                        : <p></p>)
-                                    }
+                            <div
+                                className="w-full flex
+                                justify-between mb-3"
+                            >
 
-                                    <div>
-                                        <p className='sm:hidden text-xs text-white/70'>
-                                            <span className='font-bold'>joinedDate:</span> {new Date(logDetailsJoinedDate).toLocaleDateString('en-ZA', {
-                                                day: 'numeric',
-                                                month: 'short',
-                                                year: 'numeric'
-                                            })}
-                                        </p>
-                                        <p className='hidden sm:inline text-xs text-white/70'>
-                                            <span className='font-bold'>joinedDate:</span> {new Date(logDetailsJoinedDate).toLocaleDateString('en-ZA', {
-                                                day: 'numeric',
-                                                month: 'long',
-                                                year: 'numeric'
-                                            })}
-                                        </p>
-                                    </div>
+                                <div className="flex flex-col">
 
+                                    {/* MEMBER */}
+
+                                    <h2
+                                        className="text-md
+                                        text-white/80"
+                                    >
+                                        {currentActivity?.memberName}
+                                    </h2>
+
+                                    {/* DESCRIPTION */}
+
+                                    <p
+                                        className="text-xs
+                                        text-white/70"
+                                    >
+                                        <span className="font-bold">
+                                            Description:
+                                        </span>{" "}
+                                        {currentActivity?.description}
+                                    </p>
+
+                                    {/* CURRENT AMOUNT */}
+
+                                    {hasValue(
+                                        currentActivity?.amount
+                                    ) && (
+
+                                            <p
+                                                className="text-xs
+                                                text-white/70"
+                                            >
+                                                <span className="font-bold">
+                                                    Amount:
+                                                </span>{" "}
+                                                {formatAmount(
+                                                    currentActivity?.amount
+                                                )}
+                                            </p>
+
+                                        )}
+
+                                    {/* JOINED DATE */}
+
+                                    <p
+                                        className="text-xs
+                                         text-white/70"
+                                    >
+                                        <span className="font-bold">
+                                            Joined Date:
+                                        </span>{" "}
+                                        {formatDate(
+                                            currentActivity?.joinedDate
+                                        )}
+                                    </p>
 
                                 </div>
-                                <p className='text-xs text-white/70 text-right'>{logDetailsOccuredPeriod}</p>
+
+                                {/* OCCURRED PERIOD */}
+
+                                <p
+                                    className="text-xs
+                                    text-white/70
+                                    text-right"
+                                >
+                                    {currentActivity?.occuredPeriod}
+                                </p>
+
                             </div>
-                            <table className='w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500 rounded-xl'>
-                                <tr>
-                                    <th className='bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700 p-3 rounded-tl-xl'><td>Property</td></th>
-                                    <th className='bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700 p-3'><td>Old Value</td></th>
-                                    <th className='bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700 p-3 rounded-tr-xl'><td>New Value</td></th>
-                                </tr>
-                                <tbody>
-                                    <td>
-                                        {logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ? (
-                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Amount</td></tr>
-                                        ) : (<tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Value</td></tr>)}
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Date</td></tr>
-                                        {logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ? (
-                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>Method</td></tr>
-                                        ) : (<tr></tr>)}
-                                    </td>
-                                    <td>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
-                                        {logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ? (
-                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>None</td></tr>
-                                        ) : (<tr></tr>)}
-                                    </td>
-                                    <td>
-                                        {logDetailsAmount && logDetailsAmount !== "N/A" && logDetailsAmount !== "None" && logDetailsAmount !== "" ? (
-                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>
-                                                {(() => {
-                                                    if (!logDetailsAmount) return "None";
 
-                                                    const cleanedAmount = String(logDetailsAmount).replace(/[^0-9.-]/g, '');
-                                                    const num = Number(cleanedAmount);
+                            {/* =================================================
+                                OLD / NEW TABLE
+                            ================================================= */}
 
-                                                    if (!isNaN(num) && cleanedAmount !== '') {
-                                                        return logDetailsAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
-                                                    }
+                            <div className="overflow-x-auto">
 
-                                                    return "None";
-                                                })()}
-                                            </td></tr>
-                                        ) : (<tr className='hover:bg-gray-50 text-gray-900 cursor-pointer'><td className='p-3'>{logDetailsMemberName}</td></tr>)}
-                                        <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer h-full">
-                                            <td className='p-3'>
-                                                <td className='sm:hidden'>{new Date(logDetailsOccuredPeriod).toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                                                <td className='hidden sm:inline'>{new Date(logDetailsOccuredPeriod).toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'long', year: 'numeric' })}</td>
-                                            </td>
+                                <table
+                                    className="w-full
+                                    bg-white
+                                    text-left text-sm
+                                    text-gray-500
+                                    rounded-xl
+                                    overflow-hidden"
+                                >
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th
+                                                className="bg-gray-50
+                                                text-xs font-semibold
+                                                uppercase
+                                                tracking-wider
+                                                text-gray-700 p-3"
+                                            >
+                                                Property
+                                            </th>
+
+                                            <th
+                                                className="bg-gray-50
+                                            text-xs font-semibold
+                                            uppercase
+                                            tracking-wider
+                                            text-gray-700 p-3"
+                                            >
+                                                Old Value
+                                            </th>
+
+                                            <th
+                                                className="bg-gray-50
+                                                text-xs font-semibold
+                                                uppercase
+                                                tracking-wider
+                                                text-gray-700 p-3"
+                                            >
+                                                New Value
+                                            </th>
+
                                         </tr>
-                                        {logDetailsAmount && logDetailsMethod !== "N/A" && logDetailsMethod !== "None" && logDetailsMethod !== "" ? (
-                                            <tr className="hover:bg-gray-50 text-gray-900 cursor-pointer"><td className='p-3'>{logDetailsMethod === "" ? "None" : logDetailsMethod}</td></tr>
-                                        ) : (<tr></tr>)}
-                                    </td>
-                                </tbody>
-                            </table>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        {/* =================================================
+                                            AMOUNT
+                                        ================================================= */}
+
+                                        {hasValue(
+                                            currentActivity?.amount
+                                        ) && (
+
+                                                <tr
+                                                    className="hover:bg-gray-50
+                                                    text-gray-900"
+                                                >
+
+                                                    <td
+                                                        className="p-3
+                                                        font-semibold"
+                                                    >
+                                                        Amount
+                                                    </td>
+
+                                                    {/* OLD */}
+
+                                                    <td className="p-3">
+
+                                                        {previousActivity && previousActivity.amount !== ""
+                                                            ? formatAmount(
+                                                                previousActivity.amount
+                                                            )
+                                                            : "None"}
+
+                                                    </td>
+
+                                                    {/* NEW */}
+
+                                                    <td className="p-3">
+
+                                                        {formatAmount(
+                                                            currentActivity?.amount
+                                                        )}
+
+                                                    </td>
+
+                                                </tr>
+
+                                            )}
+
+
+                                        {/* =================================================
+                                            MEMBER / VALUE
+                                        ================================================= */}
+
+                                        {!hasValue(currentActivity?.amount) && (
+                                            <tr className="hover:bg-gray-50 text-gray-900">
+                                                <td className="p-3 font-semibold">
+                                                    Value
+                                                </td>
+
+                                                {/* OLD */}
+                                                <td className="p-3">
+                                                    {currentActivity?.oldMemberName || previousActivity?.memberName || "None"}
+                                                </td>
+
+                                                {/* NEW */}
+                                                <td className="p-3">
+                                                    {currentActivity?.memberName || "None"}
+                                                </td>
+                                            </tr>
+                                        )}
+
+                                        {/* =================================================
+                                            DATE
+                                        ================================================= */}
+                                        {hasValue(currentActivity?.occuredPeriod) && (
+
+
+                                            <tr
+                                                className="hover:bg-gray-50
+                                                text-gray-900"
+                                            >
+
+                                                <td
+                                                    className="p-3
+                                                    font-semibold"
+                                                >
+                                                    Date
+                                                </td>
+
+                                                {/* OLD DATE */}
+
+                                                <td className="p-3">
+
+                                                    {previousActivity?.occuredPeriod || currentActivity?.occuredPeriod || "None"}
+
+                                                </td>
+
+                                                {/* NEW DATE */}
+
+                                                <td className="p-3">
+
+                                                    {currentActivity?.occuredPeriod || "None"}
+
+                                                </td>
+
+                                            </tr>
+
+                                        )}
+
+                                        {/* =================================================
+                                            METHOD
+                                        ================================================= */}
+
+                                        {hasValue(
+                                            currentActivity?.amount
+                                        ) && (
+
+                                                <tr
+                                                    className="hover:bg-gray-50
+                        text-gray-900"
+                                                >
+
+                                                    <td
+                                                        className="p-3
+                          font-semibold"
+                                                    >
+                                                        Method
+                                                    </td>
+
+                                                    {/* OLD METHOD */}
+
+                                                    <td className="p-3">
+
+                                                        {previousActivity
+                                                            ?.method || "None"}
+
+                                                    </td>
+
+                                                    {/* NEW METHOD */}
+
+                                                    <td className="p-3">
+
+                                                        {currentActivity
+                                                            ?.method || "None"}
+
+                                                    </td>
+
+                                                </tr>
+
+                                            )}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
                         </div>
 
+                        {/* =================================================
+                    
+            ================================================= */}
+
                         <button
-                            className='w-full py-3 rounded-xl text-white mt-2 bg-white/40 cursor-pointer hover:bg-white/30'
-                            onClick={() => setLogDetailsModal(false)} >
+                            className="w-full py-3
+                            rounded-xl
+                            text-white mt-2
+                            bg-white/40
+                            cursor-pointer
+                            hover:bg-white/30"
+                            onClick={() =>
+                                setLogDetailsModal(false)
+                            }
+                        >
                             Close
                         </button>
+
                     </div>
                 </div>
             )}

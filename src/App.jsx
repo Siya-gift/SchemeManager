@@ -70,6 +70,7 @@ function App() {
   const [logDetailsAmount, setLogDetailsAmount] = useState();
   const [logDetailsMethod, setLogDetailsMethod] = useState();
   const [logDetailsJoinedDate, setLogDetailsJoinedDate] = useState();
+  const [isEditMember, setIsEditMember] = useState(false);
 
   //schemes
   const allSchemes = [
@@ -273,6 +274,9 @@ function App() {
 
   const [LatestTransactions, setLatestTransactions] = useState([
     {
+      id: 1,
+      memberId: 100,
+      oldOccuredPeriod: "Jul 18, 2026, 10:20 AM",
       occuredPeriod: "Jul 18, 2026, 10:30 AM",
       memberName: "Jol",
       transactionScheme: "clubs",
@@ -283,7 +287,9 @@ function App() {
       method: "Cash"
     },
     {
-      occuredPeriod: "Jul 18, 2026, 10:30 AM",
+      id: 2,
+      memberId: 100,
+      occuredPeriod: "Jul 18, 2026, 10:20 AM",
       memberName: "Jol",
       transactionScheme: "clubs",
       date: "18 Jul 2026",
@@ -293,6 +299,8 @@ function App() {
       method: "Cash"
     }
   ]);
+
+
 
 
   const [schemes, setSchemes] = useState(() => allSchemes);
@@ -514,6 +522,8 @@ function App() {
       })
     );
 
+    const oldOccuredPeriod = payingMember ? members.find(member => member.memberName.toLowerCase() === payingMember.toLowerCase())?.transactions?.slice(-1)[0]?.occuredPeriod : null;
+
     //2 update Latest Transactions
     setLatestTransactions(prevTransactions => [
       {
@@ -524,7 +534,7 @@ function App() {
           hour: 'numeric',
           minute: '2-digit',
           hour12: true
-        }),
+        }) || oldOccuredPeriod,
         memberName: payingMember,
         transactionScheme: selectedSchemeName,
         date: new Date(date).toLocaleDateString('en-GB', {
@@ -539,6 +549,8 @@ function App() {
       },
       ...prevTransactions
     ]);
+
+    console.log(oldOccuredPeriod);
 
     // 3. Update Accordion History
     setAccordionData(prevData => {
@@ -723,9 +735,9 @@ function App() {
           year: 'numeric',
         }),
         description: `${membersToAdd.length === 1 ? "New Member" : "New Members"} Added`,
-        amount: `${membersToAdd.map(m => m.memberName).join(", ") || mainMemberName || "N/A"}`,
+        amount: "",
         joinedDate: `${membersToAdd.map(m => m.joinedDate).join(", ") || currentDate}`,
-        method: `${paymentMethod}`
+        method: ""
       },
       ...prevTransactions
     ]);
@@ -923,6 +935,47 @@ function App() {
     setTotalOther(filteredPaymentMethodAmount());
   }, [members, selectedSchemeName]);
 
+  const updateMember = (edtID, edtNm) => {
+    // Capture the old member details before updating state
+    const oldMember = members.find(member => member.id === edtID);
+
+    setMembers(prevMembers =>
+      prevMembers.map(member =>
+        member.id === edtID ? { ...member, ...edtNm } : member
+      )
+    );
+
+    setLatestTransactions(prevTransactions => [
+      {
+        occuredPeriod: new Date().toLocaleString('en-US', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        }),
+        // Assign the NEW name from edtNm, fallback to old if unmodified
+        memberName: edtNm.memberName || oldMember?.memberName || "N/A",
+        // Explicitly store the OLD name so the modal can display it
+        oldMemberName: oldMember?.memberName || "N/A",
+        transactionScheme: selectedSchemeName,
+        description: `Edited Member Details`,
+        amount: "",
+        date: new Date().toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        }),
+        joinedDate: oldMember?.joinedDate || "N/A",
+        method: ""
+      },
+      ...prevTransactions
+    ]);
+
+    setIsEditMember(false);
+    toast.success("Updated Member", { className: 'notifier_bg' });
+  };
 
   const getMemberStatus = (member, scheme) => {
     if (
@@ -1163,6 +1216,87 @@ function App() {
     setLogDetailsJoinedDate(joinedDate);
   }
 
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const getPreviousActivity = (transaction) => {
+    const schemeTransactions = LatestTransactions.filter(
+      (item) =>
+        item.transactionScheme === selectedSchemeName && item.memberName === transaction.memberName
+    );
+
+    const currentIndex = schemeTransactions.findIndex(
+      (item) => item.id === transaction.id
+    );
+
+    if (currentIndex === -1) {
+      return null;
+    }
+    if (currentIndex === schemeTransactions.length - 1) {
+      return null;
+    }
+
+    return schemeTransactions[currentIndex + 1];
+  };
+  const logDetailsModalWithValues = (transaction) => {
+    const previousActivity = getPreviousActivity(transaction);
+
+    setSelectedActivity({
+      current: transaction,
+      previous: previousActivity,
+    });
+
+    setLogDetailsMemberName(transaction.memberName);
+    setLogDetailsDate(transaction.date);
+    setLogDetailsDescription(transaction.description);
+    setLogDetailsAmount(transaction.amount);
+    setLogDetailsMethod(transaction.method);
+    setLogDetailsOccuredPeriod(transaction.occuredPeriod);
+    setLogDetailsJoinedDate(transaction.joinedDate);
+
+    setLogDetailsModal(true);
+  };
+
+  const latestTransactionsForSelectedScheme = LatestTransactions.filter(
+    (transaction) =>
+      transaction.transactionScheme === selectedSchemeName
+  );
+  const currentActivity = selectedActivity?.current;
+  const previousActivity = selectedActivity?.previous;
+
+  const hasValue = (value) => {
+    return (
+      value !== null &&
+      value !== undefined &&
+      value !== "" &&
+      value !== "N/A" &&
+      value !== "None"
+    );
+  };
+
+  const formatAmount = (amount) => {
+    return amount.toLocaleString("en-ZA", {
+      style: "currency",
+      currency: "ZAR",
+    });
+  };
+  const formatDate = (date) => {
+    if (!date) {
+      return "None";
+    }
+
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return date;
+    }
+
+    return parsedDate.toLocaleDateString("en-ZA", {
+      timeZone: "Africa/Johannesburg",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
   return (
     <>
       {/* calender */}
@@ -1200,8 +1334,10 @@ function App() {
           filteredMembers={filteredMembers} membersBehindStatus={membersBehindStatus} getMemberArrears={getMemberArrears} LatestTransactions={LatestTransactions}
           logDetails={logDetails} setLogDetailsModal={setLogDetailsModal} logDetailsModal={logDetailsModal} setLogDetailsMemberName={setLogDetailsMemberName} setLogDetailsDate={setLogDetailsDate} setLogDetailsDescription={setLogDetailsDescription}
           setLogDetailsAmount={setLogDetailsAmount} setLogDetailsMethod={setLogDetailsMethod} setLogDetailsOccuredPeriod={setLogDetailsOccuredPeriod} setLogDetailsJoinedDate={setLogDetailsJoinedDate}
-          logDetailsMemberName={logDetailsMemberName} logDetailsDate={logDetailsDate} logDetailsDescription={logDetailsDescription} logDetailsAmount={logDetailsAmount} logDetailsMethod={logDetailsMethod} 
-          logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate}
+          logDetailsMemberName={logDetailsMemberName} logDetailsDate={logDetailsDate} logDetailsDescription={logDetailsDescription} logDetailsAmount={logDetailsAmount} logDetailsMethod={logDetailsMethod}
+          logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate} logDetailsModalWithValues={logDetailsModalWithValues} currentActivity={currentActivity}
+          previousActivity={previousActivity} hasValue={hasValue} formatAmount={formatAmount} formatDate={formatDate}
+          latestTransactionsForSelectedScheme={latestTransactionsForSelectedScheme}
 
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
@@ -1211,7 +1347,7 @@ function App() {
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} filteredMembers={filteredMembers} members={members} setMembers={setMembers} searchState={searchState}
           setSearchState={setSearchState} payingMember={payingMember} setPayingMember={setPayingMember} accordionData={accordionData} setAccordionData={setAccordionData}
           saveMember={saveMember} addMore={addMore} newMember={newMember} setNewMember={setNewMember} isAddMember={isAddMember} setIsAddMember={setIsAddMember} setPaymentMethod={setPaymentMethod}
-          getMemberStatus={getMemberStatus} toast={toast} setLatestTransactions={setLatestTransactions}
+          getMemberStatus={getMemberStatus} toast={toast} setLatestTransactions={setLatestTransactions} updateMember={updateMember} isEditMember={isEditMember} setIsEditMember={setIsEditMember}
         />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate}
           newExpenses={newExpenses} setExpenses={setExpenses} filteredExpenses={filteredExpenses} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth}
@@ -1224,8 +1360,9 @@ function App() {
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} LatestTransactions={LatestTransactions}
           selectedSchemeName={selectedSchemeName} logDetails={logDetails} setLogDetailsModal={setLogDetailsModal} logDetailsModal={logDetailsModal} setLogDetailsMemberName={setLogDetailsMemberName} setLogDetailsDate={setLogDetailsDate} setLogDetailsDescription={setLogDetailsDescription}
           setLogDetailsAmount={setLogDetailsAmount} setLogDetailsMethod={setLogDetailsMethod} setLogDetailsOccuredPeriod={setLogDetailsOccuredPeriod} setLogDetailsJoinedDate={setLogDetailsJoinedDate}
-          logDetailsMemberName={logDetailsMemberName} logDetailsDate={logDetailsDate} logDetailsDescription={logDetailsDescription} logDetailsAmount={logDetailsAmount} logDetailsMethod={logDetailsMethod} 
-          logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate}
+          logDetailsMemberName={logDetailsMemberName} logDetailsDate={logDetailsDate} logDetailsDescription={logDetailsDescription} logDetailsAmount={logDetailsAmount} logDetailsMethod={logDetailsMethod}
+          logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate} logDetailsModalWithValues={logDetailsModalWithValues} currentActivity={currentActivity} previousActivity={previousActivity} hasValue={hasValue} formatAmount={formatAmount} formatDate={formatDate}
+          latestTransactionsForSelectedScheme={latestTransactionsForSelectedScheme}
         />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
