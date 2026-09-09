@@ -79,6 +79,7 @@ function SchemeMembers({
   const [isPaying, setIsPaying] = useState(false);
   const [isEditPaymentHist, setIsEditPaymentHist] = useState(false);
   const [isPaymentHistoryModal, setPaymentHistoryModal] = useState(false);
+  const [showPdf, setShowPdf] = useState(false);
 
   const [member, setMember] = useState("");
 
@@ -325,7 +326,7 @@ function SchemeMembers({
   };
 
 
-
+  const pdfUrl = "https://w3.org";
 
   return (
     <div className={`schemeMembers w-full min-h-screen p-4 md:p-5
@@ -832,6 +833,7 @@ function SchemeMembers({
           </div>
         </div>
       )}
+
       {isEditPaymentHist &&
         <div className='fixed z-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
         bg-black/50 h-screen w-screen'>
@@ -1021,7 +1023,8 @@ function SchemeMembers({
                 <i className="fa-solid fa-file-csv"></i>
                 <span className='ml-2'>CSV</span>
               </button>
-              <button className='bg-red-900 text-white text-md hover:bg-red-800 border-none outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full md:w-auto'>
+              <button className='bg-red-900 text-white text-md hover:bg-red-800 border-none outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full md:w-auto'
+                onClick={() => setShowPdf(!showPdf)}>
                 <i className="fa-solid fa-file-pdf"></i>
                 <span className='ml-2'>PDF Statement</span>
               </button>
@@ -1406,6 +1409,30 @@ function SchemeMembers({
             </div>
           </div>
         </div>
+      )}
+
+      {showPdf && (
+
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-[90%] border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+            <div className='flex justify-between items-center w-full text-white font-bold transition-all delay-300s'>
+              <h1 className='text-xl'>PDF Viewer</h1>
+              <div className='text-xl hover:bg-white/30 p-2 text-center rounded cursor-pointer'
+              onClick={()=> setShowPdf(false)}>&times;</div>
+            </div>
+            <div className='h-[90%]' style={{ marginTop: '20px', border: '1px solid #ccc' }}>
+              <iframe
+                src={pdfUrl}
+                width="100%"
+                height="100%"
+                title="PDF Viewer"
+              />
+            </div>
+          </div>
+        </div>
+
       )}
 
     </div>

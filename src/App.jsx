@@ -18,6 +18,7 @@ import Expenses from './components/Expenses.jsx'
 import Insights from './components/Insights.jsx'
 import ActivityHistory from './components/ActivityHistory.jsx'
 import Settings from './components/Settings.jsx'
+import MemberAccountStatement from './invoice/MemberAccountStatement.jsx'
 
 //components
 import SideBar from './components/SideBar.jsx'
@@ -1374,6 +1375,8 @@ function App() {
       )}
 
       <Toaster />
+
+      <MemberAccountStatement/>
 
       <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} selectedSchemeName={selectedSchemeName} />
       <div className='flex overflow-hidden'>
