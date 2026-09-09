@@ -35,6 +35,24 @@ function SchemeMembers({
   setLatestTransactions,
   isEditMember,
   setIsEditMember,
+  isAddSchemeModal,
+  setAddSchemeModal,
+  newScheme,
+  setNewScheme,
+  newSchemeAmount,
+  setNewSchemeAmount,
+  newSchemeStartingBal,
+  setNewSchemeStartingBal,
+  handleSchemeNameInputChange,
+  handleSchemeAmountInputChange,
+  handleSchemeStartingBalInputChange,
+  handleSchemeDateInputChange,
+  handleSchemeYearInputChange,
+  newSchemeDate,
+  setNewSchemeDate,
+  newSchemeYear,
+  setNewSchemeYear,
+  saveScheme
 }) {
 
 
@@ -60,17 +78,11 @@ function SchemeMembers({
   const [isDeletePaymentHist, setIsDeletePaymentHist] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isEditPaymentHist, setIsEditPaymentHist] = useState(false);
-  const [isAddSchemeModal, setAddSchemeModal] = useState(false);
   const [isPaymentHistoryModal, setPaymentHistoryModal] = useState(false);
 
   const [member, setMember] = useState("");
 
-
-  const [newScheme, setNewScheme] = useState("");
-  const [newSchemeAmount, setNewSchemeAmount] = useState();
-  const [newSchemeStartingBal, setNewSchemeStartingBal] = useState();
-  const [newSchemeDate, setNewSchemeDate] = useState("");
-
+  const [newPaymentValue, setNewPaymentValue] = useState("");
 
   const searchFunc = (e) => {
     setSearchState(e.target.value);
@@ -126,22 +138,7 @@ function SchemeMembers({
     }
   }
 
-  const handleInputChange = (e) => {
-    setNewMember(e.target.value);
-  };
-
-  const handleSchemeNameInputChange = (e) => {
-    setNewScheme(e.target.value);
-  };
-  const handleSchemeAmountInputChange = (e) => {
-    setNewSchemeAmount(e.target.value);
-  };
-  const handleSchemeStartingBalInputChange = (e) => {
-    setNewSchemeStartingBal(e.target.value);
-  };
-  const handleSchemeDateInputChange = (e) => {
-    setNewSchemeDate(e.target.value);
-  };
+  const handleInputChange = (e) => setNewMember(e.target.value)
 
   //Edit
   const handleInputChangeEdit = (e) => {
@@ -151,33 +148,25 @@ function SchemeMembers({
     setEditSchemeName(e.target.value);
   };
   const handleAmountInputChangeEdit = (e) => {
-    setEditSchemeAmount(e.target.value);
+    const numericString = e.target.value.replace(/[^0-9]/g, '');
+    const cents = parseInt(numericString || '0', 10);
+    setEditSchemeAmount(cents / 100);
   };
   const handleStartingBalInputChangeEdit = (e) => {
-    setEditSchemeStartingBal(e.target.value);
+    const numericString = e.target.value.replace(/[^0-9]/g, '');
+    const cents = parseInt(numericString || '0', 10);
+    setEditSchemeStartingBal(cents / 100);
   };
   const handleDateInputChangeEdit = (e) => {
     setEditSchemeDate(e.target.value);
   };
 
-  const saveScheme = () => {
-    if (!newScheme.trim()) return;
-    if (!newSchemeAmount) return;
-
-    const schemeToAdd = {
-      scheme: newScheme.trim(),
-      monthlyContribution: newSchemeAmount,
-      startingBal: newSchemeStartingBal,
-      date: newSchemeDate
-    }
-
-    setSchemes((prev) => [...prev, schemeToAdd]);
-    schemeSelected(schemes.length, newScheme.trim());
-    setNewScheme("");
-    setNewSchemeAmount("");
-    setAddSchemeModal(false);
-    toast.success("Scheme Added", { className: 'notifier_bg' });
-  }
+  //paying modal
+  const handleExpenseAmountInputChange = (e) => {
+    const numericString = e.target.value.replace(/[^0-9]/g, '');
+    const cents = parseInt(numericString || '0', 10);
+    setNewPaymentValue(cents / 100)
+  };
 
   const deleteMember = (id) => {
     setActiveMenuIdx(null);
@@ -308,7 +297,7 @@ function SchemeMembers({
     setPaymentHistoryModal(true);
   };
 
-  
+
 
 
 
@@ -694,8 +683,8 @@ function SchemeMembers({
             <div className='mb-2 text-xs'>
               <h4 className='text-white/85'>Default Monthly Contribution</h4>
               <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white ' required type='number' placeholder='R 0.00'
-                onChange={handleAmountInputChangeEdit} value={editSchemeAmount}
+              focus:outline-white text-white ' required type='text' placeholder='R 0,00'
+                onChange={handleAmountInputChangeEdit} value={editSchemeAmount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
               />
               <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
                 This is the default amount you expect from each member every month.</p>
@@ -711,12 +700,12 @@ function SchemeMembers({
                   <i className="fas fa-coins"></i>
                 </span>
                 <input
-                  type="number"
+                  type="text"
                   id="editSchemeStartingBalance"
                   className="w-full px-4 py-2 border border-gray-300 rounded-r-lg 
                   text-white focus:outline-none focus:border-white"
-                  placeholder="R 0.00"
-                  value={editSchemeStartingBal}
+                  placeholder="R 0,00"
+                  value={`${editSchemeStartingBal.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}`}
                   onChange={handleStartingBalInputChangeEdit}
                 />
               </div>
@@ -793,8 +782,11 @@ function SchemeMembers({
                 <input
                   className='border-white mt-1 border rounded-xl p-3 focus:outline-none text-white'
                   placeholder={` ${schemes[schemeSelectedState]?.monthlyContribution.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' }) || 0}`}
-                  type='number'
                   id='payAmount'
+                  required
+                  type="text"
+                  onChange={handleExpenseAmountInputChange}
+                  value={newPaymentValue.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
                 />
               </div>
               <div className='flex flex-col w-full'>
@@ -822,13 +814,14 @@ function SchemeMembers({
             <button
               className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30'
               onClick={() => {
-                const amount = document.getElementById('payAmount').value;
+                const amount = newPaymentValue;
                 const method = document.getElementById('payMethod').value;
                 const date = document.getElementById('payDate').value;
 
                 if (amount > 0) {
                   handleConfirmPayment(amount, method, date);
                   setPaymentMethod(method);
+                  setNewPaymentValue("")
                   setIsPaying(false);
                 } else {
                   alert("Please enter a valid amount");
@@ -888,62 +881,74 @@ function SchemeMembers({
 
         </div>
       }
-      {isAddSchemeModal &&
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-        bg-black/50 h-screen w-screen'>
-          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+
+      {isAddSchemeModal && (
+        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen'>
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+
+            {/* Header */}
             <div className='flex justify-between align-center w-full text-white mb-4'>
               <h1 className='text-2xl'>New Scheme</h1>
               <p className='font-bold text-2xl cursor-pointer' onClick={() => setAddSchemeModal(false)}>&times;</p>
             </div>
 
-
+            {/* Scheme Name Input */}
             <div className='mb-2 text-xs'>
               <h4 className='text-white/85'>Scheme Name</h4>
-              <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white' required placeholder={`e.g. Social Club ${new Date().getFullYear()}`} type='text'
-                onChange={handleSchemeNameInputChange} value={newScheme} />
-            </div>
-            <div className='mb-2 text-xs'>
-              <h4 className='text-white/85'>Default Monthly Contribution</h4>
-              <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white ' required type='number' placeholder='R 0.00'
-                onChange={handleSchemeAmountInputChange} value={newSchemeAmount}
+              <input
+                className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white'
+                required
+                placeholder={`e.g. Social Club ${new Date().getFullYear()}`}
+                type='text'
+                onChange={handleSchemeNameInputChange}
+                value={newScheme}
               />
-              <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
-                This is the default amount you expect from each member every month.</p>
             </div>
 
+            {/* Default Contribution Input */}
+            <div className='mb-2 text-xs'>
+              <h4 className='text-white/85'>Default Monthly Contribution</h4>
+              <input
+                className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white '
+                required
+                type='text'
+                placeholder='R 0,00'
+                onChange={handleSchemeAmountInputChange}
+                value={newSchemeAmount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
+              />
+              <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
+                This is the default amount you expect from each member every month.
+              </p>
+            </div>
+
+            {/* Starting Balance Section */}
             <div className="mb-3">
               <label className="block text-xs font-bold uppercase text-white/60 mb-1">
                 Starting Balance (Optional)
               </label>
               <div className="flex mb-2">
-                <span className="flex items-center px-3 bg-white/60 border border-r-0 
-                border-gray-300 rounded-l-lg text-white">
+                <span className="flex items-center px-3 bg-white/60 border border-r-0 border-gray-300 rounded-l-lg text-white">
                   <i className="fas fa-coins"></i>
                 </span>
                 <input
-                  type="number"
+                  type="text"
                   id="editSchemeStartingBalance"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-r-lg 
-                  text-white focus:outline-none focus:border-white"
-                  placeholder="R 0.00"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-r-lg text-white focus:outline-none focus:border-white"
+                  placeholder="R 0,00"
                   onChange={handleSchemeStartingBalInputChange}
-                  value={newSchemeStartingBal}
+                  value={newSchemeStartingBal.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
                 />
               </div>
 
-
+              {/* Date Selection Dropdowns */}
               <div className="flex">
-                <span className="flex items-center px-3 bg-white/60 border border-r-0 
-                border-gray-300 rounded-l-lg text-sm text-white">
+                <span className="flex items-center px-3 bg-white/60 border border-r-0 border-gray-300 rounded-l-lg text-sm text-white">
                   As Of
                 </span>
+
+                {/* Month Select */}
                 <select
                   id="editSchemeSBMonth"
-                  defaultValue={new Date().getMonth()}
                   onChange={handleSchemeDateInputChange}
                   value={newSchemeDate}
                   className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
@@ -958,12 +963,12 @@ function SchemeMembers({
                   ))}
                 </select>
 
+                {/* Year Select */}
                 <select
                   id="editSchemeSBYear"
-                  defaultValue={new Date().getFullYear()}
-                  className="w-25 bg-transparent px-3 py-2 text-white border 
-                  border-l-0 border-white/60 rounded-r-lg text-xs
-                  focus:outline-none focus:border-white scheme-dark"
+                  onChange={handleSchemeYearInputChange}
+                  value={newSchemeYear}
+                  className="w-25 bg-transparent px-3 py-2 text-white border border-l-0 border-white/60 rounded-r-lg text-xs focus:outline-none focus:border-white scheme-dark"
                 >
                   {Array.from({ length: 2027 - 2006 + 1 }, (_, index) => 2006 + index).map((year) => (
                     <option key={year} value={year} className="text-black">
@@ -978,16 +983,18 @@ function SchemeMembers({
                 here and select the month/year it applies to.
               </small>
 
-              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30' onClick={() => { saveScheme() }}>
+              {/* Save Button */}
+              <button
+                className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30'
+                onClick={saveScheme}
+              >
                 Save
               </button>
 
             </div>
-
           </div>
         </div>
-      }
+      )}
 
       {isPaymentHistoryModal && (
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen'>

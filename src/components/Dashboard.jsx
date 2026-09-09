@@ -50,10 +50,28 @@ function Dashboard({
     previousActivity,
     hasValue,
     formatAmount,
-    formatDate
+    formatDate,
+    isAddSchemeModal,
+    setAddSchemeModal,
+    newScheme,
+    setNewScheme,
+    newSchemeAmount,
+    setNewSchemeAmount,
+    newSchemeStartingBal,
+    setNewSchemeStartingBal,
+    handleSchemeNameInputChange,
+    handleSchemeAmountInputChange,
+    handleSchemeStartingBalInputChange,
+    handleSchemeDateInputChange,
+    handleSchemeYearInputChange,
+    newSchemeDate,
+    setNewSchemeDate,
+    newSchemeYear,
+    setNewSchemeYear,
+    saveScheme
 }) {
 
-    const [isAddSchemeModal, setAddSchemeModal] = useState(false);
+
 
     const [YearMonthFilter, setYearMonthFilter] = useState(1)
 
@@ -68,43 +86,6 @@ function Dashboard({
             notation: 'compact',
             maximumFractionDigits: 1,
         }).format(num).toLowerCase(); // remove .toLowerCase() if you prefer '2K' over '2k'
-    };
-
-    //form input
-    const [newScheme, setNewScheme] = useState('');
-    const [newSchemeAmount, setNewSchemeAmount] = useState('');
-    const [newSchemeStartingBal, setNewSchemeStartingBal] = useState();
-    const [newSchemeDate, setNewSchemeDate] = useState(new Date().getMonth());
-    const [newSchemeYear, setNewSchemeYear] = useState(new Date().getFullYear());
-
-    // Input handler functions
-    const handleSchemeNameInputChange = (e) => setNewScheme(e.target.value);
-    const handleSchemeAmountInputChange = (e) => setNewSchemeAmount(e.target.value);
-    const handleSchemeStartingBalInputChange = (e) => setNewSchemeStartingBal(e.target.value);
-    const handleSchemeDateInputChange = (e) => setNewSchemeDate(e.target.value);
-    const handleSchemeYearInputChange = (e) => setNewSchemeYear(e.target.value);
-
-    const saveScheme = () => {
-        if (!newScheme.trim()) return;
-        if (!newSchemeAmount) return;
-
-        const fullDate = new Date(newSchemeYear, newSchemeDate, 1);
-
-        const schemeToAdd = {
-            scheme: newScheme.trim(),
-            monthlyContribution: newSchemeAmount,
-            startingBal: newSchemeStartingBal,
-            date: fullDate.toISOString()
-        }
-
-        setSchemes((prev) => [...prev, schemeToAdd]);
-        schemeSelected(schemes.length, newScheme);
-        setNewScheme("");
-        setNewSchemeAmount("");
-        setNewSchemeStartingBal("");
-        setNewSchemeDate(new Date().getMonth());
-        setNewSchemeYear(new Date().getFullYear());
-        setAddSchemeModal(false);
     };
 
     const openExpensePage = () => {
@@ -325,7 +306,7 @@ function Dashboard({
                                 style={{ width: `${Math.min(100, progressPercentage)}%` }}
                             ></div>
                         </div>
-                        <h5 className='text-xs font-bold'>Target: {YearMonthFilter === 1 ? yearlyTarget.toLocaleString() : monthlyTarget.toLocaleString()}</h5>
+                        <h5 className='text-xs font-bold'>Target: {YearMonthFilter === 1 ? yearlyTarget.toLocaleString('en-ZA', { currency: "ZAR", style: "currency" }) : monthlyTarget.toLocaleString('en-ZA', { currency: "ZAR", style: "currency" })}</h5>
                     </div>
                 </div>
 
@@ -485,10 +466,10 @@ function Dashboard({
                             <input
                                 className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white '
                                 required
-                                type='number'
-                                placeholder='R 0.00'
+                                type='text'
+                                placeholder='R 0,00'
                                 onChange={handleSchemeAmountInputChange}
-                                value={newSchemeAmount}
+                                value={newSchemeAmount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
                             />
                             <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
                                 This is the default amount you expect from each member every month.
@@ -505,12 +486,12 @@ function Dashboard({
                                     <i className="fas fa-coins"></i>
                                 </span>
                                 <input
-                                    type="number"
+                                    type="text"
                                     id="editSchemeStartingBalance"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-r-lg text-white focus:outline-none focus:border-white"
-                                    placeholder="R 0.00"
+                                    placeholder="R 0,00"
                                     onChange={handleSchemeStartingBalInputChange}
-                                    value={newSchemeStartingBal}
+                                    value={newSchemeStartingBal.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
                                 />
                             </div>
 

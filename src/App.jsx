@@ -71,6 +71,8 @@ function App() {
   const [logDetailsMethod, setLogDetailsMethod] = useState();
   const [logDetailsJoinedDate, setLogDetailsJoinedDate] = useState();
   const [isEditMember, setIsEditMember] = useState(false);
+  
+  const [isAddSchemeModal, setAddSchemeModal] = useState(false);
 
   //schemes
   const allSchemes = [
@@ -315,6 +317,13 @@ function App() {
   const [isAddMember, setIsAddMember] = useState(false);
   const [membersBehindStatus, setMembersBehindStatus] = useState("");
 
+  // add scheme form input
+  const [newScheme, setNewScheme] = useState('');
+  const [newSchemeAmount, setNewSchemeAmount] = useState('');
+  const [newSchemeStartingBal, setNewSchemeStartingBal] = useState('');
+  const [newSchemeDate, setNewSchemeDate] = useState(new Date().getMonth());
+  const [newSchemeYear, setNewSchemeYear] = useState(new Date().getFullYear());
+
 
   const filteredExpenses = newExpenses.filter((expense) => {
     const monthQuery = selectedMonth.toLowerCase().trim();
@@ -430,11 +439,17 @@ function App() {
     const categories = Object.keys(categoryStats);
 
     // The safeguard we discussed: only run reduce if categories exist!
+    // The safeguard: only run reduce if categories exist!
     if (categories.length > 0) {
-      // Find the top category based on occurrences (count)
-      topCategory = categories.reduce((a, b) =>
-        categoryStats[a].count > categoryStats[b].count ? a : b
-      );
+      // Find the top category based on highest amount, using occurrences (count) as a tie-breaker
+      topCategory = categories.reduce((a, b) => {
+        if (categoryStats[a].amount === categoryStats[b].amount) {
+          // If amounts are equal, compare the occurrences
+          return categoryStats[a].count > categoryStats[b].count ? a : b;
+        }
+        // Otherwise, prioritize by the highest amount spent
+        return categoryStats[a].amount > categoryStats[b].amount ? a : b;
+      });
 
       topCategoryAmount = categoryStats[topCategory].amount;
 
@@ -804,6 +819,48 @@ function App() {
 
   };
 
+  const updateMember = (edtID, edtNm) => {
+    // Capture the old member details before updating state
+    const oldMember = members.find(member => member.id === edtID);
+
+    setMembers(prevMembers =>
+      prevMembers.map(member =>
+        member.id === edtID ? { ...member, ...edtNm } : member
+      )
+    );
+
+    setLatestTransactions(prevTransactions => [
+      {
+        occuredPeriod: new Date().toLocaleString('en-US', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        }),
+        // Assign the NEW name from edtNm, fallback to old if unmodified
+        memberName: edtNm.memberName || oldMember?.memberName || "N/A",
+        // Explicitly store the OLD name so the modal can display it
+        oldMemberName: oldMember?.memberName || "N/A",
+        transactionScheme: selectedSchemeName,
+        description: `Edited Member Details`,
+        amount: "",
+        date: new Date().toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        }),
+        joinedDate: oldMember?.joinedDate || "N/A",
+        method: ""
+      },
+      ...prevTransactions
+    ]);
+
+    setIsEditMember(false);
+    toast.success("Updated Member", { className: 'notifier_bg' });
+  };
+
   const [totalSchemeYearlyContribution, setTotalSchemeYearlyContribution] = useState(0);
   useEffect(() => {
     const currentYear = new Date().getFullYear()
@@ -934,48 +991,6 @@ function App() {
     };
     setTotalOther(filteredPaymentMethodAmount());
   }, [members, selectedSchemeName]);
-
-  const updateMember = (edtID, edtNm) => {
-    // Capture the old member details before updating state
-    const oldMember = members.find(member => member.id === edtID);
-
-    setMembers(prevMembers =>
-      prevMembers.map(member =>
-        member.id === edtID ? { ...member, ...edtNm } : member
-      )
-    );
-
-    setLatestTransactions(prevTransactions => [
-      {
-        occuredPeriod: new Date().toLocaleString('en-US', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        }),
-        // Assign the NEW name from edtNm, fallback to old if unmodified
-        memberName: edtNm.memberName || oldMember?.memberName || "N/A",
-        // Explicitly store the OLD name so the modal can display it
-        oldMemberName: oldMember?.memberName || "N/A",
-        transactionScheme: selectedSchemeName,
-        description: `Edited Member Details`,
-        amount: "",
-        date: new Date().toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric'
-        }),
-        joinedDate: oldMember?.joinedDate || "N/A",
-        method: ""
-      },
-      ...prevTransactions
-    ]);
-
-    setIsEditMember(false);
-    toast.success("Updated Member", { className: 'notifier_bg' });
-  };
 
   const getMemberStatus = (member, scheme) => {
     if (
@@ -1297,6 +1312,45 @@ function App() {
     });
   };
 
+
+  // add scheme modal
+  const handleSchemeNameInputChange = (e) => setNewScheme(e.target.value);
+  const handleSchemeAmountInputChange = (e) => {
+    const numericString = e.target.value.replace(/[^0-9]/g, '');
+    const cents = parseInt(numericString || '0', 10);
+    setNewSchemeAmount(cents / 100)
+  }
+  const handleSchemeStartingBalInputChange = (e) => {
+    const numericString = e.target.value.replace(/[^0-9]/g, '');
+    const cents = parseInt(numericString || '0', 10);
+    setNewSchemeStartingBal(cents / 100)
+  }
+  const handleSchemeDateInputChange = (e) => setNewSchemeDate(e.target.value);
+  const handleSchemeYearInputChange = (e) => setNewSchemeYear(e.target.value);
+
+  const saveScheme = () => {
+    if (!newScheme.trim()) return;
+    if (!newSchemeAmount) return;
+
+    const fullDate = new Date(newSchemeYear, newSchemeDate, 1);
+
+    const schemeToAdd = {
+      scheme: newScheme.trim(),
+      monthlyContribution: newSchemeAmount,
+      startingBal: newSchemeStartingBal,
+      date: fullDate.toISOString()
+    }
+
+    setSchemes((prev) => [...prev, schemeToAdd]);
+    schemeSelected(schemes.length, newScheme);
+    setNewScheme("");
+    setNewSchemeAmount("");
+    setNewSchemeStartingBal("");
+    setNewSchemeDate(new Date().getMonth());
+    setNewSchemeYear(new Date().getFullYear());
+    setAddSchemeModal(false);
+  };
+
   return (
     <>
       {/* calender */}
@@ -1327,6 +1381,10 @@ function App() {
         <Profile toggleState={toggleState} />
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
           openCalender={openCalender} formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
+          isAddSchemeModal={isAddSchemeModal} setAddSchemeModal={setAddSchemeModal} newScheme={newScheme} setNewScheme={setNewScheme} newSchemeAmount={newSchemeAmount} setNewSchemeAmount={setNewSchemeAmount}
+          handleSchemeNameInputChange={handleSchemeNameInputChange} handleSchemeAmountInputChange={handleSchemeAmountInputChange} handleSchemeStartingBalInputChange={handleSchemeStartingBalInputChange}
+          handleSchemeDateInputChange={handleSchemeDateInputChange} handleSchemeYearInputChange={handleSchemeYearInputChange} newSchemeStartingBal={newSchemeStartingBal} setNewSchemeStartingBal={setNewSchemeStartingBal}
+          newSchemeDate={newSchemeDate} setNewSchemeDate={setNewSchemeDate} newSchemeYear={newSchemeYear} setNewSchemeYear={setNewSchemeYear} saveScheme={saveScheme}
           schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState} setSchemeSelectedState={setSchemeSelectedState} handleConfirmPayment={handleConfirmPayment}
           totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} financialData={financialData} netDifference={netDifference}
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} totalSchemeMonthlyContribution={totalSchemeMonthlyContribution} yearlyTarget={yearlyTarget} monthlyTarget={monthlyTarget}
@@ -1342,6 +1400,10 @@ function App() {
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
+          isAddSchemeModal={isAddSchemeModal} setAddSchemeModal={setAddSchemeModal} newScheme={newScheme} setNewScheme={setNewScheme} newSchemeAmount={newSchemeAmount} setNewSchemeAmount={setNewSchemeAmount}
+          handleSchemeNameInputChange={handleSchemeNameInputChange} handleSchemeAmountInputChange={handleSchemeAmountInputChange} handleSchemeStartingBalInputChange={handleSchemeStartingBalInputChange}
+          handleSchemeDateInputChange={handleSchemeDateInputChange} handleSchemeYearInputChange={handleSchemeYearInputChange} newSchemeStartingBal={newSchemeStartingBal} setNewSchemeStartingBal={setNewSchemeStartingBal}
+          newSchemeDate={newSchemeDate} setNewSchemeDate={setNewSchemeDate} newSchemeYear={newSchemeYear} setNewSchemeYear={setNewSchemeYear} saveScheme={saveScheme}
           formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes} schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState}
           setSchemeSelectedState={setSchemeSelectedState} selectedSchemeName={selectedSchemeName} allMembers={allMembers} handleConfirmPayment={handleConfirmPayment}
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} filteredMembers={filteredMembers} members={members} setMembers={setMembers} searchState={searchState}

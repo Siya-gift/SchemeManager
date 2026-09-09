@@ -40,7 +40,7 @@ function Expenses({
     const [newExpenseType, setNewExpenseType] = useState("Expense (Outflow)");
     const [newExpenseCat, setNewExpenseCat] = useState("Other");
     const [newExpenseDate, setNewExpenseDate] = useState(new Date().toISOString().split('T')[0]);
-    const [newExpenseAmount, setNewExpenseAmount] = useState();
+    const [newExpenseAmount, setNewExpenseAmount] = useState("");
 
     const [indexOfExpense, setIndexOfExpense] = useState(null)
     const [editExpenseDesc, setEditExpenseDesc] = useState(null)
@@ -70,12 +70,17 @@ function Expenses({
             category: newExpenseCat.trim(),
             date: newExpenseDate.trim(),
             month: new Date(newExpenseDate).toLocaleString('default', { month: 'long' }),
-            amount: newExpenseAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' }),
+            amount: newExpenseAmount,
             schemeName: selectedSchemeName
         };
 
+
+
         //setting the paid amount this month
         setPayments((prevPayments) => [...prevPayments, expenseToAdd]);
+        console.log(expenseToAdd)
+
+        setExpenses((prev) => [...prev, expenseToAdd]);
 
         setLatestTransactions(prevTransactions => [
             {
@@ -102,7 +107,7 @@ function Expenses({
             ...prevTransactions
         ]);
 
-        setExpenses((prev) => [...prev, expenseToAdd]);
+
         setNewExpenseDesc("");
         setNewExpenseDate(new Date().toISOString().split('T')[0]);
         setNewExpenseAmount("");
@@ -124,10 +129,9 @@ function Expenses({
         setNewExpenseDate(e.target.value);
     };
     const handleExpenseAmountInputChange = (e) => {
-        const value = parseFloat(e.target.value);
-        if (!isNaN(value)) {
-            setNewExpenseAmount(value);
-        }
+        const numericString = e.target.value.replace(/[^0-9]/g, '');
+        const cents = parseInt(numericString || '0', 10);
+        setNewExpenseAmount(cents / 100);
     };
 
 
@@ -254,8 +258,8 @@ function Expenses({
                         <i className="fa-solid fa-calendar-days"></i>
                         <span className='ml-2'>Spent This Month</span>
                     </h3>
-                    <h1 className='text-xl font-bold'>R {totalSpentThisMonth.toLocaleString()}</h1>
-                    <h3 className='text-white/75 text-sm'>{totalTransactionsThisMonth} transaction</h3>
+                    <h1 className='text-xl font-bold'>{totalSpentThisMonth.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}</h1>
+                    <h3 className='text-white/75 text-sm'>{totalTransactionsThisMonth} {(totalTransactionsThisMonth >= 0 && totalTransactionsThisMonth <= 1) ? 'transaction' : 'transactions'}</h3>
                 </div>
                 <div className='bg-[linear-gradient(135deg,#10b981_0%,#065f46_100%)] shadow-[0_5px_15px_rgba(16,185,129,0.2)] cursor-pointer
                 text-white p-3 rounded-xl flex flex-col gap-2 w-full hover:-translate-y-1 transition-translate duration-300'>
@@ -263,8 +267,8 @@ function Expenses({
                         <i className="fa-solid fa-calendar-check"></i>
                         <span className='ml-2'>Spent This Year</span>
                     </h3>
-                    <h1 className='text-xl font-bold'>R {totalSpentThisYear.toLocaleString()}</h1>
-                    <h3 className='text-white/75 text-sm'>{totalTransactionsThisYear} transaction</h3>
+                    <h1 className='text-xl font-bold'>{totalSpentThisYear.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}</h1>
+                    <h3 className='text-white/75 text-sm'>{totalTransactionsThisYear} {(totalTransactionsThisYear >= 0 && totalTransactionsThisYear <= 1) ? 'transaction' : 'transactions'}</h3>
                 </div>
                 <div className='bg-[linear-gradient(135deg,#f59e0b_0%,#b45309_100%)] shadow-[0_5px_15px_rgba(245,158,11,0.2)] cursor-pointer
                 text-white p-3 rounded-xl flex flex-col gap-2 w-full hover:-translate-y-1 transition-translate duration-300'>
@@ -273,7 +277,7 @@ function Expenses({
                         <span className='ml-2'>Top Category</span>
                     </h3>
                     <h1 className='text-xl font-bold'>{topCategory}</h1>
-                    <h3 className='text-white/75 text-sm'>R {topCategoryAmount.toLocaleString()} ({topCategoryPercentage}%)</h3>
+                    <h3 className='text-white/75 text-sm'>{topCategoryAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })} ({topCategoryPercentage}%)</h3>
                 </div>
                 <div className='bg-[linear-gradient(135deg,#06b6d4_0%,#0369a1_100%)] shadow-[0_5px_15px_rgba(6,182,212,0.2)] cursor-pointer
                 text-white p-3 rounded-xl flex flex-col gap-2 w-full hover:-translate-y-1 transition-translate duration-300'>
@@ -281,8 +285,8 @@ function Expenses({
                         <i className="fa-solid fa-hand-holding-dollar"></i>
                         <span className='ml-2'>Refunds & Credits</span>
                     </h3>
-                    <h1 className='text-xl font-bold'>R {totalSpentForRefundsAndCredits.toLocaleString()}</h1>
-                    <h3 className='text-white/75 text-sm'>{totalTransactionsForRefundsAndCredits} transaction</h3>
+                    <h1 className='text-xl font-bold'>{totalSpentForRefundsAndCredits.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}</h1>
+                    <h3 className='text-white/75 text-sm'>{totalTransactionsForRefundsAndCredits} {(totalTransactionsForRefundsAndCredits >= 0 && totalTransactionsForRefundsAndCredits <= 1) ? 'transaction' : 'transactions'}</h3>
                 </div>
             </div>
 
@@ -430,7 +434,7 @@ function Expenses({
                                 <div className='flex justify-between items-center w-full'>
                                     <span className="text-white-900">Total for Period (Net):</span>
                                     <span className={`text-xs uppercase tracking-wider text-white-400 ${netDifference === 0 ? 'text-gray-400' : totalColor}`}>
-                                        R {financialData.moneyIn > financialData.moneyOut ? '+' : ''} {netDifference.toLocaleString()}
+                                        {financialData.moneyIn > financialData.moneyOut ? '+' : ''} {netDifference.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}
                                     </span>
                                 </div>
                             </td>
@@ -456,9 +460,9 @@ function Expenses({
                                         {expense.month}
                                     </span>
                                 </div>
-                                <div className="flex justify-between">
+                                <div className="flex justify-between gap-5">
                                     <span>Category</span>
-                                    <span className="text-gray-900 font-medium border border-gray-300 rounded-full px-2 py-1 text-xs">
+                                    <span className="text-gray-900 font-medium border border-gray-300 rounded-full px-2 py-1 text-xs text-right max-w-40 inline-block">
                                         {expense.category}
                                     </span>
                                 </div>
@@ -471,7 +475,7 @@ function Expenses({
                                 <div className="flex justify-between">
                                     <span>Amount</span>
                                     <span className={`font-medium ${expense.type === "Refund / Credit (Inflow)" ? 'text-green-400' : 'text-red-400'}`}>
-                                        R {expense.amount.toLocaleString()}
+                                        {expense.amount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
@@ -508,7 +512,7 @@ function Expenses({
                             <div className="flex justify-between border-b pb-2">
                                 <span className="font-semibold text-gray-900">Total for Period (Net):</span>
                                 <span className={`"text-xs font-semibold uppercase tracking-wider ${netDifference === 0 ? 'text-gray-400' : totalColor}`}>
-                                    R {financialData.moneyIn > financialData.moneyOut ? '+' : ''} {netDifference.toLocaleString()}
+                                    {financialData.moneyIn > financialData.moneyOut ? '+' : ''} {netDifference.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}
                                 </span>
                             </div>
                         </div>
@@ -586,8 +590,13 @@ function Expenses({
                             <div className='text-xs w-full'>
                                 <h4 className='text-white/85'>Amount (R)</h4>
                                 <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-                                focus:outline-white text-white' required placeholder='R 0.00' type='number'
-                                    onChange={handleExpenseAmountInputChange} value={newExpenseAmount} />
+                                focus:outline-white text-white'
+                                    required
+                                    type="text"
+                                    value={newExpenseAmount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
+                                    onChange={handleExpenseAmountInputChange}
+                                    placeholder='R 0,00'
+                                />
                             </div>
                         </div>
 
