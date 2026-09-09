@@ -829,7 +829,7 @@ function Dashboard({
 
                                                 <td className="p-3">
 
-                                                    {previousActivity?.occuredPeriod || currentActivity?.occuredPeriod || "None"}
+                                                    {previousActivity?.occuredPeriod || "None" || currentActivity?.occuredPeriod}
 
                                                 </td>
 
