@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
+import MemberAccountStatement from '../invoice/MemberAccountStatement';
 
 function SchemeMembers({
   toggleState,
@@ -325,8 +326,6 @@ function SchemeMembers({
     return isNaN(date.getTime()) ? "-" : date.toLocaleString("default", format);
   };
 
-
-  const pdfUrl = "https://w3.org";
 
   return (
     <div className={`schemeMembers w-full min-h-screen p-4 md:p-5
@@ -1416,19 +1415,14 @@ function SchemeMembers({
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
         bg-black/50 h-screen w-screen'>
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-[90%] border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+           w-full md:w-185 h-[90%] border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
             <div className='flex justify-between items-center w-full text-white font-bold transition-all delay-300s'>
               <h1 className='text-xl'>PDF Viewer</h1>
               <div className='text-xl hover:bg-white/30 p-2 text-center rounded cursor-pointer'
-              onClick={()=> setShowPdf(false)}>&times;</div>
+                onClick={() => setShowPdf(false)}>&times;</div>
             </div>
             <div className='h-[90%]' style={{ marginTop: '20px', border: '1px solid #ccc' }}>
-              <iframe
-                src={pdfUrl}
-                width="100%"
-                height="100%"
-                title="PDF Viewer"
-              />
+              <MemberAccountStatement />
             </div>
           </div>
         </div>
