@@ -5,7 +5,6 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "#ffffff",
     padding: 30,
-    fontFamily: "Helvetica",
   },
   header: {
     marginBottom: 20,
@@ -14,7 +13,6 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
     marginBottom: 5,
     color: "#4f46e5",
@@ -38,7 +36,6 @@ export const styles = StyleSheet.create({
   },
   metaLabel: {
     width: 150,
-    fontFamily: "Helvetica-Bold",
   },
   table: {
     width: "100%",
@@ -53,7 +50,8 @@ export const styles = StyleSheet.create({
   },
   tableHeaderRow: {
     flexDirection: "row",
-    backgroundColor: "#abb5eb",
+    backgroundColor: "#4f46e5",
+    color: "#ffffff",
   },
   tableCol: {
     width: "20%",
@@ -69,7 +67,6 @@ export const styles = StyleSheet.create({
   tableCellHeader: {
     margin: 5,
     fontSize: 9,
-    fontFamily: "Helvetica-Bold",
   },
   summary: {
     marginTop: 10,
@@ -77,7 +74,6 @@ export const styles = StyleSheet.create({
   },
   summaryHeader: {
     fontSize: 12,
-    fontFamily: "Helvetica-Bold",
     marginBottom: 10,
     color: "#4f46e5",
   },
@@ -88,10 +84,8 @@ export const styles = StyleSheet.create({
   },
   summaryLabel: {
     width: 200,
-    fontFamily: "Helvetica-Bold",
   },
   summaryValue: {
-    fontFamily: "Helvetica-Bold",
     color:"#88898a",
   },
   footer: {

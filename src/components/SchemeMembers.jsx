@@ -312,13 +312,11 @@ function SchemeMembers({
   const pdfGenerator = (data) => {
     const currentYear = new Date().getFullYear();
     const memberData = data.filter((item) => item.userName === payingMember && parseInt(item.year) === currentYear);
-
     setPDFdata(memberData)
-    console.log(currentYear)
-    console.log(PDFdata);
-    // setShowPdf(!showPdf)
+    setShowPdf(!showPdf)
   };
-
+  
+console.log(PDFdata);
   return (
     <div
       className={`schemeMembers w-full min-h-screen p-4 md:p-5
@@ -1608,7 +1606,7 @@ function SchemeMembers({
               className="h-[90%]"
               style={{ marginTop: "20px", border: "1px solid #ccc" }}
             >
-              <MemberAccountStatement />
+              <MemberAccountStatement PDFdata={PDFdata} selectedSchemeName={selectedSchemeName} />
             </div>
           </div>
         </div>

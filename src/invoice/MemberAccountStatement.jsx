@@ -1,18 +1,14 @@
-import {
-  PDFViewer,
-  Document,
-  Page,
-  View,
-  Text,
-} from "@react-pdf/renderer";
+import { PDFViewer, Document, Page, View, Text } from "@react-pdf/renderer";
 import { styles } from "./style";
 
-const InvoicePDF = () => (
-  <Document title="Statement_Sam_2026">
+const InvoicePDF = ({ PDFdata, selectedSchemeName }) => (
+  <Document title={`${PDFdata[0]?.userName}_Statement_${PDFdata[0]?.year}`}>
     <Page size="A4" style={styles.page}>
       {/* Header section matching Statement_Crok_2026.pdf */}
       <View style={styles.header}>
-        <Text style={styles.title} color="#4f46e5">Clubs</Text>
+        <Text style={styles.title} color="#4f46e5">
+          {selectedSchemeName}
+        </Text>
         <Text style={styles.subtitle}>MEMBER ACCOUNT STATEMENT</Text>
       </View>
 
@@ -20,15 +16,23 @@ const InvoicePDF = () => (
       <View style={styles.metaData}>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Report Period:</Text>
-          <Text style={styles.metaCell}>FY 2026</Text>
+          <Text style={styles.metaCell}>FY {PDFdata[0]?.year}</Text>
         </View>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Generated on:</Text>
-          <Text style={styles.metaCell}>10/09/2026, 12:24:01</Text>
+          <Text style={styles.metaCell}>
+            {new Date().toLocaleDateString("en-ZA", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </Text>
         </View>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Beneficiary:</Text>
-          <Text style={styles.metaCell}>Sam</Text>
+          <Text style={styles.metaCell}>{PDFdata[0]?.userName}</Text>
         </View>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Current Account Status:</Text>
@@ -39,37 +43,106 @@ const InvoicePDF = () => (
       {/* Table */}
       <View style={styles.table}>
         <View style={styles.tableHeaderRow}>
-          <View style={styles.tableCol}><Text style={styles.tableCellHeader}>Date</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCellHeader}>Cycle</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCellHeader}>Description</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCellHeader}>Method</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCellHeader}>Amount</Text></View>
+          <View style={styles.tableCol}>
+            <Text style={styles.tableCellHeader}>Date</Text>
+          </View>
+          <View style={styles.tableCol}>
+            <Text style={styles.tableCellHeader}>Cycle</Text>
+          </View>
+          <View style={styles.tableCol}>
+            <Text style={styles.tableCellHeader}>Description</Text>
+          </View>
+          <View style={styles.tableCol}>
+            <Text style={styles.tableCellHeader}>Method</Text>
+          </View>
+          <View style={styles.tableCol}>
+            <Text style={styles.tableCellHeader}>Amount</Text>
+          </View>
         </View>
-        
+
         {/* Sample rows totalling the R 1500,00 paid shown in your dashboard */}
-        <View style={styles.tableRow}>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>2026-07-08</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>July</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>Monthly Contribution</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>Cash</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>R 500,00</Text></View>
-        </View>
-        <View style={styles.tableRow}>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>2026-08-08</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>August</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>Monthly Contribution</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>Cash</Text></View>
-          <View style={styles.tableCol}><Text style={styles.tableCell}>R 1 000,00</Text></View>
-        </View>
+        {PDFdata[0]?.yearHistory?.length > 0 ? (
+          PDFdata[0].yearHistory.map((payment, idx) =>
+            payment ? (
+              <View style={styles.tableRow} key={idx}>
+                {/* 1. Full Date */}
+                <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>
+                    {payment?.date
+                      ? new Date(payment.date).toLocaleDateString("en-ZA", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "-"}
+                  </Text>
+                </View>
+
+                {/* 2. Dynamic Month */}
+                <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>
+                    {payment?.date
+                      ? new Date(payment.date).toLocaleDateString("en-ZA", {
+                          month: "long",
+                        })
+                      : "-"}
+                  </Text>
+                </View>
+
+                {/* 3. Description */}
+                <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>
+                    {payment?.description || "Monthly Contribution"}
+                  </Text>
+                </View>
+
+                {/* 4. Details */}
+                <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>
+                    {payment?.details || "-"}
+                  </Text>
+                </View>
+
+                {/* 5. Currency Amount (ZAR) */}
+                <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>
+                    {payment?.amount !== undefined
+                      ? `R ${Number(payment.amount).toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                      : "R 0.00"}
+                  </Text>
+                </View>
+              </View>
+            ) : null,
+          )
+        ) : (
+          /* Safe fallback that spans the layout appropriately */
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              margin: 20,
+            }}
+          >
+            <Text
+              style={{ color: "#6B7280", fontSize: 16, textAlign: "center" }}
+            >
+              No Transactions Found
+            </Text>
+          </View>
+        )}
       </View>
 
       {/* Annual Summary */}
       <View style={styles.summary}>
         <Text style={styles.summaryHeader}>Annual Summary</Text>
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Total Payments Expected (to date):</Text>
+          <Text style={styles.summaryLabel}>
+            Total Payments Expected (to date):
+          </Text>
           {/* Example expected based on R 500/mo */}
-          <Text style={styles.summaryValue}>R 2 000,00</Text> 
+          <Text style={styles.summaryValue}>R 2 000,00</Text>
         </View>
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Total Payments Recorded:</Text>
@@ -84,17 +157,24 @@ const InvoicePDF = () => (
       {/* Footer */}
       <View style={styles.footer} fixed>
         <Text>Generated by Scheme Manager Pro - Official Member Statement</Text>
-        <Text render={({ pageNumber, totalPages }) => (`Page ${pageNumber} of ${totalPages}`)} />
+        <Text
+          render={({ pageNumber, totalPages }) =>
+            `Page ${pageNumber} of ${totalPages}`
+          }
+        />
       </View>
     </Page>
   </Document>
 );
 
-export default function MemberAccountStatement() {
+export default function MemberAccountStatement({
+  PDFdata,
+  selectedSchemeName,
+}) {
   return (
     <div className="w-full h-full">
       <PDFViewer width="100%" height="100%">
-        <InvoicePDF />
+        <InvoicePDF PDFdata={PDFdata} selectedSchemeName={selectedSchemeName} />
       </PDFViewer>
     </div>
   );

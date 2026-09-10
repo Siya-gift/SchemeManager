@@ -199,12 +199,12 @@ function App() {
     {
       id: 3,
       memberName: "Vivian",
-      totPaid: 2200.00,
+      totPaid: 22200.00,
       status: "Ahead",
       schemeName: "Section 2 Society",
       joinedDate: "2026-03-16",
       transactions: [
-        { amount: 2200.00, method: "Cash", date: "2026-03-16" }
+        { amount: 22200.00, method: "Cash", date: "2026-03-16" }
       ]
     },
     {
@@ -252,7 +252,7 @@ function App() {
       userName: "Vivian",
       year: "2026",
       yearHistory: [
-        { date: "2026-03-16", amount: "2200.00", details: "Cash" }
+        { date: "2026-03-16", amount: "22200.00", details: "Cash" }
       ]
     },
     {
