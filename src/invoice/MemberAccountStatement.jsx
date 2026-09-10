@@ -12,7 +12,7 @@ const InvoicePDF = () => (
   <Document title="Statement_Sam_2026">
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
-        <Text>Section1</Text>
+        <Text>Clubs</Text>
       </View>
       <View style={styles.section}>
         <Text>Section2</Text>

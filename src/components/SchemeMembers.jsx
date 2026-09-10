@@ -1415,7 +1415,7 @@ function SchemeMembers({
         <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
         bg-black/50 h-screen w-screen'>
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-full md:w-185 h-[90%] border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
+           w-full md:w-[90%] h-[90%] border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
             <div className='flex justify-between items-center w-full text-white font-bold transition-all delay-300s'>
               <h1 className='text-xl'>PDF Viewer</h1>
               <div className='text-xl hover:bg-white/30 p-2 text-center rounded cursor-pointer'
