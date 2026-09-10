@@ -44,7 +44,7 @@ function Insights({ toggleState, toggleMobileState, formattedDate, openCalender 
           <h3 className='text-white/75 text-sm'>Expected: R 500</h3>
         </div>
         <div className='bg-[linear-gradient(135deg,#f59e0b_0%,#b45309_100%)] shadow-[0_5px_15px_rgba(245,158,11,0.2)] cursor-pointer
-                text-white p-3 rounded-xl flex flex-col justify-evenly gap-2 w-full hover:-translate-y-1 transition-translate duration-300 flex-grow'>
+                text-white p-3 rounded-xl flex flex-col justify-evenly gap-2 w-full hover:-translate-y-1 transition-translate duration-300 grow'>
           <h3 className='text-white/75 text-sm'>
             <i className="fas fa-user-clock me-2"></i>
             <span className='ml-2'>Members at Risk</span>
@@ -97,7 +97,7 @@ function Insights({ toggleState, toggleMobileState, formattedDate, openCalender 
             { name: 'Bob Brown', expected: 'R1 500,00', paid: 'R1 000,00', status: '1 Month Arrears', owed: 'R500,00' },
             { name: 'Charlie Davis', expected: 'R1 100,00', paid: 'R700,00', status: '1 Month Arrears', owed: 'R400,00' }].map((member, index) => (
               <tr key={index} className="hover:bg-gray-50 transition-colors cursor-pointer group">
-                <td className="px-6 py-4 font-medium text-gray-900 font-semibold group-hover:text-blue-600 hover:underline transition-colors">{member.name}</td>
+                <td className="px-6 py-4 font-medium text-gray-900 group-hover:text-blue-600 hover:underline transition-colors">{member.name}</td>
                 <td className="px-6 py-4">{member.expected}</td>
                 <td className="px-6 py-4 text-gray-900">{member.paid}</td>
                 <td className="px-6 py-4">

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import MemberAccountStatement from '../invoice/MemberAccountStatement';
+import React, { useState, useEffect, useMemo } from "react";
+import MemberAccountStatement from "../invoice/MemberAccountStatement";
 
 function SchemeMembers({
   toggleState,
@@ -53,10 +53,8 @@ function SchemeMembers({
   setNewSchemeDate,
   newSchemeYear,
   setNewSchemeYear,
-  saveScheme
+  saveScheme,
 }) {
-
-
   const [isDotMenu, setisDotMenu] = useState(false);
   const [activeMenuIdx, setActiveMenuIdx] = useState(null);
   const [isDotMenuState, setisDotMenuState] = useState("hidden");
@@ -71,6 +69,7 @@ function SchemeMembers({
   const [deleteTargetIndex, setDeleteTargetIndex] = useState(null);
   const [deleteSchemeTargetIndex, setDeleteSchemeTargetIndex] = useState(null);
   const [editingMember, setEditingMember] = useState(null);
+  const [PDFdata, setPDFdata] = useState(null);
 
   //popups states
   const [isDeleteMember, setIsDeleteMember] = useState(false);
@@ -106,31 +105,17 @@ function SchemeMembers({
   };
 
   const openAddMember = () => {
-    setIsAddMember(prev => !prev);
+    setIsAddMember((prev) => !prev);
     if (isAddMember) {
-      setIsAddMember(false)
+      setIsAddMember(false);
     } else {
-      setIsAddMember(true)
+      setIsAddMember(true);
     }
-  }
+  };
 
   const preventScroll = (e) => {
     e.preventDefault();
   };
-  // useEffect(() => {
-  //   if (isAddMember) {
-  //     // Blocks mouse wheel, trackpad, and touch scrolling
-  //     window.addEventListener('wheel', preventScroll, { passive: false });
-  //     window.addEventListener('touchmove', preventScroll, { passive: false });
-  //   }
-
-  //   return () => {
-  //     window.removeEventListener('wheel', preventScroll);
-  //     window.removeEventListener('touchmove', preventScroll);
-  //   };
-  // }, [isAddMember]);
-
-
 
   window.deleteMemberCan = (idx) => {
     const memberElement = document.getElementById(`member-${idx}`);
@@ -138,9 +123,9 @@ function SchemeMembers({
     if (memberElement) {
       memberElement.remove();
     }
-  }
+  };
 
-  const handleInputChange = (e) => setNewMember(e.target.value)
+  const handleInputChange = (e) => setNewMember(e.target.value);
 
   //Edit
   const handleInputChangeEdit = (e) => {
@@ -150,13 +135,13 @@ function SchemeMembers({
     setEditSchemeName(e.target.value);
   };
   const handleAmountInputChangeEdit = (e) => {
-    const numericString = e.target.value.replace(/[^0-9]/g, '');
-    const cents = parseInt(numericString || '0', 10);
+    const numericString = e.target.value.replace(/[^0-9]/g, "");
+    const cents = parseInt(numericString || "0", 10);
     setEditSchemeAmount(cents / 100);
   };
   const handleStartingBalInputChangeEdit = (e) => {
-    const numericString = e.target.value.replace(/[^0-9]/g, '');
-    const cents = parseInt(numericString || '0', 10);
+    const numericString = e.target.value.replace(/[^0-9]/g, "");
+    const cents = parseInt(numericString || "0", 10);
     setEditSchemeStartingBal(cents / 100);
   };
   const handleDateInputChangeEdit = (e) => {
@@ -165,9 +150,9 @@ function SchemeMembers({
 
   //paying modal
   const handleExpenseAmountInputChange = (e) => {
-    const numericString = e.target.value.replace(/[^0-9]/g, '');
-    const cents = parseInt(numericString || '0', 10);
-    setNewPaymentValue(cents / 100)
+    const numericString = e.target.value.replace(/[^0-9]/g, "");
+    const cents = parseInt(numericString || "0", 10);
+    setNewPaymentValue(cents / 100);
   };
 
   const deleteMember = (id) => {
@@ -200,184 +185,215 @@ function SchemeMembers({
     setIsDeleteMember(false);
     if (deleteTargetIndex === null) return;
 
-    const updatedMembers = members.filter((member) => member.id !== deleteTargetIndex);
+    const updatedMembers = members.filter(
+      (member) => member.id !== deleteTargetIndex,
+    );
     setMembers(updatedMembers);
     setDeleteTargetIndex(null);
-    toast.success("Deleted Member", { className: 'notifier_bg' });
+    toast.success("Deleted Member", { className: "notifier_bg" });
 
     // ==================================================
     // UPDATE LATEST TRANSACTIONS
     // ==================================================
-    const memberToDelete = members.find((member) => member.id === deleteTargetIndex);
+    const memberToDelete = members.find(
+      (member) => member.id === deleteTargetIndex,
+    );
     if (memberToDelete) {
-      setLatestTransactions(prevTransactions => [
+      setLatestTransactions((prevTransactions) => [
         {
-          occuredPeriod: new Date().toLocaleString('en-US', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
+          occuredPeriod: new Date().toLocaleString("en-US", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
           }),
           memberName: memberToDelete.memberName || "N/A",
           transactionScheme: selectedSchemeName,
-          date: new Date().toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
+          date: new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
           }),
           description: "Deleted Member",
-          amount: memberToDelete.memberName || "N/A"
+          amount: memberToDelete.memberName || "N/A",
         },
-        ...prevTransactions
+        ...prevTransactions,
       ]);
     }
-
   };
 
   const removeScheme = () => {
     setIsDeleteScheme(false);
     if (deleteSchemeTargetIndex === null) return;
 
-    const updatedSchemes = schemes.filter((_, index) => index !== deleteSchemeTargetIndex);
+    const updatedSchemes = schemes.filter(
+      (_, index) => index !== deleteSchemeTargetIndex,
+    );
     if (schemeSelected === 0 && deleteSchemeTargetIndex === 0) {
-      schemeSelectedState(-1)
-    };
+      schemeSelectedState(-1);
+    }
     setSchemes(updatedSchemes);
     setDeleteTargetIndex(null);
-    toast.success("Deleted Scheme", { className: 'notifier_bg' });
+    toast.success("Deleted Scheme", { className: "notifier_bg" });
 
     // ==================================================
     // UPDATE LATEST TRANSACTIONS
     // ==================================================
 
-    setLatestTransactions(prevTransactions => [
+    setLatestTransactions((prevTransactions) => [
       {
         transactionScheme: selectedSchemeName,
-        date: new Date().toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric'
+        date: new Date().toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
         }),
         description: "Deleted Scheme",
-        amount: selectedSchemeName || "N/A"
+        amount: selectedSchemeName || "N/A",
       },
-      ...prevTransactions
+      ...prevTransactions,
     ]);
-
   };
 
   const payingModal = (memberName) => {
-    setActiveMenuIdx(null)
-    setIsPaying(true)
-    setPayingMember(memberName)
-  }
+    setActiveMenuIdx(null);
+    setIsPaying(true);
+    setPayingMember(memberName);
+  };
 
   const [editingId, setEditingId] = useState(null);
   const editModal = (id, memberName) => {
-    setActiveMenuIdx(null)
-    setIsEditMember(true)
-    setEditMember(memberName)
-    setEditingId(id)
-  }
+    setActiveMenuIdx(null);
+    setIsEditMember(true);
+    setEditMember(memberName);
+    setEditingId(id);
+  };
 
   const editSchemeModal = (scheme, monthlyContribution, startingBal, date) => {
-    setIsEditScheme(true)
-    setEditSchemeName(scheme)
-    setEditSchemeAmount(monthlyContribution)
-    setEditSchemeStartingBal(startingBal)
-    setEditSchemeDate(date)
-  }
+    setIsEditScheme(true);
+    setEditSchemeName(scheme);
+    setEditSchemeAmount(monthlyContribution);
+    setEditSchemeStartingBal(startingBal);
+    setEditSchemeDate(date);
+  };
 
   const addSchemeModal = () => {
-    setAddSchemeModal(true)
-  }
+    setAddSchemeModal(true);
+  };
 
   const paymentHistoryModal = (memberName) => {
     setPayingMember(memberName);
     setPaymentHistoryModal(true);
   };
 
-
-
-
-
-
   //Payment history Accordion
   //first payment should be january and if not it'll create empty properties
-  //with no values, this is to ensure the accordion always has something to 
+  //with no values, this is to ensure the accordion always has something to
   // map through and display even if no payments have been made in that year
   const [openIndex, setOpenIndex] = useState(0);
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-
   // Inside your PaymentHistoryModal component
   const filteredData = accordionData.filter(
-    (item) => item.userName === payingMember
+    (item) => item.userName === payingMember,
   );
   //-------------------------------------------------------------------
 
-  const formatDate = (dateString, format = { month: 'long' }) => {
+  const formatDate = (dateString, format = { month: "long" }) => {
     if (!dateString || dateString === "") return "-";
     const date = new Date(dateString);
     return isNaN(date.getTime()) ? "-" : date.toLocaleString("default", format);
   };
 
+  const pdfGenerator = (data) => {
+    const currentYear = new Date().getFullYear();
+    const memberData = data.filter((item) => item.userName === payingMember && parseInt(item.year) === currentYear);
+
+    setPDFdata(memberData)
+    console.log(currentYear)
+    console.log(PDFdata);
+    // setShowPdf(!showPdf)
+  };
 
   return (
-    <div className={`schemeMembers w-full min-h-screen p-4 md:p-5
+    <div
+      className={`schemeMembers w-full min-h-screen p-4 md:p-5
         ${toggleMobileState === 2 ? "block" : "hidden"} 
         ${toggleState === 2 ? "md:block" : "md:hidden"}
-        `}>
-
+        `}
+    >
       {/* Header: Stacks on mobile, side-by-side on md+ */}
-      <div className='hearder flex flex-col md:flex-row justify-between items-center py-5 px-6 glass mb-6 gap-4'>
-        <h1 className='text-3xl font-bold text-white w-full md:w-auto text-center md:text-left'>
+      <div className="hearder flex flex-col md:flex-row justify-between items-center py-5 px-6 glass mb-6 gap-4">
+        <h1 className="text-3xl font-bold text-white w-full md:w-auto text-center md:text-left">
           Scheme & Members
         </h1>
-        <div className='flex flex-wrap justify-center md:justify-end items-center gap-4 text-white'>
-          <h5 className='text-white/50 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap'>
+        <div className="flex flex-wrap justify-center md:justify-end items-center gap-4 text-white">
+          <h5 className="text-white/50 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap">
             Filter by date:
           </h5>
-          <h3 className='text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap'>
+          <h3 className="text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap">
             {formattedDate}
           </h3>
-          <span className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
-            onClick={openCalender}>
+          <span
+            className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
+            onClick={openCalender}
+          >
             <i className="fa-solid fa-calendar-days"></i>
           </span>
         </div>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6 my-4'>
-        <div className='glass p-6 text-white flex flex-col h-auto md:col-span-1'>
-          <div className='flex justify-between items-center py-4'>
-            <h1 className='font-bold text-xl'>Your Schemes</h1>
-            <span className='text-2xl cursor-pointer' onClick={() => { addSchemeModal() }}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-4">
+        <div className="glass p-6 text-white flex flex-col h-auto md:col-span-1">
+          <div className="flex justify-between items-center py-4">
+            <h1 className="font-bold text-xl">Your Schemes</h1>
+            <span
+              className="text-2xl cursor-pointer"
+              onClick={() => {
+                addSchemeModal();
+              }}
+            >
               <i className="fa-solid fa-circle-plus"></i>
             </span>
           </div>
 
-          <ul className='grow min-h-25 max-h-130 overflow-y-auto glass-scroll'>
+          <ul className="grow min-h-25 max-h-130 overflow-y-auto glass-scroll">
             {schemes.map((item, idx) => (
-              <li key={idx} className={`py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
+              <li
+                key={idx}
+                className={`py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
               my-2 rounded-xl mr-1.5 ${schemeSelectedState === idx ? "border-3 border-white-500" : ""}`}
-                onClick={() => schemeSelected(idx, item.scheme)}>
-                <div className='flex justify-between items-center gap-3 flex-row md:flex-col lg:flex-row'>
-                  <div className='flex justify-between flex-col leading-5'>
-                    <h3 className='text-md font-bold'>{item.scheme}</h3>
-                    <p className='text-[11px] text-white/70'>R{item.monthlyContribution}/mo</p>
+                onClick={() => schemeSelected(idx, item.scheme)}
+              >
+                <div className="flex justify-between items-center gap-3 flex-row md:flex-col lg:flex-row">
+                  <div className="flex justify-between flex-col leading-5">
+                    <h3 className="text-md font-bold">{item.scheme}</h3>
+                    <p className="text-[11px] text-white/70">
+                      R{item.monthlyContribution}/mo
+                    </p>
                   </div>
-                  <div className='flex gap-3 flex-end text-[11px] transition-transform'>
-                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1'
-                      onClick={() => editSchemeModal(item.scheme, item.monthlyContribution, item.startingBal, item.date)}>
+                  <div className="flex gap-3 flex-end text-[11px] transition-transform">
+                    <span
+                      className="px-2 py-2 border rounded-lg inline-block hover:-translate-y-1"
+                      onClick={() =>
+                        editSchemeModal(
+                          item.scheme,
+                          item.monthlyContribution,
+                          item.startingBal,
+                          item.date,
+                        )
+                      }
+                    >
                       <i className="fa-regular fa-pen-to-square"></i>
                     </span>
-                    <span className='px-2 py-2 border rounded-lg inline-block hover:-translate-y-1'
-                      onClick={() => deleteSchemeModal(idx)}>
+                    <span
+                      className="px-2 py-2 border rounded-lg inline-block hover:-translate-y-1"
+                      onClick={() => deleteSchemeModal(idx)}
+                    >
                       <i className="fa-solid fa-trash"></i>
                     </span>
                   </div>
@@ -392,109 +408,171 @@ function SchemeMembers({
           </ul>
         </div>
 
-        <div className='glass p-6 text-white flex flex-col min-h-svh md:col-span-2'>
-          <div className='flex items-left flex-col gap-y-3'>
-            <h1 className='font-bold text-xl'>Members of {selectedSchemeName}</h1>
-            <div className='flex flex-col xl:flex-row gap-3 sm:w-full md:w-auto'>
-              <input className='py-2.5 px-2 border rounded-xl w-full focus:border-white 
-              focus:outline-white' type='text' value={searchState} onChange={searchFunc}
-                id="inputField" placeholder='Search Members...' />
+        <div className="glass p-6 text-white flex flex-col min-h-svh md:col-span-2">
+          <div className="flex items-left flex-col gap-y-3">
+            <h1 className="font-bold text-xl">
+              Members of {selectedSchemeName}
+            </h1>
+            <div className="flex flex-col xl:flex-row gap-3 sm:w-full md:w-auto">
+              <input
+                className="py-2.5 px-2 border rounded-xl w-full focus:border-white 
+              focus:outline-white"
+                type="text"
+                value={searchState}
+                onChange={searchFunc}
+                id="inputField"
+                placeholder="Search Members..."
+              />
 
-              <button className='bg-white/30 px-2 py-2.5 w-full border rounded-xl 
-              cursor-pointer hover:bg-white/45' onClick={openAddMember}>
+              <button
+                className="bg-white/30 px-2 py-2.5 w-full border rounded-xl 
+              cursor-pointer hover:bg-white/45"
+                onClick={openAddMember}
+              >
                 <i className="fa-solid fa-plus"></i> Add Member
               </button>
             </div>
-
-
-
           </div>
 
-          <ul className='flex w-full mt-9 rounded-2xl'>
+          <ul className="flex w-full mt-9 rounded-2xl">
             <div
               className="w-full h-150 md:h-110 glass-scroll overflow-x-auto transition-color duration-300 rounded-xl z-1 pr-2"
               onScroll={scrollOnList}
             >
-              <table className='w-full text-left border-collapse'>
-                <thead className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full`}>
+              <table className="w-full text-left border-collapse">
+                <thead
+                  className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} w-full`}
+                >
                   <tr className="border-b uppercase text-sm">
-                    <th className="sticky top-0 py-4 px-2 rounded-tl-xl">Name</th>
-                    <th className="sticky top-0 py-4 px-2 truncate max-w-50">Total Paid</th>
-                    <th className="sticky top-0 py-4 px-2 text-center">Status</th>
-                    <th className="sticky top-0 py-4 px-2 text-right rounded-tr-xl">Action</th>
+                    <th className="sticky top-0 py-4 px-2 rounded-tl-xl">
+                      Name
+                    </th>
+                    <th className="sticky top-0 py-4 px-2 truncate max-w-50">
+                      Total Paid
+                    </th>
+                    <th className="sticky top-0 py-4 px-2 text-center">
+                      Status
+                    </th>
+                    <th className="sticky top-0 py-4 px-2 text-right rounded-tr-xl">
+                      Action
+                    </th>
                   </tr>
                 </thead>
 
-                <tbody id='membersList'>
+                <tbody id="membersList">
                   {filteredMembers.map((member, idx) => {
-                    const currentStatus = getMemberStatus(member, schemes[schemeSelectedState]);
+                    const currentStatus = getMemberStatus(
+                      member,
+                      schemes[schemeSelectedState],
+                    );
                     const badgeStyle = getStatusBadgeClass(currentStatus);
                     return (
-                      <tr key={member.id || member.memberName} className={`border-b hover:bg-white/30 transition-colors ${searchList}`} id='memberRow'>
-                        <td className="py-4 px-2 align-middle font-medium truncate hover:text-white/70 cursor-pointer"
+                      <tr
+                        key={member.id || member.memberName}
+                        className={`border-b hover:bg-white/30 transition-colors ${searchList}`}
+                        id="memberRow"
+                      >
+                        <td
+                          className="py-4 px-2 align-middle font-medium truncate hover:text-white/70 cursor-pointer"
                           onClick={() => paymentHistoryModal(member.memberName)}
-                          name={"View Payment History"}>
+                          name={"View Payment History"}
+                        >
                           {idx + 1}. {member.memberName}
                         </td>
-                        <td className="py-4 px-2 align-middle">{member.transactions
-                          ?.reduce((total, tx) => total + (Number(tx.amount) || 0), 0)
-                          .toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}</td>
+                        <td className="py-4 px-2 align-middle">
+                          {member.transactions
+                            ?.reduce(
+                              (total, tx) => total + (Number(tx.amount) || 0),
+                              0,
+                            )
+                            .toLocaleString("en-ZA", {
+                              style: "currency",
+                              currency: "ZAR",
+                            })}
+                        </td>
                         <td className="py-4 px-2 align-middle text-center">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full 
-                          text-xs/3 font-medium text-center ${badgeStyle}`}>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full 
+                          text-xs/3 font-medium text-center ${badgeStyle}`}
+                          >
                             {currentStatus}
                           </span>
                         </td>
                         <td className="relative md:hidden py-4 px-2 align-middle text-right">
                           <span
-                            className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1 cursor-pointer'
-                            onClick={() => { toggleDotMenu(idx) }}
+                            className="px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1 cursor-pointer"
+                            onClick={() => {
+                              toggleDotMenu(idx);
+                            }}
                           >
                             <i className="fa-solid fa-ellipsis-vertical"></i>
                           </span>
 
                           {activeMenuIdx === idx && (
-                            <div className="md:hidden glass bg-white absolute -bottom-30 right-0 
+                            <div
+                              className="md:hidden glass bg-white absolute -bottom-30 right-0 
                           py-2.5 px-5 text-sm text-left text-black/70 z-9
                           after:content-[''] after:absolute after:bottom-full after:right-5
-                          after:border-8 after:border-transparent after:border-b-white">
-
-                              <p className='border-white-400 flex gap-2 align-center py-2'
-                                onClick={() => editModal(member.id, member.memberName)}>
-                                <i className="fa-regular fa-pen-to-square"></i> Edit
-                              </p><hr />
-                              <p className='border-white-400 flex gap-2 align-center py-2'
-                                onClick={() => deleteMember(member.id)}>
+                          after:border-8 after:border-transparent after:border-b-white"
+                            >
+                              <p
+                                className="border-white-400 flex gap-2 align-center py-2"
+                                onClick={() =>
+                                  editModal(member.id, member.memberName)
+                                }
+                              >
+                                <i className="fa-regular fa-pen-to-square"></i>{" "}
+                                Edit
+                              </p>
+                              <hr />
+                              <p
+                                className="border-white-400 flex gap-2 align-center py-2"
+                                onClick={() => deleteMember(member.id)}
+                              >
                                 <i className="fa-solid fa-trash"></i> Delete
-                              </p><hr />
-                              <p className='border-white-400 flex gap-2 align-center py-2'
-                                onClick={() => payingModal(member.memberName)}>
-                                <i className="fa-regular fa-credit-card"></i> Pay
+                              </p>
+                              <hr />
+                              <p
+                                className="border-white-400 flex gap-2 align-center py-2"
+                                onClick={() => payingModal(member.memberName)}
+                              >
+                                <i className="fa-regular fa-credit-card"></i>{" "}
+                                Pay
                               </p>
                             </div>
                           )}
-
                         </td>
                         <td className="hidden md:block py-4 px-2 align-middle text-right">
-                          <span className='px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1 cursor-pointer'
-                            onClick={() => editModal(member.id, member.memberName)}>
+                          <span
+                            className="px-2 py-2 mr-2  transition-transform inline-block hover:-translate-y-1 cursor-pointer"
+                            onClick={() =>
+                              editModal(member.id, member.memberName)
+                            }
+                          >
                             <i className="fa-regular fa-pen-to-square"></i>
                           </span>
-                          <span className='px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1 cursor-pointer'
-                            onClick={() => deleteMember(member.id)}>
+                          <span
+                            className="px-2 py-2 mr-2 transition-transform inline-block hover:-translate-y-1 cursor-pointer"
+                            onClick={() => deleteMember(member.id)}
+                          >
                             <i className="fa-solid fa-trash"></i>
                           </span>
-                          <button className='px-3 py-2 mr-2 transition-transform inline-block hover:-translate-y-1
-                        bg-white text-black text-xs rounded-xl cursor-pointer' onClick={() => payingModal(member.memberName)}>
+                          <button
+                            className="px-3 py-2 mr-2 transition-transform inline-block hover:-translate-y-1
+                        bg-white text-black text-xs rounded-xl cursor-pointer"
+                            onClick={() => payingModal(member.memberName)}
+                          >
                             Pay
                           </button>
                         </td>
                       </tr>
-                    )
+                    );
                   })}
                   {filteredMembers.length === 0 && (
                     <tr>
-                      <td colSpan="4" className="py-10 text-center opacity-50">No members found</td>
+                      <td colSpan="4" className="py-10 text-center opacity-50">
+                        No members found
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -502,192 +580,310 @@ function SchemeMembers({
             </div>
           </ul>
         </div>
-        <div className='footer md:col-span-3 flex grow flex-col sm:flex-row 
-        justify-center items-center py-5 px-6 glass text-white mt-auto'>
+        <div
+          className="footer md:col-span-3 flex grow flex-col sm:flex-row 
+        justify-center items-center py-5 px-6 glass text-white mt-auto"
+        >
           <p>All rights reserved &copy; 2026 </p>
         </div>
-
       </div>
 
-
-      {isAddMember &&
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-        bg-black/50 h-screen w-screen'>
-          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-
-            <div className='flex justify-between align-center w-full text-white'>
-              <h1 className='text-2xl'>Add Member</h1>
-              <p className='font-bold text-2xl cursor-pointer' onClick={openAddMember}>&times;</p>
+      {isAddMember && (
+        <div
+          className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen"
+        >
+          <div
+            className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999"
+          >
+            <div className="flex justify-between align-center w-full text-white">
+              <h1 className="text-2xl">Add Member</h1>
+              <p
+                className="font-bold text-2xl cursor-pointer"
+                onClick={openAddMember}
+              >
+                &times;
+              </p>
             </div>
-            <div className='flex justify-between align-center w-full text-white mt-10
-            text-sm'>
-              <h3 className='text-white'>Name</h3>
-              <p className='cursor-pointer text-xs align-center hover:text-white/75' onClick={() => { addMore() }}>
+            <div
+              className="flex justify-between align-center w-full text-white mt-10
+            text-sm"
+            >
+              <h3 className="text-white">Name</h3>
+              <p
+                className="cursor-pointer text-xs align-center hover:text-white/75"
+                onClick={() => {
+                  addMore();
+                }}
+              >
                 <i className="fa-solid fa-plus"></i> Add More
               </p>
             </div>
 
-            <ul className='max-h-60 overflow-y-auto glass-scroll pr-3' id='AddMoreMembers'>
-              <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white member-name-input
-              focus:outline-white text-white' type='text' placeholder='Enter Member Name'
+            <ul
+              className="max-h-60 overflow-y-auto glass-scroll pr-3"
+              id="AddMoreMembers"
+            >
+              <input
+                className="border-white mt-3 border rounded-xl p-3 w-full focus:border-white member-name-input
+              focus:outline-white text-white"
+                type="text"
+                placeholder="Enter Member Name"
                 onChange={handleInputChange}
                 value={newMember}
               />
             </ul>
 
-            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30' onClick={saveMember}>
+            <button
+              className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30"
+              onClick={saveMember}
+            >
               Save
             </button>
           </div>
         </div>
-      }
+      )}
 
-      {isDeleteMember &&
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-        bg-black/50 h-screen w-screen'>
-          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-            <h1 className='text-white text-2xl mb-4'>Delete Member?</h1>
+      {isDeleteMember && (
+        <div
+          className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen"
+        >
+          <div
+            className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999"
+          >
+            <h1 className="text-white text-2xl mb-4">Delete Member?</h1>
 
-            <h1 className='text-white/90 text-md'>Are you sure you want to delete this member and all their history? This cannot be undone.</h1>
-            <div className='flex justify-between align-center gap-4'>
-              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30' onClick={() => { setIsDeleteMember(false) }}>
+            <h1 className="text-white/90 text-md">
+              Are you sure you want to delete this member and all their history?
+              This cannot be undone.
+            </h1>
+            <div className="flex justify-between align-center gap-4">
+              <button
+                className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30"
+                onClick={() => {
+                  setIsDeleteMember(false);
+                }}
+              >
                 No
               </button>
-              <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
-            hover:bg-red-400' onClick={() => { removeMember() }}>
+              <button
+                className="w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
+            hover:bg-red-400"
+                onClick={() => {
+                  removeMember();
+                }}
+              >
                 Yes
               </button>
             </div>
-
           </div>
         </div>
-      }
+      )}
 
-      {isDeleteScheme &&
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-        bg-black/50 h-screen w-screen'>
-          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-            <h1 className='text-white text-2xl mb-4'>Delete Scheme?</h1>
+      {isDeleteScheme && (
+        <div
+          className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen"
+        >
+          <div
+            className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999"
+          >
+            <h1 className="text-white text-2xl mb-4">Delete Scheme?</h1>
 
-            <h1 className='text-white/90 text-md'>This will PERMANENTLY remove this scheme and all associated members and expenses.</h1>
-            <div className='flex justify-between align-center gap-4'>
-              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30' onClick={() => { setIsDeleteScheme(false) }}>
+            <h1 className="text-white/90 text-md">
+              This will PERMANENTLY remove this scheme and all associated
+              members and expenses.
+            </h1>
+            <div className="flex justify-between align-center gap-4">
+              <button
+                className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30"
+                onClick={() => {
+                  setIsDeleteScheme(false);
+                }}
+              >
                 No
               </button>
-              <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
-            hover:bg-red-400' onClick={() => { removeScheme() }}>
+              <button
+                className="w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
+            hover:bg-red-400"
+                onClick={() => {
+                  removeScheme();
+                }}
+              >
                 Yes
               </button>
             </div>
-
           </div>
         </div>
-      }
-      {isDeletePaymentHist &&
-        <div className='fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-        bg-black/50 h-screen w-screen z-100'>
-          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-            <h1 className='text-white text-2xl mb-4'>Remove Payment?</h1>
+      )}
+      {isDeletePaymentHist && (
+        <div
+          className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen z-100"
+        >
+          <div
+            className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999"
+          >
+            <h1 className="text-white text-2xl mb-4">Remove Payment?</h1>
 
-            <h1 className='text-white/90 text-md'>Are you sure you want to remove this payment record?</h1>
-            <div className='flex justify-between align-center gap-4'>
-              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30' onClick={() => { setIsDeletePaymentHist(false) }}>
+            <h1 className="text-white/90 text-md">
+              Are you sure you want to remove this payment record?
+            </h1>
+            <div className="flex justify-between align-center gap-4">
+              <button
+                className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30"
+                onClick={() => {
+                  setIsDeletePaymentHist(false);
+                }}
+              >
                 No
               </button>
-              <button className='w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
-            hover:bg-red-400' onClick={() => { removePaymentHistory() }}>
+              <button
+                className="w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
+            hover:bg-red-400"
+                onClick={() => {
+                  removePaymentHistory();
+                }}
+              >
                 Yes
               </button>
             </div>
-
           </div>
         </div>
-      }
+      )}
 
-      {isEditMember &&
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-          bg-black/50 h-screen w-screen'>
-          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-          w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-
-            <div className='flex justify-between align-center w-full text-white'>
-              <h1 className='text-2xl'>Edit Member</h1>
-              <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsEditMember(false)}>&times;</p>
+      {isEditMember && (
+        <div
+          className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+          bg-black/50 h-screen w-screen"
+        >
+          <div
+            className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+          w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999"
+          >
+            <div className="flex justify-between align-center w-full text-white">
+              <h1 className="text-2xl">Edit Member</h1>
+              <p
+                className="font-bold text-2xl cursor-pointer"
+                onClick={() => setIsEditMember(false)}
+              >
+                &times;
+              </p>
             </div>
-            <div className='flex start align-center w-full text-white mt-6
-          text-sm'>
-              <h3 className='text-white'>Name</h3>
+            <div
+              className="flex start align-center w-full text-white mt-6
+          text-sm"
+            >
+              <h3 className="text-white">Name</h3>
             </div>
 
-            <div className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers'>
-              <input className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
-        focus:outline-white text-white' type='text' value={editMember} onChange={handleInputChangeEdit}
+            <div
+              className="max-h-60 overflow-y-auto no-scrollbar"
+              id="AddMoreMembers"
+            >
+              <input
+                className="border-white mt-3 border rounded-xl p-3 w-full focus:border-white 
+        focus:outline-white text-white"
+                type="text"
+                value={editMember}
+                onChange={handleInputChangeEdit}
               />
             </div>
-            <div className='flex start align-center w-full text-white mt-5
-      text-sm'>
-              <h3 className='text-white'>Monthly Contribution</h3>
+            <div
+              className="flex start align-center w-full text-white mt-5
+      text-sm"
+            >
+              <h3 className="text-white">Monthly Contribution</h3>
             </div>
 
-            <div className='max-h-60 overflow-y-auto no-scrollbar' id='AddMoreMembers-Contribution'>
+            <div
+              className="max-h-60 overflow-y-auto no-scrollbar"
+              id="AddMoreMembers-Contribution"
+            >
               {/* Added state binding to your monthly contribution input */}
               <input
-                className='border-white mt-3 border rounded-xl p-3 w-full focus:border-white focus:outline-white text-white'
-                type='number'
-                placeholder='Default'
+                className="border-white mt-3 border rounded-xl p-3 w-full focus:border-white focus:outline-white text-white"
+                type="number"
+                placeholder="Default"
               />
             </div>
 
             {/* Fixed the button to use editMemberId and pass both your state values */}
             <button
-              className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30'
+              className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30"
               onClick={() => {
                 if (!editingId) return;
 
                 // Call the fixed updateMember function
                 updateMember(editingId, { memberName: editMember });
               }}
-
             >
               Save
             </button>
           </div>
         </div>
-      }
+      )}
 
-      {isEditScheme &&
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-        bg-black/50 h-screen w-screen'>
-          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-            <div className='flex justify-between align-center w-full text-white mb-4'>
-              <h1 className='text-2xl'>Edit Scheme</h1>
-              <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsEditScheme(false)}>&times;</p>
+      {isEditScheme && (
+        <div
+          className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen"
+        >
+          <div
+            className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999"
+          >
+            <div className="flex justify-between align-center w-full text-white mb-4">
+              <h1 className="text-2xl">Edit Scheme</h1>
+              <p
+                className="font-bold text-2xl cursor-pointer"
+                onClick={() => setIsEditScheme(false)}
+              >
+                &times;
+              </p>
             </div>
 
-
-            <div className='mb-2 text-xs'>
-              <h4 className='text-white/85'>Scheme Name</h4>
-              <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white' required placeholder={`e.g. Social Club ${new Date().getFullYear()}`} type='text'
-                onChange={handleSchemeInputChangeEdit} value={editSchemeName} />
-            </div>
-            <div className='mb-2 text-xs'>
-              <h4 className='text-white/85'>Default Monthly Contribution</h4>
-              <input className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white ' required type='text' placeholder='R 0,00'
-                onChange={handleAmountInputChangeEdit} value={editSchemeAmount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
+            <div className="mb-2 text-xs">
+              <h4 className="text-white/85">Scheme Name</h4>
+              <input
+                className="border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+              focus:outline-white text-white"
+                required
+                placeholder={`e.g. Social Club ${new Date().getFullYear()}`}
+                type="text"
+                onChange={handleSchemeInputChangeEdit}
+                value={editSchemeName}
               />
-              <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
-                This is the default amount you expect from each member every month.</p>
+            </div>
+            <div className="mb-2 text-xs">
+              <h4 className="text-white/85">Default Monthly Contribution</h4>
+              <input
+                className="border-white mt-1 border w-full rounded-xl p-3 focus:border-white 
+              focus:outline-white text-white "
+                required
+                type="text"
+                placeholder="R 0,00"
+                onChange={handleAmountInputChangeEdit}
+                value={editSchemeAmount
+                  .toLocaleString("en-ZA", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                  .replace(".", ",")}
+              />
+              <p className="text-white/60 text-[9px] w-full mt-3 mb-6">
+                This is the default amount you expect from each member every
+                month.
+              </p>
             </div>
 
             <div className="mb-3">
@@ -695,8 +891,10 @@ function SchemeMembers({
                 Starting Balance (Optional)
               </label>
               <div className="flex mb-2">
-                <span className="flex items-center px-3 bg-white/60 border border-r-0 
-                border-gray-300 rounded-l-lg text-white">
+                <span
+                  className="flex items-center px-3 bg-white/60 border border-r-0 
+                border-gray-300 rounded-l-lg text-white"
+                >
                   <i className="fas fa-coins"></i>
                 </span>
                 <input
@@ -705,15 +903,16 @@ function SchemeMembers({
                   className="w-full px-4 py-2 border border-gray-300 rounded-r-lg 
                   text-white focus:outline-none focus:border-white"
                   placeholder="R 0,00"
-                  value={`${editSchemeStartingBal.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}`}
+                  value={`${editSchemeStartingBal.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(".", ",")}`}
                   onChange={handleStartingBalInputChangeEdit}
                 />
               </div>
 
-
               <div className="flex">
-                <span className="flex items-center px-3 bg-white/60 border border-r-0 
-                border-gray-300 rounded-l-lg text-sm text-white">
+                <span
+                  className="flex items-center px-3 bg-white/60 border border-r-0 
+                border-gray-300 rounded-l-lg text-sm text-white"
+                >
                   As Of
                 </span>
                 <select
@@ -723,8 +922,18 @@ function SchemeMembers({
                   className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
                 >
                   {[
-                    "January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
                   ].map((month, index) => (
                     <option key={index} value={index} className="text-black">
                       {month}
@@ -739,7 +948,10 @@ function SchemeMembers({
                   border-l-0 border-white/60 rounded-r-lg text-xs
                   focus:outline-none focus:border-white scheme-dark"
                 >
-                  {Array.from({ length: 2027 - 2006 + 1 }, (_, index) => 2006 + index).map((year) => (
+                  {Array.from(
+                    { length: 2027 - 2006 + 1 },
+                    (_, index) => 2006 + index,
+                  ).map((year) => (
                     <option key={year} value={year} className="text-black">
                       {year}
                     </option>
@@ -748,61 +960,76 @@ function SchemeMembers({
               </div>
 
               <small className="block mt-2 text-[9px] text-white/60 leading-normal">
-                If you have existing funds from before using this app, enter the total
-                here and select the month/year it applies to.
+                If you have existing funds from before using this app, enter the
+                total here and select the month/year it applies to.
               </small>
 
-              <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30' onClick={() => { setIsEditScheme(false) }}>
+              <button
+                className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30"
+                onClick={() => {
+                  setIsEditScheme(false);
+                }}
+              >
                 Save Scheme
               </button>
-
             </div>
-
           </div>
         </div>
-      }
-
+      )}
 
       {isPaying && (
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen'>
+        <div className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen">
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-            <div className='flex justify-between align-center w-full text-white'>
-              <h1 className='text-2xl'>Record Payment</h1>
-              <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsPaying(false)}>&times;</p>
+            <div className="flex justify-between align-center w-full text-white">
+              <h1 className="text-2xl">Record Payment</h1>
+              <p
+                className="font-bold text-2xl cursor-pointer"
+                onClick={() => setIsPaying(false)}
+              >
+                &times;
+              </p>
             </div>
 
-            <div className='Username w-full bg-white/20 border border-white rounded-2xl mt-3 mb-6'>
-              <h2 className='p-2 text-white'>{payingMember}</h2>
+            <div className="Username w-full bg-white/20 border border-white rounded-2xl mt-3 mb-6">
+              <h2 className="p-2 text-white">{payingMember}</h2>
             </div>
 
-            <div className='flex justify-between flex-col md:flex-row gap-4 align-center mb-2 text-xs'>
-              <div className='flex flex-col w-full'>
-                <h4 className='text-white/85'>Amount (R)</h4>
+            <div className="flex justify-between flex-col md:flex-row gap-4 align-center mb-2 text-xs">
+              <div className="flex flex-col w-full">
+                <h4 className="text-white/85">Amount (R)</h4>
                 <input
-                  className='border-white mt-1 border rounded-xl p-3 focus:outline-none text-white'
-                  placeholder={` ${schemes[schemeSelectedState]?.monthlyContribution.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' }) || 0}`}
-                  id='payAmount'
+                  className="border-white mt-1 border rounded-xl p-3 focus:outline-none text-white"
+                  placeholder={` ${schemes[schemeSelectedState]?.monthlyContribution.toLocaleString("en-ZA", { style: "currency", currency: "ZAR" }) || 0}`}
+                  id="payAmount"
                   required
                   type="text"
                   onChange={handleExpenseAmountInputChange}
-                  value={newPaymentValue.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
+                  value={newPaymentValue
+                    .toLocaleString("en-ZA", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })
+                    .replace(".", ",")}
                 />
               </div>
-              <div className='flex flex-col w-full'>
-                <h4 className='text-white/85'>Date</h4>
+              <div className="flex flex-col w-full">
+                <h4 className="text-white/85">Date</h4>
                 <input
                   className="border-white mt-1 border w-full rounded-xl p-3 bg-transparent text-white focus:outline-none"
                   type="date"
                   id="payDate"
-                  defaultValue={new Date().toISOString().split('T')[0]} // Defaults to today
+                  defaultValue={new Date().toISOString().split("T")[0]} // Defaults to today
                 />
               </div>
             </div>
 
-            <div className='my-3 text-xs'>
-              <h4 className='text-white/85'>Payment Method</h4>
-              <select id='payMethod' className='p-3 border border-white rounded-xl w-full text-white mt-1 bg-black/40'>
+            <div className="my-3 text-xs">
+              <h4 className="text-white/85">Payment Method</h4>
+              <select
+                id="payMethod"
+                className="p-3 border border-white rounded-xl w-full text-white mt-1 bg-black/40"
+              >
                 <option>Cash</option>
                 <option>EFT</option>
                 <option>Mobile Money</option>
@@ -812,48 +1039,63 @@ function SchemeMembers({
             </div>
 
             <button
-              className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30'
+              className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30"
               onClick={() => {
                 const amount = newPaymentValue;
-                const method = document.getElementById('payMethod').value;
-                const date = document.getElementById('payDate').value;
+                const method = document.getElementById("payMethod").value;
+                const date = document.getElementById("payDate").value;
 
                 if (amount > 0) {
                   handleConfirmPayment(amount, method, date);
                   setPaymentMethod(method);
-                  setNewPaymentValue("")
+                  setNewPaymentValue("");
                   setIsPaying(false);
                 } else {
                   alert("Please enter a valid amount");
                 }
-              }}>
+              }}
+            >
               Save Payment
             </button>
           </div>
         </div>
       )}
 
-      {isEditPaymentHist &&
-        <div className='fixed z-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-        bg-black/50 h-screen w-screen'>
-          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-            <div className='flex justify-between align-center w-full text-white'>
-              <h1 className='text-2xl'>Record Payment</h1>
-              <p className='font-bold text-2xl cursor-pointer' onClick={() => setIsEditPaymentHist(false)}>&times;</p>
+      {isEditPaymentHist && (
+        <div
+          className="fixed z-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen"
+        >
+          <div
+            className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999"
+          >
+            <div className="flex justify-between align-center w-full text-white">
+              <h1 className="text-2xl">Record Payment</h1>
+              <p
+                className="font-bold text-2xl cursor-pointer"
+                onClick={() => setIsEditPaymentHist(false)}
+              >
+                &times;
+              </p>
             </div>
 
-            <div className='Username w-full bg-white/20 border border-white rounded-2xl mt-3 mb-6'>
-              <h2 className='p-2 text-white'>Sam</h2>
+            <div className="Username w-full bg-white/20 border border-white rounded-2xl mt-3 mb-6">
+              <h2 className="p-2 text-white">Sam</h2>
             </div>
-            <div className='flex justify-between flex-col md:flex-row gap-4 align-center mb-2 text-xs'>
-              <div className='flex flex-col w-full'>
-                <h4 className='text-white/85' >Amount (R) </h4>
-                <input className='border-white mt-1 border rounded-xl p-3 focus:border-white 
-              focus:outline-white text-white' placeholder='R ' type='number' name='payAmount' />
+            <div className="flex justify-between flex-col md:flex-row gap-4 align-center mb-2 text-xs">
+              <div className="flex flex-col w-full">
+                <h4 className="text-white/85">Amount (R) </h4>
+                <input
+                  className="border-white mt-1 border rounded-xl p-3 focus:border-white 
+              focus:outline-white text-white"
+                  placeholder="R "
+                  type="number"
+                  name="payAmount"
+                />
               </div>
-              <div className='flex flex-col w-full'>
-                <h4 className='text-white/85'>Date </h4>
+              <div className="flex flex-col w-full">
+                <h4 className="text-white/85">Date </h4>
                 <input
                   className="border-white mt-1 border w-full rounded-xl p-3 bg-transparent text-white focus:border-white focus:outline-none scheme-dark"
                   type="date"
@@ -861,10 +1103,12 @@ function SchemeMembers({
                 />
               </div>
             </div>
-            <div className='my-3 text-xs'>
-              <h4 className='text-white/85'>Payment Method</h4>
-              <select className='p-2 border border-white rounded-xl w-full focus:border-white 
-              focus:outline-white text-white mt-1 bg-black/40'>
+            <div className="my-3 text-xs">
+              <h4 className="text-white/85">Payment Method</h4>
+              <select
+                className="p-2 border border-white rounded-xl w-full focus:border-white 
+              focus:outline-white text-white mt-1 bg-black/40"
+              >
                 <option>Cash</option>
                 <option>EFT</option>
                 <option>Mobile Money</option>
@@ -873,52 +1117,65 @@ function SchemeMembers({
               </select>
             </div>
 
-            <button className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
-            hover:bg-white/30' onClick={() => { setIsEditPaymentHist(false) }}>
+            <button
+              className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
+            hover:bg-white/30"
+              onClick={() => {
+                setIsEditPaymentHist(false);
+              }}
+            >
               Save
             </button>
-
           </div>
-
         </div>
-      }
+      )}
 
       {isAddSchemeModal && (
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen'>
+        <div className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen">
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-
             {/* Header */}
-            <div className='flex justify-between align-center w-full text-white mb-4'>
-              <h1 className='text-2xl'>New Scheme</h1>
-              <p className='font-bold text-2xl cursor-pointer' onClick={() => setAddSchemeModal(false)}>&times;</p>
+            <div className="flex justify-between align-center w-full text-white mb-4">
+              <h1 className="text-2xl">New Scheme</h1>
+              <p
+                className="font-bold text-2xl cursor-pointer"
+                onClick={() => setAddSchemeModal(false)}
+              >
+                &times;
+              </p>
             </div>
 
             {/* Scheme Name Input */}
-            <div className='mb-2 text-xs'>
-              <h4 className='text-white/85'>Scheme Name</h4>
+            <div className="mb-2 text-xs">
+              <h4 className="text-white/85">Scheme Name</h4>
               <input
-                className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white'
+                className="border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white"
                 required
                 placeholder={`e.g. Social Club ${new Date().getFullYear()}`}
-                type='text'
+                type="text"
                 onChange={handleSchemeNameInputChange}
                 value={newScheme}
               />
             </div>
 
             {/* Default Contribution Input */}
-            <div className='mb-2 text-xs'>
-              <h4 className='text-white/85'>Default Monthly Contribution</h4>
+            <div className="mb-2 text-xs">
+              <h4 className="text-white/85">Default Monthly Contribution</h4>
               <input
-                className='border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white '
+                className="border-white mt-1 border w-full rounded-xl p-3 focus:border-white focus:outline-white text-white "
                 required
-                type='text'
-                placeholder='R 0,00'
+                type="text"
+                placeholder="R 0,00"
                 onChange={handleSchemeAmountInputChange}
-                value={newSchemeAmount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
+                value={newSchemeAmount
+                  .toLocaleString("en-ZA", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                  .replace(".", ",")}
               />
-              <p className='text-white/60 text-[9px] w-full mt-3 mb-6'>
-                This is the default amount you expect from each member every month.
+              <p className="text-white/60 text-[9px] w-full mt-3 mb-6">
+                This is the default amount you expect from each member every
+                month.
               </p>
             </div>
 
@@ -937,7 +1194,12 @@ function SchemeMembers({
                   className="w-full px-4 py-2 border border-gray-300 rounded-r-lg text-white focus:outline-none focus:border-white"
                   placeholder="R 0,00"
                   onChange={handleSchemeStartingBalInputChange}
-                  value={newSchemeStartingBal.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',')}
+                  value={newSchemeStartingBal
+                    .toLocaleString("en-ZA", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })
+                    .replace(".", ",")}
                 />
               </div>
 
@@ -955,8 +1217,18 @@ function SchemeMembers({
                   className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
                 >
                   {[
-                    "January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
                   ].map((month, index) => (
                     <option key={index} value={index} className="text-black">
                       {month}
@@ -971,7 +1243,10 @@ function SchemeMembers({
                   value={newSchemeYear}
                   className="w-25 bg-transparent px-3 py-2 text-white border border-l-0 border-white/60 rounded-r-lg text-xs focus:outline-none focus:border-white scheme-dark"
                 >
-                  {Array.from({ length: 2027 - 2006 + 1 }, (_, index) => 2006 + index).map((year) => (
+                  {Array.from(
+                    { length: 2027 - 2006 + 1 },
+                    (_, index) => 2006 + index,
+                  ).map((year) => (
                     <option key={year} value={year} className="text-black">
                       {year}
                     </option>
@@ -980,68 +1255,70 @@ function SchemeMembers({
               </div>
 
               <small className="block mt-2 text-[9px] text-white/60 leading-normal">
-                If you have existing funds from before using this app, enter the total
-                here and select the month/year it applies to.
+                If you have existing funds from before using this app, enter the
+                total here and select the month/year it applies to.
               </small>
 
               {/* Save Button */}
               <button
-                className='w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30'
+                className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30"
                 onClick={saveScheme}
               >
                 Save
               </button>
-
             </div>
           </div>
         </div>
       )}
 
       {isPaymentHistoryModal && (
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen'>
+        <div className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen">
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-
-            <div className='flex justify-between align-center w-full text-white mb-4'>
-              <h1 className='text-2xl'>{member}</h1>
-              <p className='font-bold text-2xl cursor-pointer' onClick={() => setPaymentHistoryModal(false)}>&times;</p>
+            <div className="flex justify-between align-center w-full text-white mb-4">
+              <h1 className="text-2xl">{member}</h1>
+              <p
+                className="font-bold text-2xl cursor-pointer"
+                onClick={() => setPaymentHistoryModal(false)}
+              >
+                &times;
+              </p>
             </div>
 
-            <div className='flex w-full gap-3 flex-col md:flex-row pb-4'>
+            <div className="flex w-full gap-3 flex-col md:flex-row pb-4">
               <div className="flex align-center justify-around">
                 <span className="flex items-center px-3 bg-white/60 border border-r-0 border-gray-300 rounded-l-xl text-white">
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </span>
                 <input
-                  className='border w-full md:w-50 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0 focus:outline-white text-white'
+                  className="border w-full md:w-50 border-gray-300 rounded-r-xl p-3 focus:border-white border-l-0 focus:outline-white text-white"
                   type="text"
-                  placeholder='Search History...'
+                  placeholder="Search History..."
                   onChange={(e) => setSearchHistory(e.target.value)}
                 />
               </div>
-              <button className='bg-green-900 text-white text-md hover:bg-green-800 border-none outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full md:w-auto'>
+              <button className="bg-green-900 text-white text-md hover:bg-green-800 border-none outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full md:w-auto">
                 <i className="fa-solid fa-file-csv"></i>
-                <span className='ml-2'>CSV</span>
+                <span className="ml-2">CSV</span>
               </button>
-              <button className='bg-red-900 text-white text-md hover:bg-red-800 border-none outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full md:w-auto'
-                onClick={() => setShowPdf(!showPdf)}>
+              <button
+                className="bg-red-900 text-white text-md hover:bg-red-800 border-none outline-none px-8 py-3 py-auto rounded-xl cursor-pointer w-full md:w-auto"
+                onClick={() => pdfGenerator(accordionData)}
+              >
                 <i className="fa-solid fa-file-pdf"></i>
-                <span className='ml-2'>PDF Statement</span>
+                <span className="ml-2">PDF Statement</span>
               </button>
             </div>
 
             <div className="max-h-100 overflow-y-auto pr-2 glass-scroll">
-
               {(() => {
                 const memberHistory = accordionData.filter(
-                  item =>
+                  (item) =>
                     (item.userName || "").toLowerCase() ===
-                    (payingMember || "").toLowerCase()
+                    (payingMember || "").toLowerCase(),
                 );
 
                 const hasTransactions = memberHistory.some(
-                  item =>
-                    item.yearHistory &&
-                    item.yearHistory.length > 0
+                  (item) => item.yearHistory && item.yearHistory.length > 0,
                 );
 
                 // No history at all for this member
@@ -1057,380 +1334,287 @@ function SchemeMembers({
                   );
                 }
 
-                return memberHistory.slice().reverse().map((item, index) => {
+                return memberHistory
+                  .slice()
+                  .reverse()
+                  .map((item, index) => {
+                    const query = searchHistory.toLowerCase().trim();
+                    const isOpen = openIndex === index;
 
-                  const query = searchHistory.toLowerCase().trim();
-                  const isOpen = openIndex === index;
+                    // Filter rows based on search
+                    const visibleRows = (item.yearHistory || []).filter((h) => {
+                      if (query === "") {
+                        return true;
+                      }
 
-                  // Filter rows based on search
-                  const visibleRows = (item.yearHistory || []).filter((h) => {
+                      const month = h.date
+                        ? new Date(h.date)
+                            .toLocaleString("default", {
+                              month: "long",
+                            })
+                            .toLowerCase()
+                        : "";
 
-                    if (query === "") {
-                      return true;
+                      const amount = (h.amount || "")
+                        .toString()
+                        .replace(/[\s,.]/g, "");
+
+                      const details = (h.details || "").toLowerCase();
+
+                      return (
+                        month.includes(query) ||
+                        amount.includes(query) ||
+                        details.includes(query) ||
+                        (h.date || "").includes(query)
+                      );
+                    });
+
+                    // If searching and nothing matches
+                    if (query !== "" && visibleRows.length === 0) {
+                      return null;
                     }
 
-                    const month = h.date
-                      ? new Date(h.date)
-                        .toLocaleString("default", {
-                          month: "long"
-                        })
-                        .toLowerCase()
-                      : "";
-
-                    const amount = (h.amount || "")
-                      .toString()
-                      .replace(/[\s,.]/g, "");
-
-                    const details = (h.details || "")
-                      .toLowerCase();
-
                     return (
-                      month.includes(query) ||
-                      amount.includes(query) ||
-                      details.includes(query) ||
-                      (h.date || "").includes(query)
-                    );
-                  });
+                      <div key={item.year} className="mb-2">
+                        <button
+                          onClick={() =>
+                            setOpenIndex(openIndex === index ? null : index)
+                          }
+                          className="histAccordian flex justify-between items-center text-white bg-white/40 w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50 focus:border cursor-pointer"
+                        >
+                          <h1 className="flex items-center">
+                            <i className="fa-solid fa-calendar-check"></i>
 
-                  // If searching and nothing matches
-                  if (
-                    query !== "" &&
-                    visibleRows.length === 0
-                  ) {
-                    return null;
-                  }
+                            <span className="ml-2 font-semibold">
+                              {item.year}
+                            </span>
+                          </h1>
 
-                  return (
-                    <div
-                      key={item.year}
-                      className="mb-2"
-                    >
-
-                      <button
-                        onClick={() =>
-                          setOpenIndex(
-                            openIndex === index
-                              ? null
-                              : index
-                          )
-                        }
-                        className="histAccordian flex justify-between items-center text-white bg-white/40 w-full px-5 py-6 my-1.5 rounded-xl transition-all duration-200 hover:bg-white/50 focus:border cursor-pointer"
-                      >
-
-                        <h1 className="flex items-center">
-                          <i className="fa-solid fa-calendar-check"></i>
-
-                          <span className="ml-2 font-semibold">
-                            {item.year}
-                          </span>
-                        </h1>
+                          <div
+                            className={`transition-transform duration-300 ${
+                              isOpen ? "rotate-180" : "rotate-0"
+                            }`}
+                          >
+                            <i className="fa-solid fa-chevron-down"></i>
+                          </div>
+                        </button>
 
                         <div
-                          className={`transition-transform duration-300 ${isOpen
-                            ? "rotate-180"
-                            : "rotate-0"
-                            }`}
-                        >
-                          <i className="fa-solid fa-chevron-down"></i>
-                        </div>
-
-                      </button>
-
-
-                      <div
-                        className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden ${isOpen
-                          ? "grid-rows-[1fr] py-4 my-1 opacity-100"
-                          : "grid-rows-[0fr] py-0 my-0 opacity-0"
+                          className={`grid transition-all duration-300 ease-in-out bg-white/10 rounded-xl px-5 overflow-hidden ${
+                            isOpen
+                              ? "grid-rows-[1fr] py-4 my-1 opacity-100"
+                              : "grid-rows-[0fr] py-0 my-0 opacity-0"
                           }`}
-                      >
+                        >
+                          <div className="overflow-hidden text-white/90 text-sm">
+                            {/* DESKTOP TABLE */}
+                            <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 shadow-sm mt-2">
+                              <table className="min-w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500">
+                                <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700">
+                                  <tr>
+                                    <th className="px-6 py-3">Date</th>
 
-                        <div className="overflow-hidden text-white/90 text-sm">
+                                    <th className="px-6 py-3">Month</th>
 
+                                    <th className="px-6 py-3">Amount</th>
 
-                          {/* DESKTOP TABLE */}
-                          <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 shadow-sm mt-2">
+                                    <th className="px-6 py-3">Details</th>
 
-                            <table className="min-w-full divide-y divide-gray-200 bg-white text-left text-sm text-gray-500">
+                                    <th className="px-6 py-3">Action</th>
+                                  </tr>
+                                </thead>
 
-                              <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-700">
+                                <tbody className="divide-y divide-gray-200">
+                                  {visibleRows.length > 0 ? (
+                                    visibleRows.map((h, i) => (
+                                      <tr
+                                        key={i}
+                                        className="hover:bg-gray-50 text-gray-900"
+                                      >
+                                        <td className="px-6 py-4">
+                                          {h.date || "-"}
+                                        </td>
 
-                                <tr>
-                                  <th className="px-6 py-3">
-                                    Date
-                                  </th>
+                                        <td className="px-6 py-4">
+                                          {h.date
+                                            ? new Date(h.date).toLocaleString(
+                                                "default",
+                                                {
+                                                  month: "long",
+                                                },
+                                              )
+                                            : "-"}
+                                        </td>
 
-                                  <th className="px-6 py-3">
-                                    Month
-                                  </th>
+                                        <td className="px-6 py-4 font-semibold">
+                                          {h.amount ? `R ${h.amount}` : "-"}
+                                        </td>
 
-                                  <th className="px-6 py-3">
-                                    Amount
-                                  </th>
+                                        <td className="px-6 py-4">
+                                          {h.details && (
+                                            <i className="fa-solid fa-money-bill-wave mr-2"></i>
+                                          )}
 
-                                  <th className="px-6 py-3">
-                                    Details
-                                  </th>
+                                          {h.details || "-"}
+                                        </td>
 
-                                  <th className="px-6 py-3">
-                                    Action
-                                  </th>
-                                </tr>
+                                        <td className="px-6 py-4">
+                                          <div className="flex gap-2 text-gray-500">
+                                            <span
+                                              onClick={() =>
+                                                setIsEditPaymentHist(true)
+                                              }
+                                              className="cursor-pointer hover:-translate-y-1 transition-transform border px-2 py-1 rounded-lg"
+                                            >
+                                              <i className="fa-regular fa-pen-to-square"></i>
+                                            </span>
 
-                              </thead>
+                                            <span
+                                              onClick={() =>
+                                                setIsDeletePaymentHist(true)
+                                              }
+                                              className="cursor-pointer hover:-translate-y-1 transition-transform border px-2 py-1 rounded-lg"
+                                            >
+                                              <i className="fa-solid fa-trash"></i>
+                                            </span>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    ))
+                                  ) : (
+                                    <tr>
+                                      <td
+                                        colSpan={5}
+                                        className="py-10 text-center text-gray-400"
+                                      >
+                                        No matching records found.
+                                      </td>
+                                    </tr>
+                                  )}
+                                </tbody>
+                              </table>
+                            </div>
 
-
-                              <tbody className="divide-y divide-gray-200">
-
-                                {visibleRows.length > 0 ? (
-
-                                  visibleRows.map((h, i) => (
-
-                                    <tr
-                                      key={i}
-                                      className="hover:bg-gray-50 text-gray-900"
-                                    >
-
-                                      <td className="px-6 py-4">
+                            {/* MOBILE CARDS */}
+                            <div className="block md:hidden space-y-4 mt-2 mb-2">
+                              {visibleRows.length > 0 ? (
+                                visibleRows.map((h, i) => (
+                                  <div
+                                    key={i}
+                                    className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-gray-600 space-y-2"
+                                  >
+                                    <div className="flex justify-between border-b pb-2">
+                                      <span className="font-semibold text-gray-900">
                                         {h.date || "-"}
-                                      </td>
+                                      </span>
 
-                                      <td className="px-6 py-4">
+                                      <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                                        Date
+                                      </span>
+                                    </div>
+
+                                    <div className="flex justify-between">
+                                      <span>Month:</span>
+
+                                      <span className="text-gray-900 font-medium">
                                         {h.date
-                                          ? new Date(
-                                            h.date
-                                          ).toLocaleString(
-                                            "default",
-                                            {
-                                              month: "long"
-                                            }
-                                          )
-                                          : "-"
-                                        }
-                                      </td>
+                                          ? new Date(h.date).toLocaleString(
+                                              "default",
+                                              {
+                                                month: "long",
+                                              },
+                                            )
+                                          : "-"}
+                                      </span>
+                                    </div>
 
-                                      <td className="px-6 py-4 font-semibold">
-                                        {h.amount
-                                          ? `R ${h.amount}`
-                                          : "-"
-                                        }
-                                      </td>
+                                    <div className="flex justify-between">
+                                      <span>Amount:</span>
 
-                                      <td className="px-6 py-4">
+                                      <span className="text-gray-900 font-semibold">
+                                        {h.amount ? `R ${h.amount}` : "-"}
+                                      </span>
+                                    </div>
 
+                                    <div className="flex justify-between border-t pt-2">
+                                      <span>Details:</span>
+
+                                      <span className="text-gray-900">
                                         {h.details && (
                                           <i className="fa-solid fa-money-bill-wave mr-2"></i>
                                         )}
 
                                         {h.details || "-"}
+                                      </span>
+                                    </div>
 
-                                      </td>
+                                    <div className="flex justify-end gap-3 pt-3">
+                                      <span
+                                        onClick={() =>
+                                          setIsEditPaymentHist(true)
+                                        }
+                                        className="px-3 py-1 border rounded-lg hover:-translate-y-1 transition-transform cursor-pointer text-gray-500"
+                                      >
+                                        <i className="fa-regular fa-pen-to-square"></i>
+                                      </span>
 
-                                      <td className="px-6 py-4">
-
-                                        <div className="flex gap-2 text-gray-500">
-
-                                          <span
-                                            onClick={() =>
-                                              setIsEditPaymentHist(true)
-                                            }
-                                            className="cursor-pointer hover:-translate-y-1 transition-transform border px-2 py-1 rounded-lg"
-                                          >
-                                            <i className="fa-regular fa-pen-to-square"></i>
-                                          </span>
-
-                                          <span
-                                            onClick={() =>
-                                              setIsDeletePaymentHist(true)
-                                            }
-                                            className="cursor-pointer hover:-translate-y-1 transition-transform border px-2 py-1 rounded-lg"
-                                          >
-                                            <i className="fa-solid fa-trash"></i>
-                                          </span>
-
-                                        </div>
-
-                                      </td>
-
-                                    </tr>
-
-                                  ))
-
-                                ) : (
-
-                                  <tr>
-                                    <td
-                                      colSpan={5}
-                                      className="py-10 text-center text-gray-400"
-                                    >
-                                      No matching records found.
-                                    </td>
-                                  </tr>
-
-                                )}
-
-                              </tbody>
-
-                            </table>
-
-                          </div>
-
-
-                          {/* MOBILE CARDS */}
-                          <div className="block md:hidden space-y-4 mt-2 mb-2">
-
-                            {visibleRows.length > 0 ? (
-
-                              visibleRows.map((h, i) => (
-
-                                <div
-                                  key={i}
-                                  className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm text-gray-600 space-y-2"
-                                >
-
-                                  <div className="flex justify-between border-b pb-2">
-
-                                    <span className="font-semibold text-gray-900">
-                                      {h.date || "-"}
-                                    </span>
-
-                                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                                      Date
-                                    </span>
-
+                                      <span
+                                        onClick={() =>
+                                          setIsDeletePaymentHist(true)
+                                        }
+                                        className="px-3 py-1 border rounded-lg hover:-translate-y-1 transition-transform cursor-pointer text-gray-500"
+                                      >
+                                        <i className="fa-solid fa-trash"></i>
+                                      </span>
+                                    </div>
                                   </div>
-
-
-                                  <div className="flex justify-between">
-
-                                    <span>
-                                      Month:
-                                    </span>
-
-                                    <span className="text-gray-900 font-medium">
-
-                                      {h.date
-                                        ? new Date(
-                                          h.date
-                                        ).toLocaleString(
-                                          "default",
-                                          {
-                                            month: "long"
-                                          }
-                                        )
-                                        : "-"
-                                      }
-
-                                    </span>
-
-                                  </div>
-
-
-                                  <div className="flex justify-between">
-
-                                    <span>
-                                      Amount:
-                                    </span>
-
-                                    <span className="text-gray-900 font-semibold">
-                                      {h.amount
-                                        ? `R ${h.amount}`
-                                        : "-"
-                                      }
-                                    </span>
-
-                                  </div>
-
-
-                                  <div className="flex justify-between border-t pt-2">
-
-                                    <span>
-                                      Details:
-                                    </span>
-
-                                    <span className="text-gray-900">
-
-                                      {h.details && (
-                                        <i className="fa-solid fa-money-bill-wave mr-2"></i>
-                                      )}
-
-                                      {h.details || "-"}
-
-                                    </span>
-
-                                  </div>
-
-
-                                  <div className="flex justify-end gap-3 pt-3">
-
-                                    <span
-                                      onClick={() =>
-                                        setIsEditPaymentHist(true)
-                                      }
-                                      className="px-3 py-1 border rounded-lg hover:-translate-y-1 transition-transform cursor-pointer text-gray-500"
-                                    >
-                                      <i className="fa-regular fa-pen-to-square"></i>
-                                    </span>
-
-                                    <span
-                                      onClick={() =>
-                                        setIsDeletePaymentHist(true)
-                                      }
-                                      className="px-3 py-1 border rounded-lg hover:-translate-y-1 transition-transform cursor-pointer text-gray-500"
-                                    >
-                                      <i className="fa-solid fa-trash"></i>
-                                    </span>
-
-                                  </div>
-
+                                ))
+                              ) : (
+                                <div className="py-8 text-center bg-white rounded-lg text-gray-500 shadow-sm">
+                                  No matching records found.
                                 </div>
-
-                              ))
-
-                            ) : (
-
-                              <div className="py-8 text-center bg-white rounded-lg text-gray-500 shadow-sm">
-                                No matching records found.
-                              </div>
-
-                            )}
-
+                              )}
+                            </div>
                           </div>
-
                         </div>
-
                       </div>
-
-                    </div>
-                  );
-                });
+                    );
+                  });
               })()}
-
             </div>
           </div>
         </div>
       )}
 
       {showPdf && (
-
-        <div className='fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-        bg-black/50 h-screen w-screen'>
-          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
-           w-full md:w-[90%] h-[90%] border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999">
-            <div className='flex justify-between items-center w-full text-white font-bold transition-all delay-300s'>
-              <h1 className='text-xl'>PDF Viewer</h1>
-              <div className='text-xl hover:bg-white/30 p-2 text-center rounded cursor-pointer'
-                onClick={() => setShowPdf(false)}>&times;</div>
+        <div
+          className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen"
+        >
+          <div
+            className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-full md:w-[90%] h-[90%] border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999"
+          >
+            <div className="flex justify-between items-center w-full text-white font-bold transition-all duration-300">
+              <h1 className="text-xl">PDF Viewer</h1>
+              <div
+                className="text-xl hover:bg-white/30 p-2 text-center rounded cursor-pointer"
+                onClick={() => setShowPdf(false)}
+              >
+                &times;
+              </div>
             </div>
-            <div className='h-[90%]' style={{ marginTop: '20px', border: '1px solid #ccc' }}>
+            <div
+              className="h-[90%]"
+              style={{ marginTop: "20px", border: "1px solid #ccc" }}
+            >
               <MemberAccountStatement />
             </div>
           </div>
         </div>
-
       )}
-
     </div>
-  )
+  );
 }
 
-export default SchemeMembers
+export default SchemeMembers;
