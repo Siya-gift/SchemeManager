@@ -1445,7 +1445,7 @@ console.log(PDFdata);
                                         </td>
 
                                         <td className="px-6 py-4 font-semibold">
-                                          {h.amount ? `R ${h.amount}` : "-"}
+                                          {(Number(h.amount).toLocaleString('en-ZA',{style:"currency", currency: "ZAR"}))}
                                         </td>
 
                                         <td className="px-6 py-4">
@@ -1530,7 +1530,7 @@ console.log(PDFdata);
                                       <span>Amount:</span>
 
                                       <span className="text-gray-900 font-semibold">
-                                        {h.amount ? `R ${h.amount}` : "-"}
+                                        {(Number(h.amount).toLocaleString('en-ZA',{style:"currency", currency: "ZAR"}))}
                                       </span>
                                     </div>
 

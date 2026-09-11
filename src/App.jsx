@@ -24,7 +24,6 @@ import Settings from './components/Settings.jsx'
 import SideBar from './components/SideBar.jsx'
 import MobileNav from './components/MobileNav.jsx'
 import MobileMenu from './components/MobileMenu.jsx'
-import MemberAccountStatement from './invoice/MemberAccountStatement';
 
 
 // gsap
