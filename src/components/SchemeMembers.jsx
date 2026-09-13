@@ -70,6 +70,7 @@ function SchemeMembers({
   const [deleteSchemeTargetIndex, setDeleteSchemeTargetIndex] = useState(null);
   const [editingMember, setEditingMember] = useState(null);
   const [PDFdata, setPDFdata] = useState(null);
+  const [PDFMemberdata, setPDFMemberdata] = useState(null);
 
   //popups states
   const [isDeleteMember, setIsDeleteMember] = useState(false);
@@ -283,8 +284,9 @@ function SchemeMembers({
     setAddSchemeModal(true);
   };
 
-  const paymentHistoryModal = (memberName) => {
-    setPayingMember(memberName);
+  const paymentHistoryModal = (member) => {
+    setPayingMember(member.memberName);
+    setPDFMemberdata(member)
     setPaymentHistoryModal(true);
   };
 
@@ -315,8 +317,7 @@ function SchemeMembers({
     setPDFdata(memberData)
     setShowPdf(!showPdf)
   };
-  
-console.log(PDFdata);
+
   return (
     <div
       className={`schemeMembers w-full min-h-screen p-4 md:p-5
@@ -472,9 +473,8 @@ console.log(PDFdata);
                       >
                         <td
                           className="py-4 px-2 align-middle font-medium truncate hover:text-white/70 cursor-pointer"
-                          onClick={() => paymentHistoryModal(member.memberName)}
-                          name={"View Payment History"}
-                        >
+                          onClick={() => paymentHistoryModal(member)}
+                          name={"View Payment History"}>
                           {idx + 1}. {member.memberName}
                         </td>
                         <td className="py-4 px-2 align-middle">
@@ -1603,10 +1603,10 @@ console.log(PDFdata);
               </div>
             </div>
             <div
-              className="h-[90%]"
+              className="h-[90%] "
               style={{ marginTop: "20px", border: "1px solid #ccc" }}
             >
-              <MemberAccountStatement PDFdata={PDFdata} selectedSchemeName={selectedSchemeName} />
+              <MemberAccountStatement PDFdata={PDFdata} PDFMemberdata={PDFMemberdata} selectedSchemeName={selectedSchemeName} />
             </div>
           </div>
         </div>

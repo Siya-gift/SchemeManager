@@ -1,7 +1,7 @@
 import { PDFViewer, Document, Page, View, Text } from "@react-pdf/renderer";
 import { styles } from "./style";
 
-const InvoicePDF = ({ PDFdata, selectedSchemeName }) => (
+const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
   <Document title={`${PDFdata[0]?.userName}_Statement_${PDFdata[0]?.year}`}>
     <Page size="A4" style={styles.page}>
       {/* Header section matching Statement_Crok_2026.pdf */}
@@ -36,7 +36,7 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName }) => (
         </View>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Current Account Status:</Text>
-          <Text style={styles.metaCell}>Arrears</Text>
+          <Text style={styles.metaCell}>{PDFMemberdata.status}</Text>
         </View>
       </View>
 
@@ -72,7 +72,7 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName }) => (
                       ? new Date(payment.date).toLocaleDateString("en-ZA", {
                           month: "long",
                           day: "numeric",
-                          year: "numeric",
+                          year: "numeric"
                         })
                       : "-"}
                   </Text>
@@ -170,12 +170,22 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName }) => (
 export default function MemberAccountStatement({
   PDFdata,
   selectedSchemeName,
+  PDFMemberdata
 }) {
   return (
-    <div className="w-full h-full">
-      <PDFViewer width="100%" height="100%">
-        <InvoicePDF PDFdata={PDFdata} selectedSchemeName={selectedSchemeName} />
-      </PDFViewer>
-    </div>
+    <>
+      <div className="w-full h-full">
+        <PDFViewer width="100%" height="100%">
+          <InvoicePDF
+            PDFdata={PDFdata}
+            selectedSchemeName={selectedSchemeName}
+            PDFMemberdata={PDFMemberdata}
+          />
+        </PDFViewer>
+      </div>
+      <div>
+        <button>Download PDF</button>
+      </div>
+    </>
   );
 }

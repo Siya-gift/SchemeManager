@@ -999,6 +999,7 @@ function App() {
       !scheme ||
       typeof scheme.monthlyContribution === "undefined"
     ) {
+      member.status = "Pending"
       return "Pending";
     }
 
@@ -1006,6 +1007,7 @@ function App() {
       Number(scheme.monthlyContribution) || 0;
 
     if (monthlyFee <= 0) {
+      member.status = "Pending"
       return "Pending";
     }
 
@@ -1021,12 +1023,14 @@ function App() {
     // =========================================================
 
     if (!member.joinedDate) {
+      member.status = "Pending"
       return "Pending";
     }
 
     const joinedDate = new Date(member.joinedDate);
 
     if (isNaN(joinedDate.getTime())) {
+      member.status = "Pending"
       return "Pending";
     }
 
@@ -1129,18 +1133,22 @@ function App() {
     if (previousArrears === 0) {
 
       if (paidThisMonth === 0) {
+        member.status = "Awaiting Payment"
         return "Awaiting Payment";
       }
 
       if (paidThisMonth < monthlyFee) {
+        member.status = "Partially Paid"
         return "Partially Paid";
       }
 
       if (paidThisMonth === monthlyFee) {
+        member.status = "Paid"
         return "Paid";
       }
 
       if (paidThisMonth > monthlyFee) {
+        member.status = "Ahead"
         return "Ahead";
       }
     }
@@ -1159,22 +1167,25 @@ function App() {
 
     // Still clearing old arrears/current contribution
     if (paidThisMonth < amountNeededToBecomePaid) {
+      member.status = "Arrears"
       return "Arrears";
     }
 
 
     // Old arrears cleared + current month paid
     if (paidThisMonth === amountNeededToBecomePaid) {
+      member.status = "Paid"
       return "Paid";
     }
 
 
     // More than everything required
     if (paidThisMonth > amountNeededToBecomePaid) {
+      member.status = "Ahead"
       return "Ahead";
     }
 
-
+    member.status = "Pending"
     return "Pending";
   };
 
