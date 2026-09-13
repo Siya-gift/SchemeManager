@@ -1,8 +1,10 @@
-import { PDFViewer, Document, Page, View, Text } from "@react-pdf/renderer";
+import { PDFViewer, Document, Page, View, Text, Line, Svg } from "@react-pdf/renderer";
 import { styles } from "./style";
+import React from 'react';
 
-const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
-  <Document title={`${PDFdata[0]?.userName}_Statement_${PDFdata[0]?.year}`}>
+// 1. Move helper calculations out or accept them as props to keep the PDF template pure
+const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata, totalExpected, totalRecorded, arrearsBalance, formatZAR }) => (
+  <Document title={`${PDFdata[0]?.userName}_Statement_${PDFdata[0]?.year}`} fileName={`${PDFdata[0]?.userName}_Statement_${PDFdata[0]?.year}`}>
     <Page size="A4" style={styles.page}>
       {/* Header section matching Statement_Crok_2026.pdf */}
       <View style={styles.header}>
@@ -11,6 +13,10 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
         </Text>
         <Text style={styles.subtitle}>MEMBER ACCOUNT STATEMENT</Text>
       </View>
+
+      <Svg viewBox="0 0 0 0" width="100%" height="40" xmlns="http://w3.org">
+        <Line x1="0" y1="8" x2="2000" y2="8" stroke="#c9c2b6" strokeWidth="1" />
+      </Svg>
 
       {/* Metadata */}
       <View style={styles.metaData}>
@@ -40,6 +46,10 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
         </View>
       </View>
 
+      <Svg viewBox="0 0 0 0" width="100%" height="40" xmlns="http://w3.org">
+        <Line x1="0" y1="8" x2="2000" y2="8" stroke="#c9c2b6" strokeWidth="1" />
+      </Svg>
+
       {/* Table */}
       <View style={styles.table}>
         <View style={styles.tableHeaderRow}>
@@ -60,7 +70,6 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
           </View>
         </View>
 
-        {/* Sample rows totalling the R 1500,00 paid shown in your dashboard */}
         {PDFdata[0]?.yearHistory?.length > 0 ? (
           PDFdata[0].yearHistory.map((payment, idx) =>
             payment ? (
@@ -70,10 +79,10 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
                   <Text style={styles.tableCell}>
                     {payment?.date
                       ? new Date(payment.date).toLocaleDateString("en-ZA", {
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric"
-                        })
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric"
+                      })
                       : "-"}
                   </Text>
                 </View>
@@ -83,8 +92,8 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
                   <Text style={styles.tableCell}>
                     {payment?.date
                       ? new Date(payment.date).toLocaleDateString("en-ZA", {
-                          month: "long",
-                        })
+                        month: "long",
+                      })
                       : "-"}
                   </Text>
                 </View>
@@ -99,7 +108,7 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
                 {/* 4. Details */}
                 <View style={styles.tableCol}>
                   <Text style={styles.tableCell}>
-                    {payment?.details || "-"}
+                    {payment?.details || payment?.method || "-"}
                   </Text>
                 </View>
 
@@ -115,7 +124,6 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
             ) : null,
           )
         ) : (
-          /* Safe fallback that spans the layout appropriately */
           <View
             style={{
               flex: 1,
@@ -134,23 +142,29 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata }) => (
         )}
       </View>
 
+      <Svg viewBox="0 0 0 0" width="100%" height="40" xmlns="http://w3.org">
+        <Line x1="0" y1="8" x2="2000" y2="8" stroke="#c9c2b6" strokeWidth="1" />
+      </Svg>
+
       {/* Annual Summary */}
       <View style={styles.summary}>
         <Text style={styles.summaryHeader}>Annual Summary</Text>
+
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>
-            Total Payments Expected (to date):
-          </Text>
-          {/* Example expected based on R 500/mo */}
-          <Text style={styles.summaryValue}>R 2 000,00</Text>
+          <Text style={styles.summaryLabel}>Total Payments Expected (to date):</Text>
+          <Text style={styles.summaryValue}>{formatZAR(totalExpected)}</Text>
         </View>
+
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Total Payments Recorded:</Text>
-          <Text style={styles.summaryValue}>R 1 500,00</Text>
+          <Text style={styles.summaryValue}>{formatZAR(totalRecorded)}</Text>
         </View>
+
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Arrears Balance:</Text>
-          <Text style={styles.summaryValue}>R 500,00</Text>
+          <Text style={[styles.summaryValue, arrearsBalance > 0 && { color: 'red' }]}>
+            {formatZAR(arrearsBalance)}
+          </Text>
         </View>
       </View>
 
@@ -172,20 +186,57 @@ export default function MemberAccountStatement({
   selectedSchemeName,
   PDFMemberdata
 }) {
+
+  // 1. Safely extract member details
+  const member = PDFdata?.[0] || {};
+  const totalRecorded = member.yearHistory?.reduce((sum, payment) => sum + parseInt(payment.amount || 0), 0) || 0;
+
+  // 2. Fallback dependencies to prevent breakdowns if structural mappings vary
+  const joinedDateStr = PDFMemberdata?.joinedDate
+  const monthlyFee = PDFMemberdata?.transactions[0]?.amount || member.transactions?.[0]?.amount || 500;
+
+  // 3. Dynamic Date Calculations (Vanilla JS)
+  const calculateExpected = () => {
+    const today = new Date();
+    const joined = new Date(joinedDateStr);
+
+    if (joined > today) return 0;
+
+    // Calculate difference in months
+    const yearDiff = today.getFullYear() - joined.getFullYear();
+    const monthDiff = today.getMonth() - joined.getMonth();
+    let totalMonths = (yearDiff * 12) + monthDiff;
+
+    // If today's day of the month hasn't reached the billing day yet, subtract a month
+    if (today.getDate() < joined.getDate()) {
+      totalMonths--;
+    }
+
+    // Include the first month (signup day payment)
+    const expectedCycles = totalMonths + 1;
+    return expectedCycles * monthlyFee;
+  };
+
+  const totalExpected = calculateExpected();
+  const arrearsBalance = Math.max(0, totalExpected - totalRecorded);
+
+  // 4. Currency Formatter for ZAR (en-ZA)
+  const formatZAR = (value) => 
+    value.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+
   return (
-    <>
-      <div className="w-full h-full">
-        <PDFViewer width="100%" height="100%">
-          <InvoicePDF
-            PDFdata={PDFdata}
-            selectedSchemeName={selectedSchemeName}
-            PDFMemberdata={PDFMemberdata}
-          />
-        </PDFViewer>
-      </div>
-      <div>
-        <button>Download PDF</button>
-      </div>
-    </>
+    <div className="w-full h-full">
+      <PDFViewer width="100%" height="100%">
+        <InvoicePDF 
+          PDFdata={PDFdata}
+          selectedSchemeName={selectedSchemeName}
+          PDFMemberdata={PDFMemberdata}
+          totalExpected={totalExpected}
+          totalRecorded={totalRecorded}
+          arrearsBalance={arrearsBalance}
+          formatZAR={formatZAR}
+        />
+      </PDFViewer>
+    </div>
   );
 }
