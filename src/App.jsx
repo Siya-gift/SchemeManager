@@ -10,6 +10,7 @@ import crustBg from './images/bg.png'
 
 
 
+
 //tabs
 import Profile from './components/Profile.jsx'
 import Dashboard from './components/Dashboard.jsx'
@@ -237,7 +238,7 @@ function App() {
       yearHistory: [
         { date: "2026-07-16", amount: "500.00", details: "Cash" },
         { date: "2026-05-16", amount: "500.00", details: "Cash" },
-        { date: "2026-04-16", amount: "500.00", details: "Cash" }
+        { date: "2026-06-16", amount: "500.00", details: "Cash" }
       ]
     },
     {
@@ -1430,7 +1431,7 @@ function App() {
           topCategoryAmount={topCategoryAmount} topCategoryPercentage={topCategoryPercentage} totalSpentForRefundsAndCredits={totalSpentForRefundsAndCredits} totalTransactionsForRefundsAndCredits={totalTransactionsForRefundsAndCredits}
           selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference} setLatestTransactions={setLatestTransactions}
         />
-        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} />
+        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} filteredMembers={filteredMembers} schemes={schemes} selectedSchemeName={selectedSchemeName}/>
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} LatestTransactions={LatestTransactions}
           selectedSchemeName={selectedSchemeName} logDetails={logDetails} setLogDetailsModal={setLogDetailsModal} logDetailsModal={logDetailsModal} setLogDetailsMemberName={setLogDetailsMemberName} setLogDetailsDate={setLogDetailsDate} setLogDetailsDescription={setLogDetailsDescription}
           setLogDetailsAmount={setLogDetailsAmount} setLogDetailsMethod={setLogDetailsMethod} setLogDetailsOccuredPeriod={setLogDetailsOccuredPeriod} setLogDetailsJoinedDate={setLogDetailsJoinedDate}

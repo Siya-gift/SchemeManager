@@ -119,85 +119,69 @@ function ActivityHistory({
             h-full overflow-auto pr-2"
           >
 
-            {latestTransactionsForSelectedScheme.length === 0 ? (
+            {/* Fix: Added optional chaining (?.) and an array fallback (|| []) to avoid undefined crashes */}
+{(latestTransactionsForSelectedScheme || []).length === 0 ? (
+  <div
+    className="text-center text-white/50
+    py-10 w-full h-full
+    flex justify-center items-center
+    flex-col gap-2"
+  >
+    <div className="text-9xl">
+      <i className="fa-solid fa-hourglass-start"></i>
+    </div>
 
-              <div
-                className="text-center text-white/50
-                py-10 w-full h-full
-                flex justify-center items-center
-                flex-col gap-2"
-              >
-                <div className="text-9xl">
-                  <i className="fa-solid fa-hourglass-start"></i>
-                </div>
+    <p>
+      No transactions
+      <br />
+      available
+    </p>
+  </div>
+) : (
+  (latestTransactionsForSelectedScheme || []).map((transaction, idx) => (
+    <li
+      key={idx}
+      className="flex items-center
+      justify-between
+      border-b border-white/10
+      py-3 w-full
+      hover:bg-white/10
+      transition-all cursor-pointer
+      px-2 rounded-lg
+      hover:text-white gap-2"
+      onClick={() => logDetailsModalWithValues(transaction)}
+    >
+      {/* OCCURRED PERIOD */}
+      <p
+        className="text-white/70 text-sm
+        w-24 md:w-1/4
+        shrink-0 text-left"
+      >
+        {transaction.occuredPeriod}
+      </p>
 
-                <p>
-                  No transactions
-                  <br />
-                  available
-                </p>
-              </div>
+      {/* DESCRIPTION */}
+      <p
+        className="text-white/90 text-sm
+        text-left flex-1 truncate"
+      >
+        {transaction.description}
+      </p>
 
-            ) : (
+      {/* AMOUNT */}
+      <p
+        className="text-white/90 text-sm
+        shrink-0 text-right
+        whitespace-nowrap"
+      >
+        {hasValue(transaction.amount)
+          ? formatAmount(transaction.amount)
+          : transaction.memberName}
+      </p>
+    </li>
+  ))
+)}
 
-              latestTransactionsForSelectedScheme.map(
-                (transaction, idx) => (
-
-                  <li
-                    key={idx}
-                    className="flex items-center
-                    justify-between
-                    border-b border-white/10
-                    py-3 w-full
-                    hover:bg-white/10
-                    transition-all cursor-pointer
-                    px-2 rounded-lg
-                    hover:text-white gap-2"
-                    onClick={() =>
-                      logDetailsModalWithValues(
-                        transaction
-                      )
-                    }
-                  >
-
-                    {/* OCCURRED PERIOD */}
-
-                    <p
-                      className="text-white/70 text-sm
-                      w-24 md:w-1/4
-                      shrink-0 text-left"
-                    >
-                      {transaction.occuredPeriod}
-                    </p>
-
-                    {/* DESCRIPTION */}
-
-                    <p
-                      className="text-white/90 text-sm
-                      text-left flex-1 truncate"
-                    >
-                      {transaction.description}
-                    </p>
-
-                    {/* AMOUNT */}
-
-                    <p
-                      className="text-white/90 text-sm
-                      shrink-0 text-right
-                      whitespace-nowrap"
-                    >
-                      {hasValue(transaction.amount)
-                        ? formatAmount(
-                          transaction.amount
-                        )
-                        : transaction.memberName}
-                    </p>
-
-                  </li>
-                )
-              )
-
-            )}
 
           </ul>
         </div>

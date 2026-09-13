@@ -3,7 +3,7 @@ import { styles } from "./style";
 import React from 'react';
 
 // 1. Move helper calculations out or accept them as props to keep the PDF template pure
-const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata, totalExpected, totalRecorded, arrearsBalance, formatZAR }) => (
+const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata, totalExpected, totalRecorded, arrearsBalance, formatZAR, schemes }) => (
   <Document title={`${PDFdata[0]?.userName}_Statement_${PDFdata[0]?.year}`} fileName={`${PDFdata[0]?.userName}_Statement_${PDFdata[0]?.year}`}>
     <Page size="A4" style={styles.page}>
       {/* Header section matching Statement_Crok_2026.pdf */}
@@ -43,6 +43,37 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata, totalExpected,
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Current Account Status:</Text>
           <Text style={styles.metaCell}>{PDFMemberdata.status}</Text>
+        </View>
+
+        {PDFMemberdata.status === "Arrears" ? (
+          <View style={styles.metaRow}>
+            <Text style={styles.metaLabel}>Months Behind:</Text>
+            <Text style={styles.metaCell}>
+              {PDFMemberdata.status === "Arrears" ? (() => {
+                const joined = new Date(PDFMemberdata.joinedDate);
+                const today = new Date();
+
+                // 1. Calculate whole months from years and months
+                const wholeMonths = (today.getFullYear() - joined.getFullYear(PDFMemberdata.joinedDate)) * 12 + (today.getMonth() - joined.getMonth(PDFMemberdata.joinedDate));
+
+                // 2. Add or subtract fractional days based on a standard 30-day month
+                const dayDifference = today.getDate() - joined.getDate();
+                const fractionalMonths = wholeMonths + (dayDifference / 30);
+
+                // 3. Round to 1 decimal place (e.g., 9.5) and keep it positive
+                const finalMonths = Math.max(0, fractionalMonths).toFixed(1);
+
+                return `${finalMonths}_Mo`;
+              })() : ""}
+
+            </Text>
+          </View>
+        ) : ""}
+
+
+        <View style={styles.metaRow}>
+          <Text style={styles.metaLabel}>Member Joining Date:</Text>
+          <Text style={styles.metaCell}>{new Date(PDFMemberdata.joinedDate).toDateString('en-ZA', { day: "2-digit", month: "long", year: "numeric" })}</Text>
         </View>
       </View>
 
@@ -184,7 +215,8 @@ const InvoicePDF = ({ PDFdata, selectedSchemeName, PDFMemberdata, totalExpected,
 export default function MemberAccountStatement({
   PDFdata,
   selectedSchemeName,
-  PDFMemberdata
+  PDFMemberdata,
+  schemes
 }) {
 
   // 1. Safely extract member details
@@ -193,10 +225,16 @@ export default function MemberAccountStatement({
 
   // 2. Fallback dependencies to prevent breakdowns if structural mappings vary
   const joinedDateStr = PDFMemberdata?.joinedDate
-  const monthlyFee = PDFMemberdata?.transactions[0]?.amount || member.transactions?.[0]?.amount || 500;
+  // Find the specific scheme object first, then safely grab its contribution fee
+  const activeScheme = schemes.find((sName) => sName.scheme === selectedSchemeName);
+
+  // Use parseFloat to preserve decimals/cents for ZAR, default to 0 if not found
+  const monthlyFee = activeScheme ? parseFloat(activeScheme.monthlyContribution) : 0;
+
 
   // 3. Dynamic Date Calculations (Vanilla JS)
   const calculateExpected = () => {
+
     const today = new Date();
     const joined = new Date(joinedDateStr);
 
@@ -208,7 +246,7 @@ export default function MemberAccountStatement({
     let totalMonths = (yearDiff * 12) + monthDiff;
 
     // If today's day of the month hasn't reached the billing day yet, subtract a month
-    if (today.getDate() < joined.getDate()) {
+    if (today.getMonth() < joined.getMonth()) {
       totalMonths--;
     }
 
@@ -221,13 +259,13 @@ export default function MemberAccountStatement({
   const arrearsBalance = Math.max(0, totalExpected - totalRecorded);
 
   // 4. Currency Formatter for ZAR (en-ZA)
-  const formatZAR = (value) => 
+  const formatZAR = (value) =>
     value.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
 
   return (
-    <div className="w-full h-full">
-      <PDFViewer width="100%" height="100%">
-        <InvoicePDF 
+    <div className="w-full h-full rounded-xl overflow-hidden shadow-inner">
+      <PDFViewer width="100%" height="100%" >
+        <InvoicePDF
           PDFdata={PDFdata}
           selectedSchemeName={selectedSchemeName}
           PDFMemberdata={PDFMemberdata}
@@ -235,6 +273,7 @@ export default function MemberAccountStatement({
           totalRecorded={totalRecorded}
           arrearsBalance={arrearsBalance}
           formatZAR={formatZAR}
+          schemes={schemes}
         />
       </PDFViewer>
     </div>

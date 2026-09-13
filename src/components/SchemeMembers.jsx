@@ -1604,9 +1604,9 @@ function SchemeMembers({
             </div>
             <div
               className="h-[90%] "
-              style={{ marginTop: "20px", border: "1px solid #ccc" }}
+              style={{ marginTop: "20px"}}
             >
-              <MemberAccountStatement PDFdata={PDFdata} PDFMemberdata={PDFMemberdata} selectedSchemeName={selectedSchemeName} />
+              <MemberAccountStatement PDFdata={PDFdata} PDFMemberdata={PDFMemberdata} selectedSchemeName={selectedSchemeName} schemes={schemes} />
             </div>
           </div>
         </div>
