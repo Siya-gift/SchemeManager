@@ -1,9 +1,9 @@
-import {React, useState} from 'react'
+import { React, useState } from 'react'
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import  SchemeSummaryReport  from "../invoice/SchemeSummaryRpt";
+import SchemeSummaryReport from "../invoice/SchemeSummaryRpt";
 
 function Insights({ toggleState, toggleMobileState, formattedDate, openCalender, filteredMembers, selectedSchemeName, schemes }) {
-  
+
   const [showPdf, setShowPdf] = useState(false);
 
   const activeScheme = schemes.find((sName) => sName.scheme === selectedSchemeName);
@@ -12,7 +12,7 @@ function Insights({ toggleState, toggleMobileState, formattedDate, openCalender,
   // 1. Updated to accept a member's individual joined date
   const calculateExpected = (joinedDateStr) => {
     if (!joinedDateStr) return 0;
-    
+
     const today = new Date();
     const joined = new Date(joinedDateStr);
     if (joined > today) return 0;
@@ -34,7 +34,7 @@ function Insights({ toggleState, toggleMobileState, formattedDate, openCalender,
 
   // --- Dynamic calculations for the 3 OKR Cards ---
   const totalPaidSum = filteredMembers.reduce((acc, m) => acc + (Number(m.totPaid) || 0), 0);
-  
+
   // Card 1: Count members who have contributed anything at all
   const payingMembersCount = filteredMembers.filter(m => Number(m.totPaid) > 0).length;
 
@@ -49,7 +49,7 @@ function Insights({ toggleState, toggleMobileState, formattedDate, openCalender,
     const expectedAmount = calculateExpected(member.joinedDate);
     const amountOwed = expectedAmount - member.totPaid;
     const monthsBehind = monthlyFee > 0 ? Math.max(0, Math.ceil(amountOwed / monthlyFee)) : 0;
-    
+
     if (monthsBehind > 0) {
       generalBehindCount++;
       if (monthsBehind >= 3) {
@@ -59,82 +59,82 @@ function Insights({ toggleState, toggleMobileState, formattedDate, openCalender,
   });
 
   const getAvgPayingMembersOver3Months = () => {
-  // 1. Get the boundary dates for the last 3 full months
-  const today = new Date();
-  
-  // If your app uses a transaction array, filter them here. 
-  // For now, if you only have the current active list:
-  const currentPaying = filteredMembers.filter(m => Number(m.totPaid) > 0).length;
-  
-  // Note: To make this 100% accurate historically, you would map over your payment data:
-  // const month1Count = payments.filter(p => isInMonth(p.date, 0)).distinct(p => p.memberId).length;
-  
-  // If simulating based on your current state (e.g. active paying members running average):
-  const simulatedAverage = currentPaying; // Replace with historical calculation if transaction arrays are available
-  
-  return simulatedAverage;
-};
+    // 1. Get the boundary dates for the last 3 full months
+    const today = new Date();
 
-const avgPayingMembers = getAvgPayingMembersOver3Months();
+    // If your app uses a transaction array, filter them here. 
+    // For now, if you only have the current active list:
+    const currentPaying = filteredMembers.filter(m => Number(m.totPaid) > 0).length;
 
-const getStatusTheme = (status, monthsBehind) => {
-  const cleanStatus = status?.toLowerCase() || '';
+    // Note: To make this 100% accurate historically, you would map over your payment data:
+    // const month1Count = payments.filter(p => isInMonth(p.date, 0)).distinct(p => p.memberId).length;
 
-  // 1. Ahead / Paid Up
-  if (monthsBehind === 0 && cleanStatus.includes('ahead')) {
-    return {
-      bg: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-      dot: 'bg-emerald-500',
-      label: 'Paid Ahead'
-    };
-  }
+    // If simulating based on your current state (e.g. active paying members running average):
+    const simulatedAverage = currentPaying; // Replace with historical calculation if transaction arrays are available
 
-  // 2. Good Standing / Fully Paid
-  if (monthsBehind === 0) {
-    return {
-      bg: 'bg-green-50 text-green-700 border border-green-200',
-      dot: 'bg-green-500',
-      label: status || 'Paid Up'
-    };
-  }
-
-  // 3. High Risk (3+ Months Behind)
-  if (monthsBehind >= 3) {
-    return {
-      bg: 'bg-rose-50 text-rose-700 border border-rose-200 animation-pulse',
-      dot: 'bg-rose-500',
-      label: status || 'High Risk'
-    };
-  }
-
-  // 4. Default Arrears / Warning (1-2 Months Behind)
-  return {
-    bg: 'bg-amber-50 text-amber-700 border border-amber-200',
-    dot: 'bg-amber-500',
-    label: status || 'In Arrears'
+    return simulatedAverage;
   };
-};
 
+  const avgPayingMembers = getAvgPayingMembersOver3Months();
 
-// ... Keep all calculations inside the main Insights component exactly the same ...
-// Under your existing metrics block, map out the formatted arrays needed for the document:
-const pdfDataList = filteredMembers.map(member => {
-  const expectedAmount = calculateExpected(member.joinedDate);
-  const amountOwed = expectedAmount - member.totPaid;
-  const monthsBehind = monthlyFee > 0 ? Math.max(0, Math.ceil(amountOwed / monthlyFee)) : 0;
-  return {
-    memberName: member.memberName,
-    status: member.status,
-    monthsBehind: monthsBehind,
-    amountOwed: amountOwed
+  const getStatusTheme = (status, monthsBehind) => {
+    const cleanStatus = status?.toLowerCase() || '';
+
+    // 1. Ahead / Paid Up
+    if (monthsBehind === 0 && cleanStatus.includes('ahead')) {
+      return {
+        bg: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+        dot: 'bg-emerald-500',
+        label: 'Paid Ahead'
+      };
+    }
+
+    // 2. Good Standing / Fully Paid
+    if (monthsBehind === 0) {
+      return {
+        bg: 'bg-green-50 text-green-700 border border-green-200',
+        dot: 'bg-green-500',
+        label: status || 'Paid Up'
+      };
+    }
+
+    // 3. High Risk (3+ Months Behind)
+    if (monthsBehind >= 3) {
+      return {
+        bg: 'bg-rose-50 text-rose-700 border border-rose-200 animation-pulse',
+        dot: 'bg-rose-500',
+        label: status || 'High Risk'
+      };
+    }
+
+    // 4. Default Arrears / Warning (1-2 Months Behind)
+    return {
+      bg: 'bg-amber-50 text-amber-700 border border-amber-200',
+      dot: 'bg-amber-500',
+      label: status || 'In Arrears'
+    };
   };
-});
 
-// Calculate metrics from the document structure
-const totalOutstandingAmount = pdfDataList.reduce((acc, curr) => acc + curr.amountOwed, 0);
-const complianceRatePercentage = filteredMembers.length > 0 
-  ? Math.round((filteredMembers.filter(m => (calculateExpected(m.joinedDate) - m.totPaid) <= 0).length / filteredMembers.length) * 100) 
-  : 0;
+
+  // ... Keep all calculations inside the main Insights component exactly the same ...
+  // Under your existing metrics block, map out the formatted arrays needed for the document:
+  const pdfDataList = filteredMembers.map(member => {
+    const expectedAmount = calculateExpected(member.joinedDate);
+    const amountOwed = expectedAmount - member.totPaid;
+    const monthsBehind = monthlyFee > 0 ? Math.max(0, Math.ceil(amountOwed / monthlyFee)) : 0;
+    return {
+      memberName: member.memberName,
+      status: member.status,
+      monthsBehind: monthsBehind,
+      amountOwed: amountOwed
+    };
+  });
+
+  // Calculate metrics from the document structure
+  const totalOutstandingAmount = pdfDataList.reduce((acc, curr) => acc + curr.amountOwed, 0);
+  const complianceRatePercentage = filteredMembers.length > 0
+    ? Math.round((filteredMembers.filter(m => (calculateExpected(m.joinedDate) - m.totPaid) <= 0).length / filteredMembers.length) * 100)
+    : 0;
 
 
 
@@ -154,16 +154,16 @@ const complianceRatePercentage = filteredMembers.length > 0
       <div className='okrContainer flex flex-col md:flex-row gap-4 w-full transition-all duration-300'>
         {/* Card 1: Paying Members */}
         {/* Card 1: Average Paying Members over 3 Months */}
-<div className='bg-[linear-gradient(135deg,#4f46e5_0%,#3730a3_100%)] shadow-[0_5px_15px_rgba(79,70,229,0.2)] cursor-pointer text-white p-4 rounded-xl flex flex-col gap-2 flex-1 hover:-translate-y-1 transition-translate duration-300'>
-  <h3 className='text-white/75 text-sm'>
-    <i className="fas fa-users me-2"></i>
-    <span className='ml-2'>Average Paying Members</span>
-  </h3>
-  <h1 className='text-2xl font-bold'>
-    {avgPayingMembers.toFixed(1)}
-  </h1>
-  <h3 className='text-white/75 text-sm'>Avg. over 3 mo</h3>
-</div>
+        <div className='bg-[linear-gradient(135deg,#4f46e5_0%,#3730a3_100%)] shadow-[0_5px_15px_rgba(79,70,229,0.2)] cursor-pointer text-white p-4 rounded-xl flex flex-col gap-2 flex-1 hover:-translate-y-1 transition-translate duration-300'>
+          <h3 className='text-white/75 text-sm'>
+            <i className="fas fa-users me-2"></i>
+            <span className='ml-2'>Average Paying Members</span>
+          </h3>
+          <h1 className='text-2xl font-bold'>
+            {avgPayingMembers.toFixed(1)}
+          </h1>
+          <h3 className='text-white/75 text-sm'>Avg. over 3 mo</h3>
+        </div>
 
 
         {/* Card 2: Averages */}
@@ -202,7 +202,7 @@ const complianceRatePercentage = filteredMembers.length > 0
           <h3 className='text-xl text-white'>Detailed Risk Report</h3>
           <button className='bg-red-900 text-white text-md 
           hover:bg-red-800 border-none outline-none 
-          px-4 py-2 rounded-xl cursor-pointer w-full md:w-auto' onClick={()=> setShowPdf(!showPdf)}>
+          px-4 py-2 rounded-xl cursor-pointer w-full md:w-auto' onClick={() => setShowPdf(!showPdf)}>
             <i className="fa-solid fa-file-pdf"></i>
             <span className='ml-2'>Scheme Summary Report</span>
           </button>
@@ -227,42 +227,41 @@ const complianceRatePercentage = filteredMembers.length > 0
                 const expectedAmount = calculateExpected(member.joinedDate);
                 const amountOwed = expectedAmount - member.totPaid;
                 const monthsBehind = monthlyFee > 0 ? Math.max(0, Math.ceil(amountOwed / monthlyFee)) : 0;
-                
+
                 return (
                   <tr key={member.id || index} className="hover:bg-gray-50 transition-colors cursor-pointer group">
                     <td className="px-6 py-4 font-medium text-gray-900 group-hover:text-blue-600 hover:underline transition-colors">
                       {member.memberName}
                     </td>
-                    
+
                     <td className="px-6 py-4 text-gray-900 whitespace-nowrap">
                       {expectedAmount.toLocaleString('en-ZA', { style: "currency", currency: "ZAR" })}
                     </td>
-                    
+
                     <td className="px-6 py-4 text-gray-900 whitespace-nowrap">
                       {Number(member.totPaid).toLocaleString('en-ZA', { style: "currency", currency: "ZAR" })}
                     </td>
-                    
-                    <td className="px-6 py-4">
-  {(() => {
-    const theme = getStatusTheme(member.status, monthsBehind);
-    return (
-      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm ${theme.bg}`}>
-        <span className={`h-1.5 w-1.5 rounded-full ${theme.dot}`}></span>
-        <span className="flex flex-col">
-          <span>
-            {monthsBehind === 0 ? 'Up to date' : `${monthsBehind} ${monthsBehind === 1 ? 'Month' : 'Months'}`}
-          </span>
-          <span className="text-[10px] opacity-80 uppercase tracking-wider">{theme.label}</span>
-        </span>
-      </span>
-    );
-  })()}
-</td>
 
-                    
-                    <td className={`px-6 py-4 text-right font-semibold font-mono ${
-                      amountOwed <= 0 ? 'text-emerald-600' : 'text-rose-600'
-                    }`}>
+                    <td className="px-6 py-4">
+                      {(() => {
+                        const theme = getStatusTheme(member.status, monthsBehind);
+                        return (
+                          <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm ${theme.bg}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${theme.dot}`}></span>
+                            <span className="flex flex-col">
+                              <span className="no-wrap">
+                                {monthsBehind === 0 ? 'Up to date' : `${monthsBehind} ${monthsBehind === 1 ? 'Month' : 'Months'}`}
+                              </span>
+                              <span className="text-[10px] opacity-80 uppercase tracking-wider">{theme.label}</span>
+                            </span>
+                          </span>
+                        );
+                      })()}
+                    </td>
+
+
+                    <td className={`px-6 py-4 text-right font-semibold font-mono ${amountOwed <= 0 ? 'text-emerald-600' : 'text-rose-600'
+                      }`}>
                       {amountOwed <= 0 ? (
                         <>
                           {Math.abs(amountOwed).toLocaleString('en-ZA', { style: "currency", currency: "ZAR" })}
@@ -276,13 +275,13 @@ const complianceRatePercentage = filteredMembers.length > 0
               })
             ) : (
 
-  // 2. Fallback if the array is empty
-  <tr>
-    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-      No members found
-    </td>
-  </tr>
-)}
+              // 2. Fallback if the array is empty
+              <tr>
+                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                  No members found
+                </td>
+              </tr>
+            )}
 
           </tbody>
         </table>
@@ -311,15 +310,15 @@ const complianceRatePercentage = filteredMembers.length > 0
             </div>
             <div
               className="h-[90%] "
-              style={{ marginTop: "20px"}}
+              style={{ marginTop: "20px" }}
             >
               <SchemeSummaryReport
-          data={pdfDataList} 
-          totalOutstanding={totalOutstandingAmount}
-          complianceRate={complianceRatePercentage}
-          totalBeneficiaries={filteredMembers.length}
-          selectedSchemeName={selectedSchemeName}
-        />
+                data={pdfDataList}
+                totalOutstanding={totalOutstandingAmount}
+                complianceRate={complianceRatePercentage}
+                totalBeneficiaries={filteredMembers.length}
+                selectedSchemeName={selectedSchemeName}
+              />
             </div>
           </div>
         </div>
