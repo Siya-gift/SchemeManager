@@ -210,7 +210,7 @@ function Insights({ toggleState, toggleMobileState, formattedDate, openCalender,
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm mt-4 h-95 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div className="rounded-xl border border-gray-200 bg-white/85 shadow-sm mt-4 h-95 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         <table className="w-full border-collapse text-left text-sm text-gray-500">
           <thead className="bg-gray-50 sticky top-0  shadow-[inset_0_-1px_0_rgba(0,0,0,0.05)]">
             <tr>
@@ -249,7 +249,7 @@ function Insights({ toggleState, toggleMobileState, formattedDate, openCalender,
                           <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm ${theme.bg}`}>
                             <span className={`h-1.5 w-1.5 rounded-full ${theme.dot}`}></span>
                             <span className="flex flex-col">
-                              <span className="no-wrap">
+                              <span className='whitespace-nowrap'>
                                 {monthsBehind === 0 ? 'Up to date' : `${monthsBehind} ${monthsBehind === 1 ? 'Month' : 'Months'}`}
                               </span>
                               <span className="text-[10px] opacity-80 uppercase tracking-wider">{theme.label}</span>
