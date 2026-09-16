@@ -33,7 +33,7 @@ function Settings({ toggleState, toggleMobileState }) {
                                 </div>
                                 <label className="inline-flex items-center cursor-pointer select-none">
                                     <input type="checkbox" className="sr-only peer" />
-                                    <div className="relative w-11 h-6 bg-white/15 rounded-full peer peer-focus:ring-1 peer-focus:ring-white/50 
+                                    <div className="relative w-11 h-6 bg-white/15 rounded-full peer ring-1 peer-focus:ring-1 peer-focus:ring-white/50 
                                 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] 
                                 after:absolute after:top-0.5 after:inset-s-0.5 after:bg-white/90 after:rounded-full 
                                 after:h-5 after:w-5 after:transition-all after:duration-300 peer-checked:bg-white/50"></div>
@@ -99,7 +99,7 @@ function Settings({ toggleState, toggleMobileState }) {
                         <h1 className='text-2xl font-bold mb-4'>Account</h1>
 
                         <div className='flex flex-col gap-3 rounded-2xl bg-white/30 w-full py-3 px-3 mb-2'>
-                            <div className='flex flex-row items-center justify-between w-full'>
+                            <div className='flex flex-row gap-4 items-center justify-between w-full'>
                                 <div className='flex items-center gap-3'>
                                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 
@@ -109,11 +109,10 @@ function Settings({ toggleState, toggleMobileState }) {
                                 </div>
 
                                 <button
-                                    className="px-3 py-1 text-xs font-semibold text-slate-800 bg-white rounded-lg 
+                                    className="flex gap-2 items-center px-3 py-1.5 text-xs font-semibold text-slate-800 bg-white rounded-lg 
                                     hover:bg-white/95 active:scale-95 transition-all duration-200"
                                 >
                                     <i class="fa-solid fa-download"></i>
-                                    {/* <i class="fa-solid fa-cloud-arrow-up"></i> */}
                                     <p>Download Backup File</p>
                                 </button>
                             </div>
@@ -136,7 +135,7 @@ function Settings({ toggleState, toggleMobileState }) {
                             </div>
                         </div>
                         <div className='flex flex-col gap-3 rounded-2xl bg-white/30 w-full py-3 px-3 mb-2'>
-                            <div className='flex flex-row items-center justify-between w-full'>
+                            <div className='flex flex-row gap-4 items-center justify-between w-full'>
                                 <div className='flex items-center gap-3'>
                                     <i class="fa-solid fa-arrow-up-from-bracket"></i>
                                     <p className="font-medium text-white">Restore from Backup</p>
