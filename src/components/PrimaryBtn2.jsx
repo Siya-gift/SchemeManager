@@ -4,7 +4,7 @@ import "../App.css";
 
 function PrimaryBtn2({btnLearn}) {
   return (
-    <button className="relative text-white text-[13px] font-semibold px-12 py-5 overflow-hidden rounded-lg group transition-all duration-200 hover:scale-y-90 cursor-pointer focus:scale-85">
+    <button className="relative text-white h-20 md:h-auto text-[13px] font-semibold px-12 py-5 overflow-hidden rounded-lg group transition-all duration-200 hover:scale-y-90 cursor-pointer focus:scale-85">
       <img
         src={signinSvgBtn}
         alt=""

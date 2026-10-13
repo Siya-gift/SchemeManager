@@ -9,7 +9,7 @@ function PrimaryBtn({ btnSignin, btnGetStarted }) {
   const showArrow = btnGetStarted === "Get Started";
 
   return (
-    <button className="relative px-8  h-13.5 text-white text-[13px] font-semibold overflow-hidden rounded-lg group transition-all duration-200 hover:scale-y-90 cursor-pointer focus:scale-85 flex items-center justify-center">
+    <button className="relative px-8 h-20 md:h-13.5 text-white text-[13px] font-semibold overflow-hidden rounded-lg group transition-all duration-200 hover:scale-y-90 cursor-pointer focus:scale-85 flex items-center justify-center">
       {/* Background image remains locked to the container dimensions */}
       <img
         src={signinSvgBtn}

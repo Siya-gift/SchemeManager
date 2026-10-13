@@ -53,10 +53,10 @@ function HomePage() {
           </div>
 
           <div className="menuHome rotate-180">
-            <div className="burger z-50 w-6">
+            <div className="burger z-50 w-6 h-3">
               <div className="line1 h-0.75 w-full z-20 bg-white rounded-sm"></div>
-              <div className="line2 h-0.75 w-[70%] z-20 bg-white rounded-sm mt-1.25"></div>
-              <div className="line3 h-0.75 w-full z-20 bg-white rounded-sm mt-1.25"></div>
+              <div className="line2 h-0.75 w-[70%] z-20 bg-white rounded-sm mt-1"></div>
+              <div className="line3 h-0.75 w-full z-20 bg-white rounded-sm mt-1"></div>
             </div>
           </div>
 
@@ -96,12 +96,12 @@ function HomePage() {
         />
 
         <img
-          className="md:hidden absolute top-90 left-5 w-40 h-32 object-cover"
+          className="md:hidden absolute top-93 left-5 w-40 h-32 object-cover"
           src={decor1}
           alt="card"
         />
         <img
-          className="md:hidden absolute top-120 left-40 w-50 h-35 object-cover"
+          className="md:hidden absolute top-120 right-0 w-50 h-35 object-cover"
           src={decor2}
           alt="card"
         />
@@ -112,7 +112,7 @@ function HomePage() {
         />
 
         <img
-          className="absolute bottom-0 -left-2 md:left-24 w-full md:w-60 h-96 md:h-72 object-cover"
+          className="absolute bottom-0 left-5 md:left-24 w-[75vw] md:w-70 aspect-3/4 md:aspect-auto md:h-72 object-cover"
           src={w_left_home}
           alt="picture"
         />
@@ -148,9 +148,9 @@ function HomePage() {
 
         <div
           className="absolute w-full top-30 md:top-1/2 left-1/2 -translate-x-1/2 
-   md:-translate-y-1/2    flex flex-col items-center justify-center gap-5 "
+   md:-translate-y-1/2    flex flex-col items-center justify-center gap-3 "
         >
-          <h1 className=" text-center text-white text-[32px] md:text-[42px] font-semibold leading-10 md:leading-10">
+          <h1 className=" text-center text-white text-[32px] md:text-[42px] w-screen md:w-auto font-semibold leading-10 md:leading-10">
             Bringing your financial goals to <br />
             life.{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% font-bold">
