@@ -167,7 +167,6 @@ body {
 .Tcard {
   position: relative;
   background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
-  /* Creates a stacking context so pseudo-elements stay contained */
   isolation: isolate; 
 }
 
@@ -175,7 +174,7 @@ body {
 .Tcard::before {
   content: "";
   position: absolute;
-  inset: -3px; /* Makes the border glow slightly larger than the card */
+  inset: -1px; /* Makes the border glow slightly larger than the card */
   z-index: -6;
   background: conic-gradient(from var(--cardTrotate), var(--clr1), var(--clr2), var(--clr3), var(--clr3), var(--clr2), var(--clr1));
   border-radius: inherit;
