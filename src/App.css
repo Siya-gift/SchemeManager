@@ -151,21 +151,46 @@ body {
   opacity: 80%;
 }
 
-.Tcard{
-  position: relative;
-  background-color: white;
-  z-index: 1;
+@property --cardTrotate {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
 }
 
+:root {
+  --cardTrotate: 0deg;
+  --clr1: #00FF9D;
+  --clr2: #fb18f7;
+  --clr3: #0368FF;
+}   
 
-.Tcardspan {
+.Tcard {
+  position: relative;
+  background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+  /* Creates a stacking context so pseudo-elements stay contained */
+  isolation: isolate; 
+}
+
+.Tcard::after,
+.Tcard::before {
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  background: red;
-  z-index: -1;
-  margin: 3px;
+  inset: -3px; /* Makes the border glow slightly larger than the card */
+  z-index: -6;
+  background: conic-gradient(from var(--cardTrotate), var(--clr1), var(--clr2), var(--clr3), var(--clr3), var(--clr2), var(--clr1));
+  border-radius: inherit;
+  animation: rotateCards 20s linear infinite;
+}
+
+.Tcard::after {
+  filter: blur(1.5rem); /* Reduced slightly so it doesn't wash out completely */
+}
+
+@keyframes rotateCards {
+  0% {
+    --cardTrotate: 0deg;
+  }
+  100% {
+    --cardTrotate: 360deg;
+  }
 }

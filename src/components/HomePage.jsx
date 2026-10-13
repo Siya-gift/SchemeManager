@@ -127,13 +127,19 @@ function HomePage() {
           100% { transform: translate(0, 0) rotate(360deg); }
         }
       `}</style>
-        <div className="relative z-10 w-full h-full bg-black/10 backdrop-blur-[120px] flex flex-col justify-between">
-          <div className="h-full w-full testimonial_cards flex gap-10 items-center justify-center">
-            <div className="Tcard relative bg-white w-55 h-90 rounded-2xl z-100">
-              <span className="Tcardspan"></span>
-            </div>
-          </div>
-        </div>
+        <div className="relative w-full h-full bg-black/10 backdrop-blur-[120px] flex flex-col justify-between">
+  <div className="h-full w-full testimonial_cards flex gap-10 items-center justify-center">
+    
+    {/* Added an inner element or made the main card background semi-transparent / dark so the glow pops */}
+    <div className="Tcard relative w-55 h-90 rounded-2xl">
+      {/* Optional: Inner content container */}
+      <div className="relative z-10 w-full h-full p-6 text-white">
+        Your Card Content Here
+      </div>
+    </div>
+
+  </div>
+</div>
       </div>
     </>
   );
