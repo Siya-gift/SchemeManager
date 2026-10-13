@@ -179,6 +179,9 @@ function Dashboard({
                     >
                         <i className="fa-solid fa-calendar-days"></i>
                     </span>
+                    <span className='cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]'>
+                        <i className="fa-solid fa-bell"></i>
+                    </span>
                 </div>
             </div>
 
@@ -915,7 +918,7 @@ function Dashboard({
                     </div>
                 </div>
             )}
-            
+
 
         </div>
     )

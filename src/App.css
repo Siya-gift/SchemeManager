@@ -1,8 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @import "tailwindcss";
 
+@layer utilities {
+  /* Exact Figma/SVG Glow Filter combination */
+  .ai-btn-glow {
+    filter: drop-shadow(0px 0px 18px rgba(0, 229, 255, 0.2))
+      drop-shadow(0px 0px 24px rgba(168, 85, 247, 0.2));
+  }
+
+  /* Text Shadow for 'Sign In' text layer */
+  .ai-text-shadow {
+    text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+  }
+}
 
 ::-webkit-scrollbar {
   width: 8px;
@@ -20,15 +31,15 @@
   border: 1px solid #f1f1f1;
 }
 
-
 ::-webkit-scrollbar-thumb:hover {
   background: #2980b9;
 }
 
-
 body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+  user-select: none;
+  font-family: "Poppins", sans-serif;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
     url("./images/bannerPic1.jpg");
   background-size: cover;
   background-position: center;
@@ -36,6 +47,7 @@ body {
   background-blend-mode: 10px;
   min-height: 100vh;
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 /* .active-tab {
@@ -45,7 +57,7 @@ body {
 } */
 
 .tab-leg::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -55,13 +67,12 @@ body {
 }
 
 .glass {
-  backdrop-filter: blur(25px); 
-  -webkit-backdrop-filter: blur(25px); 
-  border-radius: 16px; 
-  border: 1px solid rgba(255, 255, 255, 0.6); 
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.21); 
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.21);
 }
-
 
 /* width will change dynamically */
 .progBar1 .progress {
@@ -70,7 +81,6 @@ body {
   border-radius: 25px;
   background-color: white;
 }
-
 
 /* Glassy Scrollbar Styles */
 .glass-scroll::-webkit-scrollbar {
@@ -100,20 +110,62 @@ body {
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none;  
-  scrollbar-width: none;  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
 
 .notifier_bg {
   font-size: 18px !important;
   width: 60vw;
   background: rgba(255, 255, 255, 0.4) !important;
-  backdrop-filter: blur(15px) !important; 
+  backdrop-filter: blur(15px) !important;
   color: white !important;
   border: 1px solid white !important;
   font-weight: bold !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 
-              0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.25),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
 }
 
+.nav_link {
+  position: relative;
+}
+
+.nav_link::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  content: "";
+  width: 0%;
+  height: 1px;
+  background-color: white;
+  transition: all 0.3s ease-out;
+}
+
+.nav_link:hover::after {
+  width: 100%;
+}
+
+.nav_link:focus::after {
+  width: 100%;
+  opacity: 80%;
+}
+
+.Tcard{
+  position: relative;
+  background-color: white;
+  z-index: 1;
+}
+
+
+.Tcardspan {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: red;
+  z-index: -1;
+  margin: 3px;
+}

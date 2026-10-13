@@ -1,0 +1,40 @@
+<svg width="168" height="92" viewBox="0 0 168 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_dd_2225_6)">
+<g clip-path="url(#clip0_2225_6)">
+<rect x="12" y="12" width="144" height="68" rx="34" fill="url(#paint0_radial_2225_6)"/>
+<rect x="16" y="16" width="136" height="60" rx="30" fill="url(#paint1_radial_2225_6)"/>
+</g>
+<rect x="24.5" y="24.5" width="119" height="43" rx="21.5" stroke="url(#paint2_linear_2225_6)"/>
+</g>
+<defs>
+<filter id="filter0_dd_2225_6" x="0" y="0" width="168" height="92" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="9"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.898039 0 0 0 0 1 0 0 0 0.2 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2225_6"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="12"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.658824 0 0 0 0 0.333333 0 0 0 0 0.968627 0 0 0 0.2 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow_2225_6" result="effect2_dropShadow_2225_6"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_2225_6" result="shape"/>
+</filter>
+<radialGradient id="paint0_radial_2225_6" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(84 46) scale(72 34)">
+<stop stop-color="#00E5FF" stop-opacity="0.4"/>
+<stop offset="1" stop-color="#00E5FF" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint1_radial_2225_6" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(84 46) scale(68 30)">
+<stop stop-color="#A855F7"/>
+<stop offset="1" stop-color="#A855F7" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="paint2_linear_2225_6" x1="24" y1="46" x2="144" y2="46" gradientUnits="userSpaceOnUse">
+<stop offset="0.355769" stop-color="#00FF9D"/>
+<stop offset="0.947115" stop-color="#0368FF"/>
+</linearGradient>
+<clipPath id="clip0_2225_6">
+<rect x="24" y="24" width="120" height="44" rx="22" fill="white"/>
+</clipPath>
+</defs>
+</svg>

@@ -7,6 +7,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Draggable } from "gsap/Draggable";
 import crustBg from './images/bg.png'
+import { BrowserRouter, Routes, Route } from 'react';
 
 
 
@@ -20,6 +21,9 @@ import Expenses from './components/Expenses.jsx'
 import Insights from './components/Insights.jsx'
 import ActivityHistory from './components/ActivityHistory.jsx'
 import Settings from './components/Settings.jsx'
+
+//HomePage
+import HomePage from './components/HomePage.jsx';
 
 //components
 import SideBar from './components/SideBar.jsx'
@@ -73,7 +77,7 @@ function App() {
   const [logDetailsMethod, setLogDetailsMethod] = useState();
   const [logDetailsJoinedDate, setLogDetailsJoinedDate] = useState();
   const [isEditMember, setIsEditMember] = useState(false);
-  
+
   const [isAddSchemeModal, setAddSchemeModal] = useState(false);
 
   //schemes
@@ -1387,11 +1391,11 @@ function App() {
       )}
 
       <Toaster />
-
       <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} selectedSchemeName={selectedSchemeName} />
       <div className='flex overflow-hidden'>
         <SideBar toggleState={toggleState} setToggleState={setToggleState} activeTab={activeTab} selectedSchemeName={selectedSchemeName} />
         <Profile toggleState={toggleState} />
+
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
           openCalender={openCalender} formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
           isAddSchemeModal={isAddSchemeModal} setAddSchemeModal={setAddSchemeModal} newScheme={newScheme} setNewScheme={setNewScheme} newSchemeAmount={newSchemeAmount} setNewSchemeAmount={setNewSchemeAmount}
@@ -1431,7 +1435,7 @@ function App() {
           topCategoryAmount={topCategoryAmount} topCategoryPercentage={topCategoryPercentage} totalSpentForRefundsAndCredits={totalSpentForRefundsAndCredits} totalTransactionsForRefundsAndCredits={totalTransactionsForRefundsAndCredits}
           selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference} setLatestTransactions={setLatestTransactions}
         />
-        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} filteredMembers={filteredMembers} schemes={schemes} selectedSchemeName={selectedSchemeName}/>
+        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} filteredMembers={filteredMembers} schemes={schemes} selectedSchemeName={selectedSchemeName} />
         <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} LatestTransactions={LatestTransactions}
           selectedSchemeName={selectedSchemeName} logDetails={logDetails} setLogDetailsModal={setLogDetailsModal} logDetailsModal={logDetailsModal} setLogDetailsMemberName={setLogDetailsMemberName} setLogDetailsDate={setLogDetailsDate} setLogDetailsDescription={setLogDetailsDescription}
           setLogDetailsAmount={setLogDetailsAmount} setLogDetailsMethod={setLogDetailsMethod} setLogDetailsOccuredPeriod={setLogDetailsOccuredPeriod} setLogDetailsJoinedDate={setLogDetailsJoinedDate}
