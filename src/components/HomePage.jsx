@@ -2,16 +2,22 @@ import React from "react"; // Removed unused useState
 import "../App.css";
 import homeBG from "../images/bghomeSvg.svg";
 import textureSvgHome from "../images/textureSvgHome.svg";
+import phoneHomebgTexture from "../images/phoneHomebgTexture.svg";
 import logo from "../images/logoSvg.svg";
 
 import w_left_home from "../images/w_left_home.svg";
 import m_right_home from "../images/m_right_home.svg";
 import shodowDown from "../images/shodowDown.svg";
+import shadowDownMobile from "../images/shadowDownMobile.svg";
 import shadowsPC from "../images/shadowsPC.svg";
+import shadowsMobile from "../images/shadowsMobile.svg";
 import Tstars from "../images/Tstars.svg";
 import user1 from "../images/user1.svg";
 import user2 from "../images/user2.svg";
 import user3 from "../images/user3.svg";
+import decor1 from "../images/decor1.png";
+import decor2 from "../images/decor2.png";
+import decor3 from "../images/decor3.png";
 import pollDeco from "../images/pollDeco.svg";
 import decoCards2 from "../images/decoCards2.png";
 import PrimaryBtn from "./PrimaryBtn";
@@ -31,8 +37,13 @@ function HomePage() {
           alt="Home background"
         />
         <img
-          className="absolute inset-0 w-full h-full object-cover"
+          className="hidden md:block absolute inset-0 w-full h-full object-cover"
           src={textureSvgHome}
+          alt="Home background texture"
+        />
+        <img
+          className="md:hidden absolute inset-0 w-full h-full object-cover"
+          src={phoneHomebgTexture}
           alt="Home background texture"
         />
 
@@ -41,68 +52,105 @@ function HomePage() {
             <img className="w-35 h-10 object-contain" src={logo} alt="Logo" />
           </div>
 
-          <ul className="flex items-center gap-13">
-            <li>
-              <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                FAQ
-              </button>
-            </li>
-            <li>
-              <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                Pricing
-              </button>
-            </li>
-            <li>
-              <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                About us
-              </button>
-            </li>
-            <li>
-              <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                Contact
-              </button>
-            </li>
-            <li className="cursor-pointer">
-              <PrimaryBtn btnSignin={btnSignin} />
-            </li>
-          </ul>
+          <div className="menuHome rotate-180">
+            <div className="burger z-50 w-6">
+              <div className="line1 h-0.75 w-full z-20 bg-white rounded-sm"></div>
+              <div className="line2 h-0.75 w-[70%] z-20 bg-white rounded-sm mt-1.25"></div>
+              <div className="line3 h-0.75 w-full z-20 bg-white rounded-sm mt-1.25"></div>
+            </div>
+          </div>
+
+          <div className="hidden md:block">
+            <ul className="flex items-center gap-13">
+              <li>
+                <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                  FAQ
+                </button>
+              </li>
+              <li>
+                <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                  Pricing
+                </button>
+              </li>
+              <li>
+                <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                  About us
+                </button>
+              </li>
+              <li>
+                <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                  Contact
+                </button>
+              </li>
+              <li className="cursor-pointer">
+                <PrimaryBtn btnSignin={btnSignin} />
+              </li>
+            </ul>
+          </div>
         </nav>
 
         <img
-          className="absolute bottom-0 left-30 w-60 h-75 object-cover"
+          className="md:hidden absolute bottom-0 left-0 w-full h-screen object-cover"
+          src={shadowsMobile}
+          alt="picture"
+        />
+
+        <img
+          className="md:hidden absolute top-90 left-5 w-40 h-32 object-cover"
+          src={decor1}
+          alt="card"
+        />
+        <img
+          className="md:hidden absolute top-120 left-40 w-50 h-35 object-cover"
+          src={decor2}
+          alt="card"
+        />
+        <img
+          className="md:hidden absolute -bottom-2 left-5 w-50 h-32 z-1 object-cover"
+          src={decor3}
+          alt="card"
+        />
+
+        <img
+          className="absolute bottom-0 -left-2 md:left-24 w-full md:w-60 h-96 md:h-72 object-cover"
           src={w_left_home}
           alt="picture"
         />
 
         <img
-          className="absolute bottom-0 right-30 w-65 h-120 object-cover"
+          className="hidden md:block absolute bottom-0 right-30 w-65 h-120 object-cover"
           src={m_right_home}
           alt="picture"
         />
 
         <img
-          className="absolute bottom-0 left-0 w-full h-110 object-cover"
+          className="hidden md:block absolute bottom-0 left-0 w-full h-110 object-cover"
           src={shodowDown}
+          alt="picture"
+        />
+        <img
+          className="md:hidden absolute bottom-0 left-0 w-full h-110 object-cover"
+          src={shadowDownMobile}
           alt="picture"
         />
 
         <img
-          className="absolute bottom-0 left-0 w-full h-full object-cover"
+          className="hidden md:block absolute bottom-0 left-0 w-full h-full object-cover"
           src={shadowsPC}
           alt="picture"
         />
 
         <img
-          className="absolute w-180 bottom-5 left-1/2 -translate-x-1/2"
+          className="hidden md:block absolute w-180 bottom-5 left-1/2 -translate-x-1/2"
           src={decoCards2}
           alt="picture"
         />
 
         <div
-          className="absolute w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-      flex flex-col items-center justify-center gap-5 "
+          className="absolute w-full top-30 md:top-1/2 left-1/2 -translate-x-1/2 
+   md:-translate-y-1/2    flex flex-col items-center justify-center gap-5 "
         >
-          <h1 className=" text-center text-white text-[42px] font-semibold leading-10">
+          <h1 className=" text-center text-white text-[32px] md:text-[42px] font-semibold leading-10 md:leading-10">
             Bringing your financial goals to <br />
             life.{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% font-bold">
@@ -110,7 +158,7 @@ function HomePage() {
             </span>
           </h1>
 
-          <div className="flex flex-row items-center justify-center gap-3">
+          <div className="flex flex-row items-center justify-center gap-0 md:gap-3">
             <PrimaryBtn2 btnLearn={btnLearn} />
             <PrimaryBtn btnGetStarted={btnGetStarted} />
           </div>
@@ -134,10 +182,16 @@ function HomePage() {
       `}</style>
         <div className="relative w-full h-full bg-black/10 backdrop-blur-[120px] flex flex-col justify-between">
           <div className="w-full min-h-full flex flex-col items-center justify-center p-4">
-            <h1 className="text-2xl md:text-4xl leading-0.5 font-light text-white mb-18 md:mb-60 family-['Raleway']">Testimonials</h1>
-            
+            <h1 className="text-2xl md:text-4xl leading-0.5 font-light text-white mb-18 md:mb-40 family-['Raleway']">
+              Testimonials
+            </h1>
+
             <div className="testimonial_cards flex flex-col md:flex-row gap-6 md:gap-8 items-center justify-center w-full max-w-6xl mx-auto relative">
-              <img className="absolute top-1/2 -translate-y-1/2 left-12 h-175 md:rotate-90 md:left-1/2 md:-translate-x-1/2 md:-top-45" src={pollDeco} alt="poll" />
+              <img
+                className="absolute top-1/2 -translate-y-1/2 left-12 h-175 md:rotate-90 md:left-1/2 md:-translate-x-1/2 md:-top-30"
+                src={pollDeco}
+                alt="poll"
+              />
               {/* Card 1 */}
               <div className="Tcard before:-z-1 relative bg-zinc-900 h-40 md:h-70 w-80 md:w-full sm:w-72 max-w-sm rounded-2xl">
                 <div className="relative z-10 w-full h-full p-6 text-white bg-[#0f0f0f] border-inherit rounded-2xl flex flex-col items-start justify-center gap-3">
