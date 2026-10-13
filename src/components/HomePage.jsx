@@ -150,8 +150,8 @@ function HomePage() {
           className="absolute w-full top-30 md:top-1/2 left-1/2 -translate-x-1/2 
    md:-translate-y-1/2    flex flex-col items-center justify-center gap-3 "
         >
-          <h1 className=" text-center text-white text-[32px] md:text-[42px] w-screen md:w-auto font-semibold leading-10 md:leading-10">
-            Bringing your financial goals to <br />
+          <h1 className=" text-center text-white text-[32px] md:text-[42px] max-w-75 md:max-w-auto font-semibold leading-10 md:leading-10">
+            Bringing your financial goals to <br  />
             life.{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% font-bold">
               Secure. Grow. Achieve.
