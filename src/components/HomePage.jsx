@@ -137,7 +137,7 @@ function HomePage() {
             <h1 className="text-2xl md:text-4xl leading-0.5 font-light text-white mb-18 md:mb-60 family-['Raleway']">Testimonials</h1>
             
             <div className="testimonial_cards flex flex-col md:flex-row gap-6 md:gap-8 items-center justify-center w-full max-w-6xl mx-auto relative">
-              <img className="absolute top-1/2 -translate-y-1/2 left-12 h-175 md:rotate-90 md:left-1/2 md:-translate-x-1/2 md:-top-40" src={pollDeco} alt="poll" />
+              <img className="absolute top-1/2 -translate-y-1/2 left-12 h-175 md:rotate-90 md:left-1/2 md:-translate-x-1/2 md:-top-45" src={pollDeco} alt="poll" />
               {/* Card 1 */}
               <div className="Tcard before:-z-1 relative bg-zinc-900 h-40 md:h-70 w-80 md:w-full sm:w-72 max-w-sm rounded-2xl">
                 <div className="relative z-10 w-full h-full p-6 text-white bg-[#0f0f0f] border-inherit rounded-2xl flex flex-col items-start justify-center gap-3">
