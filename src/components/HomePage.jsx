@@ -20,13 +20,21 @@ import decor2 from "../images/decor2.png";
 import decor3 from "../images/decor3.png";
 import pollDeco from "../images/pollDeco.svg";
 import decoCards2 from "../images/decoCards2.png";
+import blurPup from "../images/blurPup.svg";
+
 import PrimaryBtn from "./PrimaryBtn";
 import PrimaryBtn2 from "./PrimaryBtn2";
+import PrimaryBtn3 from "./PrimaryBtn3";
+import guideCd from "../images/guideCd.svg";
+import bgPhoneGuide from "../images/bgPhoneGuide.svg";
+import wGuidePic from "../images/wGuidePic.svg";
+import GuidePhones from "../images/GuidePhones.svg";
 
 function HomePage() {
   const btnSignin = "Sign in";
   const btnGetStarted = "Get Started";
   const btnLearn = "Learn More";
+  const btnGuide = "Guide Me";
 
   return (
     <>
@@ -150,8 +158,8 @@ function HomePage() {
           className="absolute w-full top-30 md:top-1/2 left-1/2 -translate-x-1/2 
    md:-translate-y-1/2    flex flex-col items-center justify-center gap-3 "
         >
-          <h1 className=" text-center text-white text-[32px] md:text-[42px] max-w-75 md:max-w-auto font-semibold leading-10 md:leading-10">
-            Bringing your financial goals to <br  />
+          <h1 className=" text-center text-white text-[32px] md:text-[42px] max-w-75 md:max-w-full font-semibold leading-10 md:leading-10">
+            Bringing your financial goals to <br />
             life.{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% font-bold">
               Secure. Grow. Achieve.
@@ -273,6 +281,77 @@ function HomePage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="relative w-full h-screen bg-white overflow-hidden">
+        <div className="relative w-full h-screen overflow-hidden bg-white">
+          {" "}
+          {/* Parent wrapper to hide edges */}
+          <div
+            className="absolute inset-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,#00FF9D33_34%,#0368FF33_92%)] pointer-events-none"
+            style={{
+              animation: "slow-circle 70s infinite linear",
+            }}
+          />
+          <style>
+            {`
+              @keyframes slow-circle {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(3%, 3%) rotate(90deg); }
+                50% { transform: translate(0, 5%) rotate(180deg); }
+                75% { transform: translate(-3%, 3%) rotate(270deg); }
+                100% { transform: translate(0, 0) rotate(360deg); }
+              }
+            `}
+          </style>
+          <div className="relative w-full h-full bg-white/10 backdrop-blur-[120px]">
+            <div className="relative top-1/2 left-20 h-130 w-[50%] -translate-y-1/2 flex flex-col items-center justify-center p-8">
+              <img
+                className="absolute bottom-70 md:bottom-10 left-20 h-80 md:h-50"
+                src={blurPup}
+                alt="blur"
+              />
+              <img
+                className="hidden md:block absolute inset-0 h-full w-full object-contain pointer-events-none"
+                src={guideCd}
+                alt="Guide CD"
+              />
+              <img
+                className="md:hidden absolute inset-0 h-full w-full object-contain pointer-events-none scale-190"
+                src={bgPhoneGuide}
+                alt="bgPhoneGuide"
+              />
+
+              <h1 className="relative -top-60 md:-top-20 -left-5 md:left-0 z-10 p-10 text-[35px] md:text-[72px] font-black text-[#FF00F2] text-start max-w-md balance leading-8 md:leading-15">
+                Explore every Financial freedom
+              </h1>
+
+              <div className="hidden md:block">
+                <div className="relative bottom-25 flex flex-row items-center gap-3 text-start">
+                  <h3 className="text-[14px] max-w-35 font-bold text-[#34E442] leading-5">
+                    Easy to use. need <br /> guidance ?
+                  </h3>
+                  <PrimaryBtn3 btnGuide={btnGuide} />
+                </div>
+              </div>
+            </div>
+
+            <img
+              className="absolute h-80 md:h-100 bottom-0 -right-8 md:right-0 md:left-1/2 md:-translate-x-1/2"
+              src={wGuidePic}
+              alt="w_guidePic"
+            />
+
+            <img
+              className="absolute h-200 top-15 md:-top-40 right-35 md:right-10"
+              src={GuidePhones}
+              alt="Guide Phones"
+            />
+
+            <div className="md:hidden absolute bottom-25 left-15 w-30  h-20 text-2xl">
+              <PrimaryBtn3 btnGuide={btnGuide} />
             </div>
           </div>
         </div>
