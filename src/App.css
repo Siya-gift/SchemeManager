@@ -159,9 +159,9 @@ body {
 
 :root {
   --cardTrotate: 0deg;
-  --clr1: #00FF9D;
-  --clr2: #fb18f7;
-  --clr3: #0368FF;
+  --clr1: #00ff9d8f;
+  --clr2: #1e8ce6;
+  --clr3: #20B2AA;
 }   
 
 .Tcard {
@@ -182,7 +182,7 @@ body {
 }
 
 .Tcard::after {
-  filter: blur(1.5rem); /* Reduced slightly so it doesn't wash out completely */
+  filter: blur(1rem); /* Reduced slightly so it doesn't wash out completely */
 }
 
 @keyframes rotateCards {
