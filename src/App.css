@@ -35,6 +35,7 @@
   background: #2980b9;
 }
 
+
 body {
   user-select: none;
   font-family: "Poppins", sans-serif;
@@ -209,3 +210,31 @@ body {
     transform: none !important; 
   }
 }
+
+
+.premiumShine {
+  background-image: linear-gradient(
+    115deg,
+    transparent 25%,
+    #ffffff08 35%,
+    #ffffff20 43%,
+    #ffffff40 50%,
+    #ffffff20 57%,
+    #ffffff08 65%,
+    transparent 75%
+  );
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+@keyframes shine {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.group-hover\:animate-shine:hover,
+.group:hover .group-hover\:animate-shine {
+  animation: shine 0.75s ease-in-out;
+}
+
