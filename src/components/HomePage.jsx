@@ -39,136 +39,147 @@ function HomePage() {
   return (
     <>
       <div className="relative w-full h-screen bg-white overflow-hidden">
-        <img
-          className="absolute inset-0 w-full h-full object-cover filter saturate-0"
-          src={homeBG}
-          alt="Home background"
-        />
-        <img
-          className="hidden md:block absolute inset-0 w-full h-full object-cover"
-          src={textureSvgHome}
-          alt="Home background texture"
-        />
-        <img
-          className="md:hidden absolute inset-0 w-full h-full object-cover"
-          src={phoneHomebgTexture}
-          alt="Home background texture"
-        />
+        <div className="w-full h-svh">
+          <div
+            className="absolute top-0 left-0 w-full h-48 md:h-96 z-10 pointer-events-none
+            bg-linear-to-t from-transparent via-black/20 to-black/20"
+          />
 
-        <nav className="relative z-70 flex items-center justify-between w-full px-5 py-4.25">
-          <div className="logo-container">
-            <img className="w-35 h-10 object-contain" src={logo} alt="Logo" />
-          </div>
+          <img
+            className="absolute inset-0 w-full h-full object-cover filter saturate-0 z-1"
+            src={homeBG}
+            alt="Home background"
+          />
+          <img
+            className="hidden md:block absolute inset-0 w-full h-full object-cover z-1"
+            src={textureSvgHome}
+            alt="Home background texture"
+          />
+          <img
+            className="md:hidden absolute inset-0 w-full h-full object-cover z-1"
+            src={phoneHomebgTexture}
+            alt="Home background texture"
+          />
 
-          <div className="menuHome rotate-180">
-            <div className="burger z-50 w-6 h-3">
-              <div className="line1 h-0.75 w-full z-20 bg-white rounded-sm"></div>
-              <div className="line2 h-0.75 w-[70%] z-20 bg-white rounded-sm mt-1"></div>
-              <div className="line3 h-0.75 w-full z-20 bg-white rounded-sm mt-1"></div>
+          <nav className="relative z-70 flex items-center justify-between w-full px-5 py-4.25">
+            <div className="logo-container">
+              <img className="w-35 h-10 object-contain" src={logo} alt="Logo" />
             </div>
-          </div>
 
-          <div className="hidden md:block">
-            <ul className="flex items-center gap-13">
-              <li>
-                <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                  FAQ
-                </button>
-              </li>
-              <li>
-                <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                  Pricing
-                </button>
-              </li>
-              <li>
-                <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                  About us
-                </button>
-              </li>
-              <li>
-                <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                  Contact
-                </button>
-              </li>
-              <li className="cursor-pointer">
-                <PrimaryBtn btnSignin={btnSignin} />
-              </li>
-            </ul>
-          </div>
-        </nav>
+            <div className="md:hidden menuHome rotate-180">
+              <div className="burger z-50 w-6 h-3">
+                <div className="line1 h-0.75 w-full z-20 bg-white rounded-sm"></div>
+                <div className="line2 h-0.75 w-[70%] z-20 bg-white rounded-sm mt-1"></div>
+                <div className="line3 h-0.75 w-full z-20 bg-white rounded-sm mt-1"></div>
+              </div>
+            </div>
 
-        <img
-          className="md:hidden absolute bottom-0 left-0 w-full h-screen object-cover"
-          src={shadowsMobile}
-          alt="picture"
-        />
+            <div className="hidden md:block">
+              <ul className="flex items-center gap-13">
+                <li>
+                  <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                    FAQ
+                  </button>
+                </li>
+                <li>
+                  <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                    Pricing
+                  </button>
+                </li>
+                <li>
+                  <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                    About us
+                  </button>
+                </li>
+                <li>
+                  <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                    Contact
+                  </button>
+                </li>
+                <li className="cursor-pointer">
+                  <PrimaryBtn btnSignin={btnSignin} />
+                </li>
+              </ul>
+            </div>
+          </nav>
 
-        <img
-          className="md:hidden absolute top-93 left-5 w-50 h-32 object-cover z-2"
-          src={decor1}
-          alt="card"
-        />
-        <img
-          className="md:hidden absolute top-120 right-0 w-50 h-35 object-cover z-1"
-          src={decor2}
-          alt="card"
-        />
-        <img
-          className="md:hidden absolute -bottom-2 left-5 w-50 h-32 z-1 object-cover"
-          src={decor3}
-          alt="card"
-        />
+          <img
+            className="md:hidden absolute bottom-0 left-0 w-full h-screen object-cover z-1"
+            src={shadowsMobile}
+            alt="picture"
+          />
 
-        <img
-          className="absolute bottom-0 -left-5 md:left-24 w-[90vw] md:w-70 aspect-3/4 md:aspect-auto md:h-72 object-contain"
-          src={w_left_home}
-          alt="picture"
-        />
+          <img
+            className="md:hidden absolute top-93 left-5 w-50 h-32 object-cover z-10"
+            src={decor1}
+            alt="card"
+          />
+          <img
+            className="md:hidden absolute top-120 right-0 w-50 h-35 object-cover z-5"
+            src={decor2}
+            alt="card"
+          />
+          <img
+            className="md:hidden absolute -bottom-2 left-5 w-50 h-32 z-10 object-cover"
+            src={decor3}
+            alt="card"
+          />
 
-        <img
-          className="hidden md:block absolute bottom-0 right-30 w-65 h-120 object-cover"
-          src={m_right_home}
-          alt="picture"
-        />
+          <img
+            className="absolute bottom-0 -left-5 md:left-24 w-[130vw] md:w-70 aspect-1 md:aspect-1 md:h-72 object-cover z-7"
+            src={w_left_home}
+            alt="picture"
+          />
 
-        <img
-          className="hidden md:block absolute bottom-0 left-0 w-full h-110 object-cover"
-          src={shodowDown}
-          alt="picture"
-        />
-        <img
-          className="md:hidden absolute bottom-0 left-0 w-full h-110 object-cover"
-          src={shadowDownMobile}
-          alt="picture"
-        />
+          <img
+            className="hidden md:block absolute bottom-0 right-30 w-65 h-120 object-cover z-7"
+            src={m_right_home}
+            alt="picture"
+          />
 
-        <img
-          className="hidden md:block absolute bottom-0 left-0 w-full h-full object-cover"
-          src={shadowsPC}
-          alt="picture"
-        />
+          {/* <img
+            className="hidden md:block absolute bottom-0 left-0 w-full h-110 object-cover z-8"
+            src={shodowDown}
+            alt="picture"
+          /> */}
+          {/* <img
+            className="md:hidden absolute bottom-0 left-0 w-full h-30 object-cover z-8"
+            src={shadowDownMobile}
+            alt="picture"
+          /> */}
+          <div
+            className="absolute bottom-0 left-0 w-full h-50 md:h-100 z-8 pointer-events-none
+            bg-linear-to-b from-transparent via-black/20 to-black/70"
+          />
 
-        <img
-          className="hidden md:block absolute w-180 bottom-5 left-1/2 -translate-x-1/2"
-          src={decoCards2}
-          alt="picture"
-        />
+          <img
+            className="hidden md:block absolute bottom-0 left-0 w-full h-full object-cover z-8"
+            src={shadowsPC}
+            alt="picture"
+          />
 
-        <div
-          className="absolute w-full top-30 md:top-1/2 left-1/2 -translate-x-1/2 
-   md:-translate-y-1/2    flex flex-col items-center justify-center gap-3 "
-        >
-          <h1 className=" text-center text-white text-[32px] md:text-[42px] max-w-75 md:max-w-full font-semibold leading-10 md:leading-10">
-            Bringing your financial goals to <br />
-            life.{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% font-bold">
-              Secure. Grow. Achieve.
-            </span>
-          </h1>
+          <img
+            className="hidden md:block absolute w-180 bottom-5 left-1/2 -translate-x-1/2 z-20"
+            src={decoCards2}
+            alt="picture"
+          />
 
-          <div className="flex flex-row items-center justify-center gap-0 md:gap-3">
-            <PrimaryBtn2 btnLearn={btnLearn} />
-            <PrimaryBtn btnGetStarted={btnGetStarted} />
+          <div
+            className="absolute w-full top-30 md:top-1/2 left-1/2 -translate-x-1/2 
+   md:-translate-y-1/2    flex flex-col items-center justify-center gap-3 z-20"
+          >
+            <h1 className=" text-center text-white text-[32px] md:text-[42px] max-w-75 md:max-w-full font-semibold leading-10 md:leading-10">
+              Bringing your financial goals to <br />
+              life.{" "}
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% font-bold">
+                Secure. Grow. Achieve.
+              </span>
+            </h1>
+
+            <div className="flex flex-row items-center justify-center gap-0 md:gap-3">
+              <PrimaryBtn2 btnLearn={btnLearn} />
+              <PrimaryBtn btnGetStarted={btnGetStarted} />
+            </div>
           </div>
         </div>
       </div>
