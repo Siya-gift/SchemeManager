@@ -38,7 +38,7 @@ function HomePage() {
 
   return (
     <>
-      <div className="h-dvh overflow-y-auto snap-y snap-mandatory">
+      <div className="h-dvh overflow-y-auto glass-scroll snap-y snap-mandatory bg-black">
         <section className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden">
           <div className="w-full h-full">
             <div
@@ -61,16 +61,15 @@ function HomePage() {
               alt="Home background texture"
             />
             <nav className="relative z-70 flex items-center justify-between w-full px-5 py-4.25">
-              <div className="logo-container group relative overflow-hidden cursor-pointer">
+              <div className="logo-container group relative overflow-clip cursor-pointer">
                 {/* The Logo */}
                 <img
-                  className="w-35 h-10 object-contain relative z-10"
+                  className="w-35 h-10 object-contain relative z-10 "
                   src={logo}
                   alt="Logo"
                 />
 
-                {/* The Shine Overlay */}
-                <div className="premiumShine z-20 absolute inset-0 w-[200%] h-full -translate-x-full group-hover:animate-shine pointer-events-none object-cover" />
+                <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
               </div>
 
               <div className="md:hidden menuHome rotate-180">
@@ -140,16 +139,6 @@ function HomePage() {
               src={m_right_home}
               alt="picture"
             />
-            {/* <img
-            className="hidden md:block absolute bottom-0 left-0 w-full h-110 object-cover z-8"
-            src={shodowDown}
-            alt="picture"
-          /> */}
-            {/* <img
-            className="md:hidden absolute bottom-0 left-0 w-full h-30 object-cover z-8"
-            src={shadowDownMobile}
-            alt="picture"
-          /> */}
             <div
               className="absolute bottom-0 left-0 w-full h-50 md:h-100 z-8 pointer-events-none
             bg-linear-to-b from-transparent via-black/20 to-black/70"
@@ -159,11 +148,9 @@ function HomePage() {
               src={shadowsPC}
               alt="picture"
             />
-            <img
-              className="hidden md:block absolute w-180 bottom-5 left-1/2 -translate-x-1/2 z-20"
-              src={decoCards2}
-              alt="picture"
-            />
+            <div className="hidden md:block absolute w-180 bottom-5 left-1/2 -translate-x-1/2 z-20">
+              <img src={decoCards2} alt="picture" />
+            </div>
             <div
               className="absolute w-full top-30 md:top-1/2 left-1/2 -translate-x-1/2 
    md:-translate-y-1/2    flex flex-col items-center justify-center gap-3 z-20"
@@ -212,84 +199,111 @@ function HomePage() {
                   alt="poll"
                 />
                 {/* Card 1 */}
-                <div className="Tcard before:-z-1 relative bg-zinc-900 h-40 md:h-70 w-80 md:w-full sm:w-72 max-w-sm rounded-2xl">
-                  <div className="relative z-10 w-full h-full p-6 text-white bg-[#0f0f0f] border-inherit rounded-2xl flex flex-col items-start justify-center gap-3">
-                    <div className="flex flex-row items-center justify-start gap-3">
-                      <div className="flex items-center justify-center">
+                <div className="Tcard relative isolate box-border h-40 md:h-70 w-full max-w-sm min-w-0 rounded-2xl group cursor-pointer">
+                  {/* Inner wrapper clips content and shine, not the outer glow */}
+                  <div className="relative z-10 h-full w-full min-w-0 rounded-2xl overflow-hidden">
+                    {/* Card content */}
+                    <div className="relative z-10 flex h-full w-full min-w-0 flex-col items-start justify-center gap-3 rounded-2xl bg-[#0f0f0f] p-6 text-white">
+                      <div className="flex min-w-0 flex-row items-center justify-start gap-3">
                         <img
-                          className="w-10 h-10 rounded-full object-cover"
+                          className="h-10 w-10 shrink-0 rounded-full object-cover"
                           src={user1}
                           alt="Andries"
                         />
+
+                        <div className="flex min-w-0 flex-col items-start justify-start gap-0.5">
+                          <p className="family-['Roboto_Condensed'] text-[18px]">
+                            Andries
+                          </p>
+
+                          <img
+                            className="w-15 max-w-full"
+                            src={Tstars}
+                            alt="Rating"
+                          />
+                        </div>
                       </div>
-                      <div className="flex flex-col items-start justify-start gap-0.5">
-                        <p className="family-['Roboto-Condensed'] text-[18px]">
-                          Andries
-                        </p>
-                        <img className="w-15" src={Tstars} alt="Rating" />
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[12px] text-white/70 family-['Roboto-Condensed']">
+
+                      <p className="w-full min-w-0 wrap-break-word text-[12px] text-white/70 family-['Roboto_Condensed']">
                         “Managed to purchase land after saving money using
                         Scheme Manager Pro for 1 year”
                       </p>
                     </div>
+
+                    <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
                   </div>
                 </div>
 
                 {/* Card 2 */}
-                <div className="Tcard before:-z-1 relative bg-zinc-900 h-40 md:h-70 w-80 md:w-full sm:w-72 max-w-sm rounded-2xl">
-                  <div className="relative z-10 w-full h-full p-6 text-white bg-[#0f0f0f] border-inherit rounded-2xl flex flex-col items-start justify-center gap-3">
-                    <div className="flex flex-row items-center justify-start gap-3">
-                      <div className="flex items-center justify-center">
+                <div className="Tcard relative isolate box-border h-40 md:h-70 w-full max-w-sm min-w-0 rounded-2xl group cursor-pointer">
+                  {/* Inner wrapper clips content and shine, not the outer glow */}
+                  <div className="relative z-10 h-full w-full min-w-0 rounded-2xl overflow-hidden">
+                    {/* Card content */}
+                    <div className="relative z-10 flex h-full w-full min-w-0 flex-col items-start justify-center gap-3 rounded-2xl bg-[#0f0f0f] p-6 text-white">
+                      <div className="flex min-w-0 flex-row items-center justify-start gap-3">
                         <img
-                          className="w-10 h-10 rounded-full object-cover"
+                          className="h-10 w-10 shrink-0 rounded-full object-cover"
                           src={user2}
-                          alt="Sophie"
+                          alt="Andries"
                         />
+
+                        <div className="flex min-w-0 flex-col items-start justify-start gap-0.5">
+                          <p className="family-['Roboto_Condensed'] text-[18px]">
+                            Sophie
+                          </p>
+
+                          <img
+                            className="w-15 max-w-full"
+                            src={Tstars}
+                            alt="Rating"
+                          />
+                        </div>
                       </div>
-                      <div className="flex flex-col items-start justify-start gap-0.5">
-                        <p className="family-['Roboto-Condensed'] text-[18px]">
-                          Sophie
-                        </p>
-                        <img className="w-15" src={Tstars} alt="Rating" />
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[12px] text-white/70 family-['Roboto-Condensed']">
+
+                      <p className="w-full min-w-0 wrap-break-word text-[12px] text-white/70 family-['Roboto_Condensed']">
                         “Was able to transition to full-time freelancing after
-                        building an emergency fund using Scheme Manager Pro for
+                        building an emergency fund using scheme manager pro for
                         1 year”
                       </p>
                     </div>
+
+                    <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
                   </div>
                 </div>
 
                 {/* Card 3 */}
-                <div className="Tcard before:-z-1 relative bg-zinc-900 h-40 md:h-70 w-80 md:w-full sm:w-72 max-w-sm rounded-2xl">
-                  <div className="relative z-10 w-full h-full p-6 text-white bg-[#0f0f0f] border-inherit rounded-2xl flex flex-col items-start justify-center gap-3">
-                    <div className="flex flex-row items-center justify-start gap-3">
-                      <div className="flex items-center justify-center">
+                <div className="Tcard relative isolate box-border h-40 md:h-70 w-full max-w-sm min-w-0 rounded-2xl group cursor-pointer">
+                  {/* Inner wrapper clips content and shine, not the outer glow */}
+                  <div className="relative z-10 h-full w-full min-w-0 rounded-2xl overflow-hidden">
+                    {/* Card content */}
+                    <div className="relative z-10 flex h-full w-full min-w-0 flex-col items-start justify-center gap-3 rounded-2xl bg-[#0f0f0f] p-6 text-white">
+                      <div className="flex min-w-0 flex-row items-center justify-start gap-3">
                         <img
-                          className="w-10 h-10 rounded-full object-cover"
+                          className="h-10 w-10 shrink-0 rounded-full object-cover"
                           src={user3}
-                          alt="Nova"
+                          alt="Andries"
                         />
+
+                        <div className="flex min-w-0 flex-col items-start justify-start gap-0.5">
+                          <p className="family-['Roboto_Condensed'] text-[18px]">
+                            Nova
+                          </p>
+
+                          <img
+                            className="w-15 max-w-full"
+                            src={Tstars}
+                            alt="Rating"
+                          />
+                        </div>
                       </div>
-                      <div className="flex flex-col items-start justify-start gap-0.5">
-                        <p className="family-['Roboto-Condensed'] text-[18px]">
-                          Nova
-                        </p>
-                        <img className="w-15" src={Tstars} alt="Rating" />
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[12px] text-white/70 family-['Roboto-Condensed']">
-                        “Automated insights helped our scheme track members
+
+                      <p className="w-full min-w-0 wrap-break-word text-[12px] text-white/70 family-['Roboto_Condensed']">
+                        “Automated insights helped our scheme to track members
                         behind on payment”
                       </p>
                     </div>
+
+                    <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
                   </div>
                 </div>
               </div>
