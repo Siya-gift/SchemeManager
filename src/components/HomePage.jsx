@@ -113,7 +113,7 @@ function HomePage() {
             className="md:hidden absolute top-93 left-5 w-50 h-32 object-cover z-5"
             src={decor1}
             alt="card"
-          />
+          />h-screen
           <img
             className="md:hidden absolute top-120 right-0 w-50 h-35 object-cover z-5"
             src={decor2}
@@ -324,10 +324,11 @@ function HomePage() {
                     className="relative top-[min(50%,400px)] left-90 -translate-x-1/2 -translate-y-1/2 hidden md:block w-[max(31.25rem,50vw)] h-[max(100%,80svh)] bg-contain bg-center bg-no-repeat"
                     style={{
                       backgroundImage: `url(${guideCd})`,
+                      zIndex: 10
                     }}
                     aria-label="Guide CD"
                   >
-                    <div className="guideContent absolute top-140 left-20 flex flex-col gap-5">
+                    <div className="guideContent absolute top-140 left-20 flex flex-col gap-5 z-100">
                       <h1 className=" text-[clamp(42px,100svh,86px)] font-black text-[#FF00F2] text-start balance leading-15">
                         Explore every Financial freedom
                       </h1>
@@ -366,7 +367,7 @@ function HomePage() {
                         <h3 className="text-[16px] w-40 font-bold text-[#34E442]">
                           Easy to use. need <br /> guidance ?
                         </h3>
-                        <div className="w-35">
+                        <div className="w-35 z-80">
                           <PrimaryBtn3 btnGuide={btnGuide} />
                         </div>
                       </div>
@@ -387,7 +388,7 @@ function HomePage() {
                       src={GuidePhones}
                       alt="Guide Phones"
                     />
-                    <div className="md:hidden absolute bottom-10 left-8 w-30  h-20 text-2xl z-30">
+                    <div className="md:hidden absolute bottom-10 left-8 w-30  h-20 text-2xl z-80">
                       <PrimaryBtn3 btnGuide={btnGuide} />
                     </div>
                   </div>

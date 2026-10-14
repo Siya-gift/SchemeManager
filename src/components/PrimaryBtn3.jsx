@@ -7,7 +7,7 @@ function PrimaryBtn({ btnGuide}) {
   const buttonText = btnGuide;
 
   return (
-    <button className="relative px-8 h-20 w-full md:h-20 text-white text-[13px] font-semibold overflow-hidden rounded-lg group transition-all duration-200 hover:scale-y-90 cursor-pointer focus:scale-85 flex items-center justify-center">
+    <button className="relative px-8 h-20 w-full md:h-20 text-white text-[13px] font-semibold overflow-hidden rounded-lg group transition-all duration-200 hover:scale-y-90 cursor-pointer focus:scale-85 flex  z-200 items-center justify-center">
       {/* Background image remains locked to the container dimensions */}
       <img
         src={signinSvgBtn}
