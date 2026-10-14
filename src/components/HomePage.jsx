@@ -104,12 +104,12 @@ function HomePage() {
         />
 
         <img
-          className="md:hidden absolute top-93 left-5 w-40 h-32 object-cover"
+          className="md:hidden absolute top-93 left-5 w-40 h-32 object-cover z-1"
           src={decor1}
           alt="card"
         />
         <img
-          className="md:hidden absolute top-120 right-0 w-50 h-35 object-cover"
+          className="md:hidden absolute top-120 right-0 w-50 h-35 object-cover z-1"
           src={decor2}
           alt="card"
         />
@@ -287,8 +287,6 @@ function HomePage() {
       </div>
       <div className="relative w-full h-screen bg-white overflow-hidden">
         <div className="relative w-full h-screen overflow-hidden bg-white">
-          {" "}
-          {/* Parent wrapper to hide edges */}
           <div
             className="absolute inset-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,#00FF9D33_34%,#0368FF33_92%)] pointer-events-none"
             style={{
@@ -307,52 +305,97 @@ function HomePage() {
             `}
           </style>
           <div className="relative w-full h-full bg-white/10 backdrop-blur-[120px]">
-            <div className="relative top-1/2 left-20 h-130 w-[50%] -translate-y-1/2 flex flex-col items-center justify-center p-8">
-              <img
-                className="absolute bottom-70 md:bottom-10 left-20 h-80 md:h-50"
-                src={blurPup}
-                alt="blur"
-              />
-              <img
-                className="hidden md:block absolute inset-0 h-full w-full object-contain pointer-events-none"
-                src={guideCd}
-                alt="Guide CD"
-              />
-              <img
-                className="md:hidden absolute inset-0 h-full w-full object-contain pointer-events-none scale-190"
-                src={bgPhoneGuide}
-                alt="bgPhoneGuide"
-              />
+            <div className="flex h-full w-full">
+              <div className="h-full w-full flex items-center justify-end">
+                <div className="relative w-full h-full">
+                  {/* Pc view */}
+                  <div
+                    className="relative top-[min(50%,400px)] left-90 -translate-x-1/2 -translate-y-1/2 hidden md:block w-[max(31.25rem,50vw)] h-[max(100%,80svh)] bg-contain bg-center bg-no-repeat"
+                    style={{
+                      backgroundImage: `url(${guideCd})`,
+                    }}
+                    aria-label="Guide CD"
+                  >
+                    <div className="guideContent absolute top-140 left-20 flex flex-col gap-5">
+                      <h1 className=" text-[clamp(42px,100svh,86px)] font-black text-[#FF00F2] text-start balance leading-15">
+                        Explore every Financial freedom
+                      </h1>
+                      <div className="flex flex-row items-center gap-3 text-start">
+                        <h3 className="text-[16px] w-40 font-bold text-[#34E442]">
+                          Easy to use. need <br /> guidance ?
+                        </h3>
+                        <div className="w-35">
+                          <PrimaryBtn3 btnGuide={btnGuide} />
+                        </div>
+                      </div>
+                    </div>
 
-              <h1 className="relative -top-60 md:-top-20 -left-5 md:left-0 z-10 p-10 text-[35px] md:text-[72px] font-black text-[#FF00F2] text-start max-w-md balance leading-8 md:leading-15">
-                Explore every Financial freedom
-              </h1>
+                    <img
+                      className="absolute bottom-10 left-0 h-50 -z-1"
+                      src={blurPup}
+                      alt="blur"
+                    />
+                  </div>
 
-              <div className="hidden md:block">
-                <div className="relative bottom-25 flex flex-row items-center gap-3 text-start">
-                  <h3 className="text-[14px] max-w-35 font-bold text-[#34E442] leading-5">
-                    Easy to use. need <br /> guidance ?
-                  </h3>
-                  <PrimaryBtn3 btnGuide={btnGuide} />
+                  {/* Mobile view */}
+                  <div
+                    className="relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  md:hidden h-150 w-70 bg-cover bg-center bg-no-repeat"
+                    style={{ backgroundImage: `url(${bgPhoneGuide})` }}
+                    aria-label="Guide CD"
+                  >
+                    <h1 className="absolute top-20 left-10 text-[32px] font-black text-[#FF00F2] text-start balance leading-8 w-50">
+                      Explore every Financial freedom
+                    </h1>
+                    <h3 className="absolute top-60 left-10 text-[13px] w-30 font-bold text-[#34E442]">
+                      Easy to use. need <br /> guidance ?
+                    </h3>
+
+                    <div className="hidden absolute left-10 bottom-40">
+                      <div className="flex flex-row items-center gap-3 text-start">
+                        <h3 className="text-[16px] w-40 font-bold text-[#34E442]">
+                          Easy to use. need <br /> guidance ?
+                        </h3>
+                        <div className="w-35">
+                          <PrimaryBtn3 btnGuide={btnGuide} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <img
+                      className="absolute top-30 -right-10 h-50 -z-1"
+                      src={blurPup}
+                      alt="blur"
+                    />
+                    <img
+                      className="absolute bottom-10 left-0 h-50 -z-1"
+                      src={blurPup}
+                      alt="blur"
+                    />
+                    <img
+                      className="md:hidden absolute top-95 left-5 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-110 h-200"
+                      src={GuidePhones}
+                      alt="Guide Phones"
+                    />
+                    <div className="md:hidden absolute bottom-10 left-8 w-30  h-20 text-2xl z-30">
+                      <PrimaryBtn3 btnGuide={btnGuide} />
+                    </div>
+                  </div>
+
+                  <img
+                    className="hidden md:block absolute top-1/2 left-[min(55rem,calc(100vw-21rem))] 
+                    -translate-x-1/2 -translate-y-1/2 pointer-events-none w-110 h-100 scale-150 "
+                    src={GuidePhones}
+                    alt="Guide Phones"
+                  />
                 </div>
               </div>
             </div>
 
             <img
-              className="absolute h-80 md:h-100 bottom-0 -right-8 md:right-0 md:left-1/2 md:-translate-x-1/2"
+              className="absolute h-80 md:h-120 max-h-140 bottom-0 left-70 md:left-1/2 -translate-x-1/2 z-10"
               src={wGuidePic}
               alt="w_guidePic"
             />
-
-            <img
-              className="absolute h-200 top-15 md:-top-40 right-35 md:right-10"
-              src={GuidePhones}
-              alt="Guide Phones"
-            />
-
-            <div className="md:hidden absolute bottom-25 left-15 w-30  h-20 text-2xl">
-              <PrimaryBtn3 btnGuide={btnGuide} />
-            </div>
           </div>
         </div>
       </div>

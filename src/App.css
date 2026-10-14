@@ -193,3 +193,19 @@ body {
     --cardTrotate: 360deg;
   }
 }
+
+@media  (min-width: 1280px) {
+  .guideContent {
+    top: 17% !important;
+  }
+}
+
+
+@media (min-width: 768px) and (max-height: 1024px) {
+  .guideContent {
+    top: 15% !important;
+    /* Keeps the top edge precisely at 15% without 
+       pulling the element upward by its own height */
+    transform: none !important; 
+  }
+}
