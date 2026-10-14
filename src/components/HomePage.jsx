@@ -39,7 +39,7 @@ function HomePage() {
   return (
     <>
       <div className="relative w-full h-screen bg-white overflow-hidden">
-        <div className="w-full h-svh">
+        <div className="w-full min-h-dvh">
           <div
             className="absolute top-0 left-0 w-full h-48 md:h-96 z-10 pointer-events-none
             bg-linear-to-t from-transparent via-black/20 to-black/20"
