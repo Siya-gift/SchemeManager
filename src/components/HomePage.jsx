@@ -38,7 +38,7 @@ function HomePage() {
 
   return (
     <>
-      <div className="relative w-full min-h-[90svh] bg-white overflow-hidden">
+      <div className="relative w-full min-h-[90dvh] bg-white overflow-hidden">
         <div className="w-full h-full">
           <div
             className="absolute top-0 left-0 w-full h-48 md:h-96 z-10 pointer-events-none
