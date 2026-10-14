@@ -38,7 +38,7 @@ function HomePage() {
 
   return (
     <>
-      <div className="relative w-full min-h-[90dvh] bg-white overflow-hidden">
+      <div className="relative w-full min-h-dvh bg-white overflow-hidden">
         <div className="w-full h-full">
           <div
             className="absolute top-0 left-0 w-full h-48 md:h-96 z-10 pointer-events-none
@@ -110,7 +110,7 @@ function HomePage() {
           />
 
           <img
-            className="md:hidden absolute top-93 left-5 w-50 h-32 object-cover z-10"
+            className="md:hidden absolute top-93 left-5 w-50 h-32 object-cover z-20"
             src={decor1}
             alt="card"
           />
