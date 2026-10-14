@@ -104,7 +104,7 @@ function HomePage() {
         />
 
         <img
-          className="md:hidden absolute top-93 left-5 w-40 h-32 object-cover z-1"
+          className="md:hidden absolute top-93 left-5 w-50 h-32 object-cover z-2"
           src={decor1}
           alt="card"
         />
@@ -120,7 +120,7 @@ function HomePage() {
         />
 
         <img
-          className="absolute bottom-0 left-5 md:left-24 w-[75vw] md:w-70 aspect-3/4 md:aspect-auto md:h-72 object-cover"
+          className="absolute bottom-0 -left-5 md:left-24 w-[90vw] md:w-70 aspect-3/4 md:aspect-auto md:h-72 object-contain"
           src={w_left_home}
           alt="picture"
         />
