@@ -40,7 +40,7 @@ function HomePage() {
 
   return (
     <>
-      <div className="h-svh relative overflow-y-auto glass-scroll snap-y snap-mandatory bg-black">
+      <div className="h-dvh w-dvw relative overflow-y-auto glass-scroll snap-y snap-mandatory bg-black">
         <div className="hidden fixed inset-0 z-9999 flex flex-col items-center justify-center gap-4 bg-black/70 h-full w-full backdrop-blur-[5px]">
           {/* Windows-style Dot Spinner Container */}
           <div className="relative w-12 h-12">
