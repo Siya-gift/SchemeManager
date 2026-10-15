@@ -208,8 +208,8 @@ function HomePage() {
           100% { transform: translate(0, 0) rotate(360deg); }
         }
       `}</style>
-          <div className="relative w-full h-svh bg-black/10 backdrop-blur-[120px] flex flex-col justify-between">
-            <div className="w-full h-full flex flex-col items-center justify-center p-4">
+          <div className="relative w-full h-svh bg-black/10 backdrop-blur-[120px] flex flex-col justify-center items-center">
+            <div className="w-full h-80vh flex flex-col items-center justify-center p-16 ">
               <h1 className="text-2xl md:text-4xl leading-0.5 font-light text-white mb-18 md:mb-40 family-['Raleway']">
                 Testimonials
               </h1>
