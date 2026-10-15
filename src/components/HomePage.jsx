@@ -192,7 +192,7 @@ function HomePage() {
             </div>
           </div>
         </section>
-        <section className="relative w-full min-h-svh snap-start snap-always overflow-hidden bg-[#000000]">
+        <section className="relative w-full min-h-dvh snap-start snap-always overflow-hidden bg-[#000000]">
           <div
             className="absolute inset-[-10%] w-[120%] h-[120%] bg-[radial-gradient(60%_92.31%_at_0%_0%,#005214_0%,rgba(0,82,20,0)_100%),radial-gradient(60%_92.31%_at_88%_82%,#0F0070_0%,rgba(15,0,112,0)_100%),radial-gradient(60%_92.31%_at_53.27%_0%,#215063_0%,rgba(33,80,99,0)_100%),radial-gradient(60%_92.31%_at_19.19%_56.58%,#000000_0%,rgba(0,0,0,0)_100%)] mix-blend-screen opacity-90 pointer-events-none"
             style={{
@@ -208,7 +208,7 @@ function HomePage() {
           100% { transform: translate(0, 0) rotate(360deg); }
         }
       `}</style>
-          <div className="relative w-full h-svh bg-black/10 backdrop-blur-[120px] flex flex-col justify-center items-center">
+          <div className="relative w-full h-dvh bg-black/10 backdrop-blur-[120px] flex flex-col justify-center items-center">
             <div className="w-full h-80vh flex flex-col items-center justify-center p-16 ">
               <h1 className="text-2xl md:text-4xl leading-0.5 font-light text-white mb-18 md:mb-40 family-['Raleway']">
                 Testimonials
@@ -332,7 +332,7 @@ function HomePage() {
             </div>
           </div>
         </section>
-        <section className="relative w-full min-h-svh snap-start snap-always bg-white overflow-hidden">
+        <section className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden">
           <div className="relative w-full h-svh overflow-hidden bg-white">
             <div
               className="absolute inset-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,#00FF9D33_34%,#0368FF33_92%)] pointer-events-none"
@@ -448,7 +448,7 @@ function HomePage() {
           </div>
         </section>
         <section
-          className="relative w-full min-h-svh snap-start snap-always bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
+          className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${proveBG})`,
             zIndex: 20,
