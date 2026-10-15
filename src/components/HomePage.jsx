@@ -448,7 +448,7 @@ function HomePage() {
           </div>
         </section>
         <section
-          className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
+          className="relative w-full h-dvh snap-start snap-always bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${proveBG})`,
             zIndex: 20,
