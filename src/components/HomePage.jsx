@@ -40,9 +40,9 @@ function HomePage() {
 
   return (
     <>
-      <div className="h-dvh w-dvw relative overflow-y-auto glass-scroll snap-y snap-mandatory bg-black">
-        <div className="hidden fixed inset-0 z-9999 flex flex-col items-center justify-center gap-4 bg-black/70 h-full w-full backdrop-blur-[5px]">
-          {/* Windows-style Dot Spinner Container */}
+      <div className="h-dvh relative overflow-y-auto glass-scroll snap-y snap-mandatory bg-black">
+        {/* <div className="hidden fixed inset-0 z-9999 flex flex-col items-center justify-center gap-4 bg-black/70 h-full w-full backdrop-blur-[5px]">
+          
           <div className="relative w-12 h-12">
             <div className="absolute inset-0 animate-spin flex items-center justify-center">
               <div className="w-2.5 h-2.5 bg-white rounded-full absolute top-0"></div>
@@ -55,7 +55,7 @@ function HomePage() {
           <p className="text-white/80 text-sm md:text-base font-medium tracking-wide animate-pulse">
             Loading...
           </p>
-        </div>
+        </div> */}
 
         <section className="relative w-full min-h-svh snap-start snap-always bg-white overflow-hidden">
           <div className="w-full h-full">
@@ -141,7 +141,6 @@ function HomePage() {
               src={decor1}
               alt="card"
             />
-            h-screen
             <img
               className="md:hidden absolute top-120 right-0 w-50 h-35 object-cover z-5"
               src={decor2}
@@ -334,7 +333,7 @@ function HomePage() {
           </div>
         </section>
         <section className="relative w-full min-h-svh snap-start snap-always bg-white overflow-hidden">
-          <div className="relative w-full h-screen overflow-hidden bg-white">
+          <div className="relative w-full h-svh overflow-hidden bg-white">
             <div
               className="absolute inset-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,#00FF9D33_34%,#0368FF33_92%)] pointer-events-none"
               style={{
