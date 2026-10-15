@@ -241,3 +241,36 @@ body {
   animation: shine .3s linear;
 }
 
+.realGlass {
+  /* 1. Glass Styles */
+  background: rgba(255, 255, 255, 0.1); /* Optional: add a subtle translucent fill for the glass effect */
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.21);
+
+  /* 2. Gradient Border Setup */
+  border: 2px solid transparent; /* Set thickness */
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  
+  /* 3. Define the Fill and the Gradient Border */
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), /* Inner background */
+    linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.1)); /* Your gradient border colors */
+}
+
+@keyframes dilate-constrict {
+  0%, 100% {
+    transform: scale(0.8);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.animate-dilate {
+  animation: dilate-constrict 2.5s ease-in-out infinite;
+}

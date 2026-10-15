@@ -1,6 +1,7 @@
 import React from "react"; // Removed unused useState
 import "../App.css";
 import homeBG from "../images/bghomeSvg.svg";
+import proveBg from "../images/proveBg.jpg";
 import textureSvgHome from "../images/textureSvgHome.svg";
 import phoneHomebgTexture from "../images/phoneHomebgTexture.svg";
 import logo from "../images/logoSvg.svg";
@@ -29,6 +30,7 @@ import guideCd from "../images/guideCd.svg";
 import bgPhoneGuide from "../images/bgPhoneGuide.svg";
 import wGuidePic from "../images/wGuidePic.svg";
 import GuidePhones from "../images/GuidePhones.svg";
+import proveCard from "../images/proveCard.svg";
 
 function HomePage() {
   const btnSignin = "Sign in";
@@ -38,7 +40,23 @@ function HomePage() {
 
   return (
     <>
-      <div className="h-dvh overflow-y-auto glass-scroll snap-y snap-mandatory bg-black">
+      <div className="h-svh relative overflow-y-auto glass-scroll snap-y snap-mandatory bg-black">
+        <div className="hidden fixed inset-0 z-9999 flex flex-col items-center justify-center gap-4 bg-black/70 h-full w-full backdrop-blur-[5px]">
+          {/* Windows-style Dot Spinner Container */}
+          <div className="relative w-12 h-12">
+            <div className="absolute inset-0 animate-spin flex items-center justify-center">
+              <div className="w-2.5 h-2.5 bg-white rounded-full absolute top-0"></div>
+              <div className="w-2.5 h-2.5 bg-white/80 rounded-full absolute right-0"></div>
+              <div className="w-2.5 h-2.5 bg-white/60 rounded-full absolute bottom-0"></div>
+              <div className="w-2.5 h-2.5 bg-white/40 rounded-full absolute left-0"></div>
+            </div>
+          </div>
+
+          <p className="text-white/80 text-sm md:text-base font-medium tracking-wide animate-pulse">
+            Loading...
+          </p>
+        </div>
+
         <section className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden">
           <div className="w-full h-full">
             <div
@@ -82,6 +100,11 @@ function HomePage() {
 
               <div className="hidden md:block">
                 <ul className="flex items-center gap-13">
+                  <li>
+                    <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                      Ask AI
+                    </button>
+                  </li>
                   <li>
                     <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
                       FAQ
@@ -153,7 +176,7 @@ function HomePage() {
             </div>
             <div
               className="absolute w-full top-30 md:top-1/2 left-1/2 -translate-x-1/2 
-   md:-translate-y-1/2    flex flex-col items-center justify-center gap-3 z-20"
+               md:-translate-y-1/2    flex flex-col items-center justify-center gap-3 z-20"
             >
               <h1 className=" text-center text-white text-[32px] md:text-[42px] max-w-75 md:max-w-full font-semibold leading-10 md:leading-10">
                 Bringing your financial goals to <br />
@@ -422,6 +445,91 @@ function HomePage() {
                 src={wGuidePic}
                 alt="w_guidePic"
               />
+            </div>
+          </div>
+        </section>
+        <section className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden">
+          <img
+            className="absolute inset-0 w-full h-full object-cover filter z-1"
+            src={proveBg}
+            alt="background"
+          />
+          <div className="absolute inset-0 w-full h-full object-cover bg-[#FF0033]/40 z-2"></div>
+
+          <div className="prove absolute inset-0 w-full h-full object-cover flex flex-col justify-center md:justify-start lg:justify-center items-center p-20 z-4 border border-red-600 gap-18 md:gap-0">
+            <h1 className="w-[58vw] md:w-[45vw] h-fit text-[32px] md:text-[55px]  font-black leading-8 md:leading-11 text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% z-10 border border-green-600">
+              Why choose Scheme manager pro?
+            </h1>
+            {/* pc view */}
+            <div className="hidden min-[900px]:block">
+              <div
+                className="flex items-center justify-center p-6 md:p-12 w-full max-w-3xl aspect-video bg-contain bg-center bg-no-repeat border border-blue-600"
+                style={{
+                  backgroundImage: `url(${proveCard})`,
+                  zIndex: 20,
+                }}
+              >
+                <div className="flex items-center justify-center border border-white w-[95%] h-[75%]">
+                  <div className="flex h-full w-full justify-end p-2 gap-7">
+                    <div className="flex flex-col gap-1 text-start items-center justify-center">
+                      <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word ">
+                        Taking <br /> Accountability
+                      </h3>
+                      <p className="text-white text-[9px] font-normal family-['Roboto_Condensed']">
+                        We believe that true leadership starts with taking full
+                        ownership of our actions, decisions, and outcomes. We do
+                        not hide behind corporate buzzwords or shy away from
+                        difficult situations; instead, we stand firmly behind
+                        the promises we make to you. If a challenge arises, our
+                        focus is entirely on finding immediate solutions and
+                        ensuring your goals are met without disruption. By
+                        holding ourselves to the highest operational standards,
+                        we provide you with a reliable partnership where excuses
+                        are replaced by definitive results.
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-1 text-start items-center justify-center">
+                      <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word">
+                        Openness
+                      </h3>
+                      <p className="text-white text-[9px] font-normal family-['Roboto_Condensed']">
+                        Transparency is the foundation of our communication
+                        style. We maintain an environment of complete openness,
+                        ensuring you have clear, unrestricted visibility into
+                        our processes, pricing, and project timelines from day
+                        one. By sharing honest insights, realistic expectations,
+                        and regular updates, we eliminate guesswork and
+                        unexpected surprises. We welcome your feedback, promote
+                        collaborative dialogue, and keep the door open for any
+                        questions you have, making your experience entirely
+                        straightforward and stress-free.
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-1 text-start items-center justify-center">
+                      <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word">
+                        Trustworthiness
+                      </h3>
+                      <p className="text-white text-[9px] font-normal family-['Roboto_Condensed']">
+                        Trust cannot be demanded; it must be earned through
+                        consistent ethical behavior and uncompromised integrity.
+                        Over the years, we have built our reputation on doing
+                        exactly what we say we will do, safeguarding your data,
+                        projects, and investments with the absolute highest
+                        standards of confidentiality. When you choose us, you
+                        are partnering with an organization that values
+                        long-term relationships over short-term wins, giving you
+                        the peace of mind that your interests are always in
+                        safe, dependable hands.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* mobile view */}
+            <div className="md:hidden">
+              <div className="glass w-[90%] h-79 flex p-40"></div>
             </div>
           </div>
         </section>
