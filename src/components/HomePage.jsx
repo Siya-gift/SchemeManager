@@ -1,7 +1,7 @@
 import React from "react"; // Removed unused useState
 import "../App.css";
 import homeBG from "../images/bghomeSvg.svg";
-import proveBg from "../images/proveBg.jpg";
+import proveBG from "../images/proveBG.jpg";
 import textureSvgHome from "../images/textureSvgHome.svg";
 import phoneHomebgTexture from "../images/phoneHomebgTexture.svg";
 import logo from "../images/logoSvg.svg";
@@ -450,7 +450,7 @@ function HomePage() {
         <section
           className="relative w-full min-h-svh snap-start snap-always bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(${proveBg})`,
+            backgroundImage: `url(${proveBG})`,
             zIndex: 20,
           }}
         >
