@@ -582,7 +582,7 @@ function HomePage() {
                         </div>
                       )}
 
-                      <div className="h-[30%]">
+                      <div className="h-[30%] mt-5">
                         <div className="flex justify-between items-center text-[#e3e3e3]"
                         onClick={() => openProve2()}>
                           <h1 className="text-sm family-['Roboto_Condense']">
@@ -612,7 +612,7 @@ function HomePage() {
                         </div>
                       )}
 
-                      <div className="h-[30%]">
+                      <div className="h-[30%] mt-5">
                         <div className="flex justify-between items-center text-[#e3e3e3]"
                         onClick={() => openProve3()}>
                           <h1 className="text-sm family-['Roboto_Condense']">
