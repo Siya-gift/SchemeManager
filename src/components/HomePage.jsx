@@ -1,4 +1,4 @@
-import React from "react"; // Removed unused useState
+import React, { useState } from "react"; // Removed unused useState
 import "../App.css";
 import homeBG from "../images/bghomeSvg.svg";
 import proveBG from "../images/proveBG.jpg";
@@ -31,12 +31,23 @@ import bgPhoneGuide from "../images/bgPhoneGuide.svg";
 import wGuidePic from "../images/wGuidePic.svg";
 import GuidePhones from "../images/GuidePhones.svg";
 import proveCard from "../images/proveCard.svg";
+import mobilePbg from "../images/mobilePbg.svg";
+import arrowD from "../images/arrowD.svg";
+import arrowU from "../images/arrowU.svg";
 
 function HomePage() {
   const btnSignin = "Sign in";
   const btnGetStarted = "Get Started";
   const btnLearn = "Learn More";
   const btnGuide = "Guide Me";
+
+  const [proveState1, proveStateFunc1] = useState(false);
+  const [proveState2, proveStateFunc2] = useState(false);
+  const [proveState3, proveStateFunc3] = useState(false);
+
+  const openProve1 = () =>   proveStateFunc1(!proveState1);
+  const openProve2 = () =>   proveStateFunc2(!proveState2);
+  const openProve3 = () =>   proveStateFunc3(!proveState3);
 
   return (
     <>
@@ -530,7 +541,110 @@ function HomePage() {
 
               {/* mobile view */}
               <div className="min-[900px]:hidden">
-                <div className="glass w-[90%] h-79 flex p-40 mt-10"></div>
+                <div
+                  className="w-[90%] h-79 flex relative p-50 min-[500px]:p-80  mt-10 bg-contain bg-center bg-no-repeat"
+                  style={{
+                    backgroundImage: `url(${mobilePbg})`,
+                    zIndex: 20,
+                  }}
+                >
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[67%] h-[80%] p-5 flex items-center justify-center transition-all duration-75">
+                    <div className="relative h-full w-full flex flex-col justify-evenly overflow-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
+                      <div className="h-[30%]">
+                        <div
+                          className="flex justify-between items-center text-[#e3e3e3]"
+                          onClick={() => openProve1()}
+                        >
+                          <h1 className="text-sm family-['Roboto_Condense']">
+                            Taking <br /> Accountability
+                          </h1>
+                          <div className={`transition-transform duration-500 h-1.25 ${proveState1 ? 'rotate-180' : ''}`}>
+                            <img src={arrowD} />
+                          </div>
+                        </div>
+                        <hr className="border-[.7px] text-[#e3e3e3] mt-2" />
+                      </div>
+                      {proveState1 && (
+                        <div className="p-6">
+                          <p className=" text-[11px] text-[#e3e3e3]">
+                            We believe that true leadership starts with taking
+                            full ownership of our actions, decisions, and
+                            outcomes. We do not hide behind corporate buzzwords
+                            or shy away from difficult situations; instead, we
+                            stand firmly behind the promises we make to you. If
+                            a challenge arises, our focus is entirely on finding
+                            immediate solutions and ensuring your goals are met
+                            without disruption. By holding ourselves to the
+                            highest operational standards, we provide you with a
+                            reliable partnership where excuses are replaced by
+                            definitive results.
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="h-[30%]">
+                        <div className="flex justify-between items-center text-[#e3e3e3]"
+                        onClick={() => openProve2()}>
+                          <h1 className="text-sm family-['Roboto_Condense']">
+                            Openness
+                          </h1>
+                          <div className={`transition-transform duration-500 h-1.25 ${proveState2 ? 'rotate-180' : ''}`}>
+                            <img src={arrowD} />
+                          </div>
+                        </div>
+                        <hr className="border-[.7px] text-[#e3e3e3] mt-2" />
+                      </div>
+                      {proveState2 && (
+                        <div className="p-6">
+                          <p className="text-[11px] text-[#e3e3e3]">
+                            We believe that true leadership starts with taking
+                            full ownership of our actions, decisions, and
+                            outcomes. We do not hide behind corporate buzzwords
+                            or shy away from difficult situations; instead, we
+                            stand firmly behind the promises we make to you. If
+                            a challenge arises, our focus is entirely on finding
+                            immediate solutions and ensuring your goals are met
+                            without disruption. By holding ourselves to the
+                            highest operational standards, we provide you with a
+                            reliable partnership where excuses are replaced by
+                            definitive results.
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="h-[30%]">
+                        <div className="flex justify-between items-center text-[#e3e3e3]"
+                        onClick={() => openProve3()}>
+                          <h1 className="text-sm family-['Roboto_Condense']">
+                            Trustworthiness
+                          </h1>
+                          <div className={`transition-transform duration-500 h-1.25 ${proveState3 ? 'rotate-180' : ''}`}>
+                            <img src={arrowD} />
+                          </div>
+                        </div>
+                        <hr className="border-[.7px] text-[#e3e3e3] mt-2" />
+                      </div>
+                      {proveState3 && (
+                        <div className="p-6">
+                          <p className="text-[11px] text-[#e3e3e3]">
+                            We believe that true leadership starts with taking
+                            full ownership of our actions, decisions, and
+                            outcomes. We do not hide behind corporate buzzwords
+                            or shy away from difficult situations; instead, we
+                            stand firmly behind the promises we make to you. If
+                            a challenge arises, our focus is entirely on finding
+                            immediate solutions and ensuring your goals are met
+                            without disruption. By holding ourselves to the
+                            highest operational standards, we provide you with a
+                            reliable partnership where excuses are replaced by
+                            definitive results.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="absolute bottom-0 left-0 w-full h-30 md:h-96 z-10 pointer-events-none backdrop-blur-md mask-[linear-gradient(to_top,black,transparent)]" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
