@@ -45,9 +45,9 @@ function HomePage() {
   const [proveState2, proveStateFunc2] = useState(false);
   const [proveState3, proveStateFunc3] = useState(false);
 
-  const openProve1 = () =>   proveStateFunc1(!proveState1);
-  const openProve2 = () =>   proveStateFunc2(!proveState2);
-  const openProve3 = () =>   proveStateFunc3(!proveState3);
+  const openProve1 = () => proveStateFunc1(!proveState1);
+  const openProve2 = () => proveStateFunc2(!proveState2);
+  const openProve3 = () => proveStateFunc3(!proveState3);
 
   return (
     <>
@@ -558,7 +558,9 @@ function HomePage() {
                           <h1 className="text-sm family-['Roboto_Condense']">
                             Taking <br /> Accountability
                           </h1>
-                          <div className={`transition-transform duration-500 h-1.25 ${proveState1 ? 'rotate-180' : ''}`}>
+                          <div
+                            className={`transition-transform duration-500 h-1.25 ${proveState1 ? "rotate-180" : ""}`}
+                          >
                             <img src={arrowD} />
                           </div>
                         </div>
@@ -570,7 +572,7 @@ function HomePage() {
                             We believe that true leadership starts with taking
                             full ownership of our actions, decisions, and
                             outcomes. We do not hide behind corporate buzzwords
-                            or shy away from difficult situations; instead, we
+                            or shy away from difficult situations. Instead, we
                             stand firmly behind the promises we make to you. If
                             a challenge arises, our focus is entirely on finding
                             immediate solutions and ensuring your goals are met
@@ -583,12 +585,16 @@ function HomePage() {
                       )}
 
                       <div className="h-[30%] mt-5">
-                        <div className="flex justify-between items-center text-[#e3e3e3]"
-                        onClick={() => openProve2()}>
+                        <div
+                          className="flex justify-between items-center text-[#e3e3e3]"
+                          onClick={() => openProve2()}
+                        >
                           <h1 className="text-sm family-['Roboto_Condense']">
                             Openness
                           </h1>
-                          <div className={`transition-transform duration-500 h-1.25 ${proveState2 ? 'rotate-180' : ''}`}>
+                          <div
+                            className={`transition-transform duration-500 h-1.25 ${proveState2 ? "rotate-180" : ""}`}
+                          >
                             <img src={arrowD} />
                           </div>
                         </div>
@@ -597,28 +603,32 @@ function HomePage() {
                       {proveState2 && (
                         <div className="p-6">
                           <p className="text-[11px] text-[#e3e3e3]">
-                            We believe that true leadership starts with taking
-                            full ownership of our actions, decisions, and
-                            outcomes. We do not hide behind corporate buzzwords
-                            or shy away from difficult situations; instead, we
-                            stand firmly behind the promises we make to you. If
-                            a challenge arises, our focus is entirely on finding
-                            immediate solutions and ensuring your goals are met
-                            without disruption. By holding ourselves to the
-                            highest operational standards, we provide you with a
-                            reliable partnership where excuses are replaced by
-                            definitive results.
+                            Transparency is the foundation of our communication
+                            style. We maintain an environment of complete
+                            openness, ensuring you have clear, unrestricted
+                            visibility into our processes, pricing, and project
+                            timelines from day one. By sharing honest insights,
+                            realistic expectations, and regular updates, we
+                            eliminate guesswork and unexpected surprises. We
+                            welcome your feedback, promote collaborative
+                            dialogue, and keep the door open for any questions
+                            you have, making your experience entirely
+                            straightforward and stress-free.
                           </p>
                         </div>
                       )}
 
-                      <div className="h-[30%] mt-5">
-                        <div className="flex justify-between items-center text-[#e3e3e3]"
-                        onClick={() => openProve3()}>
+                      <div className="h-[30%] my-5">
+                        <div
+                          className="flex justify-between items-center text-[#e3e3e3]"
+                          onClick={() => openProve3()}
+                        >
                           <h1 className="text-sm family-['Roboto_Condense']">
                             Trustworthiness
                           </h1>
-                          <div className={`transition-transform duration-500 h-1.25 ${proveState3 ? 'rotate-180' : ''}`}>
+                          <div
+                            className={`transition-transform duration-500 h-1.25 ${proveState3 ? "rotate-180" : ""}`}
+                          >
                             <img src={arrowD} />
                           </div>
                         </div>
@@ -627,17 +637,17 @@ function HomePage() {
                       {proveState3 && (
                         <div className="p-6">
                           <p className="text-[11px] text-[#e3e3e3]">
-                            We believe that true leadership starts with taking
-                            full ownership of our actions, decisions, and
-                            outcomes. We do not hide behind corporate buzzwords
-                            or shy away from difficult situations; instead, we
-                            stand firmly behind the promises we make to you. If
-                            a challenge arises, our focus is entirely on finding
-                            immediate solutions and ensuring your goals are met
-                            without disruption. By holding ourselves to the
-                            highest operational standards, we provide you with a
-                            reliable partnership where excuses are replaced by
-                            definitive results.
+                            Trust cannot be demanded; it must be earned through
+                            consistent ethical behavior and uncompromised
+                            integrity. Over the years, we have built our
+                            reputation on doing exactly what we say we will do,
+                            safeguarding your data, projects, and investments
+                            with the absolute highest standards of
+                            confidentiality. When you choose us, you are
+                            partnering with an organization that values
+                            long-term relationships over short-term wins, giving
+                            you the peace of mind that your interests are always
+                            in safe, dependable hands.
                           </p>
                         </div>
                       )}
