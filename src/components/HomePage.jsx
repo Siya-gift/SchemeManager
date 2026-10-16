@@ -2,6 +2,7 @@ import React, { useState } from "react"; // Removed unused useState
 import "../App.css";
 import homeBG from "../images/bghomeSvg.svg";
 import proveBG from "../images/proveBG.jpg";
+import plan_BG_image from "../images/plan_BG_image.svg";
 import textureSvgHome from "../images/textureSvgHome.svg";
 import phoneHomebgTexture from "../images/phoneHomebgTexture.svg";
 import logo from "../images/logoSvg.svg";
@@ -26,6 +27,7 @@ import blurPup from "../images/blurPup.svg";
 import PrimaryBtn from "./PrimaryBtn";
 import PrimaryBtn2 from "./PrimaryBtn2";
 import PrimaryBtn3 from "./PrimaryBtn3";
+import PrimaryBtn4 from "./PrimaryBtn4";
 import guideCd from "../images/guideCd.svg";
 import bgPhoneGuide from "../images/bgPhoneGuide.svg";
 import wGuidePic from "../images/wGuidePic.svg";
@@ -34,12 +36,14 @@ import proveCard from "../images/proveCard.svg";
 import mobilePbg from "../images/mobilePbg.svg";
 import arrowD from "../images/arrowD.svg";
 import arrowU from "../images/arrowU.svg";
+import CheckMark from "../images/CheckMark.svg";
 
 function HomePage() {
   const btnSignin = "Sign in";
   const btnGetStarted = "Get Started";
   const btnLearn = "Learn More";
   const btnGuide = "Guide Me";
+  const btnGetPlan = "Get Plan";
 
   const [proveState1, proveStateFunc1] = useState(false);
   const [proveState2, proveStateFunc2] = useState(false);
@@ -654,6 +658,249 @@ function HomePage() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          className="relative w-full min-h-dvh snap-start snap-always bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${plan_BG_image})`,
+            zIndex: 20,
+          }}
+        >
+          {/* pc view */}
+          <div className="absolute inset-0 flex justify-center items-center gap-20 w-full h-full">
+            {/* c1 */}
+            <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+              <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                  <div className="w-full h-full flex flex-col ">
+                    <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                      R 150/<span className="text-[8px]">Month</span>
+                    </h4>
+                    <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#D900FF] from-[8.17%] via-[#6C73FF]/45 via-[74.52%] to-[#00E9FF]/20 to-[87.98%] bg-clip-text text-transparent h-fit">
+                      Starter <br /> plan
+                    </h1>
+                    <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                      Get started by using this plan and get <br /> the basic
+                      and useful features.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col h-full gap-2">
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Vote for management
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Limited number of schemes & members
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Get email notifications
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        No automation features
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        No backup storage
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="ml-auto">
+                    <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                  </div>
+                </div>
+
+                <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
+              </div>
+            </div>
+
+            {/* c2 */}
+            <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+              <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                  <div className="w-full h-full flex flex-col ">
+                    <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                      R 299/<span className="text-[8px]">Month</span>
+                    </h4>
+                    <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#0368FF] from-0% via-[#6C73FF]/45 via-[46.63%] to-[#00FF9D] to-[97.12%] bg-clip-text text-transparent h-fit">
+                      Standard <br /> plan
+                    </h1>
+                    <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                      The Complete Guide to Launching, <br /> Managing, and
+                      Scaling Your Schemes.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col h-full gap-2">
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Vote for management
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Get 10 schemes and 10 members
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Automated payments
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Fast human consultant response
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Build global public schemes to <br /> attract members
+                        worldwide
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Download backup Files
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="ml-auto">
+                    <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                  </div>
+                </div>
+
+                <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
+              </div>
+            </div>
+
+            {/* c3 */}
+            <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+              <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                  <div className="w-full h-full flex flex-col ">
+                    <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                      R 999/<span className="text-[8px]">Month</span>
+                    </h4>
+                    <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#FFEE00]/50 from-0% via-[#FFA96C]/45 via-[26.92%] to-[#B7FF00]/20 to-[66.83%] bg-clip-text text-transparent h-fit">
+                      Premium <br /> plan
+                    </h1>
+                    <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                      Supercharge your experience. Upgrade to <br />
+                      Premium for full access to our core & <br />
+                      advanced toolkits.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col h-full gap-2">
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Vote for management
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Unlimited number of schemes & members
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Automation features
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Generating unlimited reports
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Monthly payment reminder
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Invite members via whatsApp
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-3">
+                      <div className="checkM h-3 w-3">
+                        <img src={CheckMark} alt="-" />
+                      </div>
+                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        Unlimited downloads
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="ml-auto">
+                    <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                  </div>
+                </div>
+
+                <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
               </div>
             </div>
           </div>
