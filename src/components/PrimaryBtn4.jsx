@@ -12,7 +12,7 @@ function PrimaryBtn({ btnGetPlan }) {
       <img
         src={getP}
         alt=""
-        className="absolute inset-0 w-full h-full object-cover -z-10"
+        className="absolute inset-0 w-full h-full object-contain -z-10"
       />
       {/* Content wrapper: centered flex layout prevents any height shifting */}
       <span className="relative z-10 flex items-center justify-center whitespace-nowrap h-full">
