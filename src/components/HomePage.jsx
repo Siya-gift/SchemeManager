@@ -23,6 +23,7 @@ import decor3 from "../images/decor3.png";
 import pollDeco from "../images/pollDeco.svg";
 import decoCards2 from "../images/decoCards2.png";
 import blurPup from "../images/blurPup.svg";
+import upgradePic from "../images/upgradePic.svg";
 
 import PrimaryBtn from "./PrimaryBtn";
 import PrimaryBtn2 from "./PrimaryBtn2";
@@ -49,9 +50,15 @@ function HomePage() {
   const [proveState2, proveStateFunc2] = useState(false);
   const [proveState3, proveStateFunc3] = useState(false);
 
+  const [activePlan, setActivePlan] = useState(1);
+
   const openProve1 = () => proveStateFunc1(!proveState1);
   const openProve2 = () => proveStateFunc2(!proveState2);
   const openProve3 = () => proveStateFunc3(!proveState3);
+
+  const changePlan = (id) => {
+    setActivePlan(id);
+  };
 
   return (
     <>
@@ -223,124 +230,126 @@ function HomePage() {
           100% { transform: translate(0, 0) rotate(360deg); }
         }
       `}</style>
-          <div className="relative w-full h-dvh bg-black/10 backdrop-blur-[120px] flex flex-col justify-center items-center">
-            <div className="w-full h-80vh flex flex-col items-center justify-center p-16 ">
-              <h1 className="text-2xl md:text-4xl leading-0.5 font-light text-white mb-18 md:mb-40 family-['Raleway']">
-                Testimonials
-              </h1>
+          <div className="absolute inset-0 w-full h-full bg-black/10 backdrop-blur-[120px] flex flex-col justify-center items-center">
+            <div className="relative h-[80%] w-[80%]">
+              <div className="absolute inset-0 flex w-full h-full flex-col items-center justify-center  ">
+                <h1 className="text-2xl md:text-4xl leading-0.5 font-light text-white mb-18 md:mb-40 family-['Raleway']">
+                  Testimonials
+                </h1>
 
-              <div className="testimonial_cards flex flex-col md:flex-row gap-6 md:gap-8 items-center justify-center w-full max-w-6xl mx-auto relative">
-                <img
-                  className="absolute top-1/2 -translate-y-1/2 left-12 h-175 md:rotate-90 md:left-1/2 md:-translate-x-1/2 md:-top-30"
-                  src={pollDeco}
-                  alt="poll"
-                />
-                {/* Card 1 */}
-                <div className="Tcard relative isolate box-border h-40 md:h-70 w-full max-w-sm min-w-0 rounded-2xl group cursor-pointer">
-                  {/* Inner wrapper clips content and shine, not the outer glow */}
-                  <div className="relative z-10 h-full w-full min-w-0 rounded-2xl overflow-hidden">
-                    {/* Card content */}
-                    <div className="relative z-10 flex h-full w-full min-w-0 flex-col items-start justify-center gap-3 rounded-2xl bg-[#0f0f0f] p-6 text-white">
-                      <div className="flex min-w-0 flex-row items-center justify-start gap-3">
-                        <img
-                          className="h-10 w-10 shrink-0 rounded-full object-cover"
-                          src={user1}
-                          alt="Andries"
-                        />
-
-                        <div className="flex min-w-0 flex-col items-start justify-start gap-0.5">
-                          <p className="family-['Roboto_Condensed'] text-[18px]">
-                            Andries
-                          </p>
-
+                <div className="testimonial_cards flex flex-col md:flex-row gap-6 md:gap-8 items-center justify-center relative h-full md:h-auto">
+                  <img
+                    className="absolute top-1/2 -translate-y-1/2 left-12 h-175 md:rotate-90 md:left-1/2 md:-translate-x-1/2 md:-top-30"
+                    src={pollDeco}
+                    alt="poll"
+                  />
+                  {/* Card 1 */}
+                  <div className="Tcard relative isolate box-border h-40 md:h-70 w-full max-w-sm min-w-0 rounded-2xl group cursor-pointer">
+                    {/* Inner wrapper clips content and shine, not the outer glow */}
+                    <div className="relative z-10 h-full w-full min-w-0 rounded-2xl overflow-hidden">
+                      {/* Card content */}
+                      <div className="relative z-10 flex h-full w-full min-w-0 flex-col items-start justify-center gap-3 rounded-2xl bg-[#0f0f0f] p-6 text-white">
+                        <div className="flex min-w-0 flex-row items-center justify-start gap-3">
                           <img
-                            className="w-15 max-w-full"
-                            src={Tstars}
-                            alt="Rating"
+                            className="h-10 w-10 shrink-0 rounded-full object-cover"
+                            src={user1}
+                            alt="Andries"
                           />
+
+                          <div className="flex min-w-0 flex-col items-start justify-start gap-0.5">
+                            <p className="family-['Roboto_Condensed'] text-[18px]">
+                              Andries
+                            </p>
+
+                            <img
+                              className="w-15 max-w-full"
+                              src={Tstars}
+                              alt="Rating"
+                            />
+                          </div>
                         </div>
+
+                        <p className="w-full min-w-0 wrap-break-word text-[12px] text-white/70 family-['Roboto_Condensed']">
+                          “Managed to purchase land after saving money using
+                          Scheme Manager Pro for 1 year”
+                        </p>
                       </div>
 
-                      <p className="w-full min-w-0 wrap-break-word text-[12px] text-white/70 family-['Roboto_Condensed']">
-                        “Managed to purchase land after saving money using
-                        Scheme Manager Pro for 1 year”
-                      </p>
+                      <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
                     </div>
-
-                    <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
                   </div>
-                </div>
 
-                {/* Card 2 */}
-                <div className="Tcard relative isolate box-border h-40 md:h-70 w-full max-w-sm min-w-0 rounded-2xl group cursor-pointer">
-                  {/* Inner wrapper clips content and shine, not the outer glow */}
-                  <div className="relative z-10 h-full w-full min-w-0 rounded-2xl overflow-hidden">
-                    {/* Card content */}
-                    <div className="relative z-10 flex h-full w-full min-w-0 flex-col items-start justify-center gap-3 rounded-2xl bg-[#0f0f0f] p-6 text-white">
-                      <div className="flex min-w-0 flex-row items-center justify-start gap-3">
-                        <img
-                          className="h-10 w-10 shrink-0 rounded-full object-cover"
-                          src={user2}
-                          alt="Andries"
-                        />
-
-                        <div className="flex min-w-0 flex-col items-start justify-start gap-0.5">
-                          <p className="family-['Roboto_Condensed'] text-[18px]">
-                            Sophie
-                          </p>
-
+                  {/* Card 2 */}
+                  <div className="Tcard relative isolate box-border h-40 md:h-70 w-full max-w-sm min-w-0 rounded-2xl group cursor-pointer">
+                    {/* Inner wrapper clips content and shine, not the outer glow */}
+                    <div className="relative z-10 h-full w-full min-w-0 rounded-2xl overflow-hidden">
+                      {/* Card content */}
+                      <div className="relative z-10 flex h-full w-full min-w-0 flex-col items-start justify-center gap-3 rounded-2xl bg-[#0f0f0f] p-6 text-white">
+                        <div className="flex min-w-0 flex-row items-center justify-start gap-3">
                           <img
-                            className="w-15 max-w-full"
-                            src={Tstars}
-                            alt="Rating"
+                            className="h-10 w-10 shrink-0 rounded-full object-cover"
+                            src={user2}
+                            alt="Andries"
                           />
+
+                          <div className="flex min-w-0 flex-col items-start justify-start gap-0.5">
+                            <p className="family-['Roboto_Condensed'] text-[18px]">
+                              Sophie
+                            </p>
+
+                            <img
+                              className="w-15 max-w-full"
+                              src={Tstars}
+                              alt="Rating"
+                            />
+                          </div>
                         </div>
+
+                        <p className="w-full min-w-0 wrap-break-word text-[12px] text-white/70 family-['Roboto_Condensed']">
+                          “Was able to transition to full-time freelancing after
+                          building an emergency fund using scheme manager pro
+                          for 1 year”
+                        </p>
                       </div>
 
-                      <p className="w-full min-w-0 wrap-break-word text-[12px] text-white/70 family-['Roboto_Condensed']">
-                        “Was able to transition to full-time freelancing after
-                        building an emergency fund using scheme manager pro for
-                        1 year”
-                      </p>
+                      <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
                     </div>
-
-                    <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
                   </div>
-                </div>
 
-                {/* Card 3 */}
-                <div className="Tcard relative isolate box-border h-40 md:h-70 w-full max-w-sm min-w-0 rounded-2xl group cursor-pointer">
-                  {/* Inner wrapper clips content and shine, not the outer glow */}
-                  <div className="relative z-10 h-full w-full min-w-0 rounded-2xl overflow-hidden">
-                    {/* Card content */}
-                    <div className="relative z-10 flex h-full w-full min-w-0 flex-col items-start justify-center gap-3 rounded-2xl bg-[#0f0f0f] p-6 text-white">
-                      <div className="flex min-w-0 flex-row items-center justify-start gap-3">
-                        <img
-                          className="h-10 w-10 shrink-0 rounded-full object-cover"
-                          src={user3}
-                          alt="Andries"
-                        />
-
-                        <div className="flex min-w-0 flex-col items-start justify-start gap-0.5">
-                          <p className="family-['Roboto_Condensed'] text-[18px]">
-                            Nova
-                          </p>
-
+                  {/* Card 3 */}
+                  <div className="Tcard relative isolate box-border h-40 md:h-70 w-full max-w-sm min-w-0 rounded-2xl group cursor-pointer">
+                    {/* Inner wrapper clips content and shine, not the outer glow */}
+                    <div className="relative z-10 h-full w-full min-w-0 rounded-2xl overflow-hidden">
+                      {/* Card content */}
+                      <div className="relative z-10 flex h-full w-full min-w-0 flex-col items-start justify-center gap-3 rounded-2xl bg-[#0f0f0f] p-6 text-white">
+                        <div className="flex min-w-0 flex-row items-center justify-start gap-3">
                           <img
-                            className="w-15 max-w-full"
-                            src={Tstars}
-                            alt="Rating"
+                            className="h-10 w-10 shrink-0 rounded-full object-cover"
+                            src={user3}
+                            alt="Andries"
                           />
+
+                          <div className="flex min-w-0 flex-col items-start justify-start gap-0.5">
+                            <p className="family-['Roboto_Condensed'] text-[18px]">
+                              Nova
+                            </p>
+
+                            <img
+                              className="w-15 max-w-full"
+                              src={Tstars}
+                              alt="Rating"
+                            />
+                          </div>
                         </div>
+
+                        <p className="w-full min-w-0 wrap-break-word text-[12px] text-white/70 family-['Roboto_Condensed']">
+                          “Automated insights helped our scheme to track members
+                          behind on payment”
+                        </p>
                       </div>
 
-                      <p className="w-full min-w-0 wrap-break-word text-[12px] text-white/70 family-['Roboto_Condensed']">
-                        “Automated insights helped our scheme to track members
-                        behind on payment”
-                      </p>
+                      <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
                     </div>
-
-                    <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
                   </div>
                 </div>
               </div>
@@ -670,237 +679,358 @@ function HomePage() {
           }}
         >
           {/* pc view */}
-          <div className="absolute inset-0 flex justify-center items-center gap-20 w-full h-full">
-            {/* c1 */}
-            <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
-              <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
-                <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
-                  <div className="w-full h-full flex flex-col ">
-                    <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
-                      R 150/<span className="text-[8px]">Month</span>
-                    </h4>
-                    <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#D900FF] from-[8.17%] via-[#6C73FF]/45 via-[74.52%] to-[#00E9FF]/20 to-[87.98%] bg-clip-text text-transparent h-fit">
-                      Starter <br /> plan
-                    </h1>
-                    <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
-                      Get started by using this plan and get <br /> the basic
-                      and useful features.
-                    </p>
+          <div className="hidden md:block">
+            <div className="absolute inset-0 flex justify-center items-center gap-20 w-full h-full">
+              {/* c1 */}
+              <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+                <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                  <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                    <div className="w-full h-full flex flex-col ">
+                      <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                        R 150/<span className="text-[8px]">Month</span>
+                      </h4>
+                      <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#D900FF] from-[8.17%] via-[#6C73FF]/45 via-[74.52%] to-[#00E9FF]/20 to-[87.98%] bg-clip-text text-transparent h-fit">
+                        Starter <br /> plan
+                      </h1>
+                      <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                        Get started by using this plan and get <br /> the basic
+                        and useful features.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col h-full gap-2">
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Vote for management
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Limited number of schemes & members
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Get email notifications
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          No automation features
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          No backup storage
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="ml-auto">
+                      <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                    </div>
                   </div>
 
-                  <div className="flex flex-col h-full gap-2">
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Vote for management
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Limited number of schemes & members
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Get email notifications
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        No automation features
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        No backup storage
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="ml-auto">
-                    <PrimaryBtn4 btnGetPlan={btnGetPlan} />
-                  </div>
+                  <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
                 </div>
+              </div>
 
-                <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
+              {/* c2 */}
+              <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+                <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                  <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                    <div className="w-full h-full flex flex-col ">
+                      <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                        R 299/<span className="text-[8px]">Month</span>
+                      </h4>
+                      <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#0368FF] from-0% via-[#6C73FF]/45 via-[46.63%] to-[#00FF9D] to-[97.12%] bg-clip-text text-transparent h-fit">
+                        Standard <br /> plan
+                      </h1>
+                      <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                        The Complete Guide to Launching, <br /> Managing, and
+                        Scaling Your Schemes.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col h-full gap-2">
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Vote for management
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Get 10 schemes and 10 members
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Automated payments
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Fast human consultant response
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Build global public schemes to <br /> attract members
+                          worldwide
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Download backup Files
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="ml-auto">
+                      <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                    </div>
+                  </div>
+
+                  <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
+                </div>
+              </div>
+
+              {/* c3 */}
+              <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+                <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                  <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                    <div className="w-full h-full flex flex-col ">
+                      <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                        R 999/<span className="text-[8px]">Month</span>
+                      </h4>
+                      <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#FFEE00]/50 from-0% via-[#FFA96C]/45 via-[26.92%] to-[#B7FF00]/20 to-[66.83%] bg-clip-text text-transparent h-fit">
+                        Premium <br /> plan
+                      </h1>
+                      <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                        Supercharge your experience. Upgrade to <br />
+                        Premium for full access to our core & <br />
+                        advanced toolkits.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col h-full gap-2">
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Vote for management
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Unlimited number of schemes & members
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Automation features
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Generating unlimited reports
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Monthly payment reminder
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Invite members via whatsApp
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Unlimited downloads
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="ml-auto">
+                      <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                    </div>
+                  </div>
+
+                  <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* c2 */}
-            <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
-              <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
-                <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
-                  <div className="w-full h-full flex flex-col ">
-                    <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
-                      R 299/<span className="text-[8px]">Month</span>
-                    </h4>
-                    <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#0368FF] from-0% via-[#6C73FF]/45 via-[46.63%] to-[#00FF9D] to-[97.12%] bg-clip-text text-transparent h-fit">
-                      Standard <br /> plan
-                    </h1>
-                    <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
-                      The Complete Guide to Launching, <br /> Managing, and
-                      Scaling Your Schemes.
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col h-full gap-2">
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Vote for management
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Get 10 schemes and 10 members
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Automated payments
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Fast human consultant response
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Build global public schemes to <br /> attract members
-                        worldwide
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Download backup Files
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="ml-auto">
-                    <PrimaryBtn4 btnGetPlan={btnGetPlan} />
-                  </div>
-                </div>
-
-                <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
+          {/* mobile view */}
+          <div className="md:hidden absolute inset-0 flex justify-center items-center gap-20 w-full h-full border border-red-600">
+            <div className="flex flex-col justify-evenly border items-center border-amber-50 h-[90%] w-[90%]">
+              <div className="w-vw">
+                <img className="mx-auto" src={upgradePic} alt="title" />
               </div>
-            </div>
 
-            {/* c3 */}
-            <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
-              <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
-                <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
-                  <div className="w-full h-full flex flex-col ">
-                    <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
-                      R 999/<span className="text-[8px]">Month</span>
-                    </h4>
-                    <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#FFEE00]/50 from-0% via-[#FFA96C]/45 via-[26.92%] to-[#B7FF00]/20 to-[66.83%] bg-clip-text text-transparent h-fit">
-                      Premium <br /> plan
-                    </h1>
-                    <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
-                      Supercharge your experience. Upgrade to <br />
-                      Premium for full access to our core & <br />
-                      advanced toolkits.
-                    </p>
-                  </div>
+              <div className="flex flex-col justify-center w-full p-2.5 gap-5 bg-[#433653] rounded-[25px]">
+                <h1 className="mx-auto fontRaleway family-['Raleway'] font-light tracking text-[28px] leading-8 bg-[linear-gradient(82.77deg,#AFAFAF_45.93%,#FFFFFF_69.57%)] bg-clip-text text-transparent flex-none order-0 grow-0">
+                  Flexible plans. <br />
+                  Zero commitment.
+                </h1>
+                <div className="flex flex-row justify-evenly">
+                  <button
+                    onClick={() => changePlan(1)}
+                    className={`fontRaleway family-['Raleway'] font-medium tracking text-[14px] bg-[#221635] text-white py-1.25 px-3.5 rounded-4xl border ${
+                      activePlan === 1
+                        ? "border-[#7C5CD3]"
+                        : "border-transparent"
+                    }`}
+                  >
+                    Starter
+                  </button>
 
-                  <div className="flex flex-col h-full gap-2">
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Vote for management
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Unlimited number of schemes & members
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Automation features
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Generating unlimited reports
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Monthly payment reminder
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Invite members via whatsApp
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-3">
-                      <div className="checkM h-3 w-3">
-                        <img src={CheckMark} alt="-" />
-                      </div>
-                      <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
-                        Unlimited downloads
-                      </p>
-                    </div>
-                  </div>
+                  <button
+                    onClick={() => changePlan(2)}
+                    className={`fontRaleway family-['Raleway'] font-medium tracking text-[14px] bg-[#221635] text-white py-1.25 px-3.5 rounded-4xl border ${
+                      activePlan === 2
+                        ? "border-[#7C5CD3]"
+                        : "border-transparent"
+                    }`}
+                  >
+                    Standard
+                  </button>
 
-                  <div className="ml-auto">
-                    <PrimaryBtn4 btnGetPlan={btnGetPlan} />
-                  </div>
+                  <button
+                    onClick={() => changePlan(3)}
+                    className={`fontRaleway family-['Raleway'] font-medium tracking text-[14px] bg-[#221635] text-white py-1.25 px-3.5 rounded-4xl border ${
+                      activePlan === 3
+                        ? "border-[#7C5CD3]"
+                        : "border-transparent"
+                    }`}
+                  >
+                    Premium
+                  </button>
                 </div>
+              </div>
+              <div className="cardsContainer w-full h-100">
+                <div className="relative group overflow-hidden w-full h-full rounded-[15px]  flex flex-col justify-center items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+                <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                  <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                    <div className="w-full h-full flex flex-col ">
+                      <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                        R 150/<span className="text-[8px]">Month</span>
+                      </h4>
+                      <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#D900FF] from-[8.17%] via-[#6C73FF]/45 via-[74.52%] to-[#00E9FF]/20 to-[87.98%] bg-clip-text text-transparent h-fit">
+                        Starter <br /> plan
+                      </h1>
+                      <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                        Get started by using this plan and get <br /> the basic
+                        and useful features.
+                      </p>
+                    </div>
 
-                <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
+                    <div className="flex flex-col h-full gap-2">
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Vote for management
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Limited number of schemes & members
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          Get email notifications
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          No automation features
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-3">
+                        <div className="checkM h-3 w-3">
+                          <img src={CheckMark} alt="-" />
+                        </div>
+                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                          No backup storage
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="ml-auto">
+                      <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                    </div>
+                  </div>
+
+                  <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
+                </div>
+              </div>
               </div>
             </div>
           </div>
