@@ -24,6 +24,12 @@ import pollDeco from "../images/pollDeco.svg";
 import decoCards2 from "../images/decoCards2.png";
 import blurPup from "../images/blurPup.svg";
 import upgradePic from "../images/upgradePic.svg";
+import call_bg from "../images/call_bg.svg";
+import cellMan from "../images/cellMan.svg";
+import InstagramV from "../images/InstagramV.svg";
+import FacebookV from "../images/FacebookV.svg";
+import WhatsAppV from "../images/WhatsAppV.svg";
+import TikTokV from "../images/TikTokV.svg";
 
 import PrimaryBtn from "./PrimaryBtn";
 import PrimaryBtn2 from "./PrimaryBtn2";
@@ -68,22 +74,6 @@ function HomePage() {
   return (
     <>
       <div className="h-dvh relative overflow-y-auto glass-scroll snap-y snap-mandatory bg-black">
-        {/* <div className="hidden fixed inset-0 z-9999 flex flex-col items-center justify-center gap-4 bg-black/70 h-full w-full backdrop-blur-[5px]">
-          
-          <div className="relative w-12 h-12">
-            <div className="absolute inset-0 animate-spin flex items-center justify-center">
-              <div className="w-2.5 h-2.5 bg-white rounded-full absolute top-0"></div>
-              <div className="w-2.5 h-2.5 bg-white/80 rounded-full absolute right-0"></div>
-              <div className="w-2.5 h-2.5 bg-white/60 rounded-full absolute bottom-0"></div>
-              <div className="w-2.5 h-2.5 bg-white/40 rounded-full absolute left-0"></div>
-            </div>
-          </div>
-
-          <p className="text-white/80 text-sm md:text-base font-medium tracking-wide animate-pulse">
-            Loading...
-          </p>
-        </div> */}
-
         <section className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden">
           <div className="w-full h-full">
             <div
@@ -1243,6 +1233,84 @@ function HomePage() {
                     onClick={() => changePlan(3)}
                     className={`h-1.5 aspect-square rounded-4xl ${activePlanCardSpan === 3 ? "bg-[#1B1227]" : "bg-[#908A9A]"}`}
                   ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          className="relative w-full min-h-dvh snap-start snap-always bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat border-3 border-red-500 "
+          style={{
+            backgroundImage: `url(${call_bg})`,
+            zIndex: 20,
+          }}
+        >
+          <img
+                className="md:hidden fixed -right-30 bottom-0 h-80 aspect-video z-100"
+                src={cellMan}
+                alt="Cellular man illustration"
+              />
+          <div className="relative  h-full px-4 md:px-0">
+            <h1 className="text-left text-[36px] sm:text-[48px] md:text-[54px] leading-tight font-['Raleway'] font-normal text-[#F17A19] w-full max-w-89.5 mx-auto md:mx-0 absolute top-[20%] md:top-7.5 md:left-[calc(50%-522px)]">
+              Get in touch <br /> with us
+            </h1>
+          </div>
+
+          <div className="absolute inset-0 md:p-20 w-full h-full border-3 border-green-500 flex items-center justify-center">
+
+            
+            <div className="relative flex justify-center items-center mx-10 w-130 h-90 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[15px] rounded-[15px]">
+              <img
+                className="fixed -right-75 -bottom-25 h-137.5 aspect-video z-90"
+                src={cellMan}
+                alt="Cellular man illustration"
+              />
+              <div className="h-[80%] w-[70%] flex flex-col gap-6 z-200">
+                <div className="flex flex-col gap-4">
+                  <div className="field">
+                    <span class="w-95.25 h-5.5 self-stretch font-['Rajdhani'] font-medium text-[16px] leading-[140%] text-[#F69649]">
+                      Username
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="J...@gmail.com"
+                      class="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#F69649] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
+                    />
+                  </div>
+                  <div className="field">
+                    <span class="w-95.25 h-5.5 self-stretch font-['Rajdhani'] font-medium text-[16px] leading-[140%] text-[#F69649]">
+                      Phone number
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="0712345678"
+                      class="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#F69649] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
+                    />
+                  </div>
+                </div>
+                <button class="relative isolate flex flex-row justify-center items-center px-4.5 py-2  bg-[#F69649] shadow-[0_0_24px_rgba(168,85,247,0.2),0_0_18px_rgba(0,229,255,0.2)] rounded-full flex-none mx-auto text-white text-[13px] cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+                  Request Call
+                </button>
+                <div className="flex justify-center gap-10 z-999">
+                  <button className="h-6 aspect-auto cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+                    <img className="h-full w-full" src={InstagramV} alt="" />
+                  </button>
+                  <button className="h-6 aspect-auto cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+                    <img className="h-full w-full" src={FacebookV} alt="" />
+                  </button>
+                  <button className="h-6 aspect-auto cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+                    <img className="h-full w-full" src={WhatsAppV} alt="" />
+                  </button>
+                  <button className="h-6 aspect-auto cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+                    <img className="h-full w-full" src={TikTokV} alt="" />
+                  </button>
+                </div>
+                <div class="flex flex-row items-center justify-center w-full gap-4">
+                  <div class="flex-1 border-t border-[#F69649]"></div>
+                  <span class="text-xs font-['Raleway'] font-light text-[#F69649] whitespace-nowrap">
+                    Chat with us
+                  </span>
+                  <div class="flex-1 border-t border-[#F69649]"></div>
                 </div>
               </div>
             </div>

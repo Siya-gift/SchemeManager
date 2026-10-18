@@ -264,21 +264,7 @@ body {
     linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.1)); /* Your gradient border colors */
 }
 
-@keyframes dilate-constrict {
-  0%,
-  100% {
-    transform: scale(0.8);
-    opacity: 0.4;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-}
 
-.animate-dilate {
-  animation: dilate-constrict 2.5s ease-in-out infinite;
-}
 
 @keyframes shine {
   0% {
