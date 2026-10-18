@@ -483,114 +483,32 @@ function HomePage() {
             zIndex: 20,
           }}
         >
-          <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#FF0033]/30 z-50"></div>
-            <div className="prove absolute inset-0 w-full h-full object-contain flex flex-col justify-center md:justify-center lg:justify-center items-center p-20 z-999 gap-18 md:gap-0">
-              <h1 className="mt-20 w-[58vw] md:w-[45vw] h-fit text-[32px] md:text-[55px]  font-black leading-8 md:leading-11 text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% z-10">
-                Why choose Scheme manager pro?
-              </h1>
-              {/* pc view */}
-              <div className="hidden min-[900px]:block">
-                <div
-                  className="flex items-center justify-center p-6 md:p-12 w-full max-w-3xl aspect-video bg-contain bg-center bg-no-repeat"
-                  style={{
-                    backgroundImage: `url(${proveCard})`,
-                    zIndex: 20,
-                  }}
-                >
-                  <div className="flex items-center justify-center w-[95%] h-[75%]">
-                    <div className="flex h-full w-full justify-end p-2 gap-7">
-                      <div className="flex flex-col gap-1 text-start items-center justify-center">
-                        <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word ">
-                          Taking <br /> Accountability
-                        </h3>
-                        <p className="text-white text-[9px] font-normal family-['Roboto_Condensed']">
-                          We believe that true leadership starts with taking
-                          full ownership of our actions, decisions, and
-                          outcomes. We do not hide behind corporate buzzwords or
-                          shy away from difficult situations; instead, we stand
-                          firmly behind the promises we make to you. If a
-                          challenge arises, our focus is entirely on finding
-                          immediate solutions and ensuring your goals are met
-                          without disruption. By holding ourselves to the
-                          highest operational standards, we provide you with a
-                          reliable partnership where excuses are replaced by
-                          definitive results.
-                        </p>
-                      </div>
-                      <div className="flex flex-col gap-1 text-start items-center justify-center">
-                        <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word">
-                          Openness
-                        </h3>
-                        <p className="text-white text-[9px] font-normal family-['Roboto_Condensed']">
-                          Transparency is the foundation of our communication
-                          style. We maintain an environment of complete
-                          openness, ensuring you have clear, unrestricted
-                          visibility into our processes, pricing, and project
-                          timelines from day one. By sharing honest insights,
-                          realistic expectations, and regular updates, we
-                          eliminate guesswork and unexpected surprises. We
-                          welcome your feedback, promote collaborative dialogue,
-                          and keep the door open for any questions you have,
-                          making your experience entirely straightforward and
-                          stress-free.
-                        </p>
-                      </div>
-                      <div className="flex flex-col gap-1 text-start items-center justify-center">
-                        <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word">
-                          Trustworthiness
-                        </h3>
-                        <p className="text-white text-[9px] font-normal family-['Roboto_Condensed']">
-                          Trust cannot be demanded; it must be earned through
-                          consistent ethical behavior and uncompromised
-                          integrity. Over the years, we have built our
-                          reputation on doing exactly what we say we will do,
-                          safeguarding your data, projects, and investments with
-                          the absolute highest standards of confidentiality.
-                          When you choose us, you are partnering with an
-                          organization that values long-term relationships over
-                          short-term wins, giving you the peace of mind that
-                          your interests are always in safe, dependable hands.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* mobile view */}
-              <div className="min-[900px]:hidden">
-                <div
-                  className="w-[90%] h-79 flex relative p-50 min-[500px]:p-80  mt-10 bg-contain bg-center bg-no-repeat"
-                  style={{
-                    backgroundImage: `url(${mobilePbg})`,
-                    zIndex: 20,
-                  }}
-                >
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[67%] h-[80%] p-5 flex items-center justify-center transition-all duration-75">
-                    <div className="relative h-full w-full flex flex-col justify-evenly overflow-auto scrollbar-none [&::-webkit-scrollbar]:hidden text-[#e3e3e3] mask-[linear-gradient(to_bottom,black_60%,transparent_100%)]">
-                      <div className="h-[30%]">
-                        <div
-                          className="flex justify-between items-center text-[#e3e3e3]"
-                          onClick={() => openProve1()}
-                        >
-                          <h1 className="text-sm family-['Roboto_Condense']">
+          <div className="absolute inset-0 h-full w-full flex justify-center items-center">
+            <div className="absolute inset-0 h-[80%] w-[80%] mx-auto my-auto">
+              <div className="prove absolute inset-0 w-full h-full object-contain flex flex-col justify-center md:justify-center lg:justify-center items-center p-20 z-999 gap-18 md:gap-0">
+                <h1 className="mt-20 w-[58vw] md:w-[45vw] h-fit text-[32px] md:text-[55px]  font-black leading-8 md:leading-11 text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% z-10">
+                  Why choose Scheme manager pro?
+                </h1>
+                {/* pc view */}
+                <div className="hidden min-[1164px]:block">
+                  <div
+                    className="flex items-center justify-center p-6 md:p-12 w-full  bg-contain bg-center bg-no-repeat"
+                    style={{
+                      backgroundImage: `url(${proveCard})`,
+                      zIndex: 20,
+                    }}
+                  >
+                    <div className="flex items-center justify-center w-[95%] h-[75%]">
+                      <div className="flex h-full w-full justify-end p-2 gap-7">
+                        <div className="flex flex-col gap-1 text-start items-center justify-center">
+                          <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word ">
                             Taking <br /> Accountability
-                          </h1>
-                          <div
-                            className={`transition-transform duration-500 h-1.25 ${proveState1 ? "rotate-180" : ""}`}
-                          >
-                            <img src={arrowD} />
-                          </div>
-                        </div>
-                        <hr className="border-[.7px] text-[#e3e3e3] mt-2" />
-                      </div>
-                      {proveState1 && (
-                        <div className="p-6">
-                          <p className=" text-[11px] text-[#e3e3e3]">
+                          </h3>
+                          <p className="text-white text-[9px] font-normal family-['Roboto_Condensed']">
                             We believe that true leadership starts with taking
                             full ownership of our actions, decisions, and
                             outcomes. We do not hide behind corporate buzzwords
-                            or shy away from difficult situations. Instead, we
+                            or shy away from difficult situations; instead, we
                             stand firmly behind the promises we make to you. If
                             a challenge arises, our focus is entirely on finding
                             immediate solutions and ensuring your goals are met
@@ -600,27 +518,11 @@ function HomePage() {
                             definitive results.
                           </p>
                         </div>
-                      )}
-
-                      <div className="h-[30%] mt-5">
-                        <div
-                          className="flex justify-between items-center text-[#e3e3e3]"
-                          onClick={() => openProve2()}
-                        >
-                          <h1 className="text-sm family-['Roboto_Condense']">
+                        <div className="flex flex-col gap-1 text-start items-center justify-center">
+                          <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word">
                             Openness
-                          </h1>
-                          <div
-                            className={`transition-transform duration-500 h-1.25 ${proveState2 ? "rotate-180" : ""}`}
-                          >
-                            <img src={arrowD} />
-                          </div>
-                        </div>
-                        <hr className="border-[.7px] text-[#e3e3e3] mt-2" />
-                      </div>
-                      {proveState2 && (
-                        <div className="p-6">
-                          <p className="text-[11px] text-[#e3e3e3]">
+                          </h3>
+                          <p className="text-white text-[9px] font-normal family-['Roboto_Condensed']">
                             Transparency is the foundation of our communication
                             style. We maintain an environment of complete
                             openness, ensuring you have clear, unrestricted
@@ -634,27 +536,11 @@ function HomePage() {
                             straightforward and stress-free.
                           </p>
                         </div>
-                      )}
-
-                      <div className="h-[30%] my-5">
-                        <div
-                          className="flex justify-between items-center text-[#e3e3e3]"
-                          onClick={() => openProve3()}
-                        >
-                          <h1 className="text-sm family-['Roboto_Condense']">
+                        <div className="flex flex-col gap-1 text-start items-center justify-center">
+                          <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word">
                             Trustworthiness
-                          </h1>
-                          <div
-                            className={`transition-transform duration-500 h-1.25 ${proveState3 ? "rotate-180" : ""}`}
-                          >
-                            <img src={arrowD} />
-                          </div>
-                        </div>
-                        <hr className="border-[.7px] text-[#e3e3e3] mt-2" />
-                      </div>
-                      {proveState3 && (
-                        <div className="p-6">
-                          <p className="text-[11px] text-[#e3e3e3]">
+                          </h3>
+                          <p className="text-white text-[9px] font-normal family-['Roboto_Condensed']">
                             Trust cannot be demanded; it must be earned through
                             consistent ethical behavior and uncompromised
                             integrity. Over the years, we have built our
@@ -668,12 +554,133 @@ function HomePage() {
                             in safe, dependable hands.
                           </p>
                         </div>
-                      )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* mobile view */}
+                <div className="min-[1164px]:hidden">
+                  <div
+                    className="w-[90%] h-79 flex relative p-50 min-[500px]:p-80  mt-10 bg-contain bg-center bg-no-repeat"
+                    style={{
+                      backgroundImage: `url(${mobilePbg})`,
+                      zIndex: 20,
+                    }}
+                  >
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[67%] h-[80%] p-5 flex items-center justify-center transition-all duration-75">
+                      <div className="relative h-full w-full flex flex-col justify-evenly overflow-auto scrollbar-none [&::-webkit-scrollbar]:hidden text-[#e3e3e3] mask-[linear-gradient(to_bottom,black_60%,transparent_100%)]">
+                        <div className="h-[30%]">
+                          <div
+                            className="flex justify-between items-center text-[#e3e3e3]"
+                            onClick={() => openProve1()}
+                          >
+                            <h1 className="text-sm family-['Roboto_Condense']">
+                              Taking <br /> Accountability
+                            </h1>
+                            <div
+                              className={`transition-transform duration-500 h-1.25 ${proveState1 ? "rotate-180" : ""}`}
+                            >
+                              <img src={arrowD} />
+                            </div>
+                          </div>
+                          <hr className="border-[.7px] text-[#e3e3e3] mt-2" />
+                        </div>
+                        {proveState1 && (
+                          <div className="p-6">
+                            <p className=" text-[11px] text-[#e3e3e3]">
+                              We believe that true leadership starts with taking
+                              full ownership of our actions, decisions, and
+                              outcomes. We do not hide behind corporate
+                              buzzwords or shy away from difficult situations.
+                              Instead, we stand firmly behind the promises we
+                              make to you. If a challenge arises, our focus is
+                              entirely on finding immediate solutions and
+                              ensuring your goals are met without disruption. By
+                              holding ourselves to the highest operational
+                              standards, we provide you with a reliable
+                              partnership where excuses are replaced by
+                              definitive results.
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="h-[30%] mt-5">
+                          <div
+                            className="flex justify-between items-center text-[#e3e3e3]"
+                            onClick={() => openProve2()}
+                          >
+                            <h1 className="text-sm family-['Roboto_Condense']">
+                              Openness
+                            </h1>
+                            <div
+                              className={`transition-transform duration-500 h-1.25 ${proveState2 ? "rotate-180" : ""}`}
+                            >
+                              <img src={arrowD} />
+                            </div>
+                          </div>
+                          <hr className="border-[.7px] text-[#e3e3e3] mt-2" />
+                        </div>
+                        {proveState2 && (
+                          <div className="p-6">
+                            <p className="text-[11px] text-[#e3e3e3]">
+                              Transparency is the foundation of our
+                              communication style. We maintain an environment of
+                              complete openness, ensuring you have clear,
+                              unrestricted visibility into our processes,
+                              pricing, and project timelines from day one. By
+                              sharing honest insights, realistic expectations,
+                              and regular updates, we eliminate guesswork and
+                              unexpected surprises. We welcome your feedback,
+                              promote collaborative dialogue, and keep the door
+                              open for any questions you have, making your
+                              experience entirely straightforward and
+                              stress-free.
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="h-[30%] my-5">
+                          <div
+                            className="flex justify-between items-center text-[#e3e3e3]"
+                            onClick={() => openProve3()}
+                          >
+                            <h1 className="text-sm family-['Roboto_Condense']">
+                              Trustworthiness
+                            </h1>
+                            <div
+                              className={`transition-transform duration-500 h-1.25 ${proveState3 ? "rotate-180" : ""}`}
+                            >
+                              <img src={arrowD} />
+                            </div>
+                          </div>
+                          <hr className="border-[.7px] text-[#e3e3e3] mt-2" />
+                        </div>
+                        {proveState3 && (
+                          <div className="p-6">
+                            <p className="text-[11px] text-[#e3e3e3]">
+                              Trust cannot be demanded; it must be earned
+                              through consistent ethical behavior and
+                              uncompromised integrity. Over the years, we have
+                              built our reputation on doing exactly what we say
+                              we will do, safeguarding your data, projects, and
+                              investments with the absolute highest standards of
+                              confidentiality. When you choose us, you are
+                              partnering with an organization that values
+                              long-term relationships over short-term wins,
+                              giving you the peace of mind that your interests
+                              are always in safe, dependable hands.
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#FF0033]/30 z-50"></div>
+          </div>
         </section>
         <section
           className="relative w-full min-h-dvh snap-start snap-always bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
@@ -686,248 +693,247 @@ function HomePage() {
           <div className="hidden md:block">
             <div className="flex flex-col py-6 px-50">
               <div
-              className="w-70 h-10 bg-contain bg-center bg-no-repeat"
-              style={{
-                backgroundImage: `url(${pcPlanTitle})`,
-                zIndex: 30,
-              }}
-            ></div>
-            <div className="absolute inset-0 flex justify-center items-center gap-20 w-full h-full">
-              {/* c1 */}
-              <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
-                <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
-                  <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
-                    <div className="w-full h-full flex flex-col ">
-                      <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
-                        R 150/<span className="text-[8px]">Month</span>
-                      </h4>
-                      <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#D900FF] from-[8.17%] via-[#6C73FF]/45 via-[74.52%] to-[#00E9FF]/20 to-[87.98%] bg-clip-text text-transparent h-fit">
-                        Starter <br /> plan
-                      </h1>
-                      <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
-                        Get started by using this plan and get <br /> the basic
-                        and useful features.
-                      </p>
+                className="w-70 h-10 bg-contain bg-center bg-no-repeat"
+                style={{
+                  backgroundImage: `url(${pcPlanTitle})`,
+                  zIndex: 30,
+                }}
+              ></div>
+              <div className="absolute inset-0 flex justify-center items-center gap-20 w-full h-full">
+                {/* c1 */}
+                <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+                  <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                    <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                      <div className="w-full h-full flex flex-col ">
+                        <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                          R 150/<span className="text-[8px]">Month</span>
+                        </h4>
+                        <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#D900FF] from-[8.17%] via-[#6C73FF]/45 via-[74.52%] to-[#00E9FF]/20 to-[87.98%] bg-clip-text text-transparent h-fit">
+                          Starter <br /> plan
+                        </h1>
+                        <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                          Get started by using this plan and get <br /> the
+                          basic and useful features.
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col h-full gap-2">
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Vote for management
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Limited number of schemes & members
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Get email notifications
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            No automation features
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            No backup storage
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="ml-auto">
+                        <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                      </div>
                     </div>
 
-                    <div className="flex flex-col h-full gap-2">
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Vote for management
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Limited number of schemes & members
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Get email notifications
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          No automation features
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          No backup storage
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="ml-auto">
-                      <PrimaryBtn4 btnGetPlan={btnGetPlan} />
-                    </div>
+                    <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
                   </div>
-
-                  <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
                 </div>
-              </div>
 
-              {/* c2 */}
-              <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
-                <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
-                  <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
-                    <div className="w-full h-full flex flex-col ">
-                      <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
-                        R 299/<span className="text-[8px]">Month</span>
-                      </h4>
-                      <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#0368FF] from-0% via-[#6C73FF]/45 via-[46.63%] to-[#00FF9D] to-[97.12%] bg-clip-text text-transparent h-fit">
-                        Standard <br /> plan
-                      </h1>
-                      <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
-                        The Complete Guide to Launching, <br /> Managing, and
-                        Scaling Your Schemes.
-                      </p>
+                {/* c2 */}
+                <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+                  <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                    <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                      <div className="w-full h-full flex flex-col ">
+                        <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                          R 299/<span className="text-[8px]">Month</span>
+                        </h4>
+                        <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#0368FF] from-0% via-[#6C73FF]/45 via-[46.63%] to-[#00FF9D] to-[97.12%] bg-clip-text text-transparent h-fit">
+                          Standard <br /> plan
+                        </h1>
+                        <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                          The Complete Guide to Launching, <br /> Managing, and
+                          Scaling Your Schemes.
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col h-full gap-2">
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Vote for management
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Get 10 schemes and 10 members
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Automated payments
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Fast human consultant response
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Build global public schemes to <br /> attract
+                            members worldwide
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Download backup Files
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="ml-auto">
+                        <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                      </div>
                     </div>
 
-                    <div className="flex flex-col h-full gap-2">
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Vote for management
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Get 10 schemes and 10 members
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Automated payments
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Fast human consultant response
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Build global public schemes to <br /> attract members
-                          worldwide
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Download backup Files
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="ml-auto">
-                      <PrimaryBtn4 btnGetPlan={btnGetPlan} />
-                    </div>
+                    <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
                   </div>
-
-                  <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
                 </div>
-              </div>
 
-              {/* c3 */}
-              <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
-                <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
-                  <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
-                    <div className="w-full h-full flex flex-col ">
-                      <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
-                        R 999/<span className="text-[8px]">Month</span>
-                      </h4>
-                      <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#FFEE00]/50 from-0% via-[#FFA96C]/45 via-[26.92%] to-[#B7FF00]/20 to-[66.83%] bg-clip-text text-transparent h-fit">
-                        Premium <br /> plan
-                      </h1>
-                      <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
-                        Supercharge your experience. Upgrade to <br />
-                        Premium for full access to our core & <br />
-                        advanced toolkits.
-                      </p>
+                {/* c3 */}
+                <div className="relative isolate group overflow-hidden w-60 h-100 rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
+                  <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
+                    <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
+                      <div className="w-full h-full flex flex-col ">
+                        <h4 className="planCardFont1 text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
+                          R 999/<span className="text-[8px]">Month</span>
+                        </h4>
+                        <h1 className="text-[34px] family-['Poppins'] font-black leading-7 pb-2  bg-linear-to-r from-[#FFEE00]/50 from-0% via-[#FFA96C]/45 via-[26.92%] to-[#B7FF00]/20 to-[66.83%] bg-clip-text text-transparent h-fit">
+                          Premium <br /> plan
+                        </h1>
+                        <p className="fontRaleway family-['Raleway'] font-thin tracking text-[10px] leading-3 text-[#e3e3e3]">
+                          Supercharge your experience. Upgrade to <br />
+                          Premium for full access to our core & <br />
+                          advanced toolkits.
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col h-full gap-2">
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Vote for management
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Unlimited number of schemes & members
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Automation features
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Generating unlimited reports
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Monthly payment reminder
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Invite members via whatsApp
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-3">
+                          <div className="checkM h-3 w-3">
+                            <img src={CheckMark} alt="-" />
+                          </div>
+                          <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
+                            Unlimited downloads
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="ml-auto">
+                        <PrimaryBtn4 btnGetPlan={btnGetPlan} />
+                      </div>
                     </div>
 
-                    <div className="flex flex-col h-full gap-2">
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Vote for management
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Unlimited number of schemes & members
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Automation features
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Generating unlimited reports
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Monthly payment reminder
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Invite members via whatsApp
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-3">
-                        <div className="checkM h-3 w-3">
-                          <img src={CheckMark} alt="-" />
-                        </div>
-                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
-                          Unlimited downloads
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="ml-auto">
-                      <PrimaryBtn4 btnGetPlan={btnGetPlan} />
-                    </div>
+                    <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
                   </div>
-
-                  <div className="absolute inset-y-0 -left-10 w-[60%] translate-x-[-150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/20 to-transparent group-hover:animate-shine" />
                 </div>
               </div>
             </div>
-            </div>
-            
           </div>
 
           {/* mobile view */}
