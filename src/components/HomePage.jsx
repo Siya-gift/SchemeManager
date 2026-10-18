@@ -1248,7 +1248,7 @@ function HomePage() {
         >
           <img className="absolute left-0 to-10 h-[90%]  aspect-video " src={linesCall} />
           <img
-            className="md:hidden absolute -right-30 bottom-0 h-80 aspect-video z-30"
+            className="md:hidden absolute -right-30 bottom-0 h-60 aspect-video z-30"
             src={cellMan}
             alt="Cellular man illustration"
           />
