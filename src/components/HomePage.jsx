@@ -1258,7 +1258,7 @@ function HomePage() {
             </h1>
           </div>
 
-          <div className="absolute inset-0 pt-12 items-start justify-start md:justify-center md:items-center md:p-20 w-full h-full flex">
+          <div className="absolute inset-0 pt-37 items-start justify-start md:justify-center md:items-center md:p-20 w-full h-full flex">
             <div className="relative flex justify-center items-center mx-10 w-130 h-90 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[10px] rounded-[15px]">
               <img
                 className="hidden md:block fixed -right-75 -bottom-25 h-137.5 aspect-video z-90"
