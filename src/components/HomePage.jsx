@@ -1246,7 +1246,7 @@ function HomePage() {
           }}
         >
           <img
-                className="md:hidden fixed -right-30 bottom-0 h-80 aspect-video z-100"
+                className="md:hidden absolute -right-30 bottom-0 h-80 aspect-video z-100"
                 src={cellMan}
                 alt="Cellular man illustration"
               />
