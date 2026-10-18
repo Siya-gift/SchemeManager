@@ -560,7 +560,7 @@ function HomePage() {
                     }}
                   >
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[67%] h-[80%] p-5 flex items-center justify-center transition-all duration-75">
-                      <div className="relative h-full w-full flex flex-col justify-evenly overflow-auto scrollbar-none [&::-webkit-scrollbar]:hidden text-[#e3e3e3] mask-[linear-gradient(to_bottom,black_60%,transparent_100%)]">
+                      <div className="relative h-full w-full flex flex-col justify-center overflow-auto scrollbar-none [&::-webkit-scrollbar]:hidden text-[#e3e3e3] mask-[linear-gradient(to_bottom,black_60%,transparent_100%)]">
                         <div className="h-[30%]">
                           <div
                             className="flex justify-between items-center text-[#e3e3e3]"
