@@ -467,7 +467,7 @@ function HomePage() {
           </div>
         </section>
         <section
-          className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden bg-contain bg-center bg-no-repeat"
+          className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${proveBG})`,
             zIndex: 20,
@@ -669,7 +669,7 @@ function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#FF0033]/30 z-50"></div>
+            {/* <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#FF0033]/30 z-50"></div> */}
           </div>
         </section>
         <section
