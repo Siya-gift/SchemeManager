@@ -708,7 +708,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Vote for management
                         </p>
                       </div>
@@ -716,7 +716,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Limited number of schemes & members
                         </p>
                       </div>
@@ -724,7 +724,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Get email notifications
                         </p>
                       </div>
@@ -732,7 +732,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           No automation features
                         </p>
                       </div>
@@ -740,7 +740,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           No backup storage
                         </p>
                       </div>
@@ -777,7 +777,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Vote for management
                         </p>
                       </div>
@@ -785,7 +785,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Get 10 schemes and 10 members
                         </p>
                       </div>
@@ -793,7 +793,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Automated payments
                         </p>
                       </div>
@@ -801,7 +801,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Fast human consultant response
                         </p>
                       </div>
@@ -809,7 +809,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Build global public schemes to <br /> attract members
                           worldwide
                         </p>
@@ -818,7 +818,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Download backup Files
                         </p>
                       </div>
@@ -856,7 +856,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Vote for management
                         </p>
                       </div>
@@ -864,7 +864,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Unlimited number of schemes & members
                         </p>
                       </div>
@@ -872,7 +872,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Automation features
                         </p>
                       </div>
@@ -880,7 +880,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Generating unlimited reports
                         </p>
                       </div>
@@ -888,7 +888,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Monthly payment reminder
                         </p>
                       </div>
@@ -896,7 +896,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Invite members via whatsApp
                         </p>
                       </div>
@@ -904,7 +904,7 @@ function HomePage() {
                         <div className="checkM h-3 w-3">
                           <img src={CheckMark} alt="-" />
                         </div>
-                        <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                        <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                           Unlimited downloads
                         </p>
                       </div>
@@ -993,7 +993,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Vote for management
                             </p>
                           </div>
@@ -1001,7 +1001,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Limited number of schemes & members
                             </p>
                           </div>
@@ -1009,7 +1009,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Get email notifications
                             </p>
                           </div>
@@ -1017,7 +1017,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               No automation features
                             </p>
                           </div>
@@ -1025,7 +1025,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               No backup storage
                             </p>
                           </div>
@@ -1064,7 +1064,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Vote for management
                             </p>
                           </div>
@@ -1072,7 +1072,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Get 10 schemes and 10 members
                             </p>
                           </div>
@@ -1080,7 +1080,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Automated payments
                             </p>
                           </div>
@@ -1088,7 +1088,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Fast human consultant response
                             </p>
                           </div>
@@ -1096,7 +1096,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Build global public schemes to <br /> attract
                               members worldwide
                             </p>
@@ -1105,7 +1105,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Download backup Files
                             </p>
                           </div>
@@ -1145,7 +1145,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Vote for management
                             </p>
                           </div>
@@ -1153,7 +1153,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Unlimited number of schemes & members
                             </p>
                           </div>
@@ -1161,7 +1161,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Automation features
                             </p>
                           </div>
@@ -1169,7 +1169,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Generating unlimited reports
                             </p>
                           </div>
@@ -1177,7 +1177,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Monthly payment reminder
                             </p>
                           </div>
@@ -1185,7 +1185,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Invite members via whatsApp
                             </p>
                           </div>
@@ -1193,7 +1193,7 @@ function HomePage() {
                             <div className="checkM h-3 w-3">
                               <img src={CheckMark} alt="-" />
                             </div>
-                            <p className="fontRaleway font-thin text-[9px] tracking-normal text-white">
+                            <p className="fontRaleway font-normal text-[9px] tracking-normal text-white">
                               Unlimited downloads
                             </p>
                           </div>
