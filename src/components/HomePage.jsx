@@ -62,6 +62,16 @@ function HomePage() {
     setActivePlan(id);
     setActivePlanCard(id);
     setActivePlanCardSpan(id);
+
+    setTimeout(() => {
+    const cardElement = document.getElementById(`plan-card-${id}`);
+    if (cardElement) {
+      cardElement.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest", // "start", "center", or "nearest"
+      });
+    }
+  }, 50);
   };
 
   return (
@@ -967,9 +977,12 @@ function HomePage() {
                   </button>
                 </div>
               </div>
+
               <div className=" cardsContainer w-full h-100 flex flex-col justify-center items-center gap-8">
                 {/* c1 */}
-                <div className={`${activePlanCard === 1 ? "block" : "hidden"} w-full h-full`}>
+                <div
+                  className={`${activePlanCard === 1 ? "block" : ""} w-full h-full `} id={`plan-card-${1}`} 
+                >
                   <div className="relative mx-auto group overflow-hidden w-full h-full rounded-[15px]  flex flex-col justify-center items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
                     <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
                       <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
@@ -1040,7 +1053,9 @@ function HomePage() {
                 </div>
 
                 {/* c2 */}
-                <div className={`${activePlanCard === 2 ? "block" : "hidden"} w-full h-full`}>
+                <div
+                  className={`${activePlanCard === 2 ? "block" : ""} w-full h-full`} id={`plan-card-${2}`}
+                >
                   <div className="relative mx-auto group overflow-hidden w-full h-full rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
                     <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
                       <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
@@ -1120,7 +1135,9 @@ function HomePage() {
                 </div>
 
                 {/* c3 */}
-                <div className={`${activePlanCard === 3 ? "block" : "hidden"} w-full h-full`}>
+                <div
+                  className={`${activePlanCard === 3 ? "block" : ""} w-full h-full`} id={`plan-card-${3}`}
+                >
                   <div className="relative mx-auto group overflow-hidden w-full h-full rounded-[15px] p-8 flex flex-col items-center text-white font-sans bg-linear-to-b from-black/20 to-black/20 bg-black/10 shadow-[0px_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[125px]">
                     <div className="cursor-pointer absolute inset-0 z-20 overflow-hidden rounded-[15px]">
                       <div className="flex flex-col justify-evenly w-full h-full px-5 py-3">
@@ -1208,9 +1225,18 @@ function HomePage() {
                 </div>
 
                 <div className="w-[15%] h-6 bg-[#433653] rounded-4xl flex flex-row justify-center items-center gap-1">
-                  <span onClick={()=> changePlan(1)} className={`h-1.5 aspect-square rounded-4xl ${activePlanCardSpan === 1 ? "bg-[#1B1227]" : "bg-[#908A9A]"}`}></span>
-                  <span onClick={()=> changePlan(2)} className={`h-1.5 aspect-square rounded-4xl ${activePlanCardSpan === 2 ? "bg-[#1B1227]" : "bg-[#908A9A]"}`}></span>
-                  <span onClick={()=> changePlan(3)} className={`h-1.5 aspect-square rounded-4xl ${activePlanCardSpan === 3 ? "bg-[#1B1227]" : "bg-[#908A9A]"}`}></span>
+                  <span
+                    onClick={() => changePlan(1)}
+                    className={`h-1.5 aspect-square rounded-4xl ${activePlanCardSpan === 1 ? "bg-[#1B1227]" : "bg-[#908A9A]"}`}
+                  ></span>
+                  <span
+                    onClick={() => changePlan(2)}
+                    className={`h-1.5 aspect-square rounded-4xl ${activePlanCardSpan === 2 ? "bg-[#1B1227]" : "bg-[#908A9A]"}`}
+                  ></span>
+                  <span
+                    onClick={() => changePlan(3)}
+                    className={`h-1.5 aspect-square rounded-4xl ${activePlanCardSpan === 3 ? "bg-[#1B1227]" : "bg-[#908A9A]"}`}
+                  ></span>
                 </div>
               </div>
             </div>
