@@ -673,12 +673,16 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full min-h-dvh snap-start snap-always bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${plan_BG_image})`,
-          zIndex: 20,
-        }}
+        className="relative w-full min-h-screen snap-start bg-[#0E0019]/96 overflow-hidden transform-gpu"
+        style={{ zIndex: 20 }}
       >
+        <img
+          src={plan_BG_image}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          loading="eager"
+        />
+
         {/* pc view */}
         <div className="hidden md:block">
           <div className="flex flex-col py-6 px-50">
@@ -1233,12 +1237,15 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full min-h-dvh snap-start snap-always bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${call_bg})`,
-          zIndex: 20,
-        }}
+        className="relative w-full min-h-screen snap-start bg-[#FFDDBF] overflow-hidden transform-gpu"
+        style={{ zIndex: 20 }}
       >
+        <img
+          src={call_bg}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          loading="eager"
+        />
         <img
           className="absolute left-0 to-10 h-[90%]  aspect-video "
           src={linesCall}
