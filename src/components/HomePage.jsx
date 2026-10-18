@@ -1243,7 +1243,7 @@ function HomePage() {
         <img
           src={call_bg}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          className="absolute inset-0 w-full h-full object-contain pointer-events-none"
           loading="eager"
         />
         <img
