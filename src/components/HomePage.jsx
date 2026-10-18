@@ -550,9 +550,9 @@ function HomePage() {
                 </div>
 
                 {/* mobile view */}
-                <div className="min-[1164px]:hidden">
+                <div className="relative w-full h-full min-[1164px]:hidden">
                   <div
-                    className="w-[90%] h-79 flex relative p-50 min-[500px]:p-80  mt-10 bg-contain bg-center bg-no-repeat"
+                    className="w-[90%] h-79 flex absolute inset-0 p-50 min-[500px]:p-80  mt-10 bg-contain bg-center bg-no-repeat"
                     style={{
                       backgroundImage: `url(${mobilePbg})`,
                       zIndex: 20,
@@ -669,7 +669,7 @@ function HomePage() {
                 </div>
               </div>
             </div>
-            {/* <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#FF0033]/30 z-50"></div> */}
+            <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#FF0033]/30 z-50"></div>
           </div>
         </section>
         <section
