@@ -1253,12 +1253,12 @@ function HomePage() {
             alt="Cellular man illustration"
           />
           <div className="relative  h-full p-15 md:p-0">
-            <h1 className="text-left text-[36px] sm:text-[48px] md:text-[54px] leading-tight font-['Raleway'] font-normal text-[#F17A19] w-full max-w-89.5 md:mx-0 absolute top-[20%] md:top-7.5 md:left-[calc(60%-522px)]">
+            <h1 className="text-left text-[36px] sm:text-[48px] md:text-[54px] leading-tight font-['Raleway'] font-normal text-[#F17A19] w-full max-w-89.5 md:mx-0 absolute top-[20%] md:top-7.5 md:left-[calc(50%-522px)]">
               Get in touch <br /> with us
             </h1>
           </div>
 
-          <div className="absolute inset-0 pt-42 items-start justify-center md:items-center md:p-20 w-full h-full flex">
+          <div className="absolute inset-0 pt-42 items-start justify-start md:justify-center md:items-center md:p-20 w-full h-full flex">
             <div className="relative flex justify-center items-center mx-10 w-130 h-90 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[10px] rounded-[15px]">
               <img
                 className="hidden md:block fixed -right-75 -bottom-25 h-137.5 aspect-video z-90"
