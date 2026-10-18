@@ -30,6 +30,7 @@ import InstagramV from "../images/InstagramV.svg";
 import FacebookV from "../images/FacebookV.svg";
 import WhatsAppV from "../images/WhatsAppV.svg";
 import TikTokV from "../images/TikTokV.svg";
+import linesCall from "../images/linesCall.svg";
 
 import PrimaryBtn from "./PrimaryBtn";
 import PrimaryBtn2 from "./PrimaryBtn2";
@@ -1239,29 +1240,28 @@ function HomePage() {
           </div>
         </section>
         <section
-          className="relative w-full min-h-dvh snap-start snap-always bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat border-3 border-red-500 "
+          className="relative w-full min-h-dvh snap-start snap-always bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${call_bg})`,
             zIndex: 20,
           }}
         >
+          <img className="absolute left-0 to-10 h-[90%]  aspect-video " src={linesCall} />
           <img
-                className="md:hidden absolute -right-30 bottom-0 h-80 aspect-video z-100"
-                src={cellMan}
-                alt="Cellular man illustration"
-              />
+            className="md:hidden absolute -right-30 bottom-0 h-80 aspect-video z-100"
+            src={cellMan}
+            alt="Cellular man illustration"
+          />
           <div className="relative  h-full px-4 md:px-0">
             <h1 className="text-left text-[36px] sm:text-[48px] md:text-[54px] leading-tight font-['Raleway'] font-normal text-[#F17A19] w-full max-w-89.5 mx-auto md:mx-0 absolute top-[20%] md:top-7.5 md:left-[calc(50%-522px)]">
               Get in touch <br /> with us
             </h1>
           </div>
 
-          <div className="absolute inset-0 md:p-20 w-full h-full border-3 border-green-500 flex items-center justify-center">
-
-            
-            <div className="relative flex justify-center items-center mx-10 w-130 h-90 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[15px] rounded-[15px]">
+          <div className="absolute inset-0 md:p-20 w-full h-full flex items-center justify-center">
+            <div className="relative flex justify-center items-center mx-10 w-130 h-90 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[10px] rounded-[15px]">
               <img
-                className="fixed -right-75 -bottom-25 h-137.5 aspect-video z-90"
+                className="hidden md:block fixed -right-75 -bottom-25 h-137.5 aspect-video z-90"
                 src={cellMan}
                 alt="Cellular man illustration"
               />
@@ -1274,7 +1274,7 @@ function HomePage() {
                     <input
                       type="text"
                       placeholder="J...@gmail.com"
-                      class="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#F69649] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
+                      class="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#f77103] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
                     />
                   </div>
                   <div className="field">
@@ -1284,7 +1284,7 @@ function HomePage() {
                     <input
                       type="text"
                       placeholder="0712345678"
-                      class="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#F69649] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
+                      class="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#f77103] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
                     />
                   </div>
                 </div>
