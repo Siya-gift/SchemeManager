@@ -73,7 +73,7 @@ function HomePage() {
   };
 
   return (
-      <div className="h-dvh relative overflow-y-auto glass-scroll snap-y snap-mandatory bg-black">
+      <div className="h-dvh relative overflow-y-auto glass-scroll  bg-black">
         <section className="relative w-full min-h-dvh snap-start snap-always bg-white overflow-hidden">
           <div className="w-full h-full">
             <div
