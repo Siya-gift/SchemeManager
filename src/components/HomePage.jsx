@@ -483,7 +483,7 @@ function HomePage() {
             zIndex: 20,
           }}
         >
-          <div className="relative w-full h-svh overflow-hidden bg-[#FF0033]/40 z-2">
+          <div className="relative w-full min-h-dvh overflow-hidden bg-[#FF0033]/40 z-2">
             <div className="prove absolute inset-0 w-full h-full object-contain flex flex-col justify-center md:justify-center lg:justify-center items-center p-20 z-4 gap-18 md:gap-0">
               <h1 className="mt-20 w-[58vw] md:w-[45vw] h-fit text-[32px] md:text-[55px]  font-black leading-8 md:leading-11 text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% z-10">
                 Why choose Scheme manager pro?
