@@ -355,7 +355,7 @@ function HomePage() {
       <section className="relative w-full h-full snap-start snap-always bg-white overflow-hidden">
         <div className="relative w-full h-full overflow-hidden bg-white">
           <div
-            className="absolute inset-[-10%] w-[120%] h-full bg-[radial-gradient(circle_at_center,#00FF9D33_34%,#0368FF33_92%)] pointer-events-none"
+            className="absolute inset-0 w-full h-full bg-[radial-gradient(circle_at_center,#00FF9D33_34%,#0368FF33_92%)] pointer-events-none"
             style={{
               animation: "slow-circle 70s infinite linear",
             }}
