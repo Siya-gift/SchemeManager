@@ -470,11 +470,13 @@ function HomePage() {
       <section
         className="relative w-full h-full bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${proveBG})`,
           zIndex: 20,
         }}
       >
-        <div className="absolute inset-0 h-full w-full flex justify-center items-center">
+        <img
+            className="md:hidden absolute inset-0 w-full h-full object-cover -z-1"
+            src={proveBG}/>
+        <div className="absolute inset-0 h-full w-full flex justify-center items-center z-1">
           <div className="absolute inset-0 h-[80%] w-[80%] mx-auto my-auto">
             <div className="prove absolute inset-0 w-full h-full object-contain flex flex-col justify-center md:justify-center lg:justify-center items-center p-20 z-999 gap-18 md:gap-0">
               <h1 className="mt-20 w-[58vw] md:w-[45vw] h-fit text-[32px] md:text-[55px]  font-black leading-8 md:leading-11 text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% z-10">
