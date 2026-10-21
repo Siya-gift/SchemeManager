@@ -75,7 +75,7 @@ function HomePage() {
   return (
     // snap-y snap-mandatory
     <div className="h-screen relative overflow-y-auto glass-scroll bg-black">
-      <section className="relative w-full h-full snap-start snap-always bg-white overflow-hidden">
+      <section className="relative w-full h-full bg-white overflow-hidden">
         <div className="w-full h-full">
           <div
             className="absolute top-0 left-0 w-full h-48 md:h-96 z-10 pointer-events-none
@@ -210,7 +210,7 @@ function HomePage() {
           </div>
         </div>
       </section>
-      <section className="relative w-full h-full snap-start snap-always overflow-hidden bg-[#000000]">
+      <section className="relative w-full h-full overflow-hidden bg-[#000000]">
         <div
           className="absolute inset-[-10%] w-[120%] h-[120%] bg-[radial-gradient(60%_92.31%_at_0%_0%,#005214_0%,rgba(0,82,20,0)_100%),radial-gradient(60%_92.31%_at_88%_82%,#0F0070_0%,rgba(15,0,112,0)_100%),radial-gradient(60%_92.31%_at_53.27%_0%,#215063_0%,rgba(33,80,99,0)_100%),radial-gradient(60%_92.31%_at_19.19%_56.58%,#000000_0%,rgba(0,0,0,0)_100%)] mix-blend-screen opacity-90 pointer-events-none"
           style={{
@@ -352,7 +352,7 @@ function HomePage() {
           </div>
         </div>
       </section>
-      <section className="relative w-full h-full snap-start snap-always bg-white overflow-hidden">
+      <section className="relative w-full h-full bg-white overflow-hidden">
         <div className="relative w-full h-full overflow-hidden bg-white">
           <div
             className="absolute inset-0 w-full h-full bg-[radial-gradient(circle_at_center,#00FF9D33_34%,#0368FF33_92%)] pointer-events-none"
@@ -468,7 +468,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-full snap-start snap-always bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative w-full h-full bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${proveBG})`,
           zIndex: 20,
@@ -671,7 +671,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-full snap-start snap-always bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative w-full h-full bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${plan_BG_image})`,
           zIndex: 20,
@@ -1231,7 +1231,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-full snap-start snap-always bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative w-full h-full bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${call_bg})`,
           zIndex: 20,
