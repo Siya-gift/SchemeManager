@@ -4,7 +4,7 @@ import luffyImg from '../images/Luffy_profile_pic.jpg';
 function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName }) {
 
     return (
-        <div className='hidden md:block container w-80 m-5
+        <div className='hidden md:block container w-80 min-h-screen m-5
             p-5 glass'>
             <div
                 onClick={() => activeTab(0)}

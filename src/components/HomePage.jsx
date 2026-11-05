@@ -47,6 +47,9 @@ import arrowU from "../images/arrowU.svg";
 import CheckMark from "../images/CheckMark.svg";
 import pcPlanTitle from "../images/pcPlanTitle.svg";
 
+import { Link } from "react-router-dom";
+
+
 function HomePage() {
   const btnSignin = "Sign in";
   const btnGetStarted = "Get Started";
@@ -143,9 +146,12 @@ function HomePage() {
                     Contact
                   </button>
                 </li>
+                <Link to="/Dashboard">
                 <li className="cursor-pointer">
                   <PrimaryBtn btnSignin={btnSignin} />
                 </li>
+                </Link>
+                
               </ul>
             </div>
           </nav>
@@ -205,7 +211,10 @@ function HomePage() {
 
             <div className="flex flex-row items-center justify-center gap-0 md:gap-3">
               <PrimaryBtn2 btnLearn={btnLearn} />
+              <Link to={'/Signup'}>
               <PrimaryBtn btnGetStarted={btnGetStarted} />
+              </Link>
+              
             </div>
           </div>
         </div>
@@ -1264,27 +1273,27 @@ function HomePage() {
             <div className="h-[80%] w-[70%] flex flex-col gap-6 z-200">
               <div className="flex flex-col gap-4">
                 <div className="field">
-                  <span class="w-95.25 h-5.5 self-stretch font-['Rajdhani'] font-medium text-[16px] leading-[140%] text-[#F69649]">
+                  <span className="w-95.25 h-5.5 self-stretch font-['Rajdhani'] font-medium text-[16px] leading-[140%] text-[#F69649]">
                     Username
                   </span>
                   <input
                     type="text"
                     placeholder="J...@gmail.com"
-                    class="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#f77103] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
+                    className="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#f77103] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
                   />
                 </div>
                 <div className="field">
-                  <span class="w-95.25 h-5.5 self-stretch font-['Rajdhani'] font-medium text-[16px] leading-[140%] text-[#F69649]">
+                  <span className="w-95.25 h-5.5 self-stretch font-['Rajdhani'] font-medium text-[16px] leading-[140%] text-[#F69649]">
                     Phone number
                   </span>
                   <input
                     type="text"
                     placeholder="0712345678"
-                    class="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#f77103] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
+                    className="flex flex-row items-center px-4 py-3 w-full min-w-30 h-10 bg-[#F2F2F2] outline-none focus:border focus:border-[#e68b13] rounded-lg self-stretch flex-none font-['Rajdhani'] text-base text-[#f77103] placeholder:text-[#F69649]/60 placeholder:font-['Rajdhani']"
                   />
                 </div>
               </div>
-              <button class="relative isolate flex flex-row justify-center items-center px-4.5 py-2  bg-[#F69649] shadow-[0_0_24px_rgba(168,85,247,0.2),0_0_18px_rgba(0,229,255,0.2)] rounded-full flex-none mx-auto text-white text-[13px] cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+              <button className="relative isolate flex flex-row justify-center items-center px-4.5 py-2  bg-[#F69649] shadow-[0_0_24px_rgba(168,85,247,0.2),0_0_18px_rgba(0,229,255,0.2)] rounded-full flex-none mx-auto text-white text-[13px] cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
                 Request Call
               </button>
               <div className="flex justify-center gap-10 z-999">
@@ -1301,12 +1310,12 @@ function HomePage() {
                   <img className="h-full w-full" src={TikTokV} alt="" />
                 </button>
               </div>
-              <div class="flex flex-row items-center justify-center w-full gap-4">
-                <div class="flex-1 border-t border-[#F69649]"></div>
-                <span class="text-xs font-['Raleway'] font-light text-[#F69649] whitespace-nowrap">
+              <div className="flex flex-row items-center justify-center w-full gap-4">
+                <div className="flex-1 border-t border-[#F69649]"></div>
+                <span className="text-xs font-['Raleway'] font-light text-[#F69649] whitespace-nowrap">
                   Chat with us
                 </span>
-                <div class="flex-1 border-t border-[#F69649]"></div>
+                <div className="flex-1 border-t border-[#F69649]"></div>
               </div>
             </div>
           </div>

@@ -50,10 +50,10 @@ function Settings({ toggleState, toggleMobileState }) {
                         <div className='flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2'>
                             <div className='flex flex-row items-center justify-between w-full'>
                                 <div className='flex items-center gap-3'>
-                                    <i class="fa-solid fa-star"></i>
+                                    <i className="fa-solid fa-star"></i>
                                     <p className="font-medium">Rate Service</p>
                                 </div>
-                                <i class="fas fa-chevron-right"></i>
+                                <i className="fas fa-chevron-right"></i>
                             </div>
                         </div>
                         <div className='flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2'>

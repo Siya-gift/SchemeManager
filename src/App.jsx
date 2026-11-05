@@ -7,7 +7,8 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Draggable } from "gsap/Draggable";
 import crustBg from './images/bg.png'
-import { BrowserRouter, Routes, Route } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 
 
 
@@ -21,6 +22,7 @@ import Expenses from './components/Expenses.jsx'
 import Insights from './components/Insights.jsx'
 import ActivityHistory from './components/ActivityHistory.jsx'
 import Settings from './components/Settings.jsx'
+import System from './components/System.jsx';
 
 //HomePage
 import HomePage from './components/HomePage.jsx';
@@ -29,6 +31,7 @@ import HomePage from './components/HomePage.jsx';
 import SideBar from './components/SideBar.jsx'
 import MobileNav from './components/MobileNav.jsx'
 import MobileMenu from './components/MobileMenu.jsx'
+import Signup from './components/Signup.jsx';
 
 
 // gsap
@@ -1368,86 +1371,156 @@ function App() {
     setAddSchemeModal(false);
   };
 
+  const dashboardProps = {
+    isOpen,
+    setIsOpen,
+    toggleMenu,
+    overlayer,
+    setOverlayer,
+    toggleState,
+    setToggleState,
+    toggleMobileState,
+    settoggleMobileState,
+    activeTab,
+    toggleTabMobile,
+    selectedSchemeName,
+    openCalender,
+    formattedDate,
+    schemes,
+    setSchemes,
+    isAddSchemeModal,
+    setAddSchemeModal,
+    newScheme,
+    setNewScheme,
+    newSchemeAmount,
+    setNewSchemeAmount,
+    newSchemeStartingBal,
+    setNewSchemeStartingBal,
+    newSchemeDate,
+    setNewSchemeDate,
+    newSchemeYear,
+    setNewSchemeYear,
+    handleSchemeNameInputChange,
+    handleSchemeAmountInputChange,
+    handleSchemeStartingBalInputChange,
+    handleSchemeDateInputChange,
+    handleSchemeYearInputChange,
+    saveScheme,
+    schemeSelected,
+    schemeSelectedState,
+    setSchemeSelectedState,
+    handleConfirmPayment,
+    totalSpentThisMonth,
+    financialData,
+    netDifference,
+    totalSchemeYearlyContribution,
+    totalSchemeMonthlyContribution,
+    yearlyTarget,
+    monthlyTarget,
+    totalCash,
+    totalEFT,
+    totalOther,
+    members,
+    getMemberStatus,
+    allMembers,
+    filteredMembers,
+    membersBehindStatus,
+    getMemberArrears,
+    LatestTransactions,
+    logDetails,
+    setLogDetailsModal,
+    logDetailsModal,
+    setLogDetailsMemberName,
+    setLogDetailsDate,
+    setLogDetailsDescription,
+    setLogDetailsAmount,
+    setLogDetailsMethod,
+    setLogDetailsOccuredPeriod,
+    setLogDetailsJoinedDate,
+    logDetailsMemberName,
+    logDetailsDate,
+    logDetailsDescription,
+    logDetailsAmount,
+    logDetailsMethod,
+    logDetailsOccuredPeriod,
+    logDetailsJoinedDate,
+    logDetailsModalWithValues,
+    currentActivity,
+    previousActivity,
+    hasValue,
+    formatAmount,
+    formatDate,
+    latestTransactionsForSelectedScheme,
+    setMembers,
+    searchState,
+    setSearchState,
+    payingMember,
+    setPayingMember,
+    accordionData,
+    setAccordionData,
+    saveMember,
+    addMore,
+    newMember,
+    setNewMember,
+    isAddMember,
+    setIsAddMember,
+    setPaymentMethod,
+    toast,
+    setLatestTransactions,
+    updateMember,
+    isEditMember,
+    setIsEditMember,
+    newExpenses,
+    setExpenses,
+    filteredExpenses,
+    selectedMonth,
+    setSelectedMonth,
+    selectedCat,
+    setSelectedCat,
+    payments,
+    setPayments,
+    totalTransactionsThisMonth,
+    totalSpentThisYear,
+    totalTransactionsThisYear,
+    topCategory,
+    topCategoryAmount,
+    topCategoryPercentage,
+    totalSpentForRefundsAndCredits,
+    totalTransactionsForRefundsAndCredits,
+  };
+
   return (
-    <>
-      {/* calender */}
-      {calenderState && (
-        <div
-          className='fixed top-0 left-0 w-screen h-screen bg-black/70 z-999999'
-          onClick={() => setCalenderState(false)}
+  <BrowserRouter>
+    {/* Calendar Overlay */}
+    {calenderState && (
+      <div 
+        className='fixed top-0 left-0 w-screen h-screen bg-black/70 z-999999' 
+        onClick={() => setCalenderState(false)}
+      >
+        <div 
+          onClick={(e) => e.stopPropagation()} 
+          className="fixed bottom-1/8 left-1/2 -translate-x-1/2 -translate-y-1/8"
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="fixed bottom-1/8 left-1/2 -translate-x-1/2 -translate-y-1/8"
-          >
-            <Calendar
-              onChange={onChange}
-              value={value}
-              calenderState={calenderState}
-              setCalenderState={setCalenderState}
-            />
-          </div>
+          <Calendar 
+            onChange={onChange} 
+            value={value} 
+            calenderState={calenderState} 
+            setCalenderState={setCalenderState} 
+          />
         </div>
-      )}
-
-      <Toaster />
-      <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} selectedSchemeName={selectedSchemeName} />
-      <div className='flex overflow-hidden'>
-        <SideBar toggleState={toggleState} setToggleState={setToggleState} activeTab={activeTab} selectedSchemeName={selectedSchemeName} />
-        <Profile toggleState={toggleState} />
-
-        <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
-          openCalender={openCalender} formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
-          isAddSchemeModal={isAddSchemeModal} setAddSchemeModal={setAddSchemeModal} newScheme={newScheme} setNewScheme={setNewScheme} newSchemeAmount={newSchemeAmount} setNewSchemeAmount={setNewSchemeAmount}
-          handleSchemeNameInputChange={handleSchemeNameInputChange} handleSchemeAmountInputChange={handleSchemeAmountInputChange} handleSchemeStartingBalInputChange={handleSchemeStartingBalInputChange}
-          handleSchemeDateInputChange={handleSchemeDateInputChange} handleSchemeYearInputChange={handleSchemeYearInputChange} newSchemeStartingBal={newSchemeStartingBal} setNewSchemeStartingBal={setNewSchemeStartingBal}
-          newSchemeDate={newSchemeDate} setNewSchemeDate={setNewSchemeDate} newSchemeYear={newSchemeYear} setNewSchemeYear={setNewSchemeYear} saveScheme={saveScheme}
-          schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState} setSchemeSelectedState={setSchemeSelectedState} handleConfirmPayment={handleConfirmPayment}
-          totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} financialData={financialData} netDifference={netDifference}
-          totalSchemeYearlyContribution={totalSchemeYearlyContribution} totalSchemeMonthlyContribution={totalSchemeMonthlyContribution} yearlyTarget={yearlyTarget} monthlyTarget={monthlyTarget}
-          totalCash={totalCash} totalEFT={totalEFT} totalOther={totalOther} members={members} selectedSchemeName={selectedSchemeName} getMemberStatus={getMemberStatus} allMembers={allMembers}
-          filteredMembers={filteredMembers} membersBehindStatus={membersBehindStatus} getMemberArrears={getMemberArrears} LatestTransactions={LatestTransactions}
-          logDetails={logDetails} setLogDetailsModal={setLogDetailsModal} logDetailsModal={logDetailsModal} setLogDetailsMemberName={setLogDetailsMemberName} setLogDetailsDate={setLogDetailsDate} setLogDetailsDescription={setLogDetailsDescription}
-          setLogDetailsAmount={setLogDetailsAmount} setLogDetailsMethod={setLogDetailsMethod} setLogDetailsOccuredPeriod={setLogDetailsOccuredPeriod} setLogDetailsJoinedDate={setLogDetailsJoinedDate}
-          logDetailsMemberName={logDetailsMemberName} logDetailsDate={logDetailsDate} logDetailsDescription={logDetailsDescription} logDetailsAmount={logDetailsAmount} logDetailsMethod={logDetailsMethod}
-          logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate} logDetailsModalWithValues={logDetailsModalWithValues} currentActivity={currentActivity}
-          previousActivity={previousActivity} hasValue={hasValue} formatAmount={formatAmount} formatDate={formatDate}
-          latestTransactionsForSelectedScheme={latestTransactionsForSelectedScheme}
-
-        />
-        <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
-        <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
-          isAddSchemeModal={isAddSchemeModal} setAddSchemeModal={setAddSchemeModal} newScheme={newScheme} setNewScheme={setNewScheme} newSchemeAmount={newSchemeAmount} setNewSchemeAmount={setNewSchemeAmount}
-          handleSchemeNameInputChange={handleSchemeNameInputChange} handleSchemeAmountInputChange={handleSchemeAmountInputChange} handleSchemeStartingBalInputChange={handleSchemeStartingBalInputChange}
-          handleSchemeDateInputChange={handleSchemeDateInputChange} handleSchemeYearInputChange={handleSchemeYearInputChange} newSchemeStartingBal={newSchemeStartingBal} setNewSchemeStartingBal={setNewSchemeStartingBal}
-          newSchemeDate={newSchemeDate} setNewSchemeDate={setNewSchemeDate} newSchemeYear={newSchemeYear} setNewSchemeYear={setNewSchemeYear} saveScheme={saveScheme}
-          formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes} schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState}
-          setSchemeSelectedState={setSchemeSelectedState} selectedSchemeName={selectedSchemeName} allMembers={allMembers} handleConfirmPayment={handleConfirmPayment}
-          totalSchemeYearlyContribution={totalSchemeYearlyContribution} filteredMembers={filteredMembers} members={members} setMembers={setMembers} searchState={searchState}
-          setSearchState={setSearchState} payingMember={payingMember} setPayingMember={setPayingMember} accordionData={accordionData} setAccordionData={setAccordionData}
-          saveMember={saveMember} addMore={addMore} newMember={newMember} setNewMember={setNewMember} isAddMember={isAddMember} setIsAddMember={setIsAddMember} setPaymentMethod={setPaymentMethod}
-          getMemberStatus={getMemberStatus} toast={toast} setLatestTransactions={setLatestTransactions} updateMember={updateMember} isEditMember={isEditMember} setIsEditMember={setIsEditMember}
-        />
-        <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate}
-          newExpenses={newExpenses} setExpenses={setExpenses} filteredExpenses={filteredExpenses} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth}
-          selectedCat={selectedCat} setSelectedCat={setSelectedCat} payments={payments} setPayments={setPayments} totalSpentThisMonth={totalSpentThisMonth}
-          totalTransactionsThisMonth={totalTransactionsThisMonth} totalSpentThisYear={totalSpentThisYear} totalTransactionsThisYear={totalTransactionsThisYear} topCategory={topCategory}
-          topCategoryAmount={topCategoryAmount} topCategoryPercentage={topCategoryPercentage} totalSpentForRefundsAndCredits={totalSpentForRefundsAndCredits} totalTransactionsForRefundsAndCredits={totalTransactionsForRefundsAndCredits}
-          selectedSchemeName={selectedSchemeName} financialData={financialData} netDifference={netDifference} setLatestTransactions={setLatestTransactions}
-        />
-        <Insights toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} filteredMembers={filteredMembers} schemes={schemes} selectedSchemeName={selectedSchemeName} />
-        <ActivityHistory toggleState={toggleState} toggleMobileState={toggleMobileState} formattedDate={formattedDate} openCalender={openCalender} LatestTransactions={LatestTransactions}
-          selectedSchemeName={selectedSchemeName} logDetails={logDetails} setLogDetailsModal={setLogDetailsModal} logDetailsModal={logDetailsModal} setLogDetailsMemberName={setLogDetailsMemberName} setLogDetailsDate={setLogDetailsDate} setLogDetailsDescription={setLogDetailsDescription}
-          setLogDetailsAmount={setLogDetailsAmount} setLogDetailsMethod={setLogDetailsMethod} setLogDetailsOccuredPeriod={setLogDetailsOccuredPeriod} setLogDetailsJoinedDate={setLogDetailsJoinedDate}
-          logDetailsMemberName={logDetailsMemberName} logDetailsDate={logDetailsDate} logDetailsDescription={logDetailsDescription} logDetailsAmount={logDetailsAmount} logDetailsMethod={logDetailsMethod}
-          logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate} logDetailsModalWithValues={logDetailsModalWithValues} currentActivity={currentActivity} previousActivity={previousActivity} hasValue={hasValue} formatAmount={formatAmount} formatDate={formatDate}
-          latestTransactionsForSelectedScheme={latestTransactionsForSelectedScheme}
-        />
-        <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
       </div>
-      <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} toggleTabMobile={toggleTabMobile} />
-    </>
-  )
+    )}
+
+    <Toaster />
+
+    <Routes>
+      <Route path='/' element={<HomePage/>}/>
+      <Route path='/Signup' element={<Signup/>}/>
+      <Route path='/Dashboard' element={<System dashboardProps={dashboardProps} />}/>
+    </Routes>
+  </BrowserRouter>
+);
+
 }
 
 export default App
