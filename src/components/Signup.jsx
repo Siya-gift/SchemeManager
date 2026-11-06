@@ -5,9 +5,7 @@ import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrimaryBtn2 from "./PrimaryBtn5";
 
-
 const btnSignup = "Sign up";
-
 
 function Signup() {
   return (
@@ -19,13 +17,16 @@ function Signup() {
           src={logo}
           alt="Logo"
         />
-        <div className=" absolute inset-0 rounded-2xl">
+        <div className=" absolute inset-0 rounded-2xl [anchor-name:--signfooter]">
           <img
             src={signbg}
             alt="Sign Background"
             className="absolute inset-0 w-full h-full object-contain"
           />
         </div>
+        <p className="absolute bottom-[anchor(--signfooter_bottom)] left-[anchor(--signfooter_left)] -translate-y-8 w-full text-center font-['Rajdhani'] text-[12px] text-white/70">
+          Powered by Scheme Manager Pro
+        </p>
         <div className=" h-[70%] w-[74%]  flex flex-col">
           <div className="flex w-full  flex-row justify-left items-center gap-8">
             <Link
@@ -33,12 +34,12 @@ function Signup() {
               className="group z-10 items-center text-white gap-1 inline-flex cursor-pointer"
             >
               <i className="fa-solid fa-chevron-left text-[14px] transition-transform group-hover:-translate-x-1 group-focus:-translate-x-1" />
-              <span className="font-['Rajdhani'] font-normal text-[16px] leading-5 text-white order-1">
+              <span className="font-['Rajdhani'] font-normal text-[16px] leading-5 text-white">
                 Back
               </span>
             </Link>
 
-            <div className="font-['Rajdhani'] font-thin text-[20px] leading-4 text-white order-1">
+            <div className="font-['Rajdhani'] font-thin text-[20px] leading-4 text-white">
               Welcome, <br /> please{" "}
               <span className="bg-linear-to-r from-[#00FF9D] from-[35.58%] to-[#0368FF] to-[94.71%] bg-clip-text text-transparent font-thin">
                 Sign up Here
@@ -54,7 +55,7 @@ function Signup() {
               <input
                 type="text"
                 placeholder="Johnson"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Phone Number
@@ -62,7 +63,7 @@ function Signup() {
               <input
                 type="text"
                 placeholder="0612345678"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Username
@@ -70,7 +71,7 @@ function Signup() {
               <input
                 type="email"
                 placeholder="J...@gmail.com"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Password
@@ -78,7 +79,7 @@ function Signup() {
               <input
                 type="password"
                 placeholder="• • • • • • • • •"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Confirm Password
@@ -86,18 +87,25 @@ function Signup() {
               <input
                 type="password"
                 placeholder="• • • • • • • • •"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
 
               <div className="flex flex-col flex-end">
                 <div className="flex justify-center items-center gap-2">
-                  <input
-                    type="checkbox"
-                    class="w-3.5 h-3.5 bg-[#F2F2F2] rounded-[3px] border-none appearance-none checked:bg-indigo-600"
-                  />
-                  <p className="font-['Rajdhani'] font-thin text-[12px] text-[#FFFFFF]">
+                  <div className="p-px bg-linear-to-r from-[#0368FF] to-[#00FF9D] rounded-sm">
+                    <input
+                    id="rememberMe"
+                      type="checkbox"
+                      className="w-3.5 h-3.5 bg-[#F2F2F2] checked:bg-transparent rounded-[3px] border-none appearance-none checked:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23fff%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M16.707%205.293a1%201%200%20010%201.414l-8%208a1%201%200%2001-1.414%200l-4-4a1%201%200%20011.414-1.414L8%2012.586l7.293-7.293a1%201%200%20011.414%200z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-center bg-no-repeat bg-size-[10px_10px] cursor-pointer block"
+                    />
+                  </div>
+
+                  <label
+                    className="font-['Rajdhani'] font-thin text-[12px] text-[#FFFFFF]"
+                    htmlFor="rememberMe"
+                  >
                     Remember me
-                  </p>
+                  </label>
                 </div>
                 <button className="flex justify-center items-center  bg-[#2A2A2A] rounded-full px-3 py-3 w-full mt-4">
                   <span className="inline-flex items-center justify-center mr-2">
@@ -143,7 +151,6 @@ function Signup() {
                   </p>
                   <PrimaryBtn2 btnSignup={btnSignup} />
                 </div>
-
               </div>
             </form>
           </div>
