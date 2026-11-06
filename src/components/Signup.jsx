@@ -1,5 +1,6 @@
 import React from "react";
 import signbg from "../images/signbg.svg";
+import signDesktopBg from "../images/signDesktopBg.svg";
 import logo from "../images/logo_h.png";
 import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -10,7 +11,7 @@ const btnSignup = "Sign up";
 function Signup() {
   return (
     <div className="bg-[#1E1E1E]">
-      <div className="relative flex justify-center items-center h-screen w-screen bg-[conic-gradient(from_90deg_at_50%_50%,rgba(3,104,255,0.2)_-29.42deg,rgba(0,255,157,0.3)_122.88deg,rgba(3,104,255,0.2)_330.58deg,rgba(0,255,157,0.3)_482.88deg)]">
+      <div className="relative flex justify-center items-center min-h-210 md:h-200 w-screen md:w-full bg-[conic-gradient(from_90deg_at_50%_50%,rgba(3,104,255,0.2)_-29.42deg,rgba(0,255,157,0.3)_122.88deg,rgba(3,104,255,0.2)_330.58deg,rgba(0,255,157,0.3)_482.88deg)]">
         {" "}
         <img
           className="w-35 h-10 absolute top-4 left-2 object-contain  z-10 "
@@ -21,13 +22,18 @@ function Signup() {
           <img
             src={signbg}
             alt="Sign Background"
-            className="absolute inset-0 w-full h-full object-contain"
+            className="md:hidden absolute inset-0 w-full h-full object-contain"
+          />
+          <img
+            src={signDesktopBg}
+            alt="Sign Background"
+            className="hidden md:block absolute inset-0 w-full h-full object-contain"
           />
         </div>
         <p className="absolute bottom-[anchor(--signfooter_bottom)] left-[anchor(--signfooter_left)] -translate-y-8 w-full text-center font-['Rajdhani'] text-[12px] text-white/70">
           Powered by Scheme Manager Pro
         </p>
-        <div className=" h-[70%] w-[74%]  flex flex-col">
+        <div className=" h-[70%] md:h-[67%]  flex flex-col md:-translate-y-10 justify-center items-center gap-4 md:gap-8 w-[80%] md:w-[50%] z-10">
           <div className="flex w-full  flex-row justify-left items-center gap-8">
             <Link
               to="/"
@@ -55,7 +61,7 @@ function Signup() {
               <input
                 type="text"
                 placeholder="Johnson"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Phone Number
@@ -63,7 +69,7 @@ function Signup() {
               <input
                 type="text"
                 placeholder="0612345678"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Username
@@ -71,7 +77,7 @@ function Signup() {
               <input
                 type="email"
                 placeholder="J...@gmail.com"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Password
@@ -79,7 +85,7 @@ function Signup() {
               <input
                 type="password"
                 placeholder="• • • • • • • • •"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Confirm Password
@@ -87,7 +93,7 @@ function Signup() {
               <input
                 type="password"
                 placeholder="• • • • • • • • •"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 w-full text-slate-600 text-[14px] font-['Rajdhani']"
+                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
 
               <div className="flex flex-col flex-end">
@@ -134,7 +140,7 @@ function Signup() {
                       />
                     </svg>
                   </span>
-                  <span className="font-['Roboto'] text-base leading-6 tracking-[0.15px] text-[#FCFBFF]">
+                  <span className="font-['Roboto'] text-base leading-6 md:leading-2 tracking-[0.15px] text-[#FCFBFF]">
                     Sign up with Google
                   </span>
                 </button>
