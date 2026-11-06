@@ -30,7 +30,7 @@ export default function RestoreButton() {
             {/* Styled Trigger Button */}
             <button
                 onClick={handleButtonClick}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-800 bg-white rounded-lg hover:bg-white/95 active:scale-95 transition-all duration-200"
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-800 bg-white rounded-lg hover:bg-white/95 hover:-translate-y-1 cursor-pointer active:scale-95 transition-all duration-200"
             >
                 <i className="fa-solid fa-upload"></i>
                 <span>Restore Data From File</span>

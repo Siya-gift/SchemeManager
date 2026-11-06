@@ -15,7 +15,7 @@ function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName })
                     <img src={luffyImg} className="h-full w-full object-cover" />
                 </div>
                 <h1 className='text-white text-3xl font-bold'>Vusi Nkosi</h1>
-                <small className='text-[#abe9be] block min-w-55 max-w-55 truncate'>
+                <small className='text-[#abe9be] block min-w-55 max-w-50 truncate'>
                     Scheme : {selectedSchemeName}
                 </small>
 

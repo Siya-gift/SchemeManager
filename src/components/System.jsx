@@ -132,7 +132,7 @@ function System({ dashboardProps }) {
 
   return (
     <div
-      className="min-h-screen w-screen relative overflow-hidden"
+      className="min-h-screen w-full relative overflow-hidden"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${systemBackground})`,
         backgroundSize: 'cover',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import MemberAccountStatement from "../invoice/MemberAccountStatement";
+import Notifications from "./Notifications";
 
 function SchemeMembers({
   toggleState,
@@ -337,12 +338,15 @@ function SchemeMembers({
           <h3 className="text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap">
             {formattedDate}
           </h3>
-          <span
-            className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
-            onClick={openCalender}
-          >
-            <i className="fa-solid fa-calendar-days"></i>
-          </span>
+          <div className="flex md:justify-end gap-4 md:w-full">
+            <span
+              className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
+              onClick={openCalender}
+            >
+              <i className="fa-solid fa-calendar-days"></i>
+            </span>
+            <Notifications key={`${toggleState}-${toggleMobileState}`} desktopTab={toggleState} mobileTab={toggleMobileState} tabId={2} />
+          </div>
         </div>
       </div>
 

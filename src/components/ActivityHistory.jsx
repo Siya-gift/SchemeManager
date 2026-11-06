@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Notifications from "./Notifications";
 
 function ActivityHistory({
   toggleState,
@@ -85,14 +86,15 @@ function ActivityHistory({
             {formattedDate}
           </h3>
 
-          <span
-            className="cursor-pointer
-            hover:text-white/80
-            text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
-            onClick={openCalender}
-          >
-            <i className="fa-solid fa-calendar-days"></i>
-          </span>
+          <div className="flex md:justify-end gap-4 md:w-full">
+            <span
+              className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
+              onClick={openCalender}
+            >
+              <i className="fa-solid fa-calendar-days"></i>
+            </span>
+            <Notifications key={`${toggleState}-${toggleMobileState}`} desktopTab={toggleState} mobileTab={toggleMobileState} tabId={5} />
+          </div>
         </div>
       </div>
 

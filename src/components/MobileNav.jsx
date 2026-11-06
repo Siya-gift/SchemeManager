@@ -36,7 +36,7 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
                     </div>
                     <div>
                         <h1 className='text-white text-xl font-bold'>Vusi Nkosi</h1>
-                        <small className='text-[#abe9be] block'>Scheme: {selectedSchemeName}</small>
+                        <small className='text-[#abe9be] block truncate max-w-45'>Scheme: {selectedSchemeName}</small>
                     </div>
                 </div>
 

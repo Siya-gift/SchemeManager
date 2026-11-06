@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import Overlayer from "./Overlayer";
+import Notifications from "./Notifications";
 
 function Dashboard({
   toggleState,
@@ -170,6 +171,9 @@ function Dashboard({
     schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.date,
   );
 
+
+
+
   return (
     <div
       className={`dashboard w-full min-h-screen p-4 md:p-5
@@ -187,24 +191,25 @@ function Dashboard({
           Dashboard
         </h1>
         <div className="flex flex-col flex-wrap justify-center md:justify-end items-center gap-4 text-white mt-4 md:mt-0">
-            <div className="flex gap-2">
-          <h5 className="text-white/50 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap">
-            Filter by date:
-          </h5>
-          <h3 className="text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap">
-            {formattedDate}
-          </h3>
+          <div className="flex gap-2">
+            <h5 className="text-white/50 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap">
+              Filter by date:
+            </h5>
+            <h3
+              className="text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap"
+              onClick={openCalender}
+            >
+              {formattedDate}
+            </h3>
           </div>
-          <div className="flex gap-4">
+          <div className="flex md:justify-end gap-4 md:w-full">
             <span
               className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
               onClick={openCalender}
             >
               <i className="fa-solid fa-calendar-days"></i>
             </span>
-            <span className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]">
-              <i className="fa-solid fa-bell"></i>
-            </span>
+           <Notifications key={`${toggleState}-${toggleMobileState}`} desktopTab={toggleState} mobileTab={toggleMobileState} tabId={1} />
           </div>
         </div>
       </div>
@@ -258,8 +263,8 @@ function Dashboard({
             </div>
           </h2>
 
-          <div className="mt-4">
-            <h1 className="text-[clamp(1.25rem,5vw,2.5rem)] w-full font-bold leading-none whitespace-nowrap overflow-hidden text-ellipsis">
+          <div className="mt-4 w-full overflow-visible">
+            <h1 className="text-white text-[clamp(1.25rem,5vw,2.5rem)] md:text-[2vw] font-bold leading-none whitespace-nowrap">
               {(
                 Number(TotalCollectionsMinusMonthlyExpenses) +
                 Number(
@@ -334,7 +339,7 @@ function Dashboard({
             </ul>
           </div>
 
-          <h1 className="text-[clamp(1.25rem,5vw,2.5rem)] w-full font-bold leading-none whitespace-nowrap overflow-hidden text-ellipsis mb-4 mt-4 md:mt-0">
+          <h1 className="text-white text-[clamp(1.25rem,5vw,2.5rem)] md:text-[2vw] font-bold leading-none whitespace-nowrap mb-4 mt-4 md:mt-0">
             {YearMonthFilter === 1
               ? totalSchemeYearlyContribution.toLocaleString("en-ZA", {
                   currency: "ZAR",
