@@ -32,6 +32,7 @@ import SideBar from './components/SideBar.jsx'
 import MobileNav from './components/MobileNav.jsx'
 import MobileMenu from './components/MobileMenu.jsx'
 import Signup from './components/Signup.jsx';
+import Signin from './components/Signin.jsx';
 
 
 // gsap
@@ -1516,6 +1517,7 @@ function App() {
     <Routes>
       <Route path='/' element={<HomePage/>}/>
       <Route path='/Signup' element={<Signup/>}/>
+      <Route path='/Signin' element={<Signin/>}/>
       <Route path='/Dashboard' element={<System dashboardProps={dashboardProps} />}/>
     </Routes>
   </BrowserRouter>

@@ -1,0 +1,22 @@
+<svg width="924" height="599" viewBox="0 0 924 599" fill="none" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="0" y="-8" width="924" height="607"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(15px);clip-path:url(#bgblur_0_2020_69_clip_path);height:100%;width:100%"></div></foreignObject><g filter="url(#filter0_d_2020_69)" data-figma-bg-blur-radius="30">
+<rect x="30.5" y="22.5" width="863" height="538" rx="24.5" fill="white" fill-opacity="0.12" stroke="url(#paint0_linear_2020_69)" shape-rendering="crispEdges"/>
+</g>
+<defs>
+<filter id="filter0_d_2020_69" x="0" y="-8" width="924" height="607" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="8"/>
+<feGaussianBlur stdDeviation="15"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2020_69"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2020_69" result="shape"/>
+</filter>
+<clipPath id="bgblur_0_2020_69_clip_path" transform="translate(0 8)"><rect x="30" y="22" width="864" height="539" rx="25"/>
+</clipPath><linearGradient id="paint0_linear_2020_69" x1="30" y1="291.5" x2="894" y2="291.5" gradientUnits="userSpaceOnUse">
+<stop offset="0.355769" stop-color="#00FF9D"/>
+<stop offset="0.947115" stop-color="#0368FF"/>
+</linearGradient>
+</defs>
+</svg>

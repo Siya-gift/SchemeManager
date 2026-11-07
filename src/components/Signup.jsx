@@ -11,7 +11,7 @@ const btnSignup = "Sign up";
 function Signup() {
   return (
     <div className="bg-[#1E1E1E]">
-      <div className="relative flex justify-center items-center min-h-210 md:h-200 w-screen md:w-full bg-[conic-gradient(from_90deg_at_50%_50%,rgba(3,104,255,0.2)_-29.42deg,rgba(0,255,157,0.3)_122.88deg,rgba(3,104,255,0.2)_330.58deg,rgba(0,255,157,0.3)_482.88deg)]">
+      <div className="relative flex justify-center items-center min-h-208 md:h-300 w-screen md:w-full bg-[conic-gradient(from_90deg_at_50%_50%,rgba(3,104,255,0.2)_-29.42deg,rgba(0,255,157,0.3)_122.88deg,rgba(3,104,255,0.2)_330.58deg,rgba(0,255,157,0.3)_482.88deg)]">
         {" "}
         <img
           className="w-35 h-10 absolute top-4 left-2 object-contain  z-10 "
@@ -45,7 +45,7 @@ function Signup() {
               </span>
             </Link>
 
-            <div className="font-['Rajdhani'] font-thin text-[20px] leading-4 text-white">
+            <div className="font-['Rajdhani'] font-thin text-[20px] leading-6 text-white">
               Welcome, <br /> please{" "}
               <span className="bg-linear-to-r from-[#00FF9D] from-[35.58%] to-[#0368FF] to-[94.71%] bg-clip-text text-transparent font-thin">
                 Sign up Here
@@ -146,14 +146,14 @@ function Signup() {
                 </button>
 
                 <div className="mt-4 flex justify-between items-center w-[110%]">
-                  <p className="font-['Rajdhani'] font-thin text-[9px] text-white">
+                  <p className="font-['Rajdhani'] font-thin text-[11px] text-white">
                     Already have an account?{" "}
-                    <a
-                      href="#"
+                    <Link
+                      to="/Signin"
                       className="underline font-thin hover:text-gray-200"
                     >
                       Sign in
-                    </a>
+                    </Link>
                   </p>
                   <PrimaryBtn2 btnSignup={btnSignup} />
                 </div>
