@@ -1496,19 +1496,43 @@ function App() {
 
   useEffect(() => {
     let active = true;
-    let initialSessionCheck = true;
+    let authStateReceived = false;
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      authStateReceived = true;
       setUser(session?.user ?? null);
-      if (!initialSessionCheck) setAuthLoading(false);
+      setAuthLoading(false);
     });
 
-    supabase.auth.getUser()
+    supabase.auth.getSession()
       .then(async ({ data, error }) => {
         if (!active) return;
 
-        if (error?.message.includes("User from sub claim in JWT does not exist")) {
+        const session = data.session;
+        if (!authStateReceived) {
+          setUser(session?.user ?? null);
+          setAuthLoading(false);
+        }
+
+        if (error) {
+          console.error("Could not restore the current Supabase session:", error.message);
+          return;
+        }
+
+        if (session?.user) {
+          const { error: userError } = await supabase.auth.getUser();
+          if (!active || !userError?.message.includes("User from sub claim in JWT does not exist")) {
+            if (userError) {
+              console.error("Could not validate the current Supabase session:", userError.message);
+            }
+            return;
+          }
+
+          const { data: currentSessionData } = await supabase.auth.getSession();
+          if (currentSessionData.session?.user.id !== session.user.id) return;
+
           const { error: signOutError } = await supabase.auth.signOut({
             scope: "local",
           });
@@ -1516,19 +1540,11 @@ function App() {
             console.error("Could not clear the invalid local session:", signOutError.message);
           }
           setUser(null);
-        } else if (error) {
-          console.error("Could not validate the current Supabase session:", error.message);
-        } else {
-          setUser(data.user);
         }
-
-        initialSessionCheck = false;
-        setAuthLoading(false);
       })
       .catch((error) => {
         if (!active) return;
         console.error("Could not validate the current Supabase session:", error);
-        initialSessionCheck = false;
         setAuthLoading(false);
       });
 

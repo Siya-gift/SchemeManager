@@ -8,6 +8,7 @@ import PrimaryBtn5 from "./PrimaryBtn5";
 import { toast } from "react-hot-toast";
 import { supabase } from "../lib/supabaseClient.js";
 import { useNavigate } from "react-router-dom";
+import SignGoogleBtn from "./SignGoogleBtn.jsx";
 
 function Signup() {
   const btnSignup = "Sign up";
@@ -205,37 +206,7 @@ function Signup() {
                     Remember me
                   </label>
                 </div>
-                <button className="flex justify-center items-center  bg-[#2A2A2A] rounded-full px-3 py-3 w-full mt-4">
-                  <span className="inline-flex items-center justify-center mr-2">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M19.5328 10.1871C19.5328 9.36773 19.4664 8.7698 19.3225 8.14972H9.96582V11.848H15.458C15.3473 12.7671 14.7493 14.1512 13.4206 15.0813L13.4019 15.2051L16.3603 17.497L16.5653 17.5174C18.4477 15.779 19.5328 13.2211 19.5328 10.1871Z"
-                        fill="#4285F4"
-                      />
-                      <path
-                        d="M9.96566 19.9313C12.6563 19.9313 14.9152 19.0454 16.5651 17.5174L13.4204 15.0813C12.5789 15.6682 11.4494 16.0779 9.96566 16.0779C7.33032 16.0779 5.0936 14.3395 4.29627 11.9366L4.1794 11.9466L1.10322 14.3273L1.06299 14.4391C2.70177 17.6945 6.06795 19.9313 9.96566 19.9313Z"
-                        fill="#34A853"
-                      />
-                      <path
-                        d="M4.29626 11.9366C4.08588 11.3166 3.96412 10.6521 3.96412 9.96565C3.96412 9.27908 4.08588 8.61473 4.28519 7.99466L4.27962 7.8626L1.16489 5.44366L1.06298 5.49214C0.387557 6.84305 0 8.36008 0 9.96565C0 11.5712 0.387557 13.0882 1.06298 14.4391L4.29626 11.9366Z"
-                        fill="#FBBC05"
-                      />
-                      <path
-                        d="M9.96566 3.85336C11.837 3.85336 13.0992 4.66168 13.819 5.33718L16.6315 2.59107C14.9042 0.985496 12.6563 0 9.96566 0C6.06795 0 2.70177 2.23672 1.06299 5.49214L4.2852 7.99466C5.0936 5.59183 7.33032 3.85336 9.96566 3.85336Z"
-                        fill="#EB4335"
-                      />
-                    </svg>
-                  </span>
-                  <span className="font-['Roboto'] text-base leading-6 md:leading-2 tracking-[0.15px] text-[#FCFBFF]">
-                    Sign up with Google
-                  </span>
-                </button>
+                <SignGoogleBtn />
 
                 <div className="mt-4 flex justify-between items-center w-[110%]">
                   <p className="font-['Rajdhani'] font-thin text-[11px] text-white">
