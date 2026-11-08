@@ -22,75 +22,100 @@ function Signup() {
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const trimmedEmail = username.trim();
-  const trimmedPhone = phoneNumber.trim();
-  const trimmedName = name.trim();
+    const trimmedEmail = username.trim();
+    const trimmedPhone = phoneNumber.trim();
+    const trimmedName = name.trim();
 
-  if (trimmedEmail === "" || password === "" || trimmedName === "") {
-    toast.error("All fields are required");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    toast.error("Passwords do not match");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const { data, error: authError } = await supabase.auth.signUp({
-      email: trimmedEmail,
-      password,
-      options: {
-        data: {
-          name: trimmedName,
-          phoneNumber: trimmedPhone,
-        },
-      },
-    });
-
-    if (authError) {
-      toast.error(authError.message);
+    if (trimmedEmail === "" || password === "" || trimmedName === "") {
+      toast.error("All fields are required");
       return;
     }
 
-    if (data.user) {
-      const { error: dbError } = await supabase.from("Members").insert({
-        id: data.user.id,
-        member_name: trimmedName,
-        tot_paid: "0.00",
-        status: "Pending",
-        scheme_name: "clubs", // Adjust this as needed
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { data, error: authError } = await supabase.auth.signUp({
+        email: trimmedEmail,
+        password,
+        options: {
+          data: {
+            name: trimmedName,
+            phoneNumber: trimmedPhone,
+          },
+        },
       });
 
-      if (dbError) {
-        toast.error(`Account created, but saving the member profile failed: ${dbError.message}`);
-        console.log("Error inserting into Members table:", dbError);
+      if (authError) {
+        toast.error(authError.message);
         return;
       }
-    }
 
-    if (data.session) {
-      toast.success("Account created! Redirecting...");
-      navigate("/Dashboard");
-    } else {
-      toast.success(
-        "Registration successful! Please check your email to verify your account."
-      );
-    }
-  } catch (signupError) {
-    const message = signupError instanceof Error
-      ? signupError.message
-      : "An unexpected error occurred during signup.";
-    toast.error(message);
-  } finally {
-    setLoading(false);
-  }
-};
+      if (data.user) {
+        // 1. Insert into the main Members table
+        const { error: dbError } = await supabase.from("Members").insert({
+          id: data.user.id,
+          member_name: trimmedName,
+          tot_paid: "0.00",
+          status: "Pending",
+          scheme_name: ["clubs"],
+        });
 
+        if (dbError) {
+          toast.error(
+            `Account created, but saving the member profile failed: ${dbError.message}`,
+          );
+          console.log("Error inserting into Members table:", dbError);
+          return;
+        }
+
+        // 2. Insert the default scheme record into the member_schemes table
+        const { error: schemeError } = await supabase
+          .from("members_schemes")
+          .insert({
+            user_id: data.user.id,
+            scheme: "clubs", // Default starting scheme
+            monthly_contribution: 0, // Set your default amount
+            starting_bal: 0, // Initial starting balance
+            created_at: new Date().toISOString(),
+          });
+
+        if (schemeError) {
+          toast.error(
+            `Account created, but setting up the default scheme failed: ${schemeError.message}`,
+          );
+          console.log(
+            "Error inserting into member_schemes table:",
+            schemeError,
+          );
+          return;
+        }
+      }
+
+      if (data.session) {
+        toast.success("Account created! Redirecting...");
+        navigate("/Dashboard");
+      } else {
+        toast.success(
+          "Registration successful! Please check your email to verify your account.",
+        );
+      }
+    } catch (signupError) {
+      const message =
+        signupError instanceof Error
+          ? signupError.message
+          : "An unexpected error occurred during signup.";
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-[#1E1E1E]">

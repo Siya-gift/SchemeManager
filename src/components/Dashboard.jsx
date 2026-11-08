@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Overlayer from "./Overlayer";
 import Notifications from "./Notifications";
+import { supabase } from "../lib/supabaseClient";
 
 function Dashboard({
   toggleState,
@@ -171,9 +172,79 @@ function Dashboard({
     schemes.filter((s) => s.scheme === selectedSchemeName)[0]?.date,
   );
 
+  const [dash_schemes, setDash_schemes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    let schemeSubscription = null;
 
+    async function fetchUserSchemesData() {
+      setLoading(true);
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
+      if (userError || !user) {
+        console.error("Not logged in or error getting user:", userError);
+        setLoading(false);
+        return;
+      }
 
+      // 1. Initial fetch of existing schemes
+      const { data, error } = await supabase
+        .from("members_schemes")
+        .select("scheme")
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.error("Error fetching table data:", error);
+      } else {
+        setDash_schemes(data || []);
+      }
+
+      setLoading(false);
+
+      // 2. Set up Realtime listener (.on() MUST happen before .subscribe())
+      schemeSubscription = supabase
+        .channel("dash-schemes-realtime")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "members_schemes",
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            if (payload.eventType === "INSERT") {
+              setDash_schemes((prev) => [
+                ...prev,
+                { scheme: payload.new.scheme },
+              ]);
+            } else if (payload.eventType === "DELETE") {
+              setDash_schemes((prev) =>
+                prev.filter((item) => item.scheme !== payload.old.scheme),
+              );
+            }
+          },
+        )
+        .subscribe(); // .subscribe() is called last
+    }
+
+    fetchUserSchemesData();
+
+    // 3. Cleanup subscription on component unmount
+    return () => {
+      if (schemeSubscription) {
+        supabase.removeChannel(schemeSubscription);
+      }
+    };
+  }, []);
+
+  // 2. Render a loading state or your mapped list
+  if (loading) {
+    return <div className="text-white text-sm">Loading schemes...</div>;
+  }
   return (
     <div
       className={`dashboard w-full min-h-screen p-4 md:p-5
@@ -209,23 +280,28 @@ function Dashboard({
             >
               <i className="fa-solid fa-calendar-days"></i>
             </span>
-           <Notifications key={`${toggleState}-${toggleMobileState}`} desktopTab={toggleState} mobileTab={toggleMobileState} tabId={1} />
+            <Notifications
+              key={`${toggleState}-${toggleMobileState}`}
+              desktopTab={toggleState}
+              mobileTab={toggleMobileState}
+              tabId={1}
+            />
           </div>
         </div>
       </div>
 
       {/* Tabs Scrollable on mobile */}
       <ul className="tabs glass-scroll flex gap-2 max-w-svw md:max-w-[70vw] overflow-x-auto pb-4 no-scrollbar">
-        {schemes.map((scheme, idx) => (
+        {dash_schemes.map((scheme, idx) => (
           <li
             key={idx}
             className={`tab hover:bg-white/45 cursor-pointer 
-                    text-white glass rounded-2xl px-4 py-1.5 font-bold 
-                    text-sm whitespace-nowrap transition-all
-                    ${schemeSelectedState === idx ? "bg-white/45" : ""}`}
+                text-white glass rounded-2xl px-4 py-1.5 font-bold 
+                text-sm whitespace-nowrap transition-all
+                ${schemeSelectedState === idx ? "bg-white/45" : ""}`}
             onClick={() => schemeSelected(idx, scheme.scheme)}
           >
-            {scheme.scheme}
+            {scheme.scheme || scheme}
           </li>
         ))}
 
