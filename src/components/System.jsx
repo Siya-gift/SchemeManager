@@ -192,7 +192,7 @@ function System({ dashboardProps }) {
           logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate} logDetailsModalWithValues={logDetailsModalWithValues} currentActivity={currentActivity} previousActivity={previousActivity} hasValue={hasValue} formatAmount={formatAmount} formatDate={formatDate}
           latestTransactionsForSelectedScheme={latestTransactionsForSelectedScheme}
         />
-        <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} />
+        <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} settoggleMobileState={settoggleMobileState} setToggleState={setToggleState} />
       </div>
       <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} toggleTabMobile={toggleTabMobile} />
     </div>

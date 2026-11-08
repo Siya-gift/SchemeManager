@@ -4,7 +4,7 @@ import { supabase } from "../lib/supabaseClient.js";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-function Settings({ toggleState, toggleMobileState }) {
+function Settings({ toggleState, toggleMobileState, settoggleMobileState, setToggleState }) {
 
   const navigate = useNavigate();
 
@@ -32,6 +32,8 @@ function Settings({ toggleState, toggleMobileState }) {
 
     // Redirect to the login page (or home page)
     navigate("/login", { replace: true });
+    settoggleMobileState(1);
+    setToggleState(1);
   };
 
   return (
