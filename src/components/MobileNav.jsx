@@ -24,6 +24,37 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
 
 
 
+    const [name, setName] = useState("Loading...");
+    
+      useEffect(() => {
+        async function fetchProfile() {
+          // 1. Fetch the current logged-in authenticated user
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+    
+        //   consoole.log("Authenticated user:", user);
+    
+          if (user) {
+            // 2. Fetch the name matching that user's ID from your Users table
+            const { data, error } = await supabase
+              .from("Members")
+              .select("member_name")
+              .eq("id", user.id)
+              .single();
+    
+            if (data && data.member_name) {
+              setName(data.member_name);
+            } else {
+              setName("User"); // Fallback if member_name is empty
+              if (error) console.error("Error fetching name:", error.message);
+            }
+          } else {
+            setName("Guest"); // Fallback if no user is logged in
+          }
+        }
+        fetchProfile();
+      }, []);
 
 
     return (
@@ -35,7 +66,7 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
                         <img src={luffyImg} className="h-full w-full object-cover" alt="profile" />
                     </div>
                     <div>
-                        <h1 className='text-white text-xl font-bold'>Vusi Nkosi</h1>
+                        <h1 className='text-white text-xl font-bold'>{name}</h1>
                         <small className='text-[#abe9be] block truncate max-w-45'>Scheme: {selectedSchemeName}</small>
                     </div>
                 </div>
