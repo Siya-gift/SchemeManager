@@ -4,40 +4,74 @@ import { supabase } from "../lib/supabaseClient.js";
 
 function SideBar({
   toggleState,
-  setToggleState,
   activeTab,
   selectedSchemeName,
 }) {
   const [name, setName] = useState("Loading...");
 
   useEffect(() => {
-    async function fetchProfile() {
-      // 1. Fetch the current logged-in authenticated user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    let active = true;
+    let requestId = 0;
 
-    //   consoole.log("Authenticated user:", user);
+    async function fetchProfile(user) {
+      const currentRequestId = ++requestId;
+      const metadataName = user?.user_metadata?.name;
 
-      if (user) {
-        // 2. Fetch the name matching that user's ID from your Users table
-        const { data, error } = await supabase
+      if (!user) {
+        setName("User");
+        return;
+      }
+
+      if (metadataName) setName(metadataName);
+
+      let data;
+      let error;
+      try {
+        ({ data, error } = await supabase
           .from("Members")
           .select("member_name")
           .eq("id", user.id)
-          .single();
-
-        if (data && data.member_name) {
-          setName(data.member_name);
-        } else {
-          setName("User"); // Fallback if member_name is empty
-          if (error) console.error("Error fetching name:", error.message);
-        }
-      } else {
-        setName("Guest"); // Fallback if no user is logged in
+          .maybeSingle());
+      } catch (fetchError) {
+        if (!active || currentRequestId !== requestId) return;
+        console.error("Error fetching member name:", fetchError);
+        setName(metadataName || "User");
+        return;
       }
+
+      if (!active || currentRequestId !== requestId) return;
+
+      if (error) {
+        console.error("Error fetching member name:", error.message);
+        setName(metadataName || "User");
+        return;
+      }
+
+      setName(data?.member_name || metadataName || "User");
     }
-    fetchProfile();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      void fetchProfile(session?.user ?? null);
+    });
+
+    supabase.auth.getUser().then(({ data, error }) => {
+      if (error) {
+        console.error("Error fetching authenticated user:", error.message);
+        setName("User");
+        return;
+      }
+      void fetchProfile(data.user);
+    }).catch((error) => {
+      console.error("Error fetching authenticated user:", error);
+      setName("User");
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (

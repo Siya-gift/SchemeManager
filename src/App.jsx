@@ -1495,14 +1495,47 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
+    let active = true;
+    let initialSessionCheck = true;
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      setAuthLoading(false);
+      if (!initialSessionCheck) setAuthLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    supabase.auth.getUser()
+      .then(async ({ data, error }) => {
+        if (!active) return;
+
+        if (error?.message.includes("User from sub claim in JWT does not exist")) {
+          const { error: signOutError } = await supabase.auth.signOut({
+            scope: "local",
+          });
+          if (signOutError) {
+            console.error("Could not clear the invalid local session:", signOutError.message);
+          }
+          setUser(null);
+        } else if (error) {
+          console.error("Could not validate the current Supabase session:", error.message);
+        } else {
+          setUser(data.user);
+        }
+
+        initialSessionCheck = false;
+        setAuthLoading(false);
+      })
+      .catch((error) => {
+        if (!active) return;
+        console.error("Could not validate the current Supabase session:", error);
+        initialSessionCheck = false;
+        setAuthLoading(false);
+      });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (
