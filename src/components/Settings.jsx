@@ -1,7 +1,39 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import RestoreButton from "./UploadJsonData.jsx";
+import { supabase } from "../lib/supabaseClient.js";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function Settings({ toggleState, toggleMobileState }) {
+
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSignout = async () => {
+    setError("");
+    setLoading(true);
+
+    const { error } = await supabase.auth.signOut();
+
+    setLoading(false);
+
+    if (error) {
+      setError(error.message);
+      toast.error(error.message);
+      return;
+    }
+
+    // Clear your local user state
+    setUser(null);
+    toast.success("Signed out successfully!");
+
+    // Redirect to the login page (or home page)
+    navigate("/login", { replace: true });
+  };
+
   return (
     <div
       className={`Settings w-full min-h-screen p-4 
@@ -61,7 +93,6 @@ function Settings({ toggleState, toggleMobileState }) {
           <div className="cardS mb-3 text-white">
             <h1 className="text-2xl font-bold mb-4">Secure</h1>
 
-            
             <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
@@ -196,7 +227,10 @@ function Settings({ toggleState, toggleMobileState }) {
               </div>
             </div>
 
-            <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
+            <div
+              className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out"
+              onClick={handleSignout}
+            >
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
                   <i className="fa-solid fa-right-from-bracket"></i>

@@ -47,12 +47,12 @@ function Signin() {
       return;
     }
 
-    // Explicitly check if a valid user and session returned
+    
     if (data?.user) {
       setUser(data.user);
       toast.success("Signed in successfully!");
       
-      // Use replace: true so they can't hit the "back" button to return to login
+      
       navigate("/Dashboard", { replace: true }); 
     } else {
       toast.error("An unexpected error occurred. Please try again.");
