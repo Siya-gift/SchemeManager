@@ -66,21 +66,27 @@ function Signin() {
     setError("");
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        // Optional: specify where you want the user redirected after a successful login
-        redirectTo: `${window.location.origin}/Dashboard`,
-      },
-    });
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
 
-    setLoading(false);
-
-    if (error) {
-      setError(error.message);
-      toast.error(error.message);
+      if (error) {
+        setError(error.message);
+        toast.error(error.message);
+      }
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : "Could not start Google sign-in. Please try again.";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setLoading(false);
     }
-  
   };
 
 
