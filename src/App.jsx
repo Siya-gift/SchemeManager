@@ -8,6 +8,8 @@ import 'react-calendar/dist/Calendar.css';
 import { Draggable } from "gsap/Draggable";
 import crustBg from './images/bg.png'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+
 
 
 
@@ -23,8 +25,6 @@ import Insights from './components/Insights.jsx'
 import ActivityHistory from './components/ActivityHistory.jsx'
 import Settings from './components/Settings.jsx'
 import System from './components/System.jsx';
-
-//HomePage
 import HomePage from './components/HomePage.jsx';
 
 //components
@@ -33,6 +33,7 @@ import MobileNav from './components/MobileNav.jsx'
 import MobileMenu from './components/MobileMenu.jsx'
 import Signup from './components/Signup.jsx';
 import Signin from './components/Signin.jsx';
+import { supabase } from './lib/supabaseClient.js';
 
 
 // gsap
@@ -1490,6 +1491,20 @@ function App() {
     totalTransactionsForRefundsAndCredits,
   };
 
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setAuthLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   return (
   <BrowserRouter>
     {/* Calendar Overlay */}
@@ -1515,10 +1530,63 @@ function App() {
     <Toaster />
 
     <Routes>
-      <Route path='/' element={<HomePage/>}/>
-      <Route path='/Signup' element={<Signup/>}/>
-      <Route path='/Signin' element={<Signin/>}/>
-      <Route path='/Dashboard' element={<System dashboardProps={dashboardProps} />}/>
+      <Route
+        path="/"
+        element={
+          authLoading ? (
+            <div className="min-h-screen bg-[#1E1E1E]" />
+          ) : (
+            user ? <Navigate to="/Dashboard" replace /> : <HomePage />
+          )
+        }
+      />
+
+      <Route
+        path="/Signup"
+        element={
+          authLoading ? (
+            <div className="min-h-screen bg-[#1E1E1E]" />
+          ) : user ? (
+            <Navigate to="/Dashboard" replace />
+          ) : (
+            <Signup />
+          )
+        }
+      />
+      <Route
+        path="/Signin"
+        element={
+          authLoading ? (
+            <div className="min-h-screen bg-[#1E1E1E]" />
+          ) : user ? (
+            <Navigate to="/Dashboard" replace />
+          ) : (
+            <Signin />
+          )
+        }
+      />
+      <Route
+        path="/Dashboard"
+        element={
+          authLoading ? (
+            <div className="min-h-screen bg-[#1E1E1E]" />
+          ) : user ? (
+            <System dashboardProps={dashboardProps} />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        }
+      />
+      <Route
+        path="*"
+        element={
+          authLoading ? (
+            <div className="min-h-screen bg-[#1E1E1E]" />
+          ) : (
+            <Navigate to={user ? "/Dashboard" : "/"} replace />
+          )
+        }
+      />
     </Routes>
   </BrowserRouter>
 );

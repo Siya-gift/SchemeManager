@@ -75,37 +75,37 @@ function Settings({ toggleState, toggleMobileState }) {
             <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
-                  <i class="fa-solid fa-share-nodes"></i>
+                  <i className="fa-solid fa-share-nodes"></i>
                   <p className="font-medium">Share App</p>
                 </div>
-                <i class="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
+                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
               </div>
             </div>
             <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
-                  <i class="fa-solid fa-shield-halved"></i>
+                  <i className="fa-solid fa-shield-halved"></i>
                   <p className="font-medium">Privacy Policy</p>
                 </div>
-                <i class="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
+                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
               </div>
             </div>
             <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
-                  <i class="fa-solid fa-file-contract"></i>
+                  <i className="fa-solid fa-file-contract"></i>
                   <p className="font-medium">Terms & Conditions</p>
                 </div>
-                <i class="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
+                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
               </div>
             </div>
             <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
-                  <i class="fa-solid fa-envelope"></i>
+                  <i className="fa-solid fa-envelope"></i>
                   <p className="font-medium">Contact</p>
                 </div>
-                <i class="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
+                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
               </div>
             </div>
           </div>
@@ -117,10 +117,10 @@ function Settings({ toggleState, toggleMobileState }) {
             <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
-                  <i class="fa-solid fa-user-gear"></i>
+                  <i className="fa-solid fa-user-gear"></i>
                   <p className="font-medium">Manage My Account</p>
                 </div>
-                <i class="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
+                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
               </div>
             </div>
             <div className="flex flex-col gap-3 rounded-2xl bg-white/30 w-full py-3 px-3 mb-2">
@@ -147,12 +147,12 @@ function Settings({ toggleState, toggleMobileState }) {
                   className="flex gap-2 items-center px-3 py-1.5 text-xs font-semibold text-slate-800 bg-white rounded-lg 
                                     hover:-translate-y-1 cursor-pointer active:scale-95 transition-all duration-200"
                 >
-                  <i class="fa-solid fa-download"></i>
+                  <i className="fa-solid fa-download"></i>
                   <p>Download Backup File</p>
                 </button>
               </div>
               <div className="flex flex-row gap-3 text-white/70 text-[11px]">
-                <i class="fa-solid fa-user-shield"></i>
+                <i className="fa-solid fa-user-shield"></i>
                 <div className="flex flex-col gap-2">
                   <h1 className="text">Why backup?</h1>
                   <p>
@@ -176,7 +176,7 @@ function Settings({ toggleState, toggleMobileState }) {
             <div className="flex flex-col gap-3 rounded-2xl bg-white/30 w-full py-3 px-3 mb-2">
               <div className="flex flex-row gap-4 items-center justify-between w-full">
                 <div className="flex items-center gap-3">
-                  <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                  <i className="fa-solid fa-arrow-up-from-bracket"></i>
                   <p className="font-medium text-white">Restore from Backup</p>
                 </div>
 
@@ -199,10 +199,10 @@ function Settings({ toggleState, toggleMobileState }) {
             <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
-                  <i class="fa-solid fa-right-from-bracket"></i>
+                  <i className="fa-solid fa-right-from-bracket"></i>
                   <p className="font-medium">Logout</p>
                 </div>
-                <i class="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
+                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
               </div>
             </div>
           </div>

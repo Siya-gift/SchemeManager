@@ -278,3 +278,41 @@ body {
 .fontRaleway {
   font-family: "Raleway", sans-serif;
 }
+
+
+/* Container to keep dots centered and aligned */
+.dot-loader {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px; /* Space between dots */
+  height: 100%;
+}
+
+/* Base style for all 4 dots */
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: currentColor; /* Automatically matches your button text color */
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: fadeEffect 1.2s ease-in-out infinite;
+}
+
+/* Stagger the delays to create an "inward" fading wave illusion */
+.dot:nth-child(1) { animation-delay: 0s; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+.dot:nth-child(4) { animation-delay: 0.6s; }
+
+/* The fading keyframe animation */
+@keyframes fadeEffect {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1); /* Subtle scale adds a premium feel */
+  }
+}
