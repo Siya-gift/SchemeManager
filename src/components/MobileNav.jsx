@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import luffyImg from '../images/Luffy_profile_pic.jpg';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { supabase } from "../lib/supabaseClient.js";
 
 function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
     const container = useRef();
