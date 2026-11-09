@@ -117,6 +117,37 @@ function Signup() {
     }
   };
 
+
+  const [error, setError] = useState("");
+
+  const handleGoogleSignup = async () => {
+    setError("");
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        setError(error.message);
+        toast.error(error.message);
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Could not start Google registration. Please try again.";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-[#1E1E1E]">
       <div className="relative flex justify-center items-center min-h-208 md:h-300 w-screen md:w-full bg-[conic-gradient(from_90deg_at_50%_50%,rgba(3,104,255,0.2)_-29.42deg,rgba(0,255,157,0.3)_122.88deg,rgba(3,104,255,0.2)_330.58deg,rgba(0,255,157,0.3)_482.88deg)]">
@@ -231,7 +262,7 @@ function Signup() {
                     Remember me
                   </label>
                 </div>
-                <SignGoogleBtn />
+                <SignGoogleBtn onClick={handleGoogleSignup} text="Signup with Google"/>
 
                 <div className="mt-4 flex justify-between items-center w-[110%]">
                   <p className="font-['Rajdhani'] font-thin text-[11px] text-white">

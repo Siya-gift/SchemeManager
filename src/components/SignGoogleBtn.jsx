@@ -2,7 +2,7 @@ import React from "react";
 
 export default function SignGoogleBtn({ 
   onClick, 
-  text = "Continue with Google", 
+  text, 
   disabled = false, 
   className = "" 
 }) {
