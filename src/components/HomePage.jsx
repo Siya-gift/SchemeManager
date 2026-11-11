@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // Removed unused useState
+import React, { useState, useEffect } from "react"; // Removed unused useState
 import "../App.css";
 import homeBG from "../images/bghomeSvg.svg";
 import proveBG from "../images/proveBG.jpg";
@@ -46,9 +46,10 @@ import arrowD from "../images/arrowD.svg";
 import arrowU from "../images/arrowU.svg";
 import CheckMark from "../images/CheckMark.svg";
 import pcPlanTitle from "../images/pcPlanTitle.svg";
+import { supabase } from "../lib/supabaseClient";
 
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const btnSignin = "Sign in";
@@ -74,6 +75,66 @@ function HomePage() {
     setActivePlanCard(id);
     setActivePlanCardSpan(id);
   };
+
+  const [verifiedUser, setVerifiedUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  // 1. Check session on mount & listen for Google login/logout changes
+  useEffect(() => {
+    const checkInitialUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setVerifiedUser(session?.user ?? null);
+      setLoading(false);
+    };
+
+    checkInitialUser();
+
+    // Automatically updates verifiedUser when Google redirects back or user signs out
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setVerifiedUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // 2. Verify user on button click and update state
+  const handleGoogleUserVerified = async () => {
+    try {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (error || !user) {
+        setVerifiedUser(null);
+        navigate("/Signin");
+        return;
+      }
+
+      // Extract name from raw_user_meta_data
+      const userName =
+        user.user_metadata?.name || user.user_metadata?.full_name || "Member";
+
+      // Update your verifiedUser state with the user object and extracted name
+      setVerifiedUser({
+        ...user,
+        displayName: userName,
+      });
+
+      navigate("/Dashboard");
+    } catch (err) {
+      console.error("Verification error:", err);
+      setVerifiedUser(null);
+      navigate("/Signin");
+    }
+  };
+
+  if (loading) return null;
 
   return (
     // snap-y snap-mandatory
@@ -146,12 +207,14 @@ function HomePage() {
                     Contact
                   </button>
                 </li>
-                <Link to="/Signin">
-                <li className="cursor-pointer">
-                  <PrimaryBtn btnSignin={btnSignin} />
-                </li>
+                <Link
+                  to={verifiedUser ? "/Dashboard" : "/Signin"}
+                  onClick={handleGoogleUserVerified}
+                >
+                  <li className="cursor-pointer">
+                    <PrimaryBtn btnSignin={btnSignin} />
+                  </li>
                 </Link>
-                
               </ul>
             </div>
           </nav>
@@ -211,10 +274,9 @@ function HomePage() {
 
             <div className="flex flex-row items-center justify-center gap-0 md:gap-3">
               <PrimaryBtn2 btnLearn={btnLearn} />
-              <Link to={'/Signup'}>
-              <PrimaryBtn btnGetStarted={btnGetStarted} />
+              <Link to={"/Signup"}>
+                <PrimaryBtn btnGetStarted={btnGetStarted} />
               </Link>
-              
             </div>
           </div>
         </div>
@@ -483,8 +545,9 @@ function HomePage() {
         }}
       >
         <img
-            className="md:hidden absolute inset-0 w-full h-full object-cover -z-1"
-            src={proveBG}/>
+          className="md:hidden absolute inset-0 w-full h-full object-cover -z-1"
+          src={proveBG}
+        />
         <div className="absolute inset-0 h-full w-full flex justify-center items-center z-1">
           <div className="absolute inset-0 h-[80%] w-[80%] mx-auto my-auto">
             <div className="prove absolute inset-0 w-full h-full object-contain flex flex-col justify-center md:justify-center lg:justify-center items-center p-20 z-999 gap-18 md:gap-0">

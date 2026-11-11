@@ -206,7 +206,7 @@ function Dashboard({
 
       // 2. Set up Realtime listener (.on() MUST happen before .subscribe())
       schemeSubscription = supabase
-        .channel("dash-schemes-realtime")
+        .channel(`dash-schemes-realtime-${crypto.randomUUID()}`)
         .on(
           "postgres_changes",
           {
