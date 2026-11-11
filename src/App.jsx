@@ -1331,6 +1331,13 @@ function App() {
     );
   };
 
+  const removeSchemeRow = (currentSchemes, removedScheme) =>
+    currentSchemes.filter((scheme) =>
+      removedScheme.id != null
+        ? scheme.id !== removedScheme.id
+        : scheme.scheme !== removedScheme.scheme,
+    );
+
   const mapSchemeForApp = (scheme) => ({
     ...scheme,
     monthlyContribution: Number(scheme.monthly_contribution) || 0,
@@ -1384,6 +1391,7 @@ function App() {
         date: insertedScheme.created_at,
       };
       setSchemes((prev) => upsertScheme(prev, appScheme));
+      setDash_schemes((prev) => upsertScheme(prev, insertedScheme));
 
       schemeSelected(dash_schemes.length, insertedScheme.scheme);
 
@@ -1400,10 +1408,82 @@ function App() {
 
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const activeAuthUserId = useRef(null);
-  const selectedSchemeNameRef = useRef(selectedSchemeName);
-  selectedSchemeNameRef.current = selectedSchemeName;
-  const dash_schemes = schemes;
+  const [dash_schemes, setDash_schemes] = useState([]);
+  useEffect(() => {
+    let isActive = true;
+    let schemeSubscription = null;
+
+    async function fetchUserSchemesData() {
+      try {
+        const { data, error } = await supabase
+          .from("members_schemes")
+          .select("*")
+          .eq("user_id", user.id);
+
+        if (!isActive) return;
+        if (error) {
+          console.error("Error fetching table data:", error);
+        } else {
+          const fetchedSchemes = data || [];
+          setDash_schemes(fetchedSchemes);
+          setSchemes(fetchedSchemes.map(mapSchemeForApp));
+        }
+
+        if (!isActive) return;
+        schemeSubscription = supabase
+          .channel(`dash-schemes-realtime-${crypto.randomUUID()}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "members_schemes",
+              filter: `user_id=eq.${user.id}`,
+            },
+            (payload) => {
+              if (!isActive) return;
+              if (payload.eventType === "INSERT") {
+                setDash_schemes((prev) =>
+                  upsertScheme(prev, payload.new),
+                );
+                setSchemes((prev) =>
+                  upsertScheme(prev, mapSchemeForApp(payload.new)),
+                );
+              } else if (payload.eventType === "DELETE") {
+                setDash_schemes((prev) =>
+                  removeSchemeRow(prev, payload.old),
+                );
+                setSchemes((prev) =>
+                  removeSchemeRow(prev, payload.old),
+                );
+              }
+            },
+          )
+          .subscribe();
+      } catch (error) {
+        if (isActive) {
+          console.error("Could not load schemes:", error);
+        }
+      }
+    }
+
+    setDash_schemes([]);
+    setSchemes([]);
+    if (!user?.id) {
+      return () => {
+        isActive = false;
+      };
+    }
+
+    fetchUserSchemesData();
+
+    return () => {
+      isActive = false;
+      if (schemeSubscription) {
+        supabase.removeChannel(schemeSubscription);
+      }
+    };
+  }, [user?.id]);
 
   const dashboardProps = {
     isOpen,
@@ -1527,21 +1607,12 @@ function App() {
   useEffect(() => {
     let active = true;
     let authStateReceived = false;
-    const updateAuthenticatedUser = (nextUser) => {
-      const nextUserId = nextUser?.id ?? null;
-      if (activeAuthUserId.current !== nextUserId) {
-        activeAuthUserId.current = nextUserId;
-        setSchemes([]);
-        schemeSelected(-1, "");
-      }
-      setUser(nextUser);
-    };
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       authStateReceived = true;
-      updateAuthenticatedUser(session?.user ?? null);
+      setUser(session?.user ?? null);
       setAuthLoading(false);
     });
 
@@ -1552,7 +1623,7 @@ function App() {
 
         const session = data.session;
         if (!authStateReceived) {
-          updateAuthenticatedUser(session?.user ?? null);
+          setUser(session?.user ?? null);
           setAuthLoading(false);
         }
 
@@ -1593,7 +1664,7 @@ function App() {
               signOutError.message,
             );
           }
-          updateAuthenticatedUser(null);
+          setUser(null);
         }
       })
       .catch((error) => {
@@ -1610,109 +1681,6 @@ function App() {
       subscription.unsubscribe();
     };
   }, []);
-  useEffect(() => {
-    let isActive = true;
-    let schemeSubscription = null;
-    let latestFetchRequest = 0;
-    const userId = user?.id;
-
-    // Don't leave the previous account's schemes on screen.
-    setSchemes([]);
-    schemeSelected(-1, "");
-
-    if (!userId) {
-      return () => {
-        isActive = false;
-      };
-    }
-
-    async function fetchUserSchemesData() {
-      const requestId = ++latestFetchRequest;
-      const { data, error } = await supabase
-        .from("members_schemes")
-        .select("*")
-        .eq("user_id", userId);
-
-      if (!isActive || requestId !== latestFetchRequest) return;
-
-      if (error) {
-        console.error("Error fetching schemes:", error);
-        return;
-      }
-
-      const fetchedSchemes = data ?? [];
-      const appSchemes = fetchedSchemes.map(mapSchemeForApp);
-      setSchemes(appSchemes);
-
-      const selectedIndex = appSchemes.findIndex(
-        (scheme) => scheme.scheme === selectedSchemeNameRef.current,
-      );
-      const nextSelectedIndex =
-        selectedIndex >= 0 ? selectedIndex : appSchemes.length > 0 ? 0 : -1;
-      schemeSelected(
-        nextSelectedIndex,
-        appSchemes[nextSelectedIndex]?.scheme ?? "",
-      );
-    }
-
-    // Subscribe and clean up for this specific user.
-    schemeSubscription = supabase
-      .channel(`dash-schemes-${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "members_schemes",
-          filter: `user_id=eq.${userId}`,
-        },
-        (payload) => {
-          if (!isActive) return;
-
-          if (
-            payload.eventType === "INSERT" ||
-            payload.eventType === "UPDATE"
-          ) {
-            void fetchUserSchemesData();
-          } else if (payload.eventType === "DELETE") {
-            void fetchUserSchemesData();
-          }
-        },
-      )
-      .subscribe((status, error) => {
-        if (!isActive) return;
-
-        if (status === "SUBSCRIBED") {
-          void fetchUserSchemesData();
-        } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
-          console.error("Scheme realtime subscription failed:", status, error);
-        }
-      });
-
-    void fetchUserSchemesData();
-
-    const refreshVisibleSchemes = () => {
-      if (!document.hidden) {
-        void fetchUserSchemesData();
-      }
-    };
-    const refreshInterval = window.setInterval(
-      refreshVisibleSchemes,
-      10000,
-    );
-    document.addEventListener("visibilitychange", refreshVisibleSchemes);
-    window.addEventListener("online", refreshVisibleSchemes);
-
-    return () => {
-      isActive = false;
-      window.clearInterval(refreshInterval);
-      document.removeEventListener("visibilitychange", refreshVisibleSchemes);
-      window.removeEventListener("online", refreshVisibleSchemes);
-      if (schemeSubscription) {
-        supabase.removeChannel(schemeSubscription);
-      }
-    };
-  }, [user?.id]);
 
   return (
     <BrowserRouter>
@@ -1812,6 +1780,7 @@ function App() {
           }
         />
       </Routes>
+      
     </BrowserRouter>
   );
 }
