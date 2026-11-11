@@ -13,16 +13,14 @@ import SignGoogleBtn from "./SignGoogleBtn.jsx";
 const REMEMBERED_EMAIL_KEY = "schememanager-remembered-email";
 
 function Signin() {
-
-  
   const btnSignin = "Sign in";
   const navigate = useNavigate();
 
   const [username, setUsername] = useState(
     () => localStorage.getItem(REMEMBERED_EMAIL_KEY) || "",
   );
-  const [rememberEmail, setRememberEmail] = useState(
-    () => Boolean(localStorage.getItem(REMEMBERED_EMAIL_KEY)),
+  const [rememberEmail, setRememberEmail] = useState(() =>
+    Boolean(localStorage.getItem(REMEMBERED_EMAIL_KEY)),
   );
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -61,9 +59,10 @@ function Signin() {
         toast.error("An unexpected error occurred. Please try again.");
       }
     } catch (signinError) {
-      const message = signinError instanceof Error
-        ? signinError.message
-        : "Unable to sign in. Please try again.";
+      const message =
+        signinError instanceof Error
+          ? signinError.message
+          : "Unable to sign in. Please try again.";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -85,15 +84,36 @@ function Signin() {
         toast.error(error.message);
       }
     } catch (error) {
-      const message = error instanceof Error
-        ? error.message
-        : "Could not start Google sign-in. Please try again.";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Could not start Google sign-in. Please try again.";
       toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
+  const [email, setEmail] = useState('');
+
+
+  const handleForgotPassword = async () => {
+    setEmail(username)
+    if (!email) {
+      toast('Please enter your email address first.');
+      return;
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/UpdatePassword`,
+    });
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast('Password reset email sent! Check your inbox.');
+    }
+  };
 
   return (
     <div className="bg-[#1E1E1E]">
@@ -183,14 +203,24 @@ function Signin() {
                     />
                   </div>
 
-                  <label
-                    className="font-['Rajdhani'] font-thin text-[12px] text-[#FFFFFF]"
-                    htmlFor="rememberMe"
-                  >
-                    Remember email on this device
-                  </label>
+                  <div className="flex gap-6 justify-start">
+                    <label
+                      className="font-['Rajdhani'] font-thin text-[12px] text-[#FFFFFF]"
+                      htmlFor="rememberMe"
+                    >
+                      Remember me
+                    </label>
+                    <label
+                      className="font-['Rajdhani'] font-thin text-[12px] text-[#FFFFFF] underline hover:text-blue-100 hover:translate-y-[-0.8px] transition-all duration-200 cursor-pointer" onClick={handleForgotPassword}
+                    >
+                      Forgot password
+                    </label>
+                  </div>
                 </div>
-                <SignGoogleBtn onClick={handleGoogleSignin} text="Continue with Google" />
+                <SignGoogleBtn
+                  onClick={handleGoogleSignin}
+                  text="Continue with Google"
+                />
 
                 <div className="mt-4 flex justify-between items-center w-[110%]">
                   <p className="font-['Rajdhani'] font-thin text-[11px] text-white">
