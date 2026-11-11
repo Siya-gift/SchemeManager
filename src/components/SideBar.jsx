@@ -3,12 +3,16 @@ import luffyImg from "../images/Luffy_profile_pic.jpg";
 import { supabase } from "../lib/supabaseClient.js";
 import { getAuthUserDisplayName } from "../lib/authUserName.js";
 
-function SideBar({
-  toggleState,
-  activeTab,
-  selectedSchemeName,
-}) {
+function SideBar({ toggleState, activeTab, selectedSchemeName }) {
+  
+  const getAuthUserAvatar = (user) => {
+    if (!user) return "";
+    return user.user_metadata?.avatar_url || user.user_metadata?.picture || "";
+  };
+
+  // Inside your component:
   const [name, setName] = useState("Account");
+  const [userProfilePicture, setUserProfilePicture] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -18,22 +22,30 @@ function SideBar({
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       authStateReceived = true;
-      setName(getAuthUserDisplayName(session?.user));
+      const user = session?.user;
+      setName(getAuthUserDisplayName(user));
+      setUserProfilePicture(getAuthUserAvatar(user));
     });
 
-    supabase.auth.getUser().then(({ data, error }) => {
-      if (!active || authStateReceived) return;
-      if (error) {
-        console.error("Error fetching authenticated user:", error.message);
+    supabase.auth
+      .getUser()
+      .then(({ data, error }) => {
+        if (!active || authStateReceived) return;
+        if (error) {
+          console.error("Error fetching authenticated user:", error.message);
+          setName("Account");
+          setUserProfilePicture("");
+          return;
+        }
+        setName(getAuthUserDisplayName(data.user));
+        setUserProfilePicture(getAuthUserAvatar(data.user));
+      })
+      .catch((error) => {
+        if (!active) return;
+        console.error("Error fetching authenticated user:", error);
         setName("Account");
-        return;
-      }
-      setName(getAuthUserDisplayName(data.user));
-    }).catch((error) => {
-      if (!active) return;
-      console.error("Error fetching authenticated user:", error);
-      setName("Account");
-    });
+        setUserProfilePicture("");
+      });
 
     return () => {
       active = false;
@@ -53,7 +65,10 @@ function SideBar({
                 `}
       >
         <div className="ppic static -top-1 left-[50%] w-30 h-30 rounded-full overflow-hidden">
-          <img src={luffyImg} className="h-full w-full object-cover" />
+          <img
+            src={userProfilePicture ? userProfilePicture : luffyImg}
+            className="h-full w-full object-cover"
+          />
         </div>
         <h1 className="text-white text-3xl font-bold">{name}</h1>
         <small className="text-[#abe9be] block min-w-55 max-w-50 truncate">
