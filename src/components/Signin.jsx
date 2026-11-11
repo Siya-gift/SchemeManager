@@ -4,12 +4,13 @@ import loginSMbg from "../images/loginSMbg.svg";
 import loginMDbg from "../images/loginMDbg.svg";
 import logo from "../images/logo_h.png";
 import { Link } from "react-router-dom";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrimaryBtn5 from "./PrimaryBtn5";
 import { toast } from "react-hot-toast";
 import { supabase } from "../lib/supabaseClient.js";
 import { useNavigate } from "react-router-dom";
 import SignGoogleBtn from "./SignGoogleBtn.jsx";
+
+const REMEMBERED_EMAIL_KEY = "schememanager-remembered-email";
 
 function Signin() {
 
@@ -17,16 +18,17 @@ function Signin() {
   const btnSignin = "Sign in";
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(
+    () => localStorage.getItem(REMEMBERED_EMAIL_KEY) || "",
+  );
+  const [rememberEmail, setRememberEmail] = useState(
+    () => Boolean(localStorage.getItem(REMEMBERED_EMAIL_KEY)),
+  );
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSignin = async (e) => {
     e.preventDefault();
-    setError("");
-
     const trimmedEmail = username.trim();
     const trimmedPassword = password.trim();
 
@@ -36,34 +38,39 @@ function Signin() {
     }
 
     setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: trimmedEmail,
+        password: trimmedPassword,
+      });
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: trimmedEmail,
-      password: trimmedPassword,
-    });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
-    setLoading(false);
-
-    if (error) {
-      setError(error.message);
-      toast.error(error.message);
-      return;
-    }
-
-    
-    if (data?.user) {
-      setUser(data.user);
-      toast.success("Signed in successfully!");
-      
-      
-      navigate("/Dashboard", { replace: true }); 
-    } else {
-      toast.error("An unexpected error occurred. Please try again.");
+      if (data?.user) {
+        if (rememberEmail) {
+          localStorage.setItem(REMEMBERED_EMAIL_KEY, trimmedEmail);
+        } else {
+          localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+        }
+        toast.success("Signed in successfully!");
+        navigate("/Dashboard", { replace: true });
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+    } catch (signinError) {
+      const message = signinError instanceof Error
+        ? signinError.message
+        : "Unable to sign in. Please try again.";
+      toast.error(message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleSignin = async () => {
-    setError("");
     setLoading(true);
 
     try {
@@ -75,14 +82,12 @@ function Signin() {
       });
 
       if (error) {
-        setError(error.message);
         toast.error(error.message);
       }
     } catch (error) {
       const message = error instanceof Error
         ? error.message
         : "Could not start Google sign-in. Please try again.";
-      setError(message);
       toast.error(message);
     } finally {
       setLoading(false);
@@ -135,14 +140,20 @@ function Signin() {
           </div>
 
           <div className="flex justify-center w-full h-full z-999">
-            <form className="flex flex-col gap-4 w-[90%] mt-4">
+            <form
+              className="flex flex-col gap-4 w-[90%] mt-4"
+              onSubmit={handleSignin}
+            >
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
-                Username
+                Email
               </label>
               <input
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
                 type="email"
+                name="email"
+                autoComplete="username"
+                required
                 placeholder="J...@gmail.com"
                 className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Rajdhani'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
@@ -153,6 +164,9 @@ function Signin() {
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 type="password"
+                name="password"
+                autoComplete="current-password"
+                required
                 placeholder="• • • • • • • • •"
                 className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
               />
@@ -163,6 +177,8 @@ function Signin() {
                     <input
                       id="rememberMe"
                       type="checkbox"
+                      checked={rememberEmail}
+                      onChange={(e) => setRememberEmail(e.target.checked)}
                       className="w-3.5 h-3.5 bg-[#F2F2F2] checked:bg-transparent rounded-[3px] border-none appearance-none checked:bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23fff%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M16.707%205.293a1%201%200%20010%201.414l-8%208a1%201%200%2001-1.414%200l-4-4a1%201%200%20011.414-1.414L8%2012.586l7.293-7.293a1%201%200%20011.414%200z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-center bg-no-repeat bg-size-[10px_10px] cursor-pointer block"
                     />
                   </div>
@@ -171,7 +187,7 @@ function Signin() {
                     className="font-['Rajdhani'] font-thin text-[12px] text-[#FFFFFF]"
                     htmlFor="rememberMe"
                   >
-                    Remember me
+                    Remember email on this device
                   </label>
                 </div>
                 <SignGoogleBtn onClick={handleGoogleSignin} text="Continue with Google" />
@@ -188,7 +204,6 @@ function Signin() {
                   </p>
                   <PrimaryBtn5
                     type="submit"
-                    onClick={handleSignin}
                     btnSignup={btnSignin}
                     loading={loading}
                   />

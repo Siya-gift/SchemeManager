@@ -3,6 +3,7 @@ import luffyImg from '../images/Luffy_profile_pic.jpg';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { supabase } from "../lib/supabaseClient.js";
+import { getAuthUserDisplayName } from "../lib/authUserName.js";
 
 function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
     const container = useRef();
@@ -25,37 +26,38 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
 
 
 
-    const [name, setName] = useState("Loading...");
-    
-      useEffect(() => {
-        async function fetchProfile() {
-          // 1. Fetch the current logged-in authenticated user
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
-    
-        //   consoole.log("Authenticated user:", user);
-    
-          if (user) {
-            // 2. Fetch the name matching that user's ID from your Users table
-            const { data, error } = await supabase
-              .from("Members")
-              .select("member_name")
-              .eq("id", user.id)
-              .single();
-    
-            if (data && data.member_name) {
-              setName(data.member_name);
-            } else {
-              setName("User"); // Fallback if member_name is empty
-              if (error) console.error("Error fetching name:", error.message);
+    const [name, setName] = useState("Account");
+
+    useEffect(() => {
+        let active = true;
+        let authStateReceived = false;
+
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            authStateReceived = true;
+            setName(getAuthUserDisplayName(session?.user));
+        });
+
+        supabase.auth.getUser().then(({ data, error }) => {
+            if (!active || authStateReceived) return;
+            if (error) {
+                console.error("Error fetching authenticated user:", error.message);
+                setName("Account");
+                return;
             }
-          } else {
-            setName("Guest"); // Fallback if no user is logged in
-          }
-        }
-        fetchProfile();
-      }, []);
+            setName(getAuthUserDisplayName(data.user));
+        }).catch((error) => {
+            if (!active) return;
+            console.error("Error fetching authenticated user:", error);
+            setName("Account");
+        });
+
+        return () => {
+            active = false;
+            subscription.unsubscribe();
+        };
+    }, []);
 
 
     return (

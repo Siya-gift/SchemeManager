@@ -1,71 +1,38 @@
 import React, { useState, useEffect } from "react";
 import luffyImg from "../images/Luffy_profile_pic.jpg";
 import { supabase } from "../lib/supabaseClient.js";
+import { getAuthUserDisplayName } from "../lib/authUserName.js";
 
 function SideBar({
   toggleState,
   activeTab,
   selectedSchemeName,
 }) {
-  const [name, setName] = useState("Loading...");
+  const [name, setName] = useState("Account");
 
   useEffect(() => {
     let active = true;
-    let requestId = 0;
-
-    async function fetchProfile(user) {
-      const currentRequestId = ++requestId;
-      const metadataName = user?.user_metadata?.name;
-
-      if (!user) {
-        setName("User");
-        return;
-      }
-
-      if (metadataName) setName(metadataName);
-
-      let data;
-      let error;
-      try {
-        ({ data, error } = await supabase
-          .from("Members")
-          .select("member_name")
-          .eq("id", user.id)
-          .maybeSingle());
-      } catch (fetchError) {
-        if (!active || currentRequestId !== requestId) return;
-        console.error("Error fetching member name:", fetchError);
-        setName(metadataName || "User");
-        return;
-      }
-
-      if (!active || currentRequestId !== requestId) return;
-
-      if (error) {
-        console.error("Error fetching member name:", error.message);
-        setName(metadataName || "User");
-        return;
-      }
-
-      setName(data?.member_name || metadataName || "User");
-    }
+    let authStateReceived = false;
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      void fetchProfile(session?.user ?? null);
+      authStateReceived = true;
+      setName(getAuthUserDisplayName(session?.user));
     });
 
     supabase.auth.getUser().then(({ data, error }) => {
+      if (!active || authStateReceived) return;
       if (error) {
         console.error("Error fetching authenticated user:", error.message);
-        setName("User");
+        setName("Account");
         return;
       }
-      void fetchProfile(data.user);
+      setName(getAuthUserDisplayName(data.user));
     }).catch((error) => {
+      if (!active) return;
       console.error("Error fetching authenticated user:", error);
-      setName("User");
+      setName("Account");
     });
 
     return () => {
