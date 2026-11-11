@@ -1339,59 +1339,161 @@ function App() {
   const handleSchemeDateInputChange = (e) => setNewSchemeDate(e.target.value);
   const handleSchemeYearInputChange = (e) => setNewSchemeYear(e.target.value);
 
+  const isSavingScheme = useRef(false);
   const saveScheme = async () => {
+    if (isSavingScheme.current) return;
     if (!newScheme.trim()) return;
     if (!newSchemeAmount) return;
 
-    // 1. Get the current logged-in user from Supabase
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    isSavingScheme.current = true;
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-    if (userError || !user) {
-      console.error("Not logged in or error getting user:", userError);
-      return;
+      if (userError || !user) {
+        console.error("Not logged in or error getting user:", userError);
+        return;
+      }
+
+      const fullDate = new Date(newSchemeYear, newSchemeDate, 1);
+
+      const schemeToAdd = {
+        user_id: user.id,
+        scheme: newScheme.trim(),
+        monthly_contribution: Number(newSchemeAmount),
+        starting_bal: Number(newSchemeStartingBal) || 0,
+        created_at: fullDate.toISOString(),
+      };
+
+      const { data, error } = await supabase
+        .from("members_schemes")
+        .insert([schemeToAdd])
+        .select();
+
+      if (error) {
+        console.error("Error saving scheme to Supabase:", error);
+        return;
+      }
+
+      const insertedScheme = data[0];
+      const appScheme = {
+        ...insertedScheme,
+        monthlyContribution: Number(insertedScheme.monthly_contribution),
+        startingBal: Number(insertedScheme.starting_bal) || 0,
+        date: insertedScheme.created_at,
+      };
+      setSchemes((prev) => [...prev, appScheme]);
+      setDash_schemes((prev) => {
+        const existingIndex = prev.findIndex(
+          (scheme) =>
+            insertedScheme.id != null
+              ? scheme.id === insertedScheme.id
+              : scheme.created_at === insertedScheme.created_at,
+        );
+        if (existingIndex === -1) return [...prev, insertedScheme];
+
+        return prev.map((scheme, index) =>
+          index === existingIndex ? insertedScheme : scheme,
+        );
+      });
+
+      schemeSelected(dash_schemes.length, insertedScheme.scheme);
+
+      setNewScheme("");
+      setNewSchemeAmount("");
+      setNewSchemeStartingBal("");
+      setNewSchemeDate(new Date().getMonth());
+      setNewSchemeYear(new Date().getFullYear());
+      setAddSchemeModal(false);
+    } finally {
+      isSavingScheme.current = false;
     }
-
-    const fullDate = new Date(newSchemeYear, newSchemeDate, 1);
-
-    // 2. Prepare the object matching your database columns
-    const schemeToAdd = {
-      user_id: user.id, // Links the row to the auth user
-      scheme: newScheme.trim(),
-      monthly_contribution: Number(newSchemeAmount),
-      starting_bal: Number(newSchemeStartingBal) || 0,
-      created_at: fullDate.toISOString(),
-    };
-
-    // 3. Insert into Supabase table (change "member_schemes" to your actual table name)
-    const { data, error } = await supabase
-      .from("members_schemes")
-      .insert([schemeToAdd])
-      .select(); // .select() returns the inserted row back
-
-    if (error) {
-      console.error("Error saving scheme to Supabase:", error);
-      return;
-    }
-
-    // 4. Update local state using the returned data from Supabase
-    const insertedScheme = data[0];
-    setSchemes((prev) => [...prev, insertedScheme]);
-
-    
-    schemeSelected(data[0], insertedScheme.scheme);
-    
-
-    // 5. Reset form and close modal
-    setNewScheme("");
-    setNewSchemeAmount("");
-    setNewSchemeStartingBal("");
-    setNewSchemeDate(new Date().getMonth());
-    setNewSchemeYear(new Date().getFullYear());
-    setAddSchemeModal(false);
   };
+
+  const [dash_schemes, setDash_schemes] = useState([]);
+  useEffect(() => {
+    let isActive = true;
+    let schemeSubscription = null;
+
+    async function fetchUserSchemesData() {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (!isActive) return;
+      if (userError || !user) {
+        console.error("Not logged in or error getting user:", userError);
+        return;
+      }
+
+      // 1. Initial fetch of existing schemes
+      const { data, error } = await supabase
+        .from("members_schemes")
+        .select("*")
+        .eq("user_id", user.id);
+
+      if (!isActive) return;
+      if (error) {
+        console.error("Error fetching table data:", error);
+      } else {
+        setDash_schemes(data || []);
+      }
+
+      if (!isActive) return;
+      // 2. Set up Realtime listener (.on() MUST happen before .subscribe())
+      schemeSubscription = supabase
+        .channel(`dash-schemes-realtime-${crypto.randomUUID()}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "members_schemes",
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            if (!isActive) return;
+            if (payload.eventType === "INSERT") {
+              setDash_schemes((prev) => {
+                const existingIndex = prev.findIndex(
+                  (scheme) =>
+                    payload.new.id != null
+                      ? scheme.id === payload.new.id
+                      : scheme.created_at === payload.new.created_at,
+                );
+                if (existingIndex === -1) return [...prev, payload.new];
+
+                return prev.map((scheme, index) =>
+                  index === existingIndex ? payload.new : scheme,
+                );
+              });
+            } else if (payload.eventType === "DELETE") {
+              setDash_schemes((prev) =>
+                prev.filter((item) =>
+                  payload.old.id != null
+                    ? item.id !== payload.old.id
+                    : item.scheme !== payload.old.scheme,
+                ),
+              );
+            }
+          },
+        )
+        .subscribe(); // .subscribe() is called last
+    }
+
+    fetchUserSchemesData();
+
+    // 3. Cleanup subscription on component unmount
+    return () => {
+      isActive = false;
+      if (schemeSubscription) {
+        supabase.removeChannel(schemeSubscription);
+      }
+    };
+  }, []);
 
   const dashboardProps = {
     isOpen,
@@ -1509,6 +1611,7 @@ function App() {
     topCategoryPercentage,
     totalSpentForRefundsAndCredits,
     totalTransactionsForRefundsAndCredits,
+    dash_schemes,
   };
 
   const [user, setUser] = useState(null);

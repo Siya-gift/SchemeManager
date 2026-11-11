@@ -128,6 +128,7 @@ function System({ dashboardProps }) {
     topCategoryPercentage,
     totalSpentForRefundsAndCredits,
     totalTransactionsForRefundsAndCredits,
+    dash_schemes
   } = dashboardProps;
 
   return (
@@ -162,6 +163,7 @@ function System({ dashboardProps }) {
           logDetailsOccuredPeriod={logDetailsOccuredPeriod} logDetailsJoinedDate={logDetailsJoinedDate} logDetailsModalWithValues={logDetailsModalWithValues} currentActivity={currentActivity}
           previousActivity={previousActivity} hasValue={hasValue} formatAmount={formatAmount} formatDate={formatDate}
           latestTransactionsForSelectedScheme={latestTransactionsForSelectedScheme}
+          dash_schemes={dash_schemes}
 
         />
         <Overlayer overlayer={overlayer} toggleMenu={toggleMenu} />
@@ -175,7 +177,7 @@ function System({ dashboardProps }) {
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} filteredMembers={filteredMembers} members={members} setMembers={setMembers} searchState={searchState}
           setSearchState={setSearchState} payingMember={payingMember} setPayingMember={setPayingMember} accordionData={accordionData} setAccordionData={setAccordionData}
           saveMember={saveMember} addMore={addMore} newMember={newMember} setNewMember={setNewMember} isAddMember={isAddMember} setIsAddMember={setIsAddMember} setPaymentMethod={setPaymentMethod}
-          getMemberStatus={getMemberStatus} toast={toast} setLatestTransactions={setLatestTransactions} updateMember={updateMember} isEditMember={isEditMember} setIsEditMember={setIsEditMember}
+          getMemberStatus={getMemberStatus} toast={toast} setLatestTransactions={setLatestTransactions} updateMember={updateMember} isEditMember={isEditMember} setIsEditMember={setIsEditMember} dash_schemes={dash_schemes}
         />
         <Expenses toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender} formattedDate={formattedDate}
           newExpenses={newExpenses} setExpenses={setExpenses} filteredExpenses={filteredExpenses} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth}

@@ -55,6 +55,7 @@ function SchemeMembers({
   newSchemeYear,
   setNewSchemeYear,
   saveScheme,
+  dash_schemes
 }) {
   const [isDotMenu, setisDotMenu] = useState(false);
   const [activeMenuIdx, setActiveMenuIdx] = useState(null);
@@ -365,7 +366,7 @@ function SchemeMembers({
           </div>
 
           <ul className="grow min-h-25 max-h-130 overflow-y-auto glass-scroll">
-            {schemes.map((item, idx) => (
+            {dash_schemes.map((item, idx) => (
               <li
                 key={idx}
                 className={`py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
@@ -376,7 +377,7 @@ function SchemeMembers({
                   <div className="flex justify-between flex-col leading-5">
                     <h3 className="text-md font-bold">{item.scheme}</h3>
                     <p className="text-[11px] text-white/70">
-                      R{item.monthlyContribution}/mo
+                      R{item.monthly_contribution}/mo
                     </p>
                   </div>
                   <div className="flex gap-3 flex-end text-[11px] transition-transform">
@@ -385,9 +386,9 @@ function SchemeMembers({
                       onClick={() =>
                         editSchemeModal(
                           item.scheme,
-                          item.monthlyContribution,
-                          item.startingBal,
-                          item.date,
+                          item.monthly_contribution,
+                          item.starting_bal,
+                          item.created_at,
                         )
                       }
                     >
