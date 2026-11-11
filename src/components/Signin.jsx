@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import loginSMbg from "../images/loginSMbg.svg";
 import loginMDbg from "../images/loginMDbg.svg";
 import logo from "../images/logo_h.png";
@@ -94,24 +94,48 @@ function Signin() {
     }
   };
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
+  const [isResetting, setIsResetting] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
 
-  const handleForgotPassword = async () => {
-    setEmail(username)
-    if (!email) {
-      toast('Please enter your email address first.');
+  // Countdown timer effect
+  useEffect(() => {
+    if (cooldown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCooldown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+
+    // Block clicks while sending or during cooldown
+    if (isResetting || cooldown > 0) return;
+
+    const targetEmail = username.trim();
+    if (!targetEmail) {
+      toast.error("Please enter your email address first.");
       return;
     }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/UpdatePassword`,
-    });
+    setIsResetting(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
+        redirectTo: `${window.location.origin}/UpdatePassword`,
+      });
 
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast('Password reset email sent! Check your inbox.');
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Password reset email sent! Check your inbox.");
+        setCooldown(60); // Start 60-second cooldown on success
+      }
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -211,9 +235,18 @@ function Signin() {
                       Remember me
                     </label>
                     <label
-                      className="font-['Rajdhani'] font-thin text-[12px] text-[#FFFFFF] underline hover:text-blue-100 hover:translate-y-[-0.8px] transition-all duration-200 cursor-pointer" onClick={handleForgotPassword}
+                      onClick={handleForgotPassword}
+                      className={`font-['Rajdhani'] font-thin text-[12px] text-[#FFFFFF] underline transition-all duration-200 ${
+                        isResetting || cooldown > 0
+                          ? "opacity-50 pointer-events-none cursor-not-allowed"
+                          : "hover:text-blue-100 hover:translate-y-[-0.8px] cursor-pointer"
+                      }`}
                     >
-                      Forgot password
+                      {isResetting
+                        ? "Sending..."
+                        : cooldown > 0
+                          ? `Resend in ${cooldown}s`
+                          : "Forgot password"}
                     </label>
                   </div>
                 </div>

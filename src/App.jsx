@@ -21,6 +21,7 @@ import ActivityHistory from "./components/ActivityHistory.jsx";
 import Settings from "./components/Settings.jsx";
 import System from "./components/System.jsx";
 import HomePage from "./components/HomePage.jsx";
+import UpdatePassword from "./components/UpdatePassword.jsx";
 
 //components
 import SideBar from "./components/SideBar.jsx";
@@ -99,7 +100,6 @@ function App() {
     },
   ];
 
-  
   const expenses = [
     {
       id: 1,
@@ -1386,11 +1386,10 @@ function App() {
       };
       setSchemes((prev) => [...prev, appScheme]);
       setDash_schemes((prev) => {
-        const existingIndex = prev.findIndex(
-          (scheme) =>
-            insertedScheme.id != null
-              ? scheme.id === insertedScheme.id
-              : scheme.created_at === insertedScheme.created_at,
+        const existingIndex = prev.findIndex((scheme) =>
+          insertedScheme.id != null
+            ? scheme.id === insertedScheme.id
+            : scheme.created_at === insertedScheme.created_at,
         );
         if (existingIndex === -1) return [...prev, insertedScheme];
 
@@ -1458,11 +1457,10 @@ function App() {
             if (!isActive) return;
             if (payload.eventType === "INSERT") {
               setDash_schemes((prev) => {
-                const existingIndex = prev.findIndex(
-                  (scheme) =>
-                    payload.new.id != null
-                      ? scheme.id === payload.new.id
-                      : scheme.created_at === payload.new.created_at,
+                const existingIndex = prev.findIndex((scheme) =>
+                  payload.new.id != null
+                    ? scheme.id === payload.new.id
+                    : scheme.created_at === payload.new.created_at,
                 );
                 if (existingIndex === -1) return [...prev, payload.new];
 
@@ -1769,6 +1767,17 @@ function App() {
             )
           }
         />
+
+        <Route
+          path="/UpdatePassword"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : (
+              <UpdatePassword />
+            )
+          }
+        />
         <Route
           path="*"
           element={
@@ -1780,6 +1789,7 @@ function App() {
           }
         />
       </Routes>
+      
     </BrowserRouter>
   );
 }
