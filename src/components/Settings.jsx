@@ -4,8 +4,12 @@ import { supabase } from "../lib/supabaseClient.js";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-function Settings({ toggleState, toggleMobileState, settoggleMobileState, setToggleState }) {
-
+function Settings({
+  toggleState,
+  toggleMobileState,
+  settoggleMobileState,
+  setToggleState,
+}) {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
@@ -16,24 +20,24 @@ function Settings({ toggleState, toggleMobileState, settoggleMobileState, setTog
     setError("");
     setLoading(true);
 
-    const { error } = await supabase.auth.signOut();
+    try {
+      const { error } = await supabase.auth.signOut({ scope: "global" });
+      if (error) throw error;
 
-    setLoading(false);
+      setUser(null);
+      setSchemes([]); // Clear if this state is available here
+      schemeSelected(-1, ""); // Reset the selected scheme
 
-    if (error) {
+      toast.success("Signed out successfully!");
+      navigate("/login", { replace: true });
+      settoggleMobileState(1);
+      setToggleState(1);
+    } catch (error) {
       setError(error.message);
       toast.error(error.message);
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    // Clear your local user state
-    setUser(null);
-    toast.success("Signed out successfully!");
-
-    // Redirect to the login page (or home page)
-    navigate("/login", { replace: true });
-    settoggleMobileState(1);
-    setToggleState(1);
   };
 
   return (

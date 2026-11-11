@@ -28,9 +28,8 @@ function Signin() {
   const handleSignin = async (e) => {
     e.preventDefault();
     const trimmedEmail = username.trim();
-    const trimmedPassword = password.trim();
 
-    if (trimmedEmail === "" || trimmedPassword === "") {
+    if (trimmedEmail === "" || password.trim() === "") {
       toast.error("Email and password cannot be empty");
       return;
     }
@@ -39,7 +38,7 @@ function Signin() {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: trimmedEmail,
-        password: trimmedPassword,
+        password,
       });
 
       if (error) {
@@ -134,6 +133,12 @@ function Signin() {
         toast.success("Password reset email sent! Check your inbox.");
         setCooldown(60); // Start 60-second cooldown on success
       }
+    } catch (resetError) {
+      const message =
+        resetError instanceof Error
+          ? resetError.message
+          : "Unable to send a password reset email. Please try again.";
+      toast.error(message);
     } finally {
       setIsResetting(false);
     }

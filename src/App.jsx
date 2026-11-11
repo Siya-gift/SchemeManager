@@ -79,27 +79,6 @@ function App() {
   const [isAddSchemeModal, setAddSchemeModal] = useState(false);
 
   //schemes
-  const allSchemes = [
-    {
-      scheme: "clubs",
-      monthlyContribution: 500.0,
-      startingBal: 2000,
-      date: "2026-01-01",
-    },
-    {
-      scheme: "Section 2 Society",
-      monthlyContribution: 2200.0,
-      startingBal: 2000,
-      date: "2026-01-02",
-    },
-    {
-      scheme: "Billioniare Dream",
-      monthlyContribution: 10050.0,
-      startingBal: 2000,
-      date: "2026-01-03",
-    },
-  ];
-
   const expenses = [
     {
       id: 1,
@@ -293,7 +272,7 @@ function App() {
     },
   ]);
 
-  const [schemes, setSchemes] = useState(() => allSchemes);
+  const [schemes, setSchemes] = useState([]);
   const [newExpenses, setExpenses] = useState(() => expenses);
   // Initialize with the first scheme's name or an empty string if no schemes exist
   const [selectedSchemeName, setSelectedSchemeName] = useState(
@@ -1339,6 +1318,26 @@ function App() {
   const handleSchemeDateInputChange = (e) => setNewSchemeDate(e.target.value);
   const handleSchemeYearInputChange = (e) => setNewSchemeYear(e.target.value);
 
+  const upsertScheme = (currentSchemes, incomingScheme) => {
+    const existingIndex = currentSchemes.findIndex((scheme) =>
+      incomingScheme.id != null
+        ? scheme.id === incomingScheme.id
+        : scheme.scheme === incomingScheme.scheme,
+    );
+    if (existingIndex === -1) return [...currentSchemes, incomingScheme];
+
+    return currentSchemes.map((scheme, index) =>
+      index === existingIndex ? incomingScheme : scheme,
+    );
+  };
+
+  const mapSchemeForApp = (scheme) => ({
+    ...scheme,
+    monthlyContribution: Number(scheme.monthly_contribution) || 0,
+    startingBal: Number(scheme.starting_bal) || 0,
+    date: scheme.created_at,
+  });
+
   const isSavingScheme = useRef(false);
   const saveScheme = async () => {
     if (isSavingScheme.current) return;
@@ -1384,19 +1383,7 @@ function App() {
         startingBal: Number(insertedScheme.starting_bal) || 0,
         date: insertedScheme.created_at,
       };
-      setSchemes((prev) => [...prev, appScheme]);
-      setDash_schemes((prev) => {
-        const existingIndex = prev.findIndex((scheme) =>
-          insertedScheme.id != null
-            ? scheme.id === insertedScheme.id
-            : scheme.created_at === insertedScheme.created_at,
-        );
-        if (existingIndex === -1) return [...prev, insertedScheme];
-
-        return prev.map((scheme, index) =>
-          index === existingIndex ? insertedScheme : scheme,
-        );
-      });
+      setSchemes((prev) => upsertScheme(prev, appScheme));
 
       schemeSelected(dash_schemes.length, insertedScheme.scheme);
 
@@ -1411,87 +1398,12 @@ function App() {
     }
   };
 
-  const [dash_schemes, setDash_schemes] = useState([]);
-  useEffect(() => {
-    let isActive = true;
-    let schemeSubscription = null;
-
-    async function fetchUserSchemesData() {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (!isActive) return;
-      if (userError || !user) {
-        console.error("Not logged in or error getting user:", userError);
-        return;
-      }
-
-      // 1. Initial fetch of existing schemes
-      const { data, error } = await supabase
-        .from("members_schemes")
-        .select("*")
-        .eq("user_id", user.id);
-
-      if (!isActive) return;
-      if (error) {
-        console.error("Error fetching table data:", error);
-      } else {
-        setDash_schemes(data || []);
-      }
-
-      if (!isActive) return;
-      // 2. Set up Realtime listener (.on() MUST happen before .subscribe())
-      schemeSubscription = supabase
-        .channel(`dash-schemes-realtime-${crypto.randomUUID()}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "members_schemes",
-            filter: `user_id=eq.${user.id}`,
-          },
-          (payload) => {
-            if (!isActive) return;
-            if (payload.eventType === "INSERT") {
-              setDash_schemes((prev) => {
-                const existingIndex = prev.findIndex((scheme) =>
-                  payload.new.id != null
-                    ? scheme.id === payload.new.id
-                    : scheme.created_at === payload.new.created_at,
-                );
-                if (existingIndex === -1) return [...prev, payload.new];
-
-                return prev.map((scheme, index) =>
-                  index === existingIndex ? payload.new : scheme,
-                );
-              });
-            } else if (payload.eventType === "DELETE") {
-              setDash_schemes((prev) =>
-                prev.filter((item) =>
-                  payload.old.id != null
-                    ? item.id !== payload.old.id
-                    : item.scheme !== payload.old.scheme,
-                ),
-              );
-            }
-          },
-        )
-        .subscribe(); // .subscribe() is called last
-    }
-
-    fetchUserSchemesData();
-
-    // 3. Cleanup subscription on component unmount
-    return () => {
-      isActive = false;
-      if (schemeSubscription) {
-        supabase.removeChannel(schemeSubscription);
-      }
-    };
-  }, []);
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const activeAuthUserId = useRef(null);
+  const selectedSchemeNameRef = useRef(selectedSchemeName);
+  selectedSchemeNameRef.current = selectedSchemeName;
+  const dash_schemes = schemes;
 
   const dashboardProps = {
     isOpen,
@@ -1612,18 +1524,24 @@ function App() {
     dash_schemes,
   };
 
-  const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
-
   useEffect(() => {
     let active = true;
     let authStateReceived = false;
+    const updateAuthenticatedUser = (nextUser) => {
+      const nextUserId = nextUser?.id ?? null;
+      if (activeAuthUserId.current !== nextUserId) {
+        activeAuthUserId.current = nextUserId;
+        setSchemes([]);
+        schemeSelected(-1, "");
+      }
+      setUser(nextUser);
+    };
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       authStateReceived = true;
-      setUser(session?.user ?? null);
+      updateAuthenticatedUser(session?.user ?? null);
       setAuthLoading(false);
     });
 
@@ -1634,7 +1552,7 @@ function App() {
 
         const session = data.session;
         if (!authStateReceived) {
-          setUser(session?.user ?? null);
+          updateAuthenticatedUser(session?.user ?? null);
           setAuthLoading(false);
         }
 
@@ -1675,7 +1593,7 @@ function App() {
               signOutError.message,
             );
           }
-          setUser(null);
+          updateAuthenticatedUser(null);
         }
       })
       .catch((error) => {
@@ -1692,6 +1610,109 @@ function App() {
       subscription.unsubscribe();
     };
   }, []);
+  useEffect(() => {
+    let isActive = true;
+    let schemeSubscription = null;
+    let latestFetchRequest = 0;
+    const userId = user?.id;
+
+    // Don't leave the previous account's schemes on screen.
+    setSchemes([]);
+    schemeSelected(-1, "");
+
+    if (!userId) {
+      return () => {
+        isActive = false;
+      };
+    }
+
+    async function fetchUserSchemesData() {
+      const requestId = ++latestFetchRequest;
+      const { data, error } = await supabase
+        .from("members_schemes")
+        .select("*")
+        .eq("user_id", userId);
+
+      if (!isActive || requestId !== latestFetchRequest) return;
+
+      if (error) {
+        console.error("Error fetching schemes:", error);
+        return;
+      }
+
+      const fetchedSchemes = data ?? [];
+      const appSchemes = fetchedSchemes.map(mapSchemeForApp);
+      setSchemes(appSchemes);
+
+      const selectedIndex = appSchemes.findIndex(
+        (scheme) => scheme.scheme === selectedSchemeNameRef.current,
+      );
+      const nextSelectedIndex =
+        selectedIndex >= 0 ? selectedIndex : appSchemes.length > 0 ? 0 : -1;
+      schemeSelected(
+        nextSelectedIndex,
+        appSchemes[nextSelectedIndex]?.scheme ?? "",
+      );
+    }
+
+    // Subscribe and clean up for this specific user.
+    schemeSubscription = supabase
+      .channel(`dash-schemes-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "members_schemes",
+          filter: `user_id=eq.${userId}`,
+        },
+        (payload) => {
+          if (!isActive) return;
+
+          if (
+            payload.eventType === "INSERT" ||
+            payload.eventType === "UPDATE"
+          ) {
+            void fetchUserSchemesData();
+          } else if (payload.eventType === "DELETE") {
+            void fetchUserSchemesData();
+          }
+        },
+      )
+      .subscribe((status, error) => {
+        if (!isActive) return;
+
+        if (status === "SUBSCRIBED") {
+          void fetchUserSchemesData();
+        } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          console.error("Scheme realtime subscription failed:", status, error);
+        }
+      });
+
+    void fetchUserSchemesData();
+
+    const refreshVisibleSchemes = () => {
+      if (!document.hidden) {
+        void fetchUserSchemesData();
+      }
+    };
+    const refreshInterval = window.setInterval(
+      refreshVisibleSchemes,
+      10000,
+    );
+    document.addEventListener("visibilitychange", refreshVisibleSchemes);
+    window.addEventListener("online", refreshVisibleSchemes);
+
+    return () => {
+      isActive = false;
+      window.clearInterval(refreshInterval);
+      document.removeEventListener("visibilitychange", refreshVisibleSchemes);
+      window.removeEventListener("online", refreshVisibleSchemes);
+      if (schemeSubscription) {
+        supabase.removeChannel(schemeSubscription);
+      }
+    };
+  }, [user?.id]);
 
   return (
     <BrowserRouter>
@@ -1773,8 +1794,10 @@ function App() {
           element={
             authLoading ? (
               <div className="min-h-screen bg-[#1E1E1E]" />
-            ) : (
+            ) : user ? (
               <UpdatePassword />
+            ) : (
+              <Navigate to="/Signin" replace />
             )
           }
         />
@@ -1789,7 +1812,6 @@ function App() {
           }
         />
       </Routes>
-      
     </BrowserRouter>
   );
 }

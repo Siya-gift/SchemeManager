@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { supabase } from "../lib/supabaseClient.js";
@@ -13,18 +13,6 @@ function UpdatePassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  // Verify the user arrived via a valid recovery session
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error("Invalid or expired recovery link. Please request a new one.");
-        navigate("/login", { replace: true }); // Adjust to your login route
-      }
-    };
-    checkSession();
-  }, [navigate]);
 
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
