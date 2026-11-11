@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import RestoreButton from "./UploadJsonData.jsx";
 import { supabase } from "../lib/supabaseClient.js";
 import toast from "react-hot-toast";
@@ -12,31 +11,17 @@ function Settings({
 }) {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const handleSignout = async () => {
-    setError("");
-    setLoading(true);
-
     try {
       const { error } = await supabase.auth.signOut({ scope: "global" });
       if (error) throw error;
-
-      setUser(null);
-      setSchemes([]); // Clear if this state is available here
-      schemeSelected(-1, ""); // Reset the selected scheme
 
       toast.success("Signed out successfully!");
       navigate("/login", { replace: true });
       settoggleMobileState(1);
       setToggleState(1);
     } catch (error) {
-      setError(error.message);
       toast.error(error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
