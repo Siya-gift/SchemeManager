@@ -81,8 +81,6 @@ function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const activeAuthUserId = useRef(null);
-  const dash_schemes = schemes;
-  
 
   //schemes
   const expenses = [
@@ -279,6 +277,7 @@ function App() {
   ]);
 
   const [schemes, setSchemes] = useState([]);
+  const dash_schemes = schemes;
   const [newExpenses, setExpenses] = useState(() => expenses);
   // Initialize with the first scheme's name or an empty string if no schemes exist
   const [selectedSchemeName, setSelectedSchemeName] = useState(
