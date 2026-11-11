@@ -78,6 +78,12 @@ function App() {
 
   const [isAddSchemeModal, setAddSchemeModal] = useState(false);
 
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const activeAuthUserId = useRef(null);
+  const dash_schemes = schemes;
+  
+
   //schemes
   const expenses = [
     {
@@ -1391,7 +1397,6 @@ function App() {
         date: insertedScheme.created_at,
       };
       setSchemes((prev) => upsertScheme(prev, appScheme));
-      setDash_schemes((prev) => upsertScheme(prev, insertedScheme));
 
       schemeSelected(dash_schemes.length, insertedScheme.scheme);
 
@@ -1406,9 +1411,7 @@ function App() {
     }
   };
 
-  const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [dash_schemes, setDash_schemes] = useState([]);
+  
   useEffect(() => {
     let isActive = true;
     let schemeSubscription = null;
@@ -1425,8 +1428,11 @@ function App() {
           console.error("Error fetching table data:", error);
         } else {
           const fetchedSchemes = data || [];
-          setDash_schemes(fetchedSchemes);
           setSchemes(fetchedSchemes.map(mapSchemeForApp));
+          schemeSelected(
+            fetchedSchemes.length > 0 ? 0 : -1,
+            fetchedSchemes[0]?.scheme || "",
+          );
         }
 
         if (!isActive) return;
@@ -1443,16 +1449,10 @@ function App() {
             (payload) => {
               if (!isActive) return;
               if (payload.eventType === "INSERT") {
-                setDash_schemes((prev) =>
-                  upsertScheme(prev, payload.new),
-                );
                 setSchemes((prev) =>
                   upsertScheme(prev, mapSchemeForApp(payload.new)),
                 );
               } else if (payload.eventType === "DELETE") {
-                setDash_schemes((prev) =>
-                  removeSchemeRow(prev, payload.old),
-                );
                 setSchemes((prev) =>
                   removeSchemeRow(prev, payload.old),
                 );
@@ -1467,8 +1467,6 @@ function App() {
       }
     }
 
-    setDash_schemes([]);
-    setSchemes([]);
     if (!user?.id) {
       return () => {
         isActive = false;
@@ -1607,12 +1605,21 @@ function App() {
   useEffect(() => {
     let active = true;
     let authStateReceived = false;
+    const updateAuthenticatedUser = (nextUser) => {
+      const nextUserId = nextUser?.id ?? null;
+      if (activeAuthUserId.current !== nextUserId) {
+        activeAuthUserId.current = nextUserId;
+        setSchemes([]);
+        schemeSelected(-1, "");
+      }
+      setUser(nextUser);
+    };
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       authStateReceived = true;
-      setUser(session?.user ?? null);
+      updateAuthenticatedUser(session?.user ?? null);
       setAuthLoading(false);
     });
 
@@ -1623,7 +1630,7 @@ function App() {
 
         const session = data.session;
         if (!authStateReceived) {
-          setUser(session?.user ?? null);
+          updateAuthenticatedUser(session?.user ?? null);
           setAuthLoading(false);
         }
 
@@ -1664,7 +1671,7 @@ function App() {
               signOutError.message,
             );
           }
-          setUser(null);
+          updateAuthenticatedUser(null);
         }
       })
       .catch((error) => {
