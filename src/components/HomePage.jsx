@@ -31,6 +31,9 @@ import FacebookV from "../images/FacebookV.svg";
 import WhatsAppV from "../images/WhatsAppV.svg";
 import TikTokV from "../images/TikTokV.svg";
 import linesCall from "../images/linesCall.svg";
+import bg_info_mobile from "../images/bg_info_mobile.svg";
+import bg_info_desktop from "../images/bg_info_desktop.svg";
+import m_hand from "../images/m_hand.svg";
 
 import PrimaryBtn from "./PrimaryBtn";
 import PrimaryBtn2 from "./PrimaryBtn2";
@@ -137,7 +140,6 @@ function HomePage() {
   if (loading) return null;
 
   return (
-    // snap-y snap-mandatory
     <div className="h-screen relative overflow-y-auto glass-scroll bg-black">
       <section className="relative w-full h-full bg-white overflow-hidden">
         <div className="w-full h-full">
@@ -549,15 +551,16 @@ function HomePage() {
           src={proveBG}
         />
         <div className="absolute inset-0 h-full w-full flex justify-center items-center z-1">
-          <div className="absolute inset-0 h-[80%] w-[80%] mx-auto my-auto">
-            <div className="prove absolute inset-0 w-full h-full object-contain flex flex-col justify-center md:justify-center lg:justify-center items-center p-20 z-999 gap-18 md:gap-0">
-              <h1 className="mt-20 w-[58vw] md:w-[45vw] h-fit text-[32px] md:text-[55px]  font-black leading-8 md:leading-11 text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% z-10 bg-contain">
+          <div className="absolute inset-0 h-full w-[80%] mx-auto my-auto">
+            <div className="prove absolute inset-0 w-full h-full object-contain flex flex-col justify-center md:justify-center lg:justify-center items-center p-20 z-999 gap-19.25">
+              <h1 className="mt-20 w-[58vw] md:w-[45vw] h-fit text-[32px] md:text-[55px] font-black leading-tight md:leading-none text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% z-10">
                 Why choose Scheme manager pro?
               </h1>
+
               {/* pc view */}
               <div className="hidden min-[1164px]:block">
                 <div
-                  className="flex items-center justify-center p-6 md:p-12 w-full  bg-contain bg-center bg-no-repeat"
+                  className="flex items-center justify-center p-6 md:p-12 w-full min-h-[50vh] md:min-h-[80vh] bg-contain bg-center bg-no-repeat"
                   style={{
                     backgroundImage: `url(${proveCard})`,
                     zIndex: 20,
@@ -1381,6 +1384,43 @@ function HomePage() {
                 <div className="flex-1 border-t border-[#F69649]"></div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className="relative w-full h-218.5 bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat bg-(image:--bg-mobile) md:bg-(image:--bg-desktop)"
+        style={{
+          "--bg-mobile": `url(${bg_info_mobile})`,
+          "--bg-desktop": `url(${bg_info_desktop})`,
+          zIndex: 20,
+        }}
+      >
+        <img className="mx-auto" src={m_hand} alt="" />
+        <div className="absolute bottom-0 left-0 p-9 w-full flex flex-col gap-9.25">
+          <p className="font-['Poppins'] font-semibold text-xs leading-4.5 text-white">
+            Join 95,000+ scheme managers securing <br/> their financial future from
+            the <br/> palm of their hand.
+          </p>
+          <div className="flex justify-center items-center gap-10">
+            <span className="inline-flex items-center gap-1.5 w-fit h-8.75 font-['Raleway'] font-normal text-xs leading-8.75 text-white flex-none order-0 grow-0 underline underline-offset-6 cursor-pointer group">
+              <span className="tracking-wide">Choose how to manage</span>
+              <svg
+                className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </span>
+
+            <button className="relative isolate flex flex-row justify-center items-center px-8 py-4  bg-[#325898] shadow-[0px_0px_24px_rgba(168,85,247,0.2),0px_0px_18px_rgba(0,229,255,0.2)] rounded-full flex-none mx-auto text-white text-[13px] cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90 font-bold tracking">
+              Get Access
+            </button>
           </div>
         </div>
       </section>
