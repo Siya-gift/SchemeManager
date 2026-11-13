@@ -8,6 +8,7 @@ function Settings({
   toggleMobileState,
   settoggleMobileState,
   setToggleState,
+  activeTab
 }) {
   const navigate = useNavigate();
 
@@ -136,7 +137,11 @@ function Settings({
           <div className="cardS mb-3 text-white">
             <h1 className="text-2xl font-bold mb-4">Account</h1>
 
-            <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
+            <div
+              className={`group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out ${toggleState === 0 ? "bg-white/20" : ""}
+                `}
+              onClick={() => activeTab(0)}
+            >
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
                   <i className="fa-solid fa-user-gear"></i>

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import luffyImg from "../images/Luffy_profile_pic.jpg";
+import dash_logo from "../images/dash_logo.svg";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { supabase } from "../lib/supabaseClient.js";
@@ -81,14 +82,16 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
         className=" mx-4 p-6 glass flex md:hidden 
             justify-between items-center mt-3 rounded-2xl cursor-pointer hover:bg-white/45"
       >
-        <div className="pp flex items-center gap-3">
-          <div className="ppic w-10 h-10 rounded-full overflow-hidden border border-white/20">
+        <div className="relative pp flex items-center gap-3">
+          <div className=" ppic w-10 h-10 rounded-full overflow-hidden border border-white/20">
             <img
               src={userProfilePicture ? userProfilePicture : luffyImg}
               className="h-full w-full object-cover"
               alt="profile"
             />
+            
           </div>
+          <img className="absolute -bottom-2 left-0 w-12" src={dash_logo} alt="logo" />
           <div>
             <h1 className="text-white text-xl font-bold">{name}</h1>
             <small className="text-[#abe9be] block truncate max-w-45">
