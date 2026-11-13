@@ -1,5 +1,6 @@
 import "./App.css";
 import { useEffect, useState, useRef, useMemo } from "react";
+import Lenis from 'lenis';
 import toast, { Toaster } from "react-hot-toast";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -60,6 +61,17 @@ function App() {
     }
     setCalenderState(false);
   }, [value]);
+
+  //smooth scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      autoRaf: true,
+    });
+
+    return () => {
+      lenis.destroy();
+    };
+  }, [])
 
   //props declared
   const [schemeSelectedState, setSchemeSelectedState] = useState(0);
