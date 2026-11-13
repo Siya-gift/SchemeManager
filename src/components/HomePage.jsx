@@ -34,6 +34,14 @@ import linesCall from "../images/linesCall.svg";
 import bg_info_mobile from "../images/bg_info_mobile.svg";
 import bg_info_desktop from "../images/bg_info_desktop.svg";
 import m_hand from "../images/m_hand.svg";
+import p_hand from "../images/p_hand.svg";
+import BG_footer_p from "../images/BG_footer_p.svg";
+import BG_footer_m from "../images/BG_footer_m.svg";
+import footer_card_m from "../images/footer_card_m.png";
+import footer_card_p from "../images/footer_card_p.png";
+import m_grand_logo from "../images/m_grand_logo.svg";
+import p_2grand_logo from "../images/p_2grand_logo.svg";
+import m_payM_pic from "../images/m_payM_pic.svg";
 
 import PrimaryBtn from "./PrimaryBtn";
 import PrimaryBtn2 from "./PrimaryBtn2";
@@ -140,7 +148,10 @@ function HomePage() {
   if (loading) return null;
 
   return (
-    <div className="h-screen relative overflow-y-auto glass-scroll bg-black">
+    <div
+      className="h-screen relative overflow-y-auto glass-scroll bg-black"
+      data-lenis-prevent
+    >
       <section className="relative w-full h-full bg-white overflow-hidden">
         <div className="w-full h-full">
           <div
@@ -444,7 +455,7 @@ function HomePage() {
               }
             `}
           </style>
-          <div className="relative w-full h-full bg-white/10 backdrop-blur-[120px]">
+          <div className="relative mx-auto w-full h-full bg-white/10 backdrop-blur-[120px]">
             <div className="flex h-full w-full">
               <div className="h-full w-full flex items-center justify-end">
                 <div className="relative w-full h-full">
@@ -1387,22 +1398,22 @@ function HomePage() {
           </div>
         </div>
       </section>
-
       <section
-        className="relative w-full h-218.5 bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat bg-(image:--bg-mobile) md:bg-(image:--bg-desktop)"
+        className="relative w-full h-218.5 bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat bg-(image:--bg-mobile) md:bg-(image:--bg-desktop) px-10"
         style={{
           "--bg-mobile": `url(${bg_info_mobile})`,
           "--bg-desktop": `url(${bg_info_desktop})`,
           zIndex: 20,
         }}
       >
-        <img className="mx-auto" src={m_hand} alt="" />
-        <div className="absolute bottom-0 left-0 p-9 w-full flex flex-col gap-9.25">
-          <p className="font-['Poppins'] font-semibold text-xs leading-4.5 text-white">
-            Join 95,000+ scheme managers securing <br/> their financial future from
-            the <br/> palm of their hand.
+        <img className="md:hidden mx-auto" src={m_hand} alt="" />
+        <img className="hidden md:block mx-auto" src={p_hand} alt="" />
+        <div className="absolute bottom-0 left-0 p-9 w-full flex flex-col gap-9.25 md:gap-16 md:items-end">
+          <p className="font-['Poppins'] font-semibold text-xs leading-4.5 text-white md:text-right">
+            Join 95,000+ scheme managers securing <br /> their financial future
+            from the <br /> palm of their hand.
           </p>
-          <div className="flex justify-center items-center gap-10">
+          <div className="flex justify-center items-center gap-10 md:gap-18">
             <span className="inline-flex items-center gap-1.5 w-fit h-8.75 font-['Raleway'] font-normal text-xs leading-8.75 text-white flex-none order-0 grow-0 underline underline-offset-6 cursor-pointer group">
               <span className="tracking-wide">Choose how to manage</span>
               <svg
@@ -1422,6 +1433,131 @@ function HomePage() {
               Get Access
             </button>
           </div>
+        </div>
+      </section>
+      <section
+        className="relative w-full h-218.5 bg-[#000000] overflow-hidden bg-cover bg-center bg-no-repeat bg-(image:--bg-mobile) md:bg-(image:--bg-desktop) px-10"
+        style={{
+          "--bg-mobile": `url(${BG_footer_m})`,
+          "--bg-desktop": `url(${BG_footer_p})`,
+          zIndex: 20,
+        }}
+      >
+        <div className="mt-8.5 relative overflow-clip cursor-pointer">
+          <img
+            className="w-35 h-10 object-contain relative z-10 "
+            src={logo}
+            alt="Logo"
+          />
+
+          <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
+        </div>
+        <div className="w-full h-full flex items-center justify-center overflow-hidden">
+          {/* Inner card wrapper sized strictly to the image */}
+          <div className="relative w-fit h-fit">
+            {/* Mobile Card Image */}
+            <img
+              className="md:hidden block w-full h-auto"
+              src={footer_card_m}
+              alt="footer_p"
+            />
+
+            {/* Desktop Card Image */}
+            <img
+              className="hidden md:block w-full h-auto"
+              src={footer_card_p}
+              alt="footer_p"
+            />
+
+            {/* Text Overlay anchored to the card's edges */}
+            <div className="absolute inset-0 p-6 md:p-10 flex flex-col">
+              <div className="relative ml-7.75 md:ml-0">
+                <img className="md:hidden" src={m_grand_logo} alt="f_pic" />
+                <img
+                  className="hidden md:block"
+                  src={p_2grand_logo}
+                  alt="f_pic"
+                />
+                <div className="absolute -bottom-17 flex flex-col gap-2">
+                  <span className="inline-flex items-center gap-1.5 w-fit h-8.75 font-['Raleway'] font-normal text-xs leading-8.75 text-white underline underline-offset-6 cursor-pointer group">
+                    <span className="tracking-wide">Sign up</span>
+                    <svg
+                      className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </span>
+
+                  <div className="flex flex-row gap-3">
+                    
+                    <div className="flex flex-col">
+                      <h3 className="font-['Raleway'] font-bold text-sm  text-white">
+                        Quick links
+                      </h3>
+                      <ul className="flex flex-col gap-1.5 list-disc pl-5 marker:text-white">
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          About us
+                        </li>
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          Contacts
+                        </li>
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          Facebook
+                        </li>
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          Instagram
+                        </li>
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          WhatsApp
+                        </li>
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          Tiktok
+                        </li>
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          Blogs
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="flex flex-col">
+                      <h3 className="font-['Raleway'] font-bold text-sm  text-white">
+                        Terms & Conditions
+                      </h3>
+                      <ul className="flex flex-col gap-1.5 list-disc pl-5 marker:text-white ">
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          Terms and Conditions
+                        </li>
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          Legal
+                        </li>
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          Popia Acts
+                        </li>
+                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                          Privacy policy
+                        </li>
+                        
+                      </ul>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute left-1/2 -translate-x-1/2 gap-4 bottom-7 flex flex-col justify-center items-center w-full">
+          <img src={m_payM_pic} alt="payments" />
+          <p className=" text-center font-['Rajdhani'] font-normal text-xs leading-3.75 text-white">
+            Powered by Scheme Manager Pro® <br />
+            ©Copyright 2026 Scheme Manager pro (PTY) Ltd.
+          </p>
         </div>
       </section>
     </div>
