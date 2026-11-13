@@ -539,19 +539,19 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-full bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative w-full h-218.5 bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           zIndex: 20,
         }}
       >
         <img
-          className="md:hidden absolute inset-0 w-full h-full object-cover -z-1"
+          className="absolute inset-0 w-full h-full object-cover -z-1"
           src={proveBG}
         />
         <div className="absolute inset-0 h-full w-full flex justify-center items-center z-1">
           <div className="absolute inset-0 h-[80%] w-[80%] mx-auto my-auto">
             <div className="prove absolute inset-0 w-full h-full object-contain flex flex-col justify-center md:justify-center lg:justify-center items-center p-20 z-999 gap-18 md:gap-0">
-              <h1 className="mt-20 w-[58vw] md:w-[45vw] h-fit text-[32px] md:text-[55px]  font-black leading-8 md:leading-11 text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% z-10">
+              <h1 className="mt-20 w-[58vw] md:w-[45vw] h-fit text-[32px] md:text-[55px]  font-black leading-8 md:leading-11 text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% z-10 bg-contain">
                 Why choose Scheme manager pro?
               </h1>
               {/* pc view */}
@@ -745,7 +745,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-full bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative w-full h-218.5 bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${plan_BG_image})`,
           zIndex: 20,
@@ -1305,7 +1305,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-full bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative w-full h-218.5 bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${call_bg})`,
           zIndex: 20,
@@ -1321,12 +1321,12 @@ function HomePage() {
           alt="Cellular man illustration"
         />
         <div className="relative  h-full p-15 md:p-0">
-          <h1 className="text-left text-[36px] sm:text-[48px] md:text-[54px] leading-tight font-['Raleway'] font-normal text-[#F17A19] w-full max-w-89.5 md:mx-0 absolute top-[20%] md:top-7.5 md:left-[calc(50%-522px)]">
+          <h1 className="text-left text-[36px] sm:text-[48px] md:text-[54px] leading-tight font-['Raleway'] font-normal text-[#F17A19] w-full max-w-89.5 md:mx-0 absolute top-[20%] md:top-7.5 left-[50%] -translate-x-1/2 md:left-29.5 md:translate-x-0">
             Get in touch <br /> with us
           </h1>
         </div>
 
-        <div className="absolute inset-0 pt-37 items-start justify-start md:justify-center md:items-center md:p-20 w-full h-full flex">
+        <div className="absolute inset-0 pt-37 items-center justify-start md:justify-center md:items-center md:p-20 w-full h-full flex">
           <div className="relative flex justify-center items-center mx-10 w-130 h-90 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[10px] rounded-[15px]">
             <img
               className="hidden md:block fixed -right-75 -bottom-25 h-137.5 aspect-video z-90"
