@@ -11,7 +11,7 @@ export default function SignGoogleBtn({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex justify-center items-center bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors rounded-full px-3 py-3 w-full mt-4 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`flex justify-center items-center bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors rounded-full px-3 py-3 w-full cursor-pointer mt-4 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     >
       <span className="inline-flex items-center justify-center mr-2">
         <svg

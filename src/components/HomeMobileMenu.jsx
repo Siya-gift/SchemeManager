@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
+import { Link } from "react-router-dom";
 
 gsap.registerPlugin(Draggable);
 
@@ -125,18 +126,20 @@ function HomeMobileMenu({ isOpen, onClose }) {
           data-lenis-prevent
         >
           <ul className="h-full flex flex-col gap-3">
-            <li
-              onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group"
-            >
-              <i className="fa-solid fa-right-to-bracket w-5 text-center text-white/80"></i>
-              <span>Sign in</span>
-              <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
-            </li>
+            <Link to={"/Signin"}>
+              <li
+                onClick={handleClose}
+                className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
+              >
+                <i className="fa-solid fa-right-to-bracket w-5 text-center text-white/80"></i>
+                <span>Sign in</span>
+                <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
+              </li>
+            </Link>
 
             <li
               onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group"
+              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
             >
               <i className="fa-solid fa-wand-magic-sparkles w-5 text-center text-white/80"></i>
               <span>Ask AI</span>
@@ -145,7 +148,7 @@ function HomeMobileMenu({ isOpen, onClose }) {
 
             <li
               onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group"
+              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
             >
               <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
               <span>FAQ</span>
@@ -154,7 +157,7 @@ function HomeMobileMenu({ isOpen, onClose }) {
 
             <li
               onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group"
+              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
             >
               <i className="fa-solid fa-tags w-5 text-center text-white/80"></i>
               <span>Pricing</span>
@@ -163,7 +166,7 @@ function HomeMobileMenu({ isOpen, onClose }) {
 
             <li
               onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group"
+              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
             >
               <i className="fa-solid fa-circle-info w-5 text-center text-white/80"></i>
               <span>About us</span>
@@ -172,10 +175,10 @@ function HomeMobileMenu({ isOpen, onClose }) {
 
             <li
               onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group"
+              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
             >
-              <i className="fa-solid fa-envelope w-5 text-center text-white/80"></i>
-              <span>Contact</span>
+              <i className="fa-solid fa-credit-card w-5 text-center text-white/80"></i>
+              <span>Payments</span>
               <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
             </li>
           </ul>

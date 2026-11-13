@@ -8,9 +8,10 @@ function SchemeMembers({
   openCalender,
   formattedDate,
   schemes,
-  setSchemes,
   schemeSelected,
   schemeSelectedState,
+  updateScheme,
+  deleteScheme,
   selectedSchemeName,
   allMembers,
   handleConfirmPayment,
@@ -67,9 +68,11 @@ function SchemeMembers({
   const [editSchemeName, setEditSchemeName] = useState(null);
   const [editSchemeAmount, setEditSchemeAmount] = useState(null);
   const [editSchemeStartingBal, setEditSchemeStartingBal] = useState(null);
-  const [editSchemeDate, setEditSchemeDate] = useState(null);
+  const [editSchemeDate, setEditSchemeDate] = useState(new Date().getMonth());
+  const [editSchemeYear, setEditSchemeYear] = useState(new Date().getFullYear());
+  const [editSchemeId, setEditSchemeId] = useState(null);
   const [deleteTargetIndex, setDeleteTargetIndex] = useState(null);
-  const [deleteSchemeTargetIndex, setDeleteSchemeTargetIndex] = useState(null);
+  const [deleteSchemeTargetId, setDeleteSchemeTargetId] = useState(null);
   const [editingMember, setEditingMember] = useState(null);
   const [PDFdata, setPDFdata] = useState(null);
   const [PDFMemberdata, setPDFMemberdata] = useState(null);
@@ -148,7 +151,10 @@ function SchemeMembers({
     setEditSchemeStartingBal(cents / 100);
   };
   const handleDateInputChangeEdit = (e) => {
-    setEditSchemeDate(e.target.value);
+    setEditSchemeDate(Number(e.target.value));
+  };
+  const handleYearInputChangeEdit = (e) => {
+    setEditSchemeYear(Number(e.target.value));
   };
 
   //paying modal
@@ -164,9 +170,9 @@ function SchemeMembers({
     setDeleteTargetIndex(id);
   };
 
-  const deleteSchemeModal = (idx) => {
+  const deleteSchemeModal = (schemeId) => {
     setIsDeleteScheme(true);
-    setDeleteSchemeTargetIndex(idx);
+    setDeleteSchemeTargetId(schemeId);
   };
 
   const getStatusBadgeClass = (status) => {
@@ -227,37 +233,14 @@ function SchemeMembers({
     }
   };
 
-  const removeScheme = () => {
-    setIsDeleteScheme(false);
-    if (deleteSchemeTargetIndex === null) return;
+  const removeScheme = async () => {
+    if (deleteSchemeTargetId === null) return;
 
-    const updatedSchemes = schemes.filter(
-      (_, index) => index !== deleteSchemeTargetIndex,
-    );
-    if (schemeSelected === 0 && deleteSchemeTargetIndex === 0) {
-      schemeSelectedState(-1);
+    const deleted = await deleteScheme(deleteSchemeTargetId);
+    if (deleted) {
+      setIsDeleteScheme(false);
+      setDeleteSchemeTargetId(null);
     }
-    setSchemes(updatedSchemes);
-    setDeleteTargetIndex(null);
-    toast.success("Deleted Scheme", { className: "notifier_bg" });
-
-    // ==================================================
-    // UPDATE LATEST TRANSACTIONS
-    // ==================================================
-
-    setLatestTransactions((prevTransactions) => [
-      {
-        transactionScheme: selectedSchemeName,
-        date: new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-        description: "Deleted Scheme",
-        amount: selectedSchemeName || "N/A",
-      },
-      ...prevTransactions,
-    ]);
   };
 
   const payingModal = (memberName) => {
@@ -274,12 +257,39 @@ function SchemeMembers({
     setEditingId(id);
   };
 
-  const editSchemeModal = (scheme, monthlyContribution, startingBal, date) => {
+  const editSchemeModal = (scheme) => {
+    const schemeDate = new Date(scheme.created_at ?? scheme.date);
+    const validDate = !Number.isNaN(schemeDate.getTime());
+
     setIsEditScheme(true);
-    setEditSchemeName(scheme);
-    setEditSchemeAmount(monthlyContribution);
-    setEditSchemeStartingBal(startingBal);
-    setEditSchemeDate(date);
+    setEditSchemeId(scheme.id);
+    setEditSchemeName(scheme.scheme);
+    setEditSchemeAmount(
+      Number(scheme.monthly_contribution ?? scheme.monthlyContribution) || 0,
+    );
+    setEditSchemeStartingBal(
+      Number(scheme.starting_bal ?? scheme.startingBal) || 0,
+    );
+    setEditSchemeDate(validDate ? schemeDate.getMonth() : new Date().getMonth());
+    setEditSchemeYear(
+      validDate ? schemeDate.getFullYear() : new Date().getFullYear(),
+    );
+  };
+
+  const saveEditedScheme = async () => {
+    if (editSchemeId === null) return;
+
+    const saved = await updateScheme(editSchemeId, {
+      scheme: editSchemeName,
+      monthlyContribution: editSchemeAmount,
+      startingBal: editSchemeStartingBal,
+      date: new Date(editSchemeYear, editSchemeDate, 1).toISOString(),
+    });
+
+    if (saved) {
+      setIsEditScheme(false);
+      setEditSchemeId(null);
+    }
   };
 
   const addSchemeModal = () => {
@@ -369,7 +379,7 @@ function SchemeMembers({
             {dash_schemes.map((item, idx) => (
               <li
                 key={idx}
-                className={`py-5 px-10 bg-white/30  border cursor-pointer hover:bg-white/40
+                className={`py-5 px-5 bg-white/30  border cursor-pointer hover:bg-white/40
               my-2 rounded-xl mr-1.5 ${schemeSelectedState === idx ? "border-3 border-white-500" : ""}`}
                 onClick={() => schemeSelected(idx, item.scheme)}
               >
@@ -384,19 +394,14 @@ function SchemeMembers({
                     <span
                       className="px-2 py-2 border rounded-lg inline-block hover:-translate-y-1"
                       onClick={() =>
-                        editSchemeModal(
-                          item.scheme,
-                          item.monthly_contribution,
-                          item.starting_bal,
-                          item.created_at,
-                        )
+                        editSchemeModal(item)
                       }
                     >
                       <i className="fa-regular fa-pen-to-square"></i>
                     </span>
                     <span
                       className="px-2 py-2 border rounded-lg inline-block hover:-translate-y-1"
-                      onClick={() => deleteSchemeModal(idx)}
+                      onClick={() => deleteSchemeModal(item.id)}
                     >
                       <i className="fa-solid fa-trash"></i>
                     </span>
@@ -700,8 +705,8 @@ function SchemeMembers({
             <h1 className="text-white text-2xl mb-4">Delete Scheme?</h1>
 
             <h1 className="text-white/90 text-md">
-              This will PERMANENTLY remove this scheme and all associated
-              members and expenses.
+              This permanently removes the scheme record. Related member or
+              expense records are not deleted.
             </h1>
             <div className="flex justify-between align-center gap-4">
               <button
@@ -709,6 +714,7 @@ function SchemeMembers({
             hover:bg-white/30"
                 onClick={() => {
                   setIsDeleteScheme(false);
+                  setDeleteSchemeTargetId(null);
                 }}
               >
                 No
@@ -716,9 +722,7 @@ function SchemeMembers({
               <button
                 className="w-full py-3 rounded-xl text-white mt-6 bg-red-500 cursor-pointer
             hover:bg-red-400"
-                onClick={() => {
-                  removeScheme();
-                }}
+                onClick={removeScheme}
               >
                 Yes
               </button>
@@ -920,7 +924,7 @@ function SchemeMembers({
                 </span>
                 <select
                   id="editSchemeSBMonth"
-                  defaultValue={new Date().getMonth()}
+                  value={editSchemeDate}
                   onChange={handleDateInputChangeEdit}
                   className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
                 >
@@ -946,7 +950,8 @@ function SchemeMembers({
 
                 <select
                   id="editSchemeSBYear"
-                  defaultValue={new Date().getFullYear()}
+                  value={editSchemeYear}
+                  onChange={handleYearInputChangeEdit}
                   className="w-25 bg-transparent px-3 py-2 text-white border 
                   border-l-0 border-white/60 rounded-r-lg text-xs
                   focus:outline-none focus:border-white scheme-dark"
@@ -970,9 +975,7 @@ function SchemeMembers({
               <button
                 className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer
             hover:bg-white/30"
-                onClick={() => {
-                  setIsEditScheme(false);
-                }}
+                onClick={saveEditedScheme}
               >
                 Save Scheme
               </button>

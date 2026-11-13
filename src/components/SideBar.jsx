@@ -66,8 +66,8 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
         uistate ? "w-32" : "w-80"
       }`}
     >
-      <div className="profileCard glass relative p-5">
-        <div className="mb-3 flex h-8 items-center justify-between">
+      <div className={`profileCard glass relative ${uistate ? "p-0" : "p-5"} transition-padding duration-300 ease-in-out`}>
+        <div className={`mb-3 flex h-8 items-center ${uistate ? "justify-center" : "justify-between"} `}>
           <img
             className={`h-8 object-contain transition-[width,opacity] duration-200 ${
               uistate ? "w-0 opacity-0" : "w-20 opacity-100"
@@ -95,8 +95,8 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
 
         <div className="flex h-20 w-full items-center justify-center">
           <div
-            className={`ppic h-20 w-20 shrink rounded-full overflow-hidden transition-[width,height] duration-300 cursor-pointer ${
-              uistate ? "h-5 w-5" : ""
+            className={`ppic aspect-square shrink-0 rounded-full overflow-hidden transition-[width,height] duration-300 cursor-pointer ${
+              uistate ? "h-10" : "h-20"
             }`}
           >
             <img

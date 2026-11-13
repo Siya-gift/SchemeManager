@@ -47,6 +47,8 @@ function System({ dashboardProps }) {
     handleSchemeDateInputChange,
     handleSchemeYearInputChange,
     saveScheme,
+    updateScheme,
+    deleteScheme,
     schemeSelected,
     schemeSelectedState,
     setSchemeSelectedState,
@@ -172,7 +174,7 @@ function System({ dashboardProps }) {
           handleSchemeNameInputChange={handleSchemeNameInputChange} handleSchemeAmountInputChange={handleSchemeAmountInputChange} handleSchemeStartingBalInputChange={handleSchemeStartingBalInputChange}
           handleSchemeDateInputChange={handleSchemeDateInputChange} handleSchemeYearInputChange={handleSchemeYearInputChange} newSchemeStartingBal={newSchemeStartingBal} setNewSchemeStartingBal={setNewSchemeStartingBal}
           newSchemeDate={newSchemeDate} setNewSchemeDate={setNewSchemeDate} newSchemeYear={newSchemeYear} setNewSchemeYear={setNewSchemeYear} saveScheme={saveScheme}
-          formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes} schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState}
+          formattedDate={formattedDate} schemes={schemes} updateScheme={updateScheme} deleteScheme={deleteScheme} schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState}
           setSchemeSelectedState={setSchemeSelectedState} selectedSchemeName={selectedSchemeName} allMembers={allMembers} handleConfirmPayment={handleConfirmPayment}
           totalSchemeYearlyContribution={totalSchemeYearlyContribution} filteredMembers={filteredMembers} members={members} setMembers={setMembers} searchState={searchState}
           setSearchState={setSearchState} payingMember={payingMember} setPayingMember={setPayingMember} accordionData={accordionData} setAccordionData={setAccordionData}

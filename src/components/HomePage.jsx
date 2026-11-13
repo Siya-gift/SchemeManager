@@ -170,7 +170,7 @@ function HomePage() {
       scrollHideTimeoutRef.current = window.setTimeout(() => {
         setShowScrollToTop(false);
         scrollHideTimeoutRef.current = null;
-      }, 800);
+      }, 5000);
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
@@ -1740,7 +1740,7 @@ function HomePage() {
         onClick={handleScrollToTop}
         aria-label="Scroll to top"
         title="Scroll to top"
-        className={`fixed bottom-5 right-4 h-10 aspect-square bg-black rounded-4xl z-99 text-white flex items-center justify-center cursor-pointer hover:bg-neutral-800 hover:-translate-y-1 transition-[opacity,visibility,transform,background-color] duration-200 shadow-lg ${
+        className={`fixed bottom-5 right-4 h-10 aspect-square bg-black rounded-4xl z-99 text-white flex items-center justify-center cursor-pointer hover:bg-neutral-800 hover:-translate-y-1 transition-[opacity,visibility,transform,background-color] duration-600 shadow-lg ${
           showScrollToTop
             ? "visible opacity-100"
             : "invisible pointer-events-none opacity-0 hover:visible hover:opacity-100"

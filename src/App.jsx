@@ -67,6 +67,7 @@ function App() {
   useEffect(() => {
     const lenis = new Lenis({
       autoRaf: true,
+      allowNestedScroll: true,
     });
 
     return () => {
@@ -1423,6 +1424,131 @@ function App() {
     }
   };
 
+  const updateScheme = async (schemeId, changes) => {
+    const schemeName = changes.scheme?.trim();
+    const monthlyContribution = Number(changes.monthlyContribution);
+    const startingBal = Number(changes.startingBal);
+    const schemeDate = new Date(changes.date);
+
+    if (
+      schemeId == null ||
+      !schemeName ||
+      !Number.isFinite(monthlyContribution) ||
+      monthlyContribution <= 0 ||
+      !Number.isFinite(startingBal) ||
+      startingBal < 0 ||
+      Number.isNaN(schemeDate.getTime())
+    ) {
+      toast.error("Enter a valid scheme name, contribution, balance, and date.");
+      return false;
+    }
+
+    if (!user?.id) {
+      toast.error("Sign in to update this scheme.");
+      return false;
+    }
+
+    let data;
+    let error;
+    try {
+      ({ data, error } = await supabase
+        .from("members_schemes")
+        .update({
+          scheme: schemeName,
+          monthly_contribution: monthlyContribution,
+          starting_bal: startingBal,
+          created_at: schemeDate.toISOString(),
+        })
+        .eq("id", schemeId)
+        .eq("user_id", user.id)
+        .select("*")
+        .maybeSingle());
+    } catch (requestError) {
+      console.error("Error updating scheme in Supabase:", requestError);
+      toast.error("Could not update scheme. Please try again.");
+      return false;
+    }
+
+    if (error) {
+      console.error("Error updating scheme in Supabase:", error);
+      toast.error("Could not update scheme. Please try again.");
+      return false;
+    }
+
+    if (!data) {
+      toast.error("Scheme not found or you do not have permission to update it.");
+      return false;
+    }
+
+    const updatedScheme = mapSchemeForApp(data);
+    const selectedIndex = schemes.findIndex((scheme) => scheme.id === schemeId);
+    setSchemes((currentSchemes) => upsertScheme(currentSchemes, updatedScheme));
+
+    if (selectedIndex === schemeSelectedState) {
+      schemeSelected(selectedIndex, updatedScheme.scheme);
+    }
+
+    toast.success("Scheme updated.", { className: "notifier_bg" });
+    return true;
+  };
+
+  const deleteScheme = async (schemeId) => {
+    if (schemeId == null) {
+      toast.error("Could not identify the scheme to delete.");
+      return false;
+    }
+
+    if (!user?.id) {
+      toast.error("Sign in to delete this scheme.");
+      return false;
+    }
+
+    let data;
+    let error;
+    try {
+      ({ data, error } = await supabase
+        .from("members_schemes")
+        .delete()
+        .eq("id", schemeId)
+        .eq("user_id", user.id)
+        .select("id")
+        .maybeSingle());
+    } catch (requestError) {
+      console.error("Error deleting scheme from Supabase:", requestError);
+      toast.error("Could not delete scheme. Please try again.");
+      return false;
+    }
+
+    if (error) {
+      console.error("Error deleting scheme from Supabase:", error);
+      toast.error("Could not delete scheme. Please try again.");
+      return false;
+    }
+
+    if (!data) {
+      toast.error("Scheme not found or you do not have permission to delete it.");
+      return false;
+    }
+
+    const deletedIndex = schemes.findIndex((scheme) => scheme.id === schemeId);
+    const selectedSchemeId = schemes[schemeSelectedState]?.id;
+    const updatedSchemes = schemes.filter((scheme) => scheme.id !== schemeId);
+    setSchemes(updatedSchemes);
+
+    if (selectedSchemeId === schemeId) {
+      const nextIndex = Math.min(deletedIndex, updatedSchemes.length - 1);
+      schemeSelected(nextIndex, updatedSchemes[nextIndex]?.scheme || "");
+    } else if (deletedIndex >= 0 && schemeSelectedState > deletedIndex) {
+      schemeSelected(
+        schemeSelectedState - 1,
+        updatedSchemes[schemeSelectedState - 1]?.scheme || "",
+      );
+    }
+
+    toast.success("Scheme deleted.", { className: "notifier_bg" });
+    return true;
+  };
+
   
   useEffect(() => {
     let isActive = true;
@@ -1467,6 +1593,10 @@ function App() {
               } else if (payload.eventType === "DELETE") {
                 setSchemes((prev) =>
                   removeSchemeRow(prev, payload.old),
+                );
+              } else if (payload.eventType === "UPDATE") {
+                setSchemes((prev) =>
+                  upsertScheme(prev, mapSchemeForApp(payload.new)),
                 );
               }
             },
@@ -1530,6 +1660,8 @@ function App() {
     handleSchemeDateInputChange,
     handleSchemeYearInputChange,
     saveScheme,
+    updateScheme,
+    deleteScheme,
     schemeSelected,
     schemeSelectedState,
     setSchemeSelectedState,
