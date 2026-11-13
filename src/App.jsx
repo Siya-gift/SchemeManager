@@ -23,6 +23,8 @@ import Settings from "./components/Settings.jsx";
 import System from "./components/System.jsx";
 import HomePage from "./components/HomePage.jsx";
 import UpdatePassword from "./components/UpdatePassword.jsx";
+import Privacy from "./components/Privacy.jsx";
+import Terms_and_Conditions from "./components/Terms_and_Conditions.jsx";
 
 //components
 import SideBar from "./components/SideBar.jsx";
@@ -1896,6 +1898,28 @@ function App() {
           }
         />
         <Route
+          path="/Privacy"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : user ? (
+              <Navigate to="/Privacy" replace />
+            ) : (
+              <Privacy />
+            )
+          }
+        />
+        <Route
+          path="/Terms_and_Conditions"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : (
+              <Terms_and_Conditions />
+            )
+          }
+        />
+        <Route
           path="/Dashboard"
           element={
             authLoading ? (
@@ -1913,10 +1937,8 @@ function App() {
           element={
             authLoading ? (
               <div className="min-h-screen bg-[#1E1E1E]" />
-            ) : user ? (
-              <UpdatePassword />
             ) : (
-              <Navigate to="/Signin" replace />
+              <UpdatePassword />
             )
           }
         />
