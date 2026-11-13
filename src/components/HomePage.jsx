@@ -748,7 +748,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat min-h-[50vh] md:min-h-[874PX]"
+        className="relative w-full h-218.5 bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${plan_BG_image})`,
           zIndex: 20,
