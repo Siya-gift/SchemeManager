@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Removed unused useState
+import React, { useState, useEffect, useRef } from "react"; // Removed unused useState
 import "../App.css";
 import homeBG from "../images/bghomeSvg.svg";
 import proveBG from "../images/proveBG.jpg";
@@ -42,6 +42,7 @@ import footer_card_p from "../images/footer_card_p.png";
 import m_grand_logo from "../images/m_grand_logo.svg";
 import p_2grand_logo from "../images/p_2grand_logo.svg";
 import m_payM_pic from "../images/m_payM_pic.svg";
+import pc_payM_pics from "../images/pc_payM_pics.svg";
 
 import PrimaryBtn from "./PrimaryBtn";
 import PrimaryBtn2 from "./PrimaryBtn2";
@@ -72,6 +73,9 @@ function HomePage() {
   const [proveState1, proveStateFunc1] = useState(false);
   const [proveState2, proveStateFunc2] = useState(false);
   const [proveState3, proveStateFunc3] = useState(false);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const scrollContainerRef = useRef(null);
+  const scrollHideTimeoutRef = useRef(null);
 
   const [activePlan, setActivePlan] = useState(1);
   const [activePlanCard, setActivePlanCard] = useState(1);
@@ -145,11 +149,49 @@ function HomePage() {
     }
   };
 
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      if (scrollHideTimeoutRef.current) {
+        window.clearTimeout(scrollHideTimeoutRef.current);
+      }
+
+      if (container.scrollTop <= 200) {
+        setShowScrollToTop(false);
+        return;
+      }
+
+      setShowScrollToTop(true);
+      scrollHideTimeoutRef.current = window.setTimeout(() => {
+        setShowScrollToTop(false);
+        scrollHideTimeoutRef.current = null;
+      }, 800);
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      if (scrollHideTimeoutRef.current) {
+        window.clearTimeout(scrollHideTimeoutRef.current);
+      }
+    };
+  }, [loading]);
+
+  const handleScrollToTop = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    container.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   if (loading) return null;
 
   return (
     <div
       className="h-screen relative overflow-y-auto glass-scroll bg-black"
+      ref={scrollContainerRef}
       data-lenis-prevent
     >
       <section className="relative w-full h-full bg-white overflow-hidden">
@@ -571,13 +613,13 @@ function HomePage() {
               {/* pc view */}
               <div className="hidden min-[1164px]:block">
                 <div
-                  className="flex items-center justify-center p-6 md:p-12 w-full min-h-[50vh] md:min-h-[80vh] bg-contain bg-center bg-no-repeat"
+                  className="  flex items-center justify-center p-6 md:p-12 w-full min-h-[50vh] md:min-h-[80vh] bg-contain bg-center bg-no-repeat"
                   style={{
                     backgroundImage: `url(${proveCard})`,
                     zIndex: 20,
                   }}
                 >
-                  <div className="flex items-center justify-center w-[95%] h-[75%]">
+                  <div className="relative flex items-center justify-center w-[95%] h-[75%]">
                     <div className="flex h-full w-full justify-end p-2 gap-7">
                       <div className="flex flex-col gap-1 text-start items-center justify-center">
                         <h3 className="text-white text-[16px] font-normal family-['Roboto_Condensed'] wrap-break-word ">
@@ -1478,24 +1520,27 @@ function HomePage() {
                   src={p_2grand_logo}
                   alt="f_pic"
                 />
-                <div className="absolute -bottom-17 flex flex-col gap-2">
-                  <span className="inline-flex items-center gap-1.5 w-fit h-8.75 font-['Raleway'] font-normal text-xs leading-8.75 text-white underline underline-offset-6 cursor-pointer group">
-                    <span className="tracking-wide">Sign up</span>
-                    <svg
-                      className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="m9 18 6-6-6-6" />
-                    </svg>
-                  </span>
+
+                {/* mobile view */}
+                <div className="md:hidden absolute -bottom-17 flex flex-col gap-2">
+                  <Link to={"/Signup"}>
+                    <span className="inline-flex items-center gap-1.5 w-fit h-8.75 font-['Raleway'] font-normal text-xs leading-8.75 text-white underline underline-offset-6 cursor-pointer group">
+                      <span className="tracking-wide">Sign up</span>
+                      <svg
+                        className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="m9 18 6-6-6-6" />
+                      </svg>
+                    </span>
+                  </Link>
 
                   <div className="flex flex-row gap-3">
-                    
                     <div className="flex flex-col">
                       <h3 className="font-['Raleway'] font-bold text-sm  text-white">
                         Quick links
@@ -1541,9 +1586,118 @@ function HomePage() {
                         <li className="font-['Raleway'] font-thin text-[11px]  text-white">
                           Privacy policy
                         </li>
-                        
                       </ul>
-                      
+                    </div>
+                  </div>
+                </div>
+
+                {/* pc view */}
+                <div className="hidden md:block">
+                  <div className="absolute -bottom-2 left-10 flex flex-col gap-2">
+                    <Link to="/Signup">
+                      <span className="inline-flex items-center gap-1.5 w-fit h-8.75 font-['Raleway'] font-normal text-xs leading-8.75 text-white underline underline-offset-6 cursor-pointer group pb-5">
+                        <span className="tracking-wide">Sign up</span>
+                        <svg
+                          className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m9 18 6-6-6-6" />
+                        </svg>
+                      </span>
+                    </Link>
+
+                    <div className="flex flex-row gap-15">
+                      <div className="flex flex-col">
+                        <h3 className="font-['Raleway'] font-bold text-sm  text-white">
+                          Where to find us
+                        </h3>
+                        <ul className="flex flex-col gap-1.5 list-none pl-5 marker:text-white">
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            Contacts +27 81 122 5153
+                          </li>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            schememanagerpro.support.com
+                          </li>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white mt-3">
+                            <div className="flex justify-center gap-10 z-999">
+                              <button className="h-4 aspect-auto cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+                                <img
+                                  className="h-full w-full"
+                                  src={InstagramV}
+                                  alt=""
+                                />
+                              </button>
+                              <button className="h-4 aspect-auto cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+                                <img
+                                  className="h-full w-full"
+                                  src={FacebookV}
+                                  alt=""
+                                />
+                              </button>
+                              <button className="h-4 aspect-auto cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+                                <img
+                                  className="h-full w-full"
+                                  src={WhatsAppV}
+                                  alt=""
+                                />
+                              </button>
+                              <button className="h-4 aspect-auto cursor-pointer focus:scale-85 group transition-all duration-200 hover:scale-y-90">
+                                <img
+                                  className="h-full w-full"
+                                  src={TikTokV}
+                                  alt=""
+                                />
+                              </button>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="flex flex-col">
+                        <h3 className="font-['Raleway'] font-bold text-sm  text-white">
+                          Quick links
+                        </h3>
+                        <ul className="flex flex-col gap-1.5 list-disc pl-5 marker:text-white">
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            About us
+                          </li>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            Ask AI
+                          </li>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            FAQ
+                          </li>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            Pricing
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="flex flex-col">
+                        <h3 className="font-['Raleway'] font-bold text-sm  text-white">
+                          Terms & Conditions
+                        </h3>
+                        <ul className="flex flex-col gap-1.5 list-disc pl-5 marker:text-white ">
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            Terms and Conditions
+                          </li>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            Legal
+                          </li>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            Popia Acts
+                          </li>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                            Privacy policy
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="flex-1 mt-auto">
+                        <img src={pc_payM_pics} alt="" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1553,13 +1707,36 @@ function HomePage() {
         </div>
 
         <div className="absolute left-1/2 -translate-x-1/2 gap-4 bottom-7 flex flex-col justify-center items-center w-full">
-          <img src={m_payM_pic} alt="payments" />
+          <img className="md:hidden" src={m_payM_pic} alt="payments" />
           <p className=" text-center font-['Rajdhani'] font-normal text-xs leading-3.75 text-white">
             Powered by Scheme Manager Pro® <br />
             ©Copyright 2026 Scheme Manager pro (PTY) Ltd.
           </p>
         </div>
       </section>
+      <button
+        type="button"
+        onClick={handleScrollToTop}
+        aria-label="Scroll to top"
+        title="Scroll to top"
+        className={`fixed bottom-5 right-4 h-10 aspect-square bg-black rounded-4xl z-99 text-white flex items-center justify-center cursor-pointer hover:bg-neutral-800 hover:-translate-y-1 transition-[opacity,visibility,transform,background-color] duration-200 shadow-lg ${
+          showScrollToTop
+            ? "visible opacity-100"
+            : "invisible pointer-events-none opacity-0"
+        }`}
+      >
+        <svg
+          className="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m18 15-6-6-6 6" />
+        </svg>
+      </button>
     </div>
   );
 }

@@ -84,7 +84,7 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
             onClick={handleUI}
           >
             <img
-              className={`w-3 aspect-square transition-transform duration-300 ${
+              className={`w-4 aspect-square transition-transform duration-300 ease-in ${
                 uistate ? "rotate-180" : ""
               }`}
               src={close_side_icon}
@@ -95,8 +95,8 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
 
         <div className="flex h-20 w-full items-center justify-center">
           <div
-            className={`ppic h-20 w-20 shrink-0 rounded-full overflow-hidden transition-[width,height] duration-300 ${
-              uistate ? "h-10 w-10" : ""
+            className={`ppic h-20 w-20 shrink rounded-full overflow-hidden transition-[width,height] duration-300 cursor-pointer ${
+              uistate ? "h-5 w-5" : ""
             }`}
           >
             <img
