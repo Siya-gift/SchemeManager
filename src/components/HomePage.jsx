@@ -1604,8 +1604,8 @@ function HomePage() {
                         <li className="font-['Raleway'] font-thin text-[11px]  text-white">
                           Popia Acts
                         </li>
-                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          Privacy policy
+                        <li className="font-['Raleway'] font-thin text-[11px] text-white">
+                          <Link to="/Privacy">Privacy policy</Link>
                         </li>
                       </ul>
                     </div>
@@ -1711,8 +1711,8 @@ function HomePage() {
                           <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
                             Popia Acts
                           </li>
-                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
-                            Privacy policy
+                          <li className="font-['Raleway'] font-thin text-[11px] text-white nav_link w-fit">
+                            <Link to="/Privacy">Privacy policy</Link>
                           </li>
                         </ul>
                       </div>

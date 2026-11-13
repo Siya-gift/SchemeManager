@@ -1899,15 +1899,7 @@ function App() {
         />
         <Route
           path="/Privacy"
-          element={
-            authLoading ? (
-              <div className="min-h-screen bg-[#1E1E1E]" />
-            ) : user ? (
-              <Navigate to="/Privacy" replace />
-            ) : (
-              <Privacy />
-            )
-          }
+          element={<Privacy />}
         />
         <Route
           path="/Terms_and_Conditions"
