@@ -28,6 +28,7 @@ import UpdatePassword from "./components/UpdatePassword.jsx";
 import SideBar from "./components/SideBar.jsx";
 import MobileNav from "./components/MobileNav.jsx";
 import MobileMenu from "./components/MobileMenu.jsx";
+import HomeMobileMenu from "./components/HomeMobileMenu.jsx";
 import Signup from "./components/Signup.jsx";
 import Signin from "./components/Signin.jsx";
 import { supabase } from "./lib/supabaseClient.js";

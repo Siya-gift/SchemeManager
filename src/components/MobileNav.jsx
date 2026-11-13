@@ -101,9 +101,9 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
         </div>
 
         <div className="burger z-50 w-6" onClick={toggleMenu}>
-          <div className="line1 h-0.75 w-full z-20 bg-white rounded-sm"></div>
-          <div className="line2 h-0.75 w-[70%] z-20 bg-white rounded-sm mt-1.25"></div>
-          <div className="line3 h-0.75 w-full z-20 bg-white rounded-sm mt-1.25"></div>
+          <div className="line1 h-0.75 w-full z-20 bg-white rounded-sm transition-all duration-300"></div>
+          <div className="line2 h-0.75 w-full z-20 bg-white rounded-sm transition-all duration-300 mt-1.25"></div>
+          <div className="line3 h-0.75 w-full z-20 bg-white rounded-sm transition-all duration-300 mt-1.25"></div>
         </div>
       </div>
     </div>

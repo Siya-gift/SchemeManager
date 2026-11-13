@@ -1,6 +1,4 @@
-import React from 'react'
-import MobileNav from './MobileNav'
-import { useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Draggable } from "gsap/Draggable";
@@ -8,37 +6,66 @@ import { Draggable } from "gsap/Draggable";
 function MobileMenu({ isOpen, setIsOpen, toggleMenu, toggleMobileState, settoggleMobileState, toggleTabMobile }) {
 
     const menuRef = useRef();
+    const draggableRef = useRef(null);
+    const initializedRef = useRef(false);
 
     useGSAP(() => {
-        gsap.to(menuRef.current, {
-            y: isOpen ? 0 : "100%",
-            opacity: isOpen ? 1 : 0,
-            duration: 0.5,
-            ease: "power3.out",
-            display: isOpen ? "block" : "none"
-        });
+        const menu = menuRef.current;
+        if (!menu) return;
 
-        Draggable.create('#Menu', {
-            type: 'y',
-            trigger: '#dragger',
-            bounds: {
-                minY: 0,
-                maxY: window.innerHeight - menuRef.current.offsetHeight
-            },
-            inertia: true,
-            dragClickables: true,
-            onDragEnd: function () {
-                if (this.y > 100) {
-                    toggleMenu(false);
-                } else {
-                    gsap.to(this.target, { y: 0, duration: 0.3 });
-                }
-            }
-        });
+        if (!initializedRef.current) {
+            gsap.set(menu, {
+                yPercent: 100,
+                autoAlpha: 0,
+                pointerEvents: "none",
+            });
+            initializedRef.current = true;
+        }
 
+        draggableRef.current?.kill();
+        gsap.killTweensOf(menu);
 
+        if (isOpen) {
+            gsap.set(menu, { y: 0, autoAlpha: 1, pointerEvents: "auto" });
+            gsap.to(menu, {
+                yPercent: 0,
+                duration: 0.4,
+                ease: "power3.out",
+            });
 
+            draggableRef.current = Draggable.create(menu, {
+                type: "y",
+                trigger: menu.querySelector("#dragger"),
+                bounds: {
+                    minY: 0,
+                    maxY: window.innerHeight - menu.offsetHeight,
+                },
+                inertia: true,
+                dragClickables: true,
+                onDragEnd() {
+                    if (this.y > 100) {
+                        toggleMenu(false);
+                    } else {
+                        gsap.to(menu, { y: 0, duration: 0.3 });
+                    }
+                },
+            })[0];
+        } else {
+            gsap.to(menu, {
+                yPercent: 100,
+                autoAlpha: 0,
+                duration: 0.4,
+                ease: "power3.in",
+                onComplete: () => {
+                    gsap.set(menu, { y: 0, pointerEvents: "none" });
+                },
+            });
+        }
     }, [isOpen]);
+
+    useEffect(() => () => {
+        draggableRef.current?.kill();
+    }, []);
 
 
     return (

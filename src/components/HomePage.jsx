@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"; // Removed unused useState
+import React, { useState, useEffect, useRef, useCallback } from "react"; // Removed unused useState
 import "../App.css";
 import homeBG from "../images/bghomeSvg.svg";
 import proveBG from "../images/proveBG.jpg";
@@ -6,6 +6,7 @@ import plan_BG_image from "../images/plan_BG_image.svg";
 import textureSvgHome from "../images/textureSvgHome.svg";
 import phoneHomebgTexture from "../images/phoneHomebgTexture.svg";
 import logo from "../images/logoSvg.svg";
+import HomeMobileMenu from "./HomeMobileMenu";
 
 import w_left_home from "../images/w_left_home.svg";
 import m_right_home from "../images/m_right_home.svg";
@@ -73,6 +74,7 @@ function HomePage() {
   const [proveState1, proveStateFunc1] = useState(false);
   const [proveState2, proveStateFunc2] = useState(false);
   const [proveState3, proveStateFunc3] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const scrollContainerRef = useRef(null);
   const scrollHideTimeoutRef = useRef(null);
@@ -84,6 +86,7 @@ function HomePage() {
   const openProve1 = () => proveStateFunc1(!proveState1);
   const openProve2 = () => proveStateFunc2(!proveState2);
   const openProve3 = () => proveStateFunc3(!proveState3);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   const changePlan = (id) => {
     setActivePlan(id);
@@ -227,13 +230,31 @@ function HomePage() {
               <div className="premiumShine pointer-events-none absolute inset-y-0 left-0 z-20 h-full w-[200%] -translate-x-full rounded-2xl group-hover:animate-shine" />
             </div>
 
-            <div className="min-[882px]:hidden menuHome rotate-180">
-              <div className="burger z-50 w-6 h-3">
-                <div className="line1 h-0.75 w-full z-20 bg-white rounded-sm"></div>
-                <div className="line2 h-0.75 w-[70%] z-20 bg-white rounded-sm mt-1"></div>
-                <div className="line3 h-0.75 w-full z-20 bg-white rounded-sm mt-1"></div>
+            <button
+              type="button"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              className="min-[882px]:hidden menuHome rotate-180 cursor-pointer p-2 -mr-2 focus:outline-none"
+            >
+              <div className="burger z-50 w-6 h-4 flex flex-col justify-center">
+                <div
+                  className={`line1 h-0.75 w-full z-20 bg-white rounded-sm transition-all duration-300 origin-center ${
+                    menuOpen ? "translate-y-1.75 rotate-45" : ""
+                  }`}
+                />
+                <div
+                  className={`line2 h-0.75 w-full z-20 bg-white rounded-sm mt-1 transition-all duration-300 ${
+                    menuOpen ? "opacity-0 translate-x-2" : "opacity-100"
+                  }`}
+                />
+                <div
+                  className={`line3 h-0.75 w-full z-20 bg-white rounded-sm mt-1 transition-all duration-300 origin-center ${
+                    menuOpen ? "-translate-y-1.75 -rotate-45" : ""
+                  }`}
+                />
               </div>
-            </div>
+            </button>
 
             <div className="hidden min-[882px]:block">
               <ul className="flex items-center gap-13">
@@ -1722,7 +1743,7 @@ function HomePage() {
         className={`fixed bottom-5 right-4 h-10 aspect-square bg-black rounded-4xl z-99 text-white flex items-center justify-center cursor-pointer hover:bg-neutral-800 hover:-translate-y-1 transition-[opacity,visibility,transform,background-color] duration-200 shadow-lg ${
           showScrollToTop
             ? "visible opacity-100"
-            : "invisible pointer-events-none opacity-0"
+            : "invisible pointer-events-none opacity-0 hover:visible hover:opacity-100"
         }`}
       >
         <svg
@@ -1737,6 +1758,8 @@ function HomePage() {
           <path d="m18 15-6-6-6 6" />
         </svg>
       </button>
+
+      <HomeMobileMenu isOpen={menuOpen} onClose={closeMenu} />
     </div>
   );
 }
