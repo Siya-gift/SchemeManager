@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 
 export default function SignGoogleBtn({ 
   onClick, 
@@ -6,11 +6,29 @@ export default function SignGoogleBtn({
   disabled = false, 
   className = "" 
 }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmittingRef = useRef(false);
+
+  const handleClick = async () => {
+    if (disabled || isSubmittingRef.current) return;
+
+    isSubmittingRef.current = true;
+    setIsSubmitting(true);
+
+    try {
+      await onClick?.();
+    } finally {
+      isSubmittingRef.current = false;
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
-      disabled={disabled}
+      onClick={handleClick}
+      disabled={disabled || isSubmitting}
+      aria-busy={isSubmitting}
       className={`flex justify-center items-center bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors rounded-full px-3 py-3 w-full cursor-pointer mt-4 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     >
       <span className="inline-flex items-center justify-center mr-2">
@@ -40,7 +58,7 @@ export default function SignGoogleBtn({
         </svg>
       </span>
       <span className="font-['Roboto'] text-base leading-6 md:leading-2 tracking-[0.15px] text-[#FCFBFF]">
-        {text}
+        {isSubmitting ? "Please wait..." : text}
       </span>
     </button>
   );
