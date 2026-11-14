@@ -2,14 +2,59 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./src/images/appIcon.svg" sizes="400x400" />
-    
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="./src/images/appIcon.svg"
+      sizes="400x400"
+    />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Scheme Manager</title>
   </head>
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {},
+      Tawk_LoadStart = new Date();
+
+    Tawk_API.customStyle = {
+      visibility: {
+        desktop: {
+          position: "bl", // 'br' (bottom-right), 'bl' (bottom-left), 'cr', 'cl', 'tr', 'tl'
+          xOffset: 20, // Horizontal distance from edge in pixels
+          yOffset: 20, // Vertical distance from edge in pixels
+        },
+        mobile: {
+          position: "bl", // Mobile screen anchor position
+          xOffset: 10, // Horizontal distance from edge in pixels
+          yOffset: 10, // Vertical distance from edge in pixels
+        },
+        bubble: {
+          rotate: "0deg", // '0deg', '90deg', or '-90deg'
+          xOffset: 0,
+          yOffset: 0,
+        },
+      },
+    };
+
+    (function () {
+      var s1 = document.createElement("script"),
+        s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = "https://embed.tawk.to/6af8d12f594d653c431702de/1k7dv29b4";
+      s1.charset = "UTF-8";
+      s1.setAttribute("crossorigin", "*");
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  </script>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/js/all.min.js" integrity="sha512-6BTOlkauINO65nLhXhthZMtepgJSghyimIalb+crKRPhvhmsCdnIuGcVbR5/aQY2A+260iC1OPy1oCdB6pSSwQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/js/all.min.js"
+      integrity="sha512-6BTOlkauINO65nLhXhthZMtepgJSghyimIalb+crKRPhvhmsCdnIuGcVbR5/aQY2A+260iC1OPy1oCdB6pSSwQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </body>
 </html>

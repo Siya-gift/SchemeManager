@@ -1639,10 +1639,10 @@ function HomePage() {
                         </h3>
                         <ul className="flex flex-col gap-1.5 list-none pl-5 marker:text-white">
                           <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
-                            Contacts +27 81 122 5153
+                            Contacts +27 63 956 7719
                           </li>
                           <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
-                            schememanagerpro.support.com
+                            ngubaneelten@gmail.com
                           </li>
                           <li className="font-['Raleway'] font-thin text-[11px]  text-white mt-3">
                             <div className="flex justify-center gap-10 z-999">
