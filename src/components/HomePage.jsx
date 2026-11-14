@@ -258,11 +258,13 @@ function HomePage() {
 
             <div className="hidden min-[882px]:block">
               <ul className="flex items-center gap-13">
-                <li>
-                  <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                    Ask AI
-                  </button>
-                </li>
+                
+                  <li >
+                    <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                      Ask AI
+                    </button>
+                  </li>
+
                 <li>
                   <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
                     FAQ
