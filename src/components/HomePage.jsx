@@ -258,12 +258,17 @@ function HomePage() {
 
             <div className="hidden min-[882px]:block">
               <ul className="flex items-center gap-13">
-                
-                  <li >
+                <Link
+                  to={
+                    "https://tawk.to/chat/6af8d12f594d653c431702de/1k7dv29b4?layout=modern"
+                  }
+                >
+                  <li>
                     <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
                       Ask AI
                     </button>
                   </li>
+                </Link>
 
                 <li>
                   <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">

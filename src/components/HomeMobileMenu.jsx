@@ -125,7 +125,7 @@ function HomeMobileMenu({ isOpen, onClose }) {
           className="w-full flex-1 overflow-y-auto glass-scroll mt-3 pr-1"
           data-lenis-prevent
         >
-          <ul className="h-full flex flex-col gap-3">
+          <ul className="h-full flex flex-col gap-3 mb-9">
             <Link to={"/Signin"}>
               <li
                 onClick={handleClose}
@@ -137,14 +137,20 @@ function HomeMobileMenu({ isOpen, onClose }) {
               </li>
             </Link>
 
-            <li
-              onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
+            <Link
+              to={
+                "https://tawk.to/chat/6af8d12f594d653c431702de/1k7dv29b4?layout=modern"
+              }
             >
-              <i className="fa-solid fa-wand-magic-sparkles w-5 text-center text-white/80"></i>
-              <span>Ask AI</span>
-              <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
-            </li>
+              <li
+                onClick={handleClose}
+                className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
+              >
+                <i className="fa-solid fa-wand-magic-sparkles w-5 text-center text-white/80"></i>
+                <span>Ask AI</span>
+                <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
+              </li>
+            </Link>
 
             <li
               onClick={handleClose}
@@ -179,6 +185,14 @@ function HomeMobileMenu({ isOpen, onClose }) {
             >
               <i className="fa-solid fa-credit-card w-5 text-center text-white/80"></i>
               <span>Payments</span>
+              <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
+            </li>
+            <li
+              onClick={handleClose}
+              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
+            >
+              <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
+              <span>Help</span>
               <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
             </li>
           </ul>
