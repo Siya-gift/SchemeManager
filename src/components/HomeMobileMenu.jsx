@@ -102,7 +102,7 @@ function HomeMobileMenu({ isOpen, onClose }) {
       {/* Bottom Sheet Menu Drawer */}
       <div
         ref={menuRef}
-        className="relative w-full h-[60svh] px-8 pt-3 pb-6 flex flex-col
+        className="relative w-full h-[60svh] px-8 pt-3 pb-16 flex flex-col
                    bg-black/45 backdrop-blur-[50px] border-t border-white/20 
                    Menu rounded-t-3xl z-10 shadow-2xl"
         id="Menu"
@@ -189,7 +189,7 @@ function HomeMobileMenu({ isOpen, onClose }) {
             </li>
             <li
               onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30 mb-9"
+              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
             >
               <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
               <span>Help</span>
