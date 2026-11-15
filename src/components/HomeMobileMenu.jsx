@@ -125,7 +125,7 @@ function HomeMobileMenu({ isOpen, onClose }) {
           className="w-full flex-1 overflow-y-auto glass-scroll mt-3 pr-1"
           data-lenis-prevent
         >
-          <ul className="h-full flex flex-col gap-3 mb-9">
+          <ul className="h-full flex flex-col gap-3">
             <Link to={"/Signin"}>
               <li
                 onClick={handleClose}
@@ -189,7 +189,7 @@ function HomeMobileMenu({ isOpen, onClose }) {
             </li>
             <li
               onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
+              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30 mb-9"
             >
               <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
               <span>Help</span>
