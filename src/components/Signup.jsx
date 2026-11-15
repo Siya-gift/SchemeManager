@@ -153,6 +153,8 @@ function Signup() {
           ? error.message
           : "Could not start Google registration. Please try again.";
       setError(message);
+      console.log(message);
+      
       toast.error(message);
     } finally {
       setLoading(false);

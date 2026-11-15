@@ -8,8 +8,13 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Draggable } from "gsap/Draggable";
 import crustBg from "./images/bg.png";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 
 //tabs
 import Profile from "./components/Profile.jsx";
@@ -44,6 +49,39 @@ import { completeEmailSignup } from "./lib/completeEmailSignup.js";
 
 // gsap
 gsap.registerPlugin(Draggable);
+
+function PasswordRecoveryRedirect() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const redirectToPasswordUpdate = () => {
+      if (window.location.pathname !== "/UpdatePassword") {
+        navigate("/UpdatePassword", { replace: true });
+      }
+    };
+
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const searchParams = new URLSearchParams(window.location.search);
+    if (
+      hashParams.get("type") === "recovery" ||
+      searchParams.get("type") === "recovery"
+    ) {
+      redirectToPasswordUpdate();
+    }
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        redirectToPasswordUpdate();
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  return null;
+}
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -1770,12 +1808,15 @@ function App() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       authStateReceived = true;
       updateAuthenticatedUser(session?.user ?? null);
       setAuthLoading(false);
 
-      if (session?.user?.email_confirmed_at) {
+      if (
+        (event === "INITIAL_SESSION" || event === "SIGNED_IN") &&
+        session?.user?.email_confirmed_at
+      ) {
         window.setTimeout(() => {
           completeEmailSignup(session.user).catch((error) => {
             console.error("Could not complete the verified signup:", error);
@@ -1806,17 +1847,6 @@ function App() {
             error.message,
           );
           return;
-        }
-
-        if (session?.user?.email_confirmed_at) {
-          completeEmailSignup(session.user).catch((profileError) => {
-            console.error("Could not complete the verified signup:", profileError);
-            toast.error(
-              profileError instanceof Error
-                ? profileError.message
-                : "Could not finish setting up your account.",
-            );
-          });
         }
 
         if (session?.user) {
@@ -1868,6 +1898,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <PasswordRecoveryRedirect />
       {/* Calendar Overlay */}
       {calenderState && (
         <div

@@ -38,12 +38,12 @@ async function provisionEmailSignup(user) {
     }
   }
 
-  const { data: scheme, error: schemeLookupError } = await supabase
+  const { data: schemes, error: schemeLookupError } = await supabase
     .from("members_schemes")
     .select("user_id")
     .eq("user_id", user.id)
     .eq("scheme", "clubs")
-    .maybeSingle();
+    .limit(1);
 
   if (schemeLookupError) {
     throw new Error(
@@ -51,7 +51,7 @@ async function provisionEmailSignup(user) {
     );
   }
 
-  if (!scheme) {
+  if (schemes.length === 0) {
     const { error } = await supabase.from("members_schemes").insert({
       user_id: user.id,
       scheme: "clubs",
