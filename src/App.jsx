@@ -1813,19 +1813,33 @@ function App() {
       updateAuthenticatedUser(session?.user ?? null);
       setAuthLoading(false);
 
-      if (
-        (event === "INITIAL_SESSION" || event === "SIGNED_IN") &&
-        session?.user?.email_confirmed_at
-      ) {
-        window.setTimeout(() => {
-          completeEmailSignup(session.user).catch((error) => {
+      if (event === "SIGNED_IN" && session?.user?.email_confirmed_at) {
+        window.setTimeout(async () => {
+          try {
+            const {
+              data: { user: verifiedUser },
+              error: verificationError,
+            } = await supabase.auth.getUser();
+
+            if (verificationError) {
+              console.error(
+                "Could not validate the signed-in user before setup:",
+                verificationError.message,
+              );
+              return;
+            }
+
+            if (verifiedUser?.id === session.user.id) {
+              await completeEmailSignup(verifiedUser);
+            }
+          } catch (error) {
             console.error("Could not complete the verified signup:", error);
             toast.error(
               error instanceof Error
                 ? error.message
                 : "Could not finish setting up your account.",
             );
-          });
+          }
         }, 0);
       }
     });
@@ -1850,35 +1864,58 @@ function App() {
         }
 
         if (session?.user) {
-          const { error: userError } = await supabase.auth.getUser();
-          if (
-            !active ||
-            !userError?.message.includes(
-              "User from sub claim in JWT does not exist",
-            )
-          ) {
-            if (userError) {
+          const {
+            data: { user: verifiedUser },
+            error: userError,
+          } = await supabase.auth.getUser();
+          if (!active) return;
+
+          if (userError) {
+            if (
+              userError.status !== 403 &&
+              !userError.message.includes(
+                "User from sub claim in JWT does not exist",
+              )
+            ) {
               console.error(
                 "Could not validate the current Supabase session:",
                 userError.message,
               );
+              return;
             }
+
+            const { data: currentSessionData } =
+              await supabase.auth.getSession();
+            if (currentSessionData.session?.user.id !== session.user.id) return;
+
+            const { error: signOutError } = await supabase.auth.signOut({
+              scope: "local",
+            });
+            if (signOutError) {
+              console.error(
+                "Could not clear the invalid local session:",
+                signOutError.message,
+              );
+            }
+            updateAuthenticatedUser(null);
             return;
           }
 
-          const { data: currentSessionData } = await supabase.auth.getSession();
-          if (currentSessionData.session?.user.id !== session.user.id) return;
+          if (verifiedUser?.id !== session.user.id) return;
 
-          const { error: signOutError } = await supabase.auth.signOut({
-            scope: "local",
-          });
-          if (signOutError) {
-            console.error(
-              "Could not clear the invalid local session:",
-              signOutError.message,
-            );
+          if (verifiedUser.email_confirmed_at) {
+            completeEmailSignup(verifiedUser).catch((profileError) => {
+              console.error(
+                "Could not complete the verified signup:",
+                profileError,
+              );
+              toast.error(
+                profileError instanceof Error
+                  ? profileError.message
+                  : "Could not finish setting up your account.",
+              );
+            });
           }
-          updateAuthenticatedUser(null);
         }
       })
       .catch((error) => {
