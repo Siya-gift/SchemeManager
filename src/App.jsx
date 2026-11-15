@@ -30,6 +30,7 @@ import Help from "./components/Help.jsx";
 import Faq from "./components/Faq.jsx";
 import About_us from "./components/About_us.jsx";
 import Payments from "./components/Payments.jsx";
+import Confirm_Email from "./components/Confirm_Email.jsx";
 
 //components
 import SideBar from "./components/SideBar.jsx";
@@ -39,6 +40,7 @@ import HomeMobileMenu from "./components/HomeMobileMenu.jsx";
 import Signup from "./components/Signup.jsx";
 import Signin from "./components/Signin.jsx";
 import { supabase } from "./lib/supabaseClient.js";
+import { completeEmailSignup } from "./lib/completeEmailSignup.js";
 
 // gsap
 gsap.registerPlugin(Draggable);
@@ -1772,6 +1774,19 @@ function App() {
       authStateReceived = true;
       updateAuthenticatedUser(session?.user ?? null);
       setAuthLoading(false);
+
+      if (session?.user?.email_confirmed_at) {
+        window.setTimeout(() => {
+          completeEmailSignup(session.user).catch((error) => {
+            console.error("Could not complete the verified signup:", error);
+            toast.error(
+              error instanceof Error
+                ? error.message
+                : "Could not finish setting up your account.",
+            );
+          });
+        }, 0);
+      }
     });
 
     supabase.auth
@@ -1791,6 +1806,17 @@ function App() {
             error.message,
           );
           return;
+        }
+
+        if (session?.user?.email_confirmed_at) {
+          completeEmailSignup(session.user).catch((profileError) => {
+            console.error("Could not complete the verified signup:", profileError);
+            toast.error(
+              profileError instanceof Error
+                ? profileError.message
+                : "Could not finish setting up your account.",
+            );
+          });
         }
 
         if (session?.user) {
@@ -1986,6 +2012,16 @@ function App() {
               <div className="min-h-screen bg-[#1E1E1E]" />
             ) : (
               <Payments />
+            )
+          }
+        />
+        <Route
+          path="/Confirm_Email"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : (
+              <Confirm_Email />
             )
           }
         />

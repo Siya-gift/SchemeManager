@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 import { supabase } from "../lib/supabaseClient.js";
 import { useNavigate } from "react-router-dom";
 import SignGoogleBtn from "./SignGoogleBtn.jsx";
+import { completeEmailSignup } from "../lib/completeEmailSignup.js";
 
 function Signup() {
   const btnSignup = "Sign up";
@@ -21,6 +22,9 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [strengthScore, setStrengthScore] = useState(0);
+  const [passInfoModal, setpassInfoModal] = useState(false);
+
   const handleSignup = async (e) => {
     e.preventDefault();
 
@@ -29,18 +33,47 @@ function Signup() {
     const trimmedName = name.trim();
 
     if (trimmedEmail === "" || password === "" || trimmedName === "") {
-      toast.error("All fields are required");
+      toast.error("All fields are required.");
+      return;
+    }
+
+    if (confirmPassword === "") {
+      toast.error("Confirm your password.");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    if (strengthScore !== 5) {
+      toast.error("Match the required password.");
       return;
     }
 
     setLoading(true);
 
     try {
+      // 1. Check if email already exists in auth.users via RPC
+      const { data: emailExists, error: checkError } = await supabase.rpc(
+        "check_email_exists",
+        { email_input: trimmedEmail },
+      );
+
+      if (checkError) {
+        toast.error(`Error verifying member status: ${checkError.message}`);
+        return;
+      }
+
+      if (emailExists) {
+        toast.error(
+          "An account with this email already exists. Please log in.",
+        );
+        return;
+      }
+
+      // 2. Attempt Supabase Auth Sign Up
       const { data, error: authError } = await supabase.auth.signUp({
         email: trimmedEmail,
         password,
@@ -48,6 +81,7 @@ function Signup() {
           data: {
             name: trimmedName,
             phoneNumber: trimmedPhone,
+            registration_source: "email_signup",
           },
         },
       });
@@ -57,45 +91,20 @@ function Signup() {
         return;
       }
 
-      if (data.user) {
-        // 1. Insert into the main Members table
-        const { error: dbError } = await supabase.from("Members").insert({
-          id: data.user.id,
-          member_name: trimmedName,
-          tot_paid: "0.00",
-          status: "Pending",
-          scheme_name: ["clubs"],
-        });
+      // 3. Backup check for existing email in Supabase Auth
+      if (
+        data.user &&
+        data.user.identities &&
+        data.user.identities.length === 0
+      ) {
+        toast.error(
+          "An account with this email already exists. Please log in.",
+        );
+        return;
+      }
 
-        if (dbError) {
-          toast.error(
-            `Account created, but saving the member profile failed: ${dbError.message}`,
-          );
-          console.log("Error inserting into Members table:", dbError);
-          return;
-        }
-
-        // 2. Insert the default scheme record into the member_schemes table
-        const { error: schemeError } = await supabase
-          .from("members_schemes")
-          .insert({
-            user_id: data.user.id,
-            scheme: "clubs", // Default starting scheme
-            monthly_contribution: 0, // Set your default amount
-            starting_bal: 0, // Initial starting balance
-            created_at: new Date().toISOString(),
-          });
-
-        if (schemeError) {
-          toast.error(
-            `Account created, but setting up the default scheme failed: ${schemeError.message}`,
-          );
-          console.log(
-            "Error inserting into member_schemes table:",
-            schemeError,
-          );
-          return;
-        }
+      if (data.session && data.user) {
+        await completeEmailSignup(data.user);
       }
 
       if (data.session) {
@@ -103,8 +112,11 @@ function Signup() {
         navigate("/Dashboard");
       } else {
         toast.success(
-          "Registration successful! Please check your email to verify your account.",
+          "Verification email sent. Your account will be set up after you verify your email.",
         );
+        navigate("/Confirm_Email", {
+          state: { email: trimmedEmail, name: trimmedName },
+        });
       }
     } catch (signupError) {
       const message =
@@ -116,7 +128,6 @@ function Signup() {
       setLoading(false);
     }
   };
-
 
   const [error, setError] = useState("");
 
@@ -147,6 +158,41 @@ function Signup() {
       setLoading(false);
     }
   };
+
+  // Place this map outside your component
+  const STRENGTH_WIDTHS = {
+    0: "after:w-0",
+    1: "after:w-1/5",
+    2: "after:w-2/5",
+    3: "after:w-3/5",
+    4: "after:w-4/5",
+    5: "after:w-full",
+  };
+
+  const handlePasswordValidation = (value) => {
+    setPassword(value);
+
+    if (!value) {
+      setStrengthScore(0);
+      setpassInfoModal(true);
+      return;
+    }
+
+    let score = 0;
+    if (value.length >= 8) score += 1;
+    if (/[A-Z]/.test(value)) score += 1;
+    if (/[a-z]/.test(value)) score += 1;
+    if (/[0-9]/.test(value)) score += 1;
+    if (/[^A-Za-z0-9]/.test(value)) score += 1;
+
+    setpassInfoModal(false);
+    setStrengthScore(score);
+  };
+
+  const passwordsMatch =
+    confirmPassword.length > 0 && password === confirmPassword;
+  const passwordsMismatch =
+    confirmPassword.length > 0 && password !== confirmPassword;
 
   return (
     <div className="bg-[#1E1E1E]">
@@ -224,23 +270,37 @@ function Signup() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
+              {/* Drop-in JSX matching your exact classes and fonts */}
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Password
               </label>
-              <input
-                type="password"
-                placeholder="• • • • • • • • •"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div
+                className={`relative pb-3 before:absolute before:bottom-0 before:left-0 before:h-2 before:w-full before:rounded-full before:bg-white after:absolute after:bottom-0 after:left-0 after:h-2 after:rounded-full after:bg-linear-to-r after:from-[#3bdd9f]/60 after:to-[#411066]/50 after:transition-all after:duration-300 ${STRENGTH_WIDTHS[strengthScore]}`}
+              >
+                <input
+                  type="password"
+                  placeholder="• • • • • • • • •"
+                  className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
+                  value={password}
+                  onChange={(e) => handlePasswordValidation(e.target.value)}
+                  onFocus={() => setpassInfoModal(true)}
+                  onBlur={() => setpassInfoModal(false)}
+                />
+              </div>
+
               <label className="font-['Rajdhani'] font-thin text-[16px] leading-2 text-white">
                 Confirm Password
               </label>
               <input
                 type="password"
                 placeholder="• • • • • • • • •"
-                className="h-10 bg-[#F2F2F2] border border-[#D9D9D9] placeholder:font-['Poppins'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani']"
+                className={`h-10 bg-[#F2F2F2] border placeholder:font-['Poppins'] rounded-lg px-3 py-2 w-full text-slate-600 text-[14px] font-['Rajdhani'] outline-none transition-colors ${
+                  passwordsMismatch
+                    ? "border-red-500 ring-2 ring-red-500/40"
+                    : passwordsMatch
+                      ? "border-[#168616] ring-2 ring-[#168616]/40"
+                      : "border-[#D9D9D9]"
+                }`}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
@@ -262,9 +322,12 @@ function Signup() {
                     Remember me
                   </label>
                 </div>
-                <SignGoogleBtn onClick={handleGoogleSignup} text="Signup with Google"/>
+                <SignGoogleBtn
+                  onClick={handleGoogleSignup}
+                  text="Signup with Google"
+                />
 
-                <div className="mt-4 flex justify-between items-center w-[110%]">
+                <div className="mt-2 flex justify-between items-center w-[110%]">
                   <p className="font-['Rajdhani'] font-thin text-[11px] text-white">
                     Already have an account?{" "}
                     <Link
@@ -285,6 +348,70 @@ function Signup() {
             </form>
           </div>
         </div>
+        {passInfoModal && (
+          <div
+            className={`fixed left-1/2 -translate-x-1/2 transition-all duration-300 ease-in-out mx-auto w-90 p-10 z-9999 border glass text-white ${
+              passInfoModal
+                ? "top-5 opacity-100 scale-100 pointer-events-auto"
+                : "-top-96 opacity-0 scale-95 pointer-events-none"
+            }`}
+          >
+            <div className="relative w-full h-full">
+              <div
+                className="absolute -top-7 -right-4 mt-auto text-[22px] cursor-pointer hover:-translate-y-1 transition-all duration-150"
+                onClick={() => setpassInfoModal(false)}
+              >
+                &times;
+              </div>
+              <div className="flex flex-row gap-3">
+                <i className="fa-solid fa-lock text-[34px]"></i>
+                <h3 className="mt-auto text-[18px]">Required password info</h3>
+              </div>
+
+              <div className="mt-8">
+                <ul className="flex flex-col gap-2">
+                  <li className="flex gap-3 items-center">
+                    <span className="text-green-400">
+                      <i className="fa-solid fa-check"></i>
+                    </span>
+                    <span className="text-white">Require 8 characters</span>
+                  </li>
+                  <li className="flex gap-3 items-center">
+                    <span className="text-green-400">
+                      <i className="fa-solid fa-check"></i>
+                    </span>
+                    <span className="text-white">
+                      At least one uppercase letter
+                    </span>
+                  </li>
+                  <li className="flex gap-3 items-center">
+                    <span className="text-green-400">
+                      <i className="fa-solid fa-check"></i>
+                    </span>
+                    <span className="text-white">
+                      At least one lowercase letter
+                    </span>
+                  </li>
+                  <li className="flex gap-3 items-center">
+                    <span className="text-green-400">
+                      <i className="fa-solid fa-check"></i>
+                    </span>
+                    <span className="text-white">At least one number</span>
+                  </li>
+                  <li className="flex gap-3 items-center">
+                    <span className="text-green-400">
+                      <i className="fa-solid fa-check"></i>
+                    </span>
+                    <span className="text-white">
+                      At least one special character
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Keep the modal in the DOM, but toggle its visibility classes */}
       </div>
     </div>
   );
