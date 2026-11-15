@@ -2,14 +2,17 @@ import { Link } from "react-router-dom";
 
 function Privacy() {
   return (
-    <main className="min-h-screen bg-[#1E1E1E] px-4 py-10 text-white sm:px-8">
+    <main className="realative min-h-screen bg-linear-to-b from-[#048553] to-[#0E0019]/96 to-20% px-4 py-10 text-white sm:px-8">
       <article className="mx-auto max-w-4xl rounded-2xl border border-white/15 bg-white/5 p-6 shadow-xl sm:p-10">
         <header className="mb-8 border-b border-white/15 pb-6">
           <Link
             to="/"
-            className="mb-6 inline-block text-sm text-emerald-300 underline underline-offset-4 hover:text-emerald-200"
+            className="md:absolute mb-5 left-10 top-10 group z-10 items-center text-white gap-1 inline-flex cursor-pointer"
           >
-            Back
+            <i className="fa-solid fa-chevron-left text-[14px] transition-transform group-hover:-translate-x-1 group-focus:-translate-x-1" />
+            <span className="font-['Rajdhani'] font-normal text-[16px] leading-5 text-white">
+              Back
+            </span>
           </Link>
           <h1 className="text-3xl font-bold sm:text-4xl">Privacy Policy</h1>
           <p className="mt-3 text-sm text-white/65">
@@ -61,25 +64,25 @@ function Privacy() {
                 <strong>Scheme and account records:</strong> scheme names,
                 monthly contributions, starting balances, and scheme dates are
                 stored with your account in Supabase. Email registration also
-                creates a basic member profile containing your account ID,
-                name, status, paid total, and default scheme.
+                creates a basic member profile containing your account ID, name,
+                status, paid total, and default scheme.
               </li>
               <li>
                 <strong>Information entered in dashboard features:</strong> the
                 application provides fields for member names, contributions,
-                expenses, payment amounts, dates, methods, and descriptions.
-                In the current application, most of this dashboard information
-                is held in the browser&apos;s active app state and is not
-                uploaded to Supabase by the application. It may be lost when
-                the page is refreshed or the session ends; do not rely on it as
-                a cloud backup.
+                expenses, payment amounts, dates, methods, and descriptions. In
+                the current application, most of this dashboard information is
+                held in the browser&apos;s active app state and is not uploaded
+                to Supabase by the application. It may be lost when the page is
+                refreshed or the session ends; do not rely on it as a cloud
+                backup.
               </li>
               <li>
                 <strong>Browser storage:</strong> Supabase Auth stores session
-                information in your browser to keep you signed in. If you
-                select &quot;Remember me,&quot; your email address is saved in
-                local browser storage on that device until you remove it or
-                clear the browser&apos;s site data.
+                information in your browser to keep you signed in. If you select
+                &quot;Remember me,&quot; your email address is saved in local
+                browser storage on that device until you remove it or clear the
+                browser&apos;s site data.
               </li>
               <li>
                 <strong>Technical information:</strong> Google, Supabase, and
@@ -100,7 +103,9 @@ function Privacy() {
               <li>create and secure your account and authenticate sign-ins;</li>
               <li>display your account profile and scheme records;</li>
               <li>provide the scheme-management features you request;</li>
-              <li>respond to support requests and service-related questions;</li>
+              <li>
+                respond to support requests and service-related questions;
+              </li>
               <li>maintain, protect, and troubleshoot the application; and</li>
               <li>meet applicable legal obligations and protect our rights.</li>
             </ul>
@@ -112,14 +117,13 @@ function Privacy() {
             </h2>
             <p>
               Google user data is used only for account authentication and
-              related account features described in this policy. We do not
-              sell Google user data, use it for advertising, or use it to build
-              advertising profiles. We do not disclose it except to the
-              services needed to authenticate and operate your account, when
-              you direct us to, or when disclosure is required by law. You can
-              revoke Scheme Manager&apos;s Google account access in your Google
-              Account settings. Google&apos;s handling of its information is
-              governed by{" "}
+              related account features described in this policy. We do not sell
+              Google user data, use it for advertising, or use it to build
+              advertising profiles. We do not disclose it except to the services
+              needed to authenticate and operate your account, when you direct
+              us to, or when disclosure is required by law. You can revoke
+              Scheme Manager&apos;s Google account access in your Google Account
+              settings. Google&apos;s handling of its information is governed by{" "}
               <a
                 className="text-emerald-300 underline"
                 href="https://policies.google.com/privacy"
@@ -137,8 +141,8 @@ function Privacy() {
               How information is shared
             </h2>
             <p>
-              We do not sell personal information. We share information only
-              as needed with:
+              We do not sell personal information. We share information only as
+              needed with:
             </p>
             <ul className="mt-2 list-disc space-y-2 pl-6">
               <li>
@@ -227,12 +231,12 @@ function Privacy() {
               Privacy rights and changes
             </h2>
             <p>
-              Depending on applicable law, you may have rights to request
-              access to, correction of, or deletion of your personal
-              information, or to object to or restrict certain processing.
-              South African users may also contact the Information Regulator.
-              We may update this policy as the service changes. The revised
-              policy will be posted on this page with an updated date.
+              Depending on applicable law, you may have rights to request access
+              to, correction of, or deletion of your personal information, or to
+              object to or restrict certain processing. South African users may
+              also contact the Information Regulator. We may update this policy
+              as the service changes. The revised policy will be posted on this
+              page with an updated date.
             </p>
           </section>
 
@@ -243,10 +247,7 @@ function Privacy() {
             <p>
               For privacy questions or requests, contact Scheme Manager Pro
               (Pty) Ltd at{" "}
-              <a
-                className="text-emerald-300 underline"
-                href="tel:+27811225153"
-              >
+              <a className="text-emerald-300 underline" href="tel:+27811225153">
                 +27 73 542 4498
               </a>
               .
@@ -254,6 +255,12 @@ function Privacy() {
           </section>
         </div>
       </article>
+      <div className="mt-15 mb-7 flex flex-col justify-center items-center w-full">
+        <p className=" text-center font-['Rajdhani'] font-normal text-xs leading-3.75 text-white">
+          Powered by Scheme Manager Pro® <br />
+          ©Copyright 2026 Scheme Manager pro (PTY) Ltd.
+        </p>
+      </div>
     </main>
   );
 }

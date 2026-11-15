@@ -151,24 +151,26 @@ function HomeMobileMenu({ isOpen, onClose }) {
                 <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
               </li>
             </Link>
-
-            <li
-              onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
-            >
-              <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
-              <span>FAQ</span>
-              <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
-            </li>
-
-            <li
-              onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
-            >
-              <i className="fa-solid fa-tags w-5 text-center text-white/80"></i>
-              <span>Pricing</span>
-              <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
-            </li>
+            <Link to={"/FAQ"}>
+              <li
+                onClick={handleClose}
+                className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
+              >
+                <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
+                <span>FAQ</span>
+                <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
+              </li>
+            </Link>
+            <Link to={"/Pricing"}>
+              <li
+                onClick={handleClose}
+                className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
+              >
+                <i className="fa-solid fa-tags w-5 text-center text-white/80"></i>
+                <span>Pricing</span>
+                <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
+              </li>
+            </Link>
 
             <li
               onClick={handleClose}
@@ -187,14 +189,16 @@ function HomeMobileMenu({ isOpen, onClose }) {
               <span>Payments</span>
               <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
             </li>
-            <li
-              onClick={handleClose}
-              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
-            >
-              <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
-              <span>Help</span>
-              <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
-            </li>
+            <Link to={"/Help"}>
+              <li
+                onClick={handleClose}
+                className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
+              >
+                <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
+                <span>Help</span>
+                <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
+              </li>
+            </Link>
           </ul>
         </div>
       </div>

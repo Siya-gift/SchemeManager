@@ -25,6 +25,9 @@ import HomePage from "./components/HomePage.jsx";
 import UpdatePassword from "./components/UpdatePassword.jsx";
 import Privacy from "./components/Privacy.jsx";
 import Terms_and_Conditions from "./components/Terms_and_Conditions.jsx";
+import Pricing from "./components/Pricing.jsx";
+import Help from "./components/Help.jsx";
+import Faq from "./components/Faq.jsx";
 
 //components
 import SideBar from "./components/SideBar.jsx";
@@ -1931,6 +1934,36 @@ function App() {
               <div className="min-h-screen bg-[#1E1E1E]" />
             ) : (
               <UpdatePassword />
+            )
+          }
+        />
+        <Route
+          path="/Pricing"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : (
+              <Pricing />
+            )
+          }
+        />
+        <Route
+          path="/Help"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : (
+              <Help />
+            )
+          }
+        />
+        <Route
+          path="/FAQ"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : (
+              <Faq />
             )
           }
         />

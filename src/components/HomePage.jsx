@@ -269,27 +269,35 @@ function HomePage() {
                     </button>
                   </li>
                 </Link>
+                <Link to={"FAQ"}>
+                  <li>
+                    <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                      FAQ
+                    </button>
+                  </li>
+                </Link>
 
-                <li>
-                  <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                    FAQ
-                  </button>
-                </li>
-                <li>
-                  <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                    Pricing
-                  </button>
-                </li>
+                <Link to={"/Pricing"}>
+                  <li>
+                    <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                      Pricing
+                    </button>
+                  </li>
+                </Link>
+
                 <li>
                   <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
                     About us
                   </button>
                 </li>
-                <li>
-                  <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                    Contact
-                  </button>
-                </li>
+                <Link to={"/Help"}>
+                  <li>
+                    <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                      Help
+                    </button>
+                  </li>
+                </Link>
+
                 <Link
                   to={verifiedUser ? "/Dashboard" : "/Signin"}
                   onClick={handleGoogleUserVerified}
@@ -1577,24 +1585,22 @@ function HomePage() {
                         <li className="font-['Raleway'] font-thin text-[11px]  text-white">
                           About us
                         </li>
+                        <Link to={"https://tawk.to/chat/6af8d12f594d653c431702de/1k7dv29b4?layout=modern"}>
                         <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          Contacts
+                          Ask AI
                         </li>
-                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          Facebook
-                        </li>
-                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          Instagram
-                        </li>
-                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          WhatsApp
-                        </li>
-                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          Tiktok
-                        </li>
-                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          Blogs
-                        </li>
+                        </Link>
+                        
+                        <Link to={"/FAQ"}>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                            FAQ
+                          </li>
+                        </Link>
+                        <Link to={"/Pricing"}>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                            Pricing
+                          </li>
+                        </Link>
                       </ul>
                     </div>
                     <div className="flex flex-col">
@@ -1602,9 +1608,12 @@ function HomePage() {
                         Terms & Conditions
                       </h3>
                       <ul className="flex flex-col gap-1.5 list-disc pl-5 marker:text-white ">
-                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          Terms and Conditions
-                        </li>
+                        <Link to={"/Terms_and_Conditions"}>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                            Terms and Conditions
+                          </li>
+                        </Link>
+
                         <li className="font-['Raleway'] font-thin text-[11px]  text-white">
                           Legal
                         </li>
@@ -1693,15 +1702,25 @@ function HomePage() {
                           <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
                             About us
                           </li>
-                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
-                            Ask AI
-                          </li>
-                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
-                            FAQ
-                          </li>
-                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
-                            Pricing
-                          </li>
+                          <Link
+                            to={
+                              "https://tawk.to/chat/6af8d12f594d653c431702de/1k7dv29b4?layout=modern"
+                            }
+                          >
+                            <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                              Ask AI
+                            </li>
+                          </Link>
+                          <Link to={"/FAQ"}>
+                            <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                              FAQ
+                            </li>
+                          </Link>
+                          <Link to={"/Pricing"}>
+                            <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                              Pricing
+                            </li>
+                          </Link>
                         </ul>
                       </div>
                       <div className="flex flex-col">
@@ -1709,9 +1728,12 @@ function HomePage() {
                           Terms & Conditions
                         </h3>
                         <ul className="flex flex-col gap-1.5 list-disc pl-5 marker:text-white ">
-                          <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
-                            Terms and Conditions
-                          </li>
+                          <Link to={"Terms_and_Conditions"}>
+                            <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
+                              Terms and Conditions
+                            </li>
+                          </Link>
+
                           <li className="font-['Raleway'] font-thin text-[11px]  text-white nav_link cursor-pointer focus:text-white/80 w-fit">
                             Legal
                           </li>
