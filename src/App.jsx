@@ -28,6 +28,8 @@ import Terms_and_Conditions from "./components/Terms_and_Conditions.jsx";
 import Pricing from "./components/Pricing.jsx";
 import Help from "./components/Help.jsx";
 import Faq from "./components/Faq.jsx";
+import About_us from "./components/About_us.jsx";
+import Payments from "./components/Payments.jsx";
 
 //components
 import SideBar from "./components/SideBar.jsx";
@@ -1964,6 +1966,26 @@ function App() {
               <div className="min-h-screen bg-[#1E1E1E]" />
             ) : (
               <Faq />
+            )
+          }
+        />
+        <Route
+          path="/About_us"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : (
+              <About_us />
+            )
+          }
+        />
+        <Route
+          path="/Payments"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : (
+              <Payments />
             )
           }
         />

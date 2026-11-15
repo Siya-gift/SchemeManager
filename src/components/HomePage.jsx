@@ -1582,15 +1582,21 @@ function HomePage() {
                         Quick links
                       </h3>
                       <ul className="flex flex-col gap-1.5 list-disc pl-5 marker:text-white">
-                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          About us
-                        </li>
-                        <Link to={"https://tawk.to/chat/6af8d12f594d653c431702de/1k7dv29b4?layout=modern"}>
-                        <li className="font-['Raleway'] font-thin text-[11px]  text-white">
-                          Ask AI
-                        </li>
+                        <Link to={"/About_us"}>
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                            About us
+                          </li>
                         </Link>
-                        
+                        <Link
+                          to={
+                            "https://tawk.to/chat/6af8d12f594d653c431702de/1k7dv29b4?layout=modern"
+                          }
+                        >
+                          <li className="font-['Raleway'] font-thin text-[11px]  text-white">
+                            Ask AI
+                          </li>
+                        </Link>
+
                         <Link to={"/FAQ"}>
                           <li className="font-['Raleway'] font-thin text-[11px]  text-white">
                             FAQ
