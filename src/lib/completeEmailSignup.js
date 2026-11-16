@@ -51,17 +51,33 @@ async function provisionUserSignup(user) {
     }
   }
 
-  // 3. Unconditionally insert a "clubs" scheme (creates a duplicate on every run)
-  const { error } = await supabase.from("members_schemes").insert({
-    user_id: user.id,
-    scheme: "clubs",
-    monthly_contribution: 0,
-    starting_bal: 0,
-    created_at: new Date().toISOString(),
-  });
+  // 3. Check if the default "clubs" scheme already exists
+  const { data: schemes, error: schemeLookupError } = await supabase
+    .from("members_schemes")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .eq("scheme", "clubs")
+    .limit(1);
 
-  if (error) {
-    throw new Error(`Could not set up the default scheme: ${error.message}`);
+  if (schemeLookupError) {
+    throw new Error(
+      `Could not check the default scheme: ${schemeLookupError.message}`,
+    );
+  }
+
+  // 4. Create the default "clubs" scheme if missing
+  if (!schemes || schemes.length === 0) {
+    const { error } = await supabase.from("members_schemes").insert({
+      user_id: user.id,
+      scheme: "clubs",
+      monthly_contribution: 0,
+      starting_bal: 0,
+      created_at: new Date().toISOString(),
+    });
+
+    if (error && error.code !== "23505") {
+      throw new Error(`Could not set up the default scheme: ${error.message}`);
+    }
   }
 
   return "clubs";
@@ -84,19 +100,30 @@ export function completeUserSignup(
 ) {
   if (!user?.id) return Promise.resolve();
 
-  const completion = provisionUserSignup(user).then((schemeName) => {
-    if (schemeName && setSchemeSelectedState && setSelectedSchemeName) {
-      schemeSelected(
-        0,
-        schemeName,
-        setSchemeSelectedState,
-        setSelectedSchemeName,
-      );
-    }
-  });
+  const pendingCompletion = pendingCompletions.get(user.id);
+  if (pendingCompletion) return pendingCompletion;
 
+  const completion = provisionUserSignup(user)
+    .then((schemeName) => {
+      if (schemeName && setSchemeSelectedState && setSelectedSchemeName) {
+        schemeSelected(
+          0,
+          schemeName,
+          setSchemeSelectedState,
+          setSelectedSchemeName,
+        );
+      }
+    })
+    .finally(() => {
+      pendingCompletions.delete(user.id);
+    });
+
+  pendingCompletions.set(user.id, completion);
   return completion;
 }
+
+
+
 
 // Optional alias if other files still import the old name
 export const completeEmailSignup = completeUserSignup;
