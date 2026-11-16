@@ -95,5 +95,17 @@ export function completeUserSignup(user) {
   return completion;
 }
 
+const schemes = await completeUserSignup(session.user);
+
+if (schemes.length > 0) {
+  // Find the index of "clubs", or default to 0 if not found
+  const foundIndex = schemes.findIndex((s) => s.scheme === "clubs");
+  const idx = foundIndex !== -1 ? foundIndex : 0; // Guaranteed integer (0, 1, 2...)
+  const scheme = schemes[idx];
+
+  schemeSelected(idx, scheme.scheme);
+}
+
+
 // Optional alias if other files still import the old name
 export const completeEmailSignup = completeUserSignup;
