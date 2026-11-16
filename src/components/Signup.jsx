@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import SignGoogleBtn from "./SignGoogleBtn.jsx";
 import { completeEmailSignup } from "../lib/completeEmailSignup.js";
 
-function Signup() {
+function Signup({ setSchemeSelectedState, setSelectedSchemeName }) {
   const btnSignup = "Sign up";
   const navigate = useNavigate();
 
@@ -105,7 +105,11 @@ function Signup() {
       }
 
       if (data.session && data.user) {
-        await completeEmailSignup(data.user);
+        await completeEmailSignup(
+          data.user,
+          setSchemeSelectedState,
+          setSelectedSchemeName,
+        );
       }
 
       if (data.session) {

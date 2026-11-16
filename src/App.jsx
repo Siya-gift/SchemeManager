@@ -45,7 +45,10 @@ import HomeMobileMenu from "./components/HomeMobileMenu.jsx";
 import Signup from "./components/Signup.jsx";
 import Signin from "./components/Signin.jsx";
 import { supabase } from "./lib/supabaseClient.js";
-import { completeEmailSignup } from "./lib/completeEmailSignup.js";
+import {
+  completeEmailSignup,
+  schemeSelected as selectScheme,
+} from "./lib/completeEmailSignup.js";
 
 // gsap
 gsap.registerPlugin(Draggable);
@@ -383,8 +386,12 @@ function App() {
   });
 
   const schemeSelected = (idx, schemeName) => {
-    setSchemeSelectedState(idx);
-    setSelectedSchemeName(schemeName);
+    selectScheme(
+      idx,
+      schemeName,
+      setSchemeSelectedState,
+      setSelectedSchemeName,
+    );
   };
 
   //OKRs
@@ -1830,7 +1837,11 @@ function App() {
             }
 
             if (verifiedUser?.id === session.user.id) {
-              await completeEmailSignup(verifiedUser);
+              await completeEmailSignup(
+                verifiedUser,
+                setSchemeSelectedState,
+                setSelectedSchemeName,
+              );
             }
           } catch (error) {
             console.error("Could not complete the verified signup:", error);
@@ -1904,7 +1915,11 @@ function App() {
           if (verifiedUser?.id !== session.user.id) return;
 
           if (verifiedUser.email_confirmed_at) {
-            completeEmailSignup(verifiedUser).catch((profileError) => {
+            completeEmailSignup(
+              verifiedUser,
+              setSchemeSelectedState,
+              setSelectedSchemeName,
+            ).catch((profileError) => {
               console.error(
                 "Could not complete the verified signup:",
                 profileError,
@@ -1980,7 +1995,10 @@ function App() {
             ) : user ? (
               <Navigate to="/Dashboard" replace />
             ) : (
-              <Signup />
+              <Signup
+                setSchemeSelectedState={setSchemeSelectedState}
+                setSelectedSchemeName={setSelectedSchemeName}
+              />
             )
           }
         />

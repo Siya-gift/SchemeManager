@@ -13,7 +13,7 @@ async function provisionUserSignup(user) {
     !user.email_confirmed_at ||
     (!isEmailSignup && !isGoogleSignup)
   ) {
-    return;
+    return null;
   }
 
   // 1. Check if the member profile already exists
@@ -79,32 +79,50 @@ async function provisionUserSignup(user) {
       throw new Error(`Could not set up the default scheme: ${error.message}`);
     }
   }
+
+  return "clubs";
 }
 
-export function completeUserSignup(user) {
+export function schemeSelected(
+  idx,
+  schemeName,
+  setSchemeSelectedState,
+  setSelectedSchemeName,
+) {
+  setSchemeSelectedState(idx);
+  setSelectedSchemeName(schemeName);
+}
+
+export function completeUserSignup(
+  user,
+  setSchemeSelectedState,
+  setSelectedSchemeName,
+) {
   if (!user?.id) return Promise.resolve();
 
   const pendingCompletion = pendingCompletions.get(user.id);
   if (pendingCompletion) return pendingCompletion;
 
-  const completion = provisionUserSignup(user).finally(() => {
-    pendingCompletions.delete(user.id);
-  });
+  const completion = provisionUserSignup(user)
+    .then((schemeName) => {
+      if (schemeName && setSchemeSelectedState && setSelectedSchemeName) {
+        schemeSelected(
+          0,
+          schemeName,
+          setSchemeSelectedState,
+          setSelectedSchemeName,
+        );
+      }
+    })
+    .finally(() => {
+      pendingCompletions.delete(user.id);
+    });
 
   pendingCompletions.set(user.id, completion);
   return completion;
 }
 
-const schemes = await completeUserSignup(session.user);
 
-if (schemes.length > 0) {
-  // Find the index of "clubs", or default to 0 if not found
-  const foundIndex = schemes.findIndex((s) => s.scheme === "clubs");
-  const idx = foundIndex !== -1 ? foundIndex : 0; // Guaranteed integer (0, 1, 2...)
-  const scheme = schemes[idx];
-
-  schemeSelected(idx, scheme.scheme);
-}
 
 
 // Optional alias if other files still import the old name
