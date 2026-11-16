@@ -2,15 +2,21 @@ import { supabase } from "./supabaseClient.js";
 
 const pendingCompletions = new Map();
 
-async function provisionEmailSignup(user) {
+async function provisionUserSignup(user) {
+  const isEmailSignup =
+    user?.user_metadata?.registration_source === "email_signup";
+  const isGoogleSignup = user?.app_metadata?.provider === "google";
+
+  // Exit if user isn't confirmed or isn't from a supported signup flow
   if (
     !user?.id ||
     !user.email_confirmed_at ||
-    user.user_metadata?.registration_source !== "email_signup"
+    (!isEmailSignup && !isGoogleSignup)
   ) {
     return;
   }
 
+  // 1. Check if the member profile already exists
   const { data: member, error: memberLookupError } = await supabase
     .from("Members")
     .select("id")
@@ -23,14 +29,21 @@ async function provisionEmailSignup(user) {
     );
   }
 
+  // 2. Create the member profile if missing
   if (!member) {
+    const memberName =
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      user.email?.split("@")[0] ||
+      "Member";
+
     const { error } = await supabase.from("Members").insert({
       id: user.id,
-      member_name:
-        user.user_metadata.name || user.email?.split("@")[0] || "Member",
+      member_name: memberName,
       tot_paid: "0.00",
       status: "Pending",
       scheme_name: ["clubs"],
+      plan_type: "Premium",
     });
 
     if (error && error.code !== "23505") {
@@ -38,6 +51,7 @@ async function provisionEmailSignup(user) {
     }
   }
 
+  // 3. Check if the default "clubs" scheme already exists
   const { data: schemes, error: schemeLookupError } = await supabase
     .from("members_schemes")
     .select("user_id")
@@ -51,7 +65,8 @@ async function provisionEmailSignup(user) {
     );
   }
 
-  if (schemes.length === 0) {
+  // 4. Create the default "clubs" scheme if missing
+  if (!schemes || schemes.length === 0) {
     const { error } = await supabase.from("members_schemes").insert({
       user_id: user.id,
       scheme: "clubs",
@@ -61,22 +76,24 @@ async function provisionEmailSignup(user) {
     });
 
     if (error && error.code !== "23505") {
-      throw new Error(
-        `Could not set up the default scheme: ${error.message}`,
-      );
+      throw new Error(`Could not set up the default scheme: ${error.message}`);
     }
   }
 }
 
-export function completeEmailSignup(user) {
+export function completeUserSignup(user) {
   if (!user?.id) return Promise.resolve();
 
   const pendingCompletion = pendingCompletions.get(user.id);
   if (pendingCompletion) return pendingCompletion;
 
-  const completion = provisionEmailSignup(user).finally(() => {
+  const completion = provisionUserSignup(user).finally(() => {
     pendingCompletions.delete(user.id);
   });
+
   pendingCompletions.set(user.id, completion);
   return completion;
 }
+
+// Optional alias if other files still import the old name
+export const completeEmailSignup = completeUserSignup;

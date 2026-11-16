@@ -24,6 +24,7 @@ function Signup() {
 
   const [strengthScore, setStrengthScore] = useState(0);
   const [passInfoModal, setpassInfoModal] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -129,8 +130,6 @@ function Signup() {
     }
   };
 
-  const [error, setError] = useState("");
-
   const handleGoogleSignup = async () => {
     setError("");
     setLoading(true);
@@ -154,7 +153,7 @@ function Signup() {
           : "Could not start Google registration. Please try again.";
       setError(message);
       console.log(message);
-      
+
       toast.error(message);
     } finally {
       setLoading(false);
