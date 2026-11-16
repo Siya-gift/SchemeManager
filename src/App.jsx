@@ -1610,6 +1610,14 @@ function App() {
 
     async function fetchUserSchemesData() {
       try {
+        await completeEmailSignup(
+          user,
+          setSchemeSelectedState,
+          setSelectedSchemeName,
+        );
+
+        if (!isActive) return;
+
         const { data, error } = await supabase
           .from("members_schemes")
           .select("*")
@@ -1677,7 +1685,7 @@ function App() {
         supabase.removeChannel(schemeSubscription);
       }
     };
-  }, [user?.id]);
+  }, [user]);
 
   const dashboardProps = {
     isOpen,
