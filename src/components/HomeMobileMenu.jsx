@@ -198,7 +198,7 @@ function HomeMobileMenu({ isOpen, onClose }) {
                 className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
               >
                 <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
-                <span>Help</span>
+                <span>Help Center</span>
                 <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
               </li>
             </Link>

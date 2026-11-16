@@ -196,6 +196,18 @@ function Settings({
                 </label>
               </div>
             </div>
+            <Link to={'/Help'}>
+            <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
+              <div className="flex flex-row items-center justify-between w-full">
+                <div className="flex items-center gap-3">
+                  <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
+                  <p className="font-medium">Help Center</p>
+                </div>
+                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
+              </div>
+            </div>
+            </Link>
+            
           </div>
 
           {/* Secure */}

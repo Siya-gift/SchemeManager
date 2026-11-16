@@ -59,6 +59,7 @@ import arrowD from "../images/arrowD.svg";
 import arrowU from "../images/arrowU.svg";
 import CheckMark from "../images/CheckMark.svg";
 import pcPlanTitle from "../images/pcPlanTitle.svg";
+import magic_wood from "../images/magic_wood.svg";
 import { supabase } from "../lib/supabaseClient";
 
 import { Link } from "react-router-dom";
@@ -263,9 +264,11 @@ function HomePage() {
                     "https://tawk.to/chat/6af8d12f594d653c431702de/1k7dv29b4?layout=modern"
                   }
                 >
-                  <li>
-                    <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                      Ask AI
+                  <li className="">
+                    
+                    <button className="flex items-center gap-3 text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                      <img className="h-4" src={magic_wood} alt="AI" />
+                      <span>Ask AI</span>
                     </button>
                   </li>
                 </Link>
@@ -284,16 +287,18 @@ function HomePage() {
                     </button>
                   </li>
                 </Link>
+                <Link to={"/About_us"}>
+                  <li>
+                    <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
+                      About us
+                    </button>
+                  </li>
+                </Link>
 
-                <li>
-                  <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                    About us
-                  </button>
-                </li>
                 <Link to={"/Help"}>
                   <li>
                     <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
-                      Help
+                      Help Center
                     </button>
                   </li>
                 </Link>
