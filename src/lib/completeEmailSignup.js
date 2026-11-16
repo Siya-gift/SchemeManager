@@ -7,7 +7,6 @@ async function provisionUserSignup(user) {
     user?.user_metadata?.registration_source === "email_signup";
   const isGoogleSignup = user?.app_metadata?.provider === "google";
 
-  // Exit if user isn't confirmed or isn't from a supported signup flow
   if (
     !user?.id ||
     !user.email_confirmed_at ||
@@ -16,68 +15,47 @@ async function provisionUserSignup(user) {
     return null;
   }
 
-  // 1. Check if the member profile already exists
-  const { data: member, error: memberLookupError } = await supabase
+  const memberName =
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    user.email?.split("@")[0] ||
+    "Member";
+
+  // 1. Create the member profile if it doesn't exist (no SELECT needed)
+  const { error: memberError } = await supabase
     .from("Members")
-    .select("id")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (memberLookupError) {
-    throw new Error(
-      `Could not check the member profile: ${memberLookupError.message}`,
+    .upsert(
+      {
+        id: user.id,
+        member_name: memberName,
+        tot_paid: "0.00",
+        status: "Pending",
+        scheme_name: ["clubs"],
+        plan_type: "Premium",
+      },
+      { onConflict: "id", ignoreDuplicates: true }
     );
+
+  if (memberError) {
+    throw new Error(`Could not save the member profile: ${memberError.message}`);
   }
 
-  // 2. Create the member profile if missing
-  if (!member) {
-    const memberName =
-      user.user_metadata?.full_name ||
-      user.user_metadata?.name ||
-      user.email?.split("@")[0] ||
-      "Member";
-
-    const { error } = await supabase.from("Members").insert({
-      id: user.id,
-      member_name: memberName,
-      tot_paid: "0.00",
-      status: "Pending",
-      scheme_name: ["clubs"],
-      plan_type: "Premium",
-    });
-
-    if (error && error.code !== "23505") {
-      throw new Error(`Could not save the member profile: ${error.message}`);
-    }
-  }
-
-  // 3. Check if the default "clubs" scheme already exists
-  const { data: schemes, error: schemeLookupError } = await supabase
+  // 2. Create the default "clubs" scheme directly (ignores if already exists)
+  const { error: schemeError } = await supabase
     .from("members_schemes")
-    .select("user_id")
-    .eq("user_id", user.id)
-    .eq("scheme", "clubs")
-    .limit(1);
-
-  if (schemeLookupError) {
-    throw new Error(
-      `Could not check the default scheme: ${schemeLookupError.message}`,
+    .upsert(
+      {
+        user_id: user.id,
+        scheme: "clubs",
+        monthly_contribution: 0,
+        starting_bal: 0,
+        created_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id,scheme", ignoreDuplicates: true }
     );
-  }
 
-  // 4. Create the default "clubs" scheme if missing
-  if (!schemes || schemes.length === 0) {
-    const { error } = await supabase.from("members_schemes").insert({
-      user_id: user.id,
-      scheme: "clubs",
-      monthly_contribution: 0,
-      starting_bal: 0,
-      created_at: new Date().toISOString(),
-    });
-
-    if (error && error.code !== "23505") {
-      throw new Error(`Could not set up the default scheme: ${error.message}`);
-    }
+  if (schemeError) {
+    throw new Error(`Could not set up the default scheme: ${schemeError.message}`);
   }
 
   return "clubs";
