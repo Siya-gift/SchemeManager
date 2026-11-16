@@ -457,7 +457,7 @@ function Settings({
                   </ul>
                 </div>
                 <textarea
-                  className="mt-6 p-4 border-0 outline-0 text-[#575757] bg-white/60 rounded-2xl glass-scroll"
+                  className="w-full mt-6 p-4 border-0 outline-0 text-[#575757] bg-white/60 rounded-2xl glass-scroll"
                   placeholder="Description...(Optional)"
                   cols="30"
                   value={description}
