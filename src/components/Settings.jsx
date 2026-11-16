@@ -422,7 +422,7 @@ function Settings({
               <div className="flex flex-col justify-center items-center w-full text-white mb-4 p-10">
                 <h1 className="text-2xl">How was your experience?</h1>
                 <div className="mt-6">
-                  <ul className="flex gap-5">
+                  <ul className="flex gap-8">
                     {rateScores.map((score) => {
                       const isSelected = selectedScore === score.text;
                       const isDimmed = selectedScore !== null && !isSelected;
