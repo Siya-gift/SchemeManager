@@ -1,6 +1,7 @@
 import { supabase } from "./supabaseClient.js";
 
 const pendingCompletions = new Map();
+const completedCompletions = new Set();
 
 async function provisionUserSignup(user) {
   const isEmailSignup =
@@ -100,18 +101,18 @@ export function completeUserSignup(
 ) {
   if (!user?.id) return Promise.resolve();
 
+  if (completedCompletions.has(user.id)) return Promise.resolve();
+
   const pendingCompletion = pendingCompletions.get(user.id);
   if (pendingCompletion) return pendingCompletion;
 
   const completion = provisionUserSignup(user)
     .then((schemeName) => {
-      if (schemeName && setSchemeSelectedState && setSelectedSchemeName) {
-        schemeSelected(
-          0,
-          schemeName,
-          setSchemeSelectedState,
-          setSelectedSchemeName,
-        );
+      if (!schemeName) return;
+
+      completedCompletions.add(user.id);
+      if (setSchemeSelectedState && setSelectedSchemeName) {
+        schemeSelected(0, schemeName, setSchemeSelectedState, setSelectedSchemeName);
       }
     })
     .finally(() => {
