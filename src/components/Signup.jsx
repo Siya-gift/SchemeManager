@@ -104,14 +104,6 @@ function Signup({ setSchemeSelectedState, setSelectedSchemeName }) {
         return;
       }
 
-      if (data.session && data.user) {
-        await completeEmailSignup(
-          data.user,
-          setSchemeSelectedState,
-          setSelectedSchemeName,
-        );
-      }
-
       if (data.session) {
         toast.success("Account created! Redirecting...");
         navigate("/Dashboard");
