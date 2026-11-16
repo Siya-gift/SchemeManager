@@ -1,14 +1,15 @@
 import RestoreButton from "./UploadJsonData.jsx";
 import { supabase } from "../lib/supabaseClient.js";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import ShareButton from "./ShareButton.jsx";
 
 function Settings({
   toggleState,
   toggleMobileState,
   settoggleMobileState,
   setToggleState,
-  activeTab
+  activeTab,
 }) {
   const navigate = useNavigate();
 
@@ -95,33 +96,31 @@ function Settings({
               </div>
             </div>
 
-            <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
-              <div className="flex flex-row items-center justify-between w-full">
-                <div className="flex items-center gap-3">
-                  <i className="fa-solid fa-share-nodes"></i>
-                  <p className="font-medium">Share App</p>
+            <ShareButton />
+            <Link to={"/Privacy"}>
+              <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
+                <div className="flex flex-row items-center justify-between w-full">
+                  <div className="flex items-center gap-3">
+                    <i className="fa-solid fa-shield-halved"></i>
+                    <p className="font-medium">Privacy Policy</p>
+                  </div>
+                  <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
                 </div>
-                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
               </div>
-            </div>
-            <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
-              <div className="flex flex-row items-center justify-between w-full">
-                <div className="flex items-center gap-3">
-                  <i className="fa-solid fa-shield-halved"></i>
-                  <p className="font-medium">Privacy Policy</p>
+            </Link>
+
+            <Link to={"/Terms_and_Conditions"}>
+              <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
+                <div className="flex flex-row items-center justify-between w-full">
+                  <div className="flex items-center gap-3">
+                    <i className="fa-solid fa-file-contract"></i>
+                    <p className="font-medium">Terms & Conditions</p>
+                  </div>
+                  <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
                 </div>
-                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
               </div>
-            </div>
-            <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
-              <div className="flex flex-row items-center justify-between w-full">
-                <div className="flex items-center gap-3">
-                  <i className="fa-solid fa-file-contract"></i>
-                  <p className="font-medium">Terms & Conditions</p>
-                </div>
-                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
-              </div>
-            </div>
+            </Link>
+
             <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">

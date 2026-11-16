@@ -191,6 +191,12 @@ function Signup({ setSchemeSelectedState, setSelectedSchemeName }) {
   const passwordsMismatch =
     confirmPassword.length > 0 && password !== confirmPassword;
 
+  // toggle based on whether password has input or modal is focused
+  const progressBarOpacity =
+    password.length > 0
+      ? "before:opacity-100 after:opacity-100"
+      : "before:opacity-0 after:opacity-0";
+
   return (
     <div className="bg-[#1E1E1E]">
       <div className="relative flex justify-center items-center min-h-208 md:h-300 w-screen md:w-full bg-[conic-gradient(from_90deg_at_50%_50%,rgba(3,104,255,0.2)_-29.42deg,rgba(0,255,157,0.3)_122.88deg,rgba(3,104,255,0.2)_330.58deg,rgba(0,255,157,0.3)_482.88deg)]">
@@ -272,7 +278,10 @@ function Signup({ setSchemeSelectedState, setSelectedSchemeName }) {
                 Password
               </label>
               <div
-                className={`relative pb-3 before:absolute before:bottom-0 before:left-0 before:h-2 before:w-full before:rounded-full before:bg-white after:absolute after:bottom-0 after:left-0 after:h-2 after:rounded-full after:bg-linear-to-r after:from-[#3bdd9f]/60 after:to-[#411066]/50 after:transition-all after:duration-300 ${STRENGTH_WIDTHS[strengthScore]}`}
+                className={`relative pb-3 
+                before:absolute before:bottom-0 before:left-0 before:h-2 before:w-full before:rounded-full before:bg-white before:transition-opacity before:duration-300 
+                after:absolute after:bottom-0 after:left-0 after:h-2 after:rounded-full after:bg-linear-to-r after:from-[#3bdd9f]/60 after:to-[#411066]/50 after:transition-all after:duration-300 
+                ${progressBarOpacity} ${STRENGTH_WIDTHS[strengthScore]}`}
               >
                 <input
                   type="password"
@@ -347,7 +356,7 @@ function Signup({ setSchemeSelectedState, setSelectedSchemeName }) {
         </div>
         {passInfoModal && (
           <div
-            className={`fixed left-1/2 -translate-x-1/2 transition-all duration-300 ease-in-out mx-auto w-90 p-10 z-9999 border glass text-white ${
+            className={`fixed left-1/2 -translate-x-1/2 transition-all duration-300 ease-in-out mx-auto w-90 p-10 z-9999 border border-white/15 bg-gray-700 rounded-4xl shadow-xl text-white ${
               passInfoModal
                 ? "top-5 opacity-100 scale-100 pointer-events-auto"
                 : "-top-96 opacity-0 scale-95 pointer-events-none"
