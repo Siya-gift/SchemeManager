@@ -138,7 +138,7 @@ function MobileMenu({ isOpen, setIsOpen, toggleMenu, toggleMobileState, settoggl
                             setIsOpen(false)
                         }}
                         className={`relative flex items-center text-white gap-3 p-3 font-light
-                        ${toggleMobileState === 6 ? "bg-white/30 tab-leg" : ""}`}>
+                        ${toggleMobileState === 6 || toggleMobileState === 0 ? "bg-white/30 tab-leg" : ""}`}>
                         <i className="fa-solid fa-gear"></i>Settings
                     </li>
                 </ul>

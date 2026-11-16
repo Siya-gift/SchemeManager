@@ -227,7 +227,7 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
             className={`flex cursor-pointer items-center rounded-lg border p-3 text-white transition hover:bg-white/20 ${
               uistate ? "justify-center" : "gap-2"
             } bg-white/10
-                    ${toggleState === 6 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"}`}
+                    ${toggleState === 6 || toggleState === 0 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"}`}
           >
             <i className="fa-solid fa-gear"></i>
             <p className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}>

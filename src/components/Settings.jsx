@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabaseClient.js";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import ShareButton from "./ShareButton.jsx";
+import { useEffect, useState } from "react";
 
 function Settings({
   toggleState,
@@ -11,7 +12,22 @@ function Settings({
   setToggleState,
   activeTab,
 }) {
+  const rateScores = [
+    { imoji: "😭", text: "Bad" },
+    { imoji: "😑", text: "Not so good" },
+    { imoji: "🙂", text: "Good" },
+    { imoji: "😃", text: "Very good" },
+    { imoji: "😍", text: "Excellent" },
+  ];
   const navigate = useNavigate();
+  const [rateModal, setRateModal] = useState(false);
+  const [selectedScore, setSelectedScore] = useState(null);
+  const [selectedScoreValue, setSelectedScoreValue] = useState(0);
+  const [description, setDescription] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
+  const [ratingCheckFailed, setRatingCheckFailed] = useState(false);
+  const [hasRated, setHasRated] = useState(false);
 
   const handleSignout = async () => {
     try {
@@ -27,9 +43,109 @@ function Settings({
     }
   };
 
+  const handleScore = (score) => {
+    switch (score.text) {
+      case "Bad":
+        setSelectedScoreValue(1);
+        break;
+      case "Not so good":
+        setSelectedScoreValue(2);
+        break;
+      case "Good":
+        setSelectedScoreValue(3);
+        break;
+      case "Very good":
+        setSelectedScoreValue(4);
+        break;
+      case "Excellent":
+        setSelectedScoreValue(5);
+        break;
+      default:
+        setSelectedScoreValue(0);
+    }
+    setSelectedScore(score.text);
+  };
+
+  useEffect(() => {
+    const checkPreviousRating = async () => {
+      setIsChecking(true);
+      setRatingCheckFailed(false);
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (user) {
+          const { data, error } = await supabase
+            .from("ratings")
+            .select("id")
+            .eq("user_id", user.id)
+            .limit(1)
+            .maybeSingle();
+
+          if (error) throw error;
+          if (data) setHasRated(true);
+        } else if (localStorage.getItem("has_rated_app") === "true") {
+          setHasRated(true);
+        }
+      } catch {
+        setRatingCheckFailed(true);
+        toast.error("Could not verify rating status.");
+      } finally {
+        setIsChecking(false);
+      }
+    };
+
+    if (rateModal) {
+      checkPreviousRating();
+    }
+  }, [rateModal]);
+
+  const handleRatingSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!selectedScore) {
+      toast.error("Please select a rating first.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      const { error } = await supabase.from("ratings").insert([
+        {
+          user_id: user?.id ?? null,
+          score_value: selectedScoreValue,
+          score_label: selectedScore,
+          description: description.trim() || null,
+        },
+      ]);
+
+      if (error) throw error;
+
+      localStorage.setItem("has_rated_app", "true");
+      setHasRated(true);
+
+      toast.success("Thank you for your feedback!");
+      setSelectedScore(null);
+      setDescription("");
+      setRateModal(false);
+    } catch (err) {
+      toast.error(
+        err.message || "Failed to submit feedback. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div
-      className={`Settings w-full min-h-screen p-4 
+      className={` Settings w-full min-h-screen p-4 
         md:p-5 ${toggleMobileState === 6 ? "block" : "hidden"}
          ${toggleState === 6 ? "md:block" : "md:hidden"}
         `}
@@ -86,7 +202,10 @@ function Settings({
           <div className="cardS mb-3 text-white">
             <h1 className="text-2xl font-bold mb-4">Secure</h1>
 
-            <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
+            <div
+              className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out"
+              onClick={() => setRateModal(!rateModal)}
+            >
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
                   <i className="fa-solid fa-star"></i>
@@ -139,7 +258,10 @@ function Settings({
             <div
               className={`group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out ${toggleState === 0 ? "bg-white/20" : ""}
                 `}
-              onClick={() => activeTab(0)}
+              onClick={() => {
+                setToggleState(0);
+                settoggleMobileState(0);
+              }}
             >
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-3">
@@ -244,6 +366,116 @@ function Settings({
       >
         <p>All rights reserved &copy; 2026 </p>
       </div>
+      {rateModal && (
+        <div className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-black/50 h-screen w-screen">
+          <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-86 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999 text-center">
+            <div
+              className="absolute top-2 right-5 text-white text-2xl cursor-pointer hover:-translate-y-1 transition-all duration-300"
+              onClick={() => setRateModal(false)}
+            >
+              <p>&times;</p>
+            </div>
+
+            {/* 1. LOADING STATE */}
+            {isChecking ? (
+              <div className="flex flex-col justify-center items-center w-full text-white p-14">
+                <p className="text-lg animate-pulse">Checking...</p>
+              </div>
+            ) : ratingCheckFailed ? (
+              <div className="flex flex-col justify-center items-center w-full text-white mb-4 p-10 space-y-4">
+                <h1 className="text-2xl font-semibold">
+                  Could not verify your rating
+                </h1>
+                <p className="text-sm text-white/80 max-w-sm">
+                  Please close this window and try again. We can&apos;t accept
+                  another rating until we can check your previous response.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setRateModal(false)}
+                  className="mt-4 rounded-2xl bg-white/30 hover:bg-white/40 transition-colors duration-300 w-full py-3 px-3 cursor-pointer font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            ) : hasRated ? (
+              /* 2. DIFFERENT CONTENT IF ALREADY RATED */
+              <div className="flex flex-col justify-center items-center w-full text-white mb-4 p-10 space-y-4">
+                <p className="text-5xl">🎉</p>
+                <h1 className="text-2xl font-semibold">
+                  You&apos;ve already rated!
+                </h1>
+                <p className="text-sm text-white/80 max-w-sm">
+                  Thank you for taking the time to share your feedback. Your
+                  response helps us improve!
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setRateModal(false)}
+                  className="mt-4 rounded-2xl bg-white/30 hover:bg-white/40 transition-colors duration-300 w-full py-3 px-3 cursor-pointer font-medium"
+                >
+                  Got it
+                </button>
+              </div>
+            ) : (
+              /* 3. ORIGINAL RATING FORM IF NOT RATED YET */
+              <div className="flex flex-col justify-center items-center w-full text-white mb-4 p-10">
+                <h1 className="text-2xl">How was your experience?</h1>
+                <div className="mt-6">
+                  <ul className="flex gap-5">
+                    {rateScores.map((score) => {
+                      const isSelected = selectedScore === score.text;
+                      const isDimmed = selectedScore !== null && !isSelected;
+
+                      return (
+                        <li
+                          key={score.text}
+                          onClick={() => handleScore(score)}
+                          className={`group flex flex-col items-center cursor-pointer transition-all duration-300 hover:saturate-100 hover:opacity-100 ${
+                            isDimmed
+                              ? "saturate-0 opacity-50"
+                              : "saturate-100 opacity-100"
+                          }`}
+                        >
+                          <p
+                            className={`text-[26px] transition-transform duration-300 group-hover:-translate-y-1 ${
+                              isSelected ? "-translate-y-1 scale-110" : ""
+                            }`}
+                          >
+                            {score.imoji}
+                          </p>
+                          <p
+                            className={`text-[11px] transition-colors duration-300 ${
+                              isSelected ? "font-semibold" : ""
+                            }`}
+                          >
+                            {score.text}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+                <textarea
+                  className="mt-6 p-4 border-0 outline-0 text-[#575757] bg-white/60 rounded-2xl glass-scroll"
+                  placeholder="Description...(Optional)"
+                  cols="30"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                ></textarea>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="mt-6 rounded-2xl bg-white/30 hover:bg-white/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 w-full py-3 px-3 cursor-pointer font-medium"
+                  onClick={handleRatingSubmit}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
