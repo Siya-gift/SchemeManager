@@ -80,7 +80,18 @@ async function provisionUserSignup(user) {
     }
   }
 
-  return "clubs";
+  // 5. Fetch and return the user's schemes immediately
+  const { data: userSchemes, error: fetchError } = await supabase
+    .from("members_schemes")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: true });
+
+  if (fetchError) {
+    throw new Error(`Could not load user schemes: ${fetchError.message}`);
+  }
+
+  return userSchemes || [];
 }
 
 export function schemeSelected(
@@ -97,22 +108,31 @@ export function completeUserSignup(
   user,
   setSchemeSelectedState,
   setSelectedSchemeName,
+  setSchemesState,
 ) {
-  if (!user?.id) return Promise.resolve();
+  if (!user?.id) return Promise.resolve([]);
 
   const pendingCompletion = pendingCompletions.get(user.id);
   if (pendingCompletion) return pendingCompletion;
 
   const completion = provisionUserSignup(user)
-    .then((schemeName) => {
-      if (schemeName && setSchemeSelectedState && setSelectedSchemeName) {
-        schemeSelected(
-          0,
-          schemeName,
-          setSchemeSelectedState,
-          setSelectedSchemeName,
-        );
+    .then((userSchemes) => {
+      if (userSchemes && userSchemes.length > 0) {
+        if (setSchemesState) {
+          setSchemesState(userSchemes);
+        }
+
+        if (setSchemeSelectedState && setSelectedSchemeName) {
+          schemeSelected(
+            0,
+            userSchemes[0].scheme || "clubs",
+            setSchemeSelectedState,
+            setSelectedSchemeName,
+          );
+        }
       }
+
+      return userSchemes || [];
     })
     .finally(() => {
       pendingCompletions.delete(user.id);
@@ -121,9 +141,6 @@ export function completeUserSignup(
   pendingCompletions.set(user.id, completion);
   return completion;
 }
-
-
-
 
 // Optional alias if other files still import the old name
 export const completeEmailSignup = completeUserSignup;
