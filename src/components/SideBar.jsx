@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import luffyImg from "../images/Luffy_profile_pic.jpg";
+import logout_ic from "../images/logout_ic.svg";
 import dash_logo from "../images/dash_logo.svg";
 import close_side_icon from "../images/close_side_icon.svg";
 import { supabase } from "../lib/supabaseClient.js";
@@ -66,8 +67,12 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
         uistate ? "w-32" : "w-80"
       }`}
     >
-      <div className={`profileCard glass relative ${uistate ? "p-0" : "p-5"} transition-padding duration-300 ease-in-out`}>
-        <div className={`mb-3 flex h-8 items-center ${uistate ? "justify-center" : "justify-between"} `}>
+      <div
+        className={`profileCard glass relative ${uistate ? "p-0" : "p-5"} transition-padding duration-300 ease-in-out`}
+      >
+        <div
+          className={`mb-3 flex h-8 items-center ${uistate ? "justify-center" : "justify-between"} `}
+        >
           <img
             className={`h-8 object-contain transition-[width,opacity] duration-200 ${
               uistate ? "w-0 opacity-0" : "w-20 opacity-100"
@@ -95,7 +100,7 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
 
         <div className="flex h-20 w-full items-center justify-center">
           <div
-            className={`ppic aspect-square shrink-0 rounded-full overflow-hidden transition-[width,height] duration-300 cursor-pointer ${
+            className={`ppic relative group aspect-square shrink-0 rounded-full overflow-hidden transition-[width,height] duration-300 cursor-pointer ${
               uistate ? "h-10" : "h-20"
             }`}
           >
@@ -104,6 +109,25 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
               className="h-full w-full object-cover"
               alt="Profile"
             />
+
+            {/* Dark hover overlay with centered cross */}
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={`text-white/75 transition-all duration-200 rotate-0 ${
+                  uistate ? "h-4 w-4" : "h-6 w-6"
+                }`}
+              >
+                <path d="M5 12h14" />
+                <path d="M12 5v14" />
+              </svg>
+            </div>
           </div>
         </div>
         <h1
@@ -121,7 +145,7 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
           Scheme : {selectedSchemeName}
         </small>
       </div>
-      <div className="glass mt-5 flex-1 p-5">
+      <div className="glass mt-5 flex flex-col h-full p-5">
         <h3
           className={`mb-3 h-5 overflow-hidden whitespace-nowrap text-sm font-semibold uppercase tracking-wider text-white transition-opacity duration-200 ${
             uistate ? "opacity-0" : "opacity-70"
@@ -167,7 +191,9 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
                         `}
           >
             <i className="fa-solid fa-layer-group"></i>
-            <p className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}>
+            <p
+              className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}
+            >
               Scheme & Members
             </p>
           </li>
@@ -181,7 +207,9 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
                         `}
           >
             <i className="fa-solid fa-file-invoice"></i>
-            <p className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}>
+            <p
+              className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}
+            >
               Expenses
             </p>
           </li>
@@ -195,7 +223,9 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
                         `}
           >
             <i className="fa-solid fa-chart-line"></i>
-            <p className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}>
+            <p
+              className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}
+            >
               Insights
             </p>
           </li>
@@ -217,7 +247,9 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
                         ${toggleState === 5 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"}`}
           >
             <i className="fa-solid fa-clock-rotate-left"></i>
-            <p className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}>
+            <p
+              className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}
+            >
               Activity History
             </p>
           </li>
@@ -230,8 +262,30 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
                     ${toggleState === 6 || toggleState === 0 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"}`}
           >
             <i className="fa-solid fa-gear"></i>
-            <p className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}>
+            <p
+              className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}
+            >
               Settings
+            </p>
+          </li>
+        </ul>
+        <ul className="space-y-2 pt-2 mt-auto">
+          <li
+            onClick={() => activeTab(7)}
+            title="Dashboard"
+            className={`flex cursor-pointer items-center rounded-lg border p-3 text-white transition hover:bg-white/20 ${
+              uistate ? "justify-center" : "gap-2"
+            }
+                        ${toggleState === 7 ? "bg-white/20 border-white/80" : "bg-white/10 border-white/10"} 
+                    `}
+          >
+            <img src={logout_ic} alt="ic" />
+            <p
+              className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ${
+                uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"
+              }`}
+            >
+              Logout
             </p>
           </li>
         </ul>

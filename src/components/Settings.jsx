@@ -28,6 +28,7 @@ function Settings({
   const [isChecking, setIsChecking] = useState(false);
   const [ratingCheckFailed, setRatingCheckFailed] = useState(false);
   const [hasRated, setHasRated] = useState(false);
+  const [isNotify, setIsNotify] = useState(null);
 
   const handleSignout = async () => {
     try {
@@ -143,6 +144,14 @@ function Settings({
     }
   };
 
+  useEffect(() => {
+    if (isNotify) {
+      toast.success("Notifications are turned on");
+    } else {
+      toast.success("Notifications are turned off");
+    }
+  }, [isNotify]);
+
   return (
     <div
       className={` Settings w-full min-h-screen p-4 
@@ -186,7 +195,12 @@ function Settings({
                   <p className="font-medium">Notifications</p>
                 </div>
                 <label className="inline-flex items-center cursor-pointer select-none">
-                  <input type="checkbox" className="sr-only peer" />
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={isNotify}
+                    onChange={(e) => setIsNotify(e.target.checked)}
+                  />
                   <div
                     className="relative w-11 h-6 bg-white/15 rounded-full peer ring-1 peer-focus:ring-1 peer-focus:ring-white/50 
                                 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] 
@@ -196,18 +210,17 @@ function Settings({
                 </label>
               </div>
             </div>
-            <Link to={'/Help'}>
-            <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
-              <div className="flex flex-row items-center justify-between w-full">
-                <div className="flex items-center gap-3">
-                  <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
-                  <p className="font-medium">Help Center</p>
+            <Link to={"/Help"}>
+              <div className="group flex rounded-2xl bg-white/30 w-full py-3 px-3 mb-2 hover:bg-white/40 cursor-pointer transition-colors duration-300 ease-in-out">
+                <div className="flex flex-row items-center justify-between w-full">
+                  <div className="flex items-center gap-3">
+                    <i className="fa-solid fa-circle-question w-5 text-center text-white/80"></i>
+                    <p className="font-medium">Help Center</p>
+                  </div>
+                  <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
                 </div>
-                <i className="fas fa-chevron-right transition-transform duration-300 group-hover:translate-x-1"></i>
               </div>
-            </div>
             </Link>
-            
           </div>
 
           {/* Secure */}
