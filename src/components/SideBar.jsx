@@ -6,7 +6,7 @@ import close_side_icon from "../images/close_side_icon.svg";
 import { supabase } from "../lib/supabaseClient.js";
 import { getAuthUserDisplayName } from "../lib/authUserName.js";
 
-function SideBar({ toggleState, activeTab, selectedSchemeName }) {
+function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName, settoggleMobileState }) {
   const getAuthUserAvatar = (user) => {
     if (!user) return "";
     return user.user_metadata?.avatar_url || user.user_metadata?.picture || "";
@@ -59,6 +59,21 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
 
   const handleUI = () => {
     setUiState(!uistate);
+  };
+
+  const handleSignout = async () => {
+    activeTab(6)
+    try {
+      const { error } = await supabase.auth.signOut({ scope: "global" });
+      if (error) throw error;
+
+      toast.success("Signed out successfully!");
+      navigate("/login", { replace: true });
+      settoggleMobileState(1);
+      setToggleState(1);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -270,8 +285,7 @@ function SideBar({ toggleState, activeTab, selectedSchemeName }) {
           </li>
         </ul>
         <ul className="space-y-2 pt-2 mt-auto">
-          <li
-            onClick={() => activeTab(7)}
+          <li onClick={handleSignout}
             title="Dashboard"
             className={`flex cursor-pointer items-center rounded-lg border p-3 text-white transition hover:bg-white/20 ${
               uistate ? "justify-center" : "gap-2"

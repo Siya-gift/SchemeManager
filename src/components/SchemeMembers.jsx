@@ -361,7 +361,7 @@ function SchemeMembers({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
         <div className="glass p-6 text-white flex flex-col h-auto md:col-span-1">
           <div className="flex justify-between items-center py-4">
             <h1 className="font-bold text-xl">Your Schemes</h1>
@@ -590,7 +590,7 @@ function SchemeMembers({
         </div>
         <div
           className="footer md:col-span-3 flex grow flex-col sm:flex-row 
-        justify-center items-center py-5 px-6 glass text-white mt-auto"
+        justify-center items-center py-5 px-6 glass text-white mt-8"
         >
           <p>All rights reserved &copy; 2026 </p>
         </div>

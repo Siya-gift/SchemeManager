@@ -554,7 +554,7 @@ function Expenses({
         className="mt-6 hidden md:block h-90 overflow-y-auto pr-2 mb-3"
         onScroll={scrollOnList}
       >
-        <table className="w-full text-left text-sm text-white">
+        <table className="w-full h-full text-left text-sm text-white">
           <thead
             className={`sticky top-0 ${txtListState ? "bg-white/98 [&_tr]:text-black/70" : "text-white"} text-md`}
           >

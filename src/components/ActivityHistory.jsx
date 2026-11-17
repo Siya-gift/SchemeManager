@@ -197,7 +197,7 @@ function ActivityHistory({
         className="footer md:col-span-3
         flex grow flex-col sm:flex-row
         justify-center items-center
-        py-5 px-6 glass text-white mt-6"
+        py-5 px-6 glass text-white mt-20"
       >
         <p>
           All rights reserved &copy; 2026

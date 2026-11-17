@@ -166,7 +166,7 @@ function Settings({
       </div>
 
       <div
-        className="w-full h-screen mb-3 transition-all duration-300 glass
+        className="w-full mb-3 transition-all duration-300 glass
             shadow-[0_5px_15px_rgba(0,0,0,0.2)] py-8 px-6"
       >
         <div className="flex flex-col gap-4 h-full overflow-y-auto glass-scroll pr-2">

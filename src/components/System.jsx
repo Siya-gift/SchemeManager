@@ -145,7 +145,7 @@ function System({ dashboardProps }) {
     >
       <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} overlayer={overlayer} setOverlayer={setOverlayer} selectedSchemeName={selectedSchemeName} />
       <div className='flex overflow-hidden'>
-        <SideBar toggleState={toggleState} setToggleState={setToggleState} activeTab={activeTab} selectedSchemeName={selectedSchemeName} />
+        <SideBar toggleState={toggleState} setToggleState={setToggleState} activeTab={activeTab} selectedSchemeName={selectedSchemeName} settoggleMobileState={settoggleMobileState}/>
         <Profile toggleState={toggleState} toggleMobileState={toggleMobileState} setToggleState={setToggleState} settoggleMobileState={settoggleMobileState}/>
 
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
