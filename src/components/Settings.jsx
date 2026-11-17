@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import ShareButton from "./ShareButton.jsx";
 import { useEffect, useState } from "react";
+import { BellOff } from "lucide-react";
 
 function Settings({
   toggleState,
@@ -144,13 +145,20 @@ function Settings({
     }
   };
 
-  useEffect(() => {
-    if (isNotify) {
-      toast.success("Notifications are turned on");
+  const handleNotifySwitch = (nextState) => {
+    setIsNotify(nextState);
+
+    if (nextState) {
+      toast.success("Notifications enabled");
     } else {
-      toast.success("Notifications are turned off");
+      toast.custom((t) => (
+        <div className="flex items-center gap-3 rounded-lg bg-zinc-900 px-4 py-3 text-sm text-white shadow-lg border border-white/10">
+          <BellOff className="h-4 w-4 text-zinc-400" />
+          <span>Notifications muted</span>
+        </div>
+      ));
     }
-  }, [isNotify]);
+  };
 
   return (
     <div
@@ -199,7 +207,7 @@ function Settings({
                     type="checkbox"
                     className="sr-only peer"
                     checked={isNotify}
-                    onChange={(e) => setIsNotify(e.target.checked)}
+                    onChange={(e) => handleNotifySwitch(e.target.checked)}
                   />
                   <div
                     className="relative w-11 h-6 bg-white/15 rounded-full peer ring-1 peer-focus:ring-1 peer-focus:ring-white/50 

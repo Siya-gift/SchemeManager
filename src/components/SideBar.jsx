@@ -6,27 +6,67 @@ import close_side_icon from "../images/close_side_icon.svg";
 import { supabase } from "../lib/supabaseClient.js";
 import { getAuthUserDisplayName } from "../lib/authUserName.js";
 
-function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName, settoggleMobileState }) {
-  const getAuthUserAvatar = (user) => {
-    if (!user) return "";
-    return user.user_metadata?.avatar_url || user.user_metadata?.picture || "";
-  };
-
+function SideBar({
+  toggleState,
+  setToggleState,
+  activeTab,
+  selectedSchemeName,
+  settoggleMobileState,
+}) {
   // Inside your component:
   const [name, setName] = useState("Account");
   const [userProfilePicture, setUserProfilePicture] = useState("");
+
+  const getAuthUserAvatar = async (user) => {
+    if (!user) return "";
+
+    try {
+      const { data: files, error } = await supabase.storage
+        .from("profile_pictures")
+        .list(user.id, {
+          limit: 10,
+          sortBy: { column: "created_at", order: "desc" },
+        });
+
+      if (!error && files) {
+        // Ignore Supabase's hidden folder placeholder file
+        const validFile = files.find(
+          (file) => file.name !== ".emptyFolderPlaceholder",
+        );
+
+        if (validFile) {
+          const { data } = supabase.storage
+            .from("profile_pictures")
+            .getPublicUrl(`${user.id}/${validFile.name}`);
+
+          if (data?.publicUrl) return data.publicUrl;
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching avatar from storage:", err);
+    }
+
+    return "";
+  };
 
   useEffect(() => {
     let active = true;
     let authStateReceived = false;
 
+    const loadUser = async (user) => {
+      if (!active) return;
+      setName(getAuthUserDisplayName(user));
+      const avatarUrl = await getAuthUserAvatar(user);
+      if (active) {
+        setUserProfilePicture(avatarUrl);
+      }
+    };
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       authStateReceived = true;
-      const user = session?.user;
-      setName(getAuthUserDisplayName(user));
-      setUserProfilePicture(getAuthUserAvatar(user));
+      loadUser(session?.user);
     });
 
     supabase.auth
@@ -39,8 +79,7 @@ function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName, s
           setUserProfilePicture("");
           return;
         }
-        setName(getAuthUserDisplayName(data.user));
-        setUserProfilePicture(getAuthUserAvatar(data.user));
+        loadUser(data.user);
       })
       .catch((error) => {
         if (!active) return;
@@ -56,13 +95,14 @@ function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName, s
   }, []);
 
   const [uistate, setUiState] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleUI = () => {
     setUiState(!uistate);
   };
 
   const handleSignout = async () => {
-    activeTab(6)
+    setLoading(true);
     try {
       const { error } = await supabase.auth.signOut({ scope: "global" });
       if (error) throw error;
@@ -71,6 +111,7 @@ function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName, s
       navigate("/login", { replace: true });
       settoggleMobileState(1);
       setToggleState(1);
+      setLoading(false);
     } catch (error) {
       toast.error(error.message);
     }
@@ -113,36 +154,48 @@ function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName, s
           </button>
         </div>
 
-        <div className="flex h-20 w-full items-center justify-center">
+        <div
+          className="flex h-20 w-full items-center justify-center"
+          onClick={() => {
+            setToggleState(0);
+            settoggleMobileState(0);
+          }}
+        >
           <div
             className={`ppic relative group aspect-square shrink-0 rounded-full overflow-hidden transition-[width,height] duration-300 cursor-pointer ${
               uistate ? "h-10" : "h-20"
             }`}
           >
             <img
-              src={userProfilePicture ? userProfilePicture : luffyImg}
+              src={userProfilePicture || luffyImg}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = luffyImg;
+              }}
               className="h-full w-full object-cover"
               alt="Profile"
             />
 
             {/* Dark hover overlay with centered cross */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className={`text-white/75 transition-all duration-200 rotate-0 ${
-                  uistate ? "h-4 w-4" : "h-6 w-6"
-                }`}
-              >
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-              </svg>
-            </div>
+            {toggleState !== 0 && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`text-white/75 transition-all duration-200 rotate-0 ${
+                    uistate ? "h-4 w-4" : "h-6 w-6"
+                  }`}
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+              </div>
+            )}
           </div>
         </div>
         <h1
@@ -285,8 +338,9 @@ function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName, s
           </li>
         </ul>
         <ul className="space-y-2 pt-2 mt-auto">
-          <li onClick={handleSignout}
-            title="Dashboard"
+          <li
+            onClick={handleSignout}
+            title="Logout"
             className={`flex cursor-pointer items-center rounded-lg border p-3 text-white transition hover:bg-white/20 ${
               uistate ? "justify-center" : "gap-2"
             }
@@ -299,7 +353,7 @@ function SideBar({ toggleState, setToggleState, activeTab, selectedSchemeName, s
                 uistate ? "max-w-0 opacity-0" : "max-w-50 opacity-100"
               }`}
             >
-              Logout
+              {loading ? "Logging out..." : "Logout"}
             </p>
           </li>
         </ul>

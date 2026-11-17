@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { supabase } from "../lib/supabaseClient.js";
 import { getAuthUserDisplayName } from "../lib/authUserName.js";
 
-function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
+function MobileNav({ isOpen, toggleMenu, setToggleState, settoggleMobileState, setOverlayer, selectedSchemeName }) {
   const container = useRef();
 
   useGSAP(
@@ -28,9 +28,36 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
     { scope: container, dependencies: [isOpen] },
   );
 
-  const getAuthUserAvatar = (user) => {
+  const getAuthUserAvatar = async (user) => {
     if (!user) return "";
-    return user.user_metadata?.avatar_url || user.user_metadata?.picture || "";
+
+    try {
+      const { data: files, error } = await supabase.storage
+        .from("profile_pictures")
+        .list(user.id, {
+          limit: 10,
+          sortBy: { column: "created_at", order: "desc" },
+        });
+
+      if (!error && files) {
+        // Ignore Supabase's hidden folder placeholder file
+        const validFile = files.find(
+          (file) => file.name !== ".emptyFolderPlaceholder",
+        );
+
+        if (validFile) {
+          const { data } = supabase.storage
+            .from("profile_pictures")
+            .getPublicUrl(`${user.id}/${validFile.name}`);
+
+          if (data?.publicUrl) return data.publicUrl;
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching avatar from storage:", err);
+    }
+
+    return "";
   };
 
   // Inside your component:
@@ -41,13 +68,20 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
     let active = true;
     let authStateReceived = false;
 
+    const loadUser = async (user) => {
+      if (!active) return;
+      setName(getAuthUserDisplayName(user));
+      const avatarUrl = await getAuthUserAvatar(user);
+      if (active) {
+        setUserProfilePicture(avatarUrl);
+      }
+    };
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       authStateReceived = true;
-      const user = session?.user;
-      setName(getAuthUserDisplayName(user));
-      setUserProfilePicture(getAuthUserAvatar(user));
+      loadUser(session?.user);
     });
 
     supabase.auth
@@ -60,8 +94,7 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
           setUserProfilePicture("");
           return;
         }
-        setName(getAuthUserDisplayName(data.user));
-        setUserProfilePicture(getAuthUserAvatar(data.user));
+        loadUser(data.user);
       })
       .catch((error) => {
         if (!active) return;
@@ -82,16 +115,25 @@ function MobileNav({ isOpen, toggleMenu, setOverlayer, selectedSchemeName }) {
         className=" mx-4 p-6 glass flex md:hidden 
             justify-between items-center mt-3 rounded-2xl cursor-pointer hover:bg-white/45"
       >
-        <div className="relative pp flex items-center gap-3">
+        <div
+          className="relative pp flex items-center gap-3"
+          onClick={() => {
+            setToggleState(0);
+            settoggleMobileState(0);
+          }}
+        >
           <div className=" ppic w-10 h-10 rounded-full overflow-hidden border border-white/20">
             <img
               src={userProfilePicture ? userProfilePicture : luffyImg}
               className="h-full w-full object-cover"
               alt="profile"
             />
-            
           </div>
-          <img className="absolute -bottom-2 left-0 w-12" src={dash_logo} alt="logo" />
+          <img
+            className="absolute -bottom-2 left-0 w-12"
+            src={dash_logo}
+            alt="logo"
+          />
           <div>
             <h1 className="text-white text-xl font-bold">{name}</h1>
             <small className="text-[#abe9be] block truncate max-w-45">
