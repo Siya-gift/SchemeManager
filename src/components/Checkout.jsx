@@ -1,14 +1,27 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import PrimaryBtn6 from "./PrimaryBtn6";
+import { plan_data } from "../lib/planData.js";
+import toast from "react-hot-toast";
 
 function Checkout() {
   const btnCheckout = "Checkout";
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(null);
+  const { state } = useLocation();
+  const selectedPlan =
+    plan_data.find((plan) => plan.id === state?.planId) ?? plan_data[0];
+  const selectedPlanPrice = `R ${Number(selectedPlan.price)
+    .toFixed(2)
+    .replace(".", ",")}`;
 
   const handleCheckout = () => {
     setLoading(true);
+    toast.success("Completing last step")
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
   };
+
   return (
     <div className="w-full min-h-screen overflow-y-auto bg-[#0E0019]/96 px-5 py-8 sm:px-10">
       <div className="flex justify-between items-center">
@@ -61,16 +74,15 @@ function Checkout() {
         <div className="flex justify-center flex-col rounded-[15px] bg-[#221436] px-5.5 py-3.5 gap-3">
           <div className="flex flex-col">
             <h4 className="text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
-              R 149/<span className="text-[8px]">Month</span>
+              R {selectedPlan.price}/<span className="text-[8px]">Month</span>
             </h4>
             <h1
-              className={`text-[34px] family-['Poppins'] font-black leading-7 pb-2 bg-linear-to-r from-[#D900FF] from-[8.17%] via-[#6C73FF]/45 via-[74.52%] to-[#00E9FF]/20 to-[87.98%] bg-clip-text text-transparent h-fit`}
+              className={`text-[34px] family-['Poppins'] font-black leading-7 pb-2 ${selectedPlan.titleGradient} bg-clip-text text-transparent h-fit`}
             >
-              Starter <br /> plan
+              {selectedPlan.name} <br /> plan
             </h1>
             <p className="fontRaleway family-['Raleway'] font-thin tracking text-[12px] leading-3 text-[#e3e3e3] max-w-50">
-              Get started by using this plan and get the basic and useful
-              features.
+              {selectedPlan.description}
             </p>
           </div>
 
@@ -78,42 +90,44 @@ function Checkout() {
             <div className=" w-full rounded-tl-[15px] rounded-tr-[15px] bg-[#000000]/40 px-3 py-5">
               <div className="flex justify-between">
                 <p className="text-white text-[14px] family-['Rajdhani'] font-semibold">
-                  Starter Plan
+                  {selectedPlan.name} Plan
                 </p>
                 <p className="text-white text-[14px] family-['Rajdhani'] font-semibold">
-                  R 149,99
+                  {selectedPlanPrice}
                 </p>
               </div>
               <p className="fontRaleway family-['Raleway'] font-thin tracking text-[12px] leading-3 text-[#e3e3e3] mt-0.75">
                 Billed monthly
               </p>
             </div>
-            <div className=" w-full rounded-bl-[15px] rounded-br-[15px] bg-[#000000]/30 shadow-md shadow-black/50 px-3 py-5">
-              <div className="flex justify-between items-center">
-                <div className="flex gap-2.5 items-center">
-                  <label className="items-center cursor-pointer select-none">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div
-                      className="relative w-9 h-5 bg-transparent rounded-full peer ring-1 ring-white peer-focus:ring-1 peer-focus:ring-white/50 
+            {selectedPlan.annualPrice && (
+              <div className="w-full rounded-bl-[15px] rounded-br-[15px] bg-[#000000]/30 shadow-md shadow-black/50 px-3 py-5">
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2.5 items-center">
+                    <label className="items-center cursor-pointer select-none">
+                      <input type="checkbox" className="sr-only peer" />
+                      <div
+                        className="relative w-9 h-5 bg-transparent rounded-full peer ring-1 ring-white peer-focus:ring-1 peer-focus:ring-white/50
                     peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] 
                     after:absolute after:top-0.5 after:inset-s-0.5 after:bg-white/90 after:rounded-full 
                     after:h-4 after:w-4 after:transition-all after:duration-300 peer-checked:bg-white/50"
-                    ></div>
-                  </label>
-                  <div className="bg-white rounded-[5px] h-5.5 px-2 grid items-center">
-                    <p className="text-[8px] family-['Rajdhani'] font-semibold text-[#000000]">
-                      Save R500
+                      ></div>
+                    </label>
+                    <div className="bg-white rounded-[5px] h-5.5 px-2 grid items-center">
+                      <p className="text-[8px] family-['Rajdhani'] font-semibold text-[#000000]">
+                        Save R{selectedPlan.annualSavings}
+                      </p>
+                    </div>
+                    <p className="text-[8px] family-['Rajdhani'] font-semibold text-white">
+                      with annual billing
                     </p>
                   </div>
-                  <p className="text-[8px] family-['Rajdhani'] font-semibold text-white">
-                    with annual billing
+                  <p className="text-[11px] family-['Rajdhani'] font-semibold text-white">
+                    R {selectedPlan.annualPrice}
                   </p>
                 </div>
-                <p className="text-[11px] family-['Rajdhani'] font-semibold text-white">
-                  R 1299,99
-                </p>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-4 mt-4">
@@ -123,7 +137,7 @@ function Checkout() {
                   Subtotal
                 </p>
                 <p className="text-[14px] font-['Raleway'] font-normal text-white">
-                  R 149,99
+                  {selectedPlanPrice}
                 </p>
               </div>
               <div className="h-0.5 w-full bg-white/10"></div>
@@ -145,7 +159,7 @@ function Checkout() {
                   Total
                 </p>
                 <p className="text-[14px] font-['Raleway'] font-normal text-white">
-                  R 149,99
+                  {selectedPlanPrice}
                 </p>
               </div>
             </div>
@@ -155,7 +169,7 @@ function Checkout() {
               type={"button"}
               onClick={handleCheckout}
               btnCheckout={btnCheckout}
-              disabled={loading}
+              loading={loading}
             />
           </div>
         </div>
