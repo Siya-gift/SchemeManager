@@ -39,6 +39,7 @@ import p_hand from "../images/p_hand.svg";
 import BG_footer_p from "../images/BG_footer_p.svg";
 import BG_footer_m from "../images/BG_footer_m.svg";
 import footer_card_m from "../images/footer_card_m.png";
+import m_phoneHand from "../images/m_phoneHand.svg";
 import footer_card_p from "../images/footer_card_p.png";
 import m_grand_logo from "../images/m_grand_logo.svg";
 import p_2grand_logo from "../images/p_2grand_logo.svg";
@@ -89,6 +90,24 @@ function HomePage() {
   const openProve2 = () => proveStateFunc2(!proveState2);
   const openProve3 = () => proveStateFunc3(!proveState3);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const handlePageScroll = useCallback((event) => {
+    const container = event.currentTarget;
+
+    if (scrollHideTimeoutRef.current) {
+      window.clearTimeout(scrollHideTimeoutRef.current);
+    }
+
+    if (container.scrollTop <= 200) {
+      setShowScrollToTop(false);
+      return;
+    }
+
+    setShowScrollToTop(true);
+    scrollHideTimeoutRef.current = window.setTimeout(() => {
+      setShowScrollToTop(false);
+      scrollHideTimeoutRef.current = null;
+    }, 5000);
+  }, []);
 
   const changePlan = (id) => {
     setActivePlan(id);
@@ -98,6 +117,7 @@ function HomePage() {
 
   const [verifiedUser, setVerifiedUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [minDelayPassed, setMinDelayPassed] = useState(false);
   const navigate = useNavigate();
 
   // 1. Check session on mount & listen for Google login/logout changes
@@ -158,46 +178,54 @@ function HomePage() {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const handleScroll = () => {
-      if (scrollHideTimeoutRef.current) {
-        window.clearTimeout(scrollHideTimeoutRef.current);
-      }
+    setShowScrollToTop(container.scrollTop > 200);
 
-      if (container.scrollTop <= 200) {
-        setShowScrollToTop(false);
-        return;
-      }
-
-      setShowScrollToTop(true);
-      scrollHideTimeoutRef.current = window.setTimeout(() => {
-        setShowScrollToTop(false);
-        scrollHideTimeoutRef.current = null;
-      }, 5000);
-    };
-
-    container.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
-      container.removeEventListener("scroll", handleScroll);
       if (scrollHideTimeoutRef.current) {
         window.clearTimeout(scrollHideTimeoutRef.current);
       }
     };
-  }, [loading]);
+  }, [loading, minDelayPassed]);
 
   const handleScrollToTop = () => {
     const container = scrollContainerRef.current;
-    if (!container) return;
+    setShowScrollToTop(false);
 
-    container.scrollTo({ top: 0, behavior: "smooth" });
+    if (container) {
+      container.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (loading) return null;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMinDelayPassed(true);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading || !minDelayPassed) {
+    return (
+      <div className="h-screen w-full bg-black flex flex-col items-center justify-center gap-4">
+        <div className="relative flex items-center justify-center">
+          <div className="absolute h-12 w-12 rounded-full bg-white/10 blur-md" />
+          <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/15 border-t-white" />
+        </div>
+        <span className="text-xs font-medium tracking-[0.2em] text-white/50 uppercase animate-pulse">
+          Loading please wait...
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div
       className="h-screen relative overflow-y-auto glass-scroll bg-black"
       ref={scrollContainerRef}
       data-lenis-prevent
+      onScroll={handlePageScroll}
     >
       <section className="relative w-full h-full bg-white overflow-hidden">
         <div className="w-full h-full">
@@ -295,6 +323,19 @@ function HomePage() {
                   </li>
                 </Link>
 
+                <li>
+                  <button
+                    className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80"
+                    onClick={() =>
+                      document
+                        .getElementById("contact_section")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                  >
+                    Contanct
+                  </button>
+                </li>
+
                 <Link to={"/Help"}>
                   <li>
                     <button className="text-white text-[13px] font-semibold nav_link cursor-pointer focus:text-white/80">
@@ -377,7 +418,7 @@ function HomePage() {
           </div>
         </div>
       </section>
-      <section className="relative w-full h-218.5 overflow-hidden bg-[#000000]">
+      <section className="relative w-full h-218.5 xl:min-h-screen overflow-hidden bg-[#000000]">
         <div
           className="absolute inset-[-10%] w-[120%] h-[120%] bg-[radial-gradient(60%_92.31%_at_0%_0%,#005214_0%,rgba(0,82,20,0)_100%),radial-gradient(60%_92.31%_at_88%_82%,#0F0070_0%,rgba(15,0,112,0)_100%),radial-gradient(60%_92.31%_at_53.27%_0%,#215063_0%,rgba(33,80,99,0)_100%),radial-gradient(60%_92.31%_at_19.19%_56.58%,#000000_0%,rgba(0,0,0,0)_100%)] mix-blend-screen opacity-90 pointer-events-none"
           style={{
@@ -519,7 +560,7 @@ function HomePage() {
           </div>
         </div>
       </section>
-      <section className="relative w-full h-218.5 bg-white overflow-hidden">
+      <section className="relative w-full h-218.5 xl:min-h-screen bg-white overflow-hidden">
         <div className="relative w-full h-full overflow-hidden bg-white">
           <div
             className="absolute inset-0 w-full h-full bg-[radial-gradient(circle_at_center,#00FF9D33_34%,#0368FF33_92%)] pointer-events-none"
@@ -635,7 +676,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-218.5 bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative w-full h-218.5 xl:min-h-screen bg-white overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           zIndex: 20,
         }}
@@ -842,7 +883,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-218.5 bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="relative w-full h-218.5 xl:min-h-screen bg-[#0E0019]/96 overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${plan_BG_image})`,
           zIndex: 20,
@@ -922,7 +963,9 @@ function HomePage() {
                     <div className="ml-auto">
                       <PrimaryBtn4
                         btnGetPlan={btnGetPlan}
-                        onClick={() => navigate("/Checkout", { state: { planId: 1 } })}
+                        onClick={() =>
+                          navigate("/Checkout", { state: { planId: 1 } })
+                        }
                       />
                     </div>
                   </div>
@@ -1003,7 +1046,9 @@ function HomePage() {
                     <div className="ml-auto">
                       <PrimaryBtn4
                         btnGetPlan={btnGetPlan}
-                        onClick={() => navigate("/Checkout", { state: { planId: 2 } })}
+                        onClick={() =>
+                          navigate("/Checkout", { state: { planId: 2 } })
+                        }
                       />
                     </div>
                   </div>
@@ -1092,7 +1137,9 @@ function HomePage() {
                     <div className="ml-auto">
                       <PrimaryBtn4
                         btnGetPlan={btnGetPlan}
-                        onClick={() => navigate("/Checkout", { state: { planId: 3 } })}
+                        onClick={() =>
+                          navigate("/Checkout", { state: { planId: 3 } })
+                        }
                       />
                     </div>
                   </div>
@@ -1211,7 +1258,8 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-218.5 bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat"
+        id="contact_section"
+        className="relative w-full h-218.5 xl:min-h-screen bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${call_bg})`,
           zIndex: 20,
@@ -1291,7 +1339,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-218.5 bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat bg-(image:--bg-mobile) md:bg-(image:--bg-desktop) px-10"
+        className="relative w-full h-218.5 xl:min-h-screen bg-[#FFDDBF] overflow-hidden bg-cover bg-center bg-no-repeat bg-(image:--bg-mobile) md:bg-(image:--bg-desktop) px-10"
         style={{
           "--bg-mobile": `url(${bg_info_mobile})`,
           "--bg-desktop": `url(${bg_info_desktop})`,
@@ -1328,7 +1376,7 @@ function HomePage() {
         </div>
       </section>
       <section
-        className="relative w-full h-218.5 bg-[#000000] overflow-hidden bg-cover bg-center bg-no-repeat bg-(image:--bg-mobile) md:bg-(image:--bg-desktop) px-10"
+        className="relative w-full h-218.5 xl:min-h-screen bg-[#000000] overflow-hidden bg-cover bg-center bg-no-repeat bg-(image:--bg-mobile) md:bg-(image:--bg-desktop) px-10"
         style={{
           "--bg-mobile": `url(${BG_footer_m})`,
           "--bg-desktop": `url(${BG_footer_p})`,
@@ -1374,20 +1422,27 @@ function HomePage() {
                 {/* mobile view */}
                 <div className="md:hidden absolute -bottom-17 flex flex-col gap-2">
                   <Link to={"/Signup"}>
-                    <span className="inline-flex items-center gap-1.5 w-fit h-8.75 font-['Raleway'] font-normal text-xs leading-8.75 text-white underline underline-offset-6 cursor-pointer group">
-                      <span className="tracking-wide">Sign up</span>
-                      <svg
-                        className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="m9 18 6-6-6-6" />
-                      </svg>
-                    </span>
+                    <div className="flex justify-between items-end w-full">
+                      <span className="inline-flex items-center gap-1.5 w-fit h-8.75 font-['Raleway'] font-normal text-[8px] leading-8.75 text-white underline underline-offset-6 cursor-pointer group">
+                        <span className="tracking-wide">Sign up</span>
+                        <svg
+                          className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m9 18 6-6-6-6" />
+                        </svg>
+                      </span>
+                      <img
+                        className="md:hidden block h-[clamp(90px,25vh,150px)]"
+                        src={m_phoneHand}
+                        alt="footer_p"
+                      />
+                    </div>
                   </Link>
 
                   <div className="flex flex-row gap-3">
@@ -1452,6 +1507,7 @@ function HomePage() {
                 <div className="hidden md:block">
                   <div className="absolute -bottom-2 left-10 flex flex-col gap-2">
                     <Link to="/Signup">
+                    <div className="flex justify-between items-end">
                       <span className="inline-flex items-center gap-1.5 w-fit h-8.75 font-['Raleway'] font-normal text-xs leading-8.75 text-white underline underline-offset-6 cursor-pointer group pb-5">
                         <span className="tracking-wide">Sign up</span>
                         <svg
@@ -1466,6 +1522,13 @@ function HomePage() {
                           <path d="m9 18 6-6-6-6" />
                         </svg>
                       </span>
+                      <img
+                        className="hidden md:block h-[clamp(90px,25vh,200px)]"
+                        src={m_phoneHand}
+                        alt="footer_p"
+                      />
+                    </div>
+                      
                     </Link>
 
                     <div className="flex flex-row gap-15">
@@ -1589,10 +1652,10 @@ function HomePage() {
         onClick={handleScrollToTop}
         aria-label="Scroll to top"
         title="Scroll to top"
-        className={`fixed bottom-5 right-4 h-10 aspect-square bg-black rounded-4xl z-99 text-white flex items-center justify-center cursor-pointer hover:bg-neutral-800 hover:-translate-y-1 transition-[opacity,visibility,transform,background-color] duration-600 shadow-lg ${
+        className={`fixed bottom-5 right-4 h-14 aspect-square bg-black rounded-4xl z-99 text-white flex items-center justify-center cursor-pointer hover:bg-neutral-800 hover:-translate-y-1 transition-[opacity,visibility,transform,background-color] duration-600 shadow-lg ${
           showScrollToTop
             ? "visible opacity-100"
-            : "invisible pointer-events-none opacity-0 hover:visible hover:opacity-100"
+            : "invisible pointer-events-none opacity-0"
         }`}
       >
         <svg

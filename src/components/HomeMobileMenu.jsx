@@ -87,6 +87,15 @@ function HomeMobileMenu({ isOpen, onClose }) {
     };
   }, [handleClose, isOpen]);
 
+  const handleContactSectionScrollDown = () => {
+    setTimeout(() => {
+      document
+        .getElementById("contact_section")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }, [1000]);
+    handleClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -202,6 +211,14 @@ function HomeMobileMenu({ isOpen, onClose }) {
                 <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
               </li>
             </Link>
+            <li
+              onClick={handleContactSectionScrollDown}
+              className="relative flex items-center text-white gap-3.5 p-3.5 border-b border-white/15 font-light cursor-pointer hover:bg-white/10 rounded-lg transition-colors group focus:bg-white/30"
+            >
+              <i className="fa-solid fa-phone w-5 text-center text-white/80"></i>
+              <span>Contact</span>
+              <i className="fa-solid fa-angle-right ml-auto text-white/60 transition-transform duration-200 group-hover:translate-x-1"></i>
+            </li>
           </ul>
         </div>
       </div>
