@@ -100,8 +100,8 @@ function Checkout() {
                     after:h-4 after:w-4 after:transition-all after:duration-300 peer-checked:bg-white/50"
                     ></div>
                   </label>
-                  <div className="bg-white rounded-[5px] h-5.5 px-3 grid items-center">
-                    <p className="text-[11px] family-['Rajdhani'] font-semibold text-[#000000]">
+                  <div className="bg-white rounded-[5px] h-5.5 px-2 grid items-center">
+                    <p className="text-[8px] family-['Rajdhani'] font-semibold text-[#000000]">
                       Save R500
                     </p>
                   </div>
