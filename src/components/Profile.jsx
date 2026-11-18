@@ -177,103 +177,101 @@ function Profile({
         <div className="flex flex-col w-full my-6">
           {/* pp here */}
           <div className="w-full">
-  <div className="relative inline-block">
-    <input
-      id="avatar-input"
-      type="file"
-      accept="image/*"
-      onChange={handleUpdateAvatar}
-      className="hidden"
-    />
+            <div className="relative inline-block">
+              <input
+                id="avatar-input"
+                type="file"
+                accept="image/*"
+                onChange={handleUpdateAvatar}
+                className="hidden"
+              />
 
-    <label
-      htmlFor="avatar-input"
-      className="group relative cursor-pointer block rounded-full overflow-hidden"
-    >
-      <img
-        src={userProfilePicture ? userProfilePicture : luffyImg}
-        className="h-30 aspect-square rounded-full object-cover transition"
-        alt="Profile"
-      />
+              <label
+                htmlFor="avatar-input"
+                className="group relative cursor-pointer block rounded-full overflow-hidden"
+              >
+                <img
+                  src={userProfilePicture ? userProfilePicture : luffyImg}
+                  className="h-30 aspect-square rounded-full object-cover transition"
+                  alt="Profile"
+                />
 
-      {/* Hover Plus Overlay */}
-      <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-        <svg
-          xmlns="http://w3.org"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="w-8 h-8 text-white/90 transition-all duration-200"
-        >
-          <path d="M5 12h14" />
-          <path d="M12 5v14" />
-        </svg>
-      </div>
-    </label>
+                {/* Hover Plus Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  <svg
+                    xmlns="http://w3.org"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-8 h-8 text-white/90 transition-all duration-200"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="M12 5v14" />
+                  </svg>
+                </div>
+              </label>
 
-    {/* Always-Visible Pen Badge */}
-    <label
-      htmlFor="avatar-input"
-      className="absolute bottom-1 right-1 bg-neutral-800 hover:bg-neutral-700 p-2 rounded-full border border-white/20 cursor-pointer shadow-md transition"
-    >
-      <img src={pen_edit} alt="Edit avatar" className="w-4 h-4" />
-    </label>
-  </div>
+              {/* Always-Visible Pen Badge */}
+              <label
+                htmlFor="avatar-input"
+                className="absolute bottom-1 right-1 bg-neutral-800 hover:bg-neutral-700 p-2 rounded-full border border-white/20 cursor-pointer shadow-md transition"
+              >
+                <img src={pen_edit} alt="Edit avatar" className="w-4 h-4" />
+              </label>
+            </div>
 
-  <p className="text-white font-medium text-sm mt-2">{email}</p>
-</div>
-
+            <p className="text-white font-medium text-sm mt-2">{email}</p>
+          </div>
 
           <h3 className="text-[24px] text-white/70 font-bold mt-7">
             My Account info
           </h3>
           <div className="flex flex-col">
-
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full max-w-md gap-2 mt-3">
-            <h3 className="text-white text-sm sm:text-base">Name:</h3>
+              <h3 className="text-white text-sm sm:text-base">Name:</h3>
 
-            <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-              <input
-                id="name-input"
-                className="bg-transparent text-white outline-none focus:ring-1 focus:ring-white/40 rounded px-2 py-1 w-full sm:w-48 text-sm sm:text-base"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                onBlur={handleUpdateName}
-                onKeyDown={handleKeyDown}
-                type="text"
-                placeholder="example: Johnson"
-              />
+              <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+                <input
+                  id="name-input"
+                  className="bg-transparent text-white outline-none focus:ring-1 focus:ring-white/40 rounded px-2 py-1 w-full sm:w-48 text-sm sm:text-base"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  onBlur={handleUpdateName}
+                  onKeyDown={handleKeyDown}
+                  type="text"
+                  placeholder="example: Johnson"
+                />
 
-              <label htmlFor="name-input" className="cursor-pointer shrink-0">
-                <img className="h-5 w-5" src={pen_edit} alt="edit" />
-              </label>
+                <label htmlFor="name-input" className="cursor-pointer shrink-0">
+                  <img className="h-5 w-5" src={pen_edit} alt="edit" />
+                </label>
+              </div>
             </div>
-            
-          </div>
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full max-w-md gap-2 mt-3">
-            <h3 className="text-white text-sm sm:text-base">Phone number:</h3>
+              <h3 className="text-white text-sm sm:text-base">Phone number:</h3>
 
-            <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-              <input
-                id="phone-input"
-                className="bg-transparent text-white outline-none focus:ring-1 focus:ring-white/40 rounded px-2 py-1 w-full sm:w-48 text-sm sm:text-base"
-                onChange={(e) => setPhone(e.target.value)}
-                value={phone}
-                type="tel"
-                placeholder="example: Johnson"
-              />
+              <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+                <input
+                  id="phone-input"
+                  className="bg-transparent text-white outline-none focus:ring-1 focus:ring-white/40 rounded px-2 py-1 w-full sm:w-48 text-sm sm:text-base"
+                  onChange={(e) => setPhone(e.target.value)}
+                  value={phone}
+                  type="tel"
+                  placeholder="example: Johnson"
+                />
 
-              <label htmlFor="phone-input" className="cursor-pointer shrink-0">
-                <img className="h-5 w-5" src={pen_edit} alt="edit" />
-              </label>
+                <label
+                  htmlFor="phone-input"
+                  className="cursor-pointer shrink-0"
+                >
+                  <img className="h-5 w-5" src={pen_edit} alt="edit" />
+                </label>
+              </div>
             </div>
-            
           </div>
-          </div>
-          
         </div>
       </div>
     </div>

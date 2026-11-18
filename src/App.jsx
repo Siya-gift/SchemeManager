@@ -35,6 +35,7 @@ import Help from "./components/Help.jsx";
 import Faq from "./components/Faq.jsx";
 import About_us from "./components/About_us.jsx";
 import Payments from "./components/Payments.jsx";
+import Checkout from "./components/Checkout.jsx";
 import Confirm_Email from "./components/Confirm_Email.jsx";
 
 //components
@@ -2106,6 +2107,16 @@ function App() {
               <div className="min-h-screen bg-[#1E1E1E]" />
             ) : (
               <Payments />
+            )
+          }
+        />
+        <Route
+          path="/Checkout"
+          element={
+            authLoading ? (
+              <div className="min-h-screen bg-[#1E1E1E]" />
+            ) : (
+              <Checkout />
             )
           }
         />
