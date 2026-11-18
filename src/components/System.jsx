@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
 import ActivityHistory from './ActivityHistory.jsx'
 import Dashboard from './Dashboard.jsx'
 import Expenses from './Expenses.jsx'
@@ -133,6 +135,31 @@ function System({ dashboardProps }) {
     dash_schemes
   } = dashboardProps;
 
+  const tabContentRef = useRef(null);
+
+  useEffect(() => {
+    const tabPanels = Array.from(tabContentRef.current?.children ?? []).slice(1);
+    const activePanel = tabPanels.find(
+      (panel) => window.getComputedStyle(panel).display !== 'none',
+    );
+
+    if (!activePanel) return;
+
+    gsap.fromTo(
+      activePanel,
+      { autoAlpha: 0, y: 18 },
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        clearProps: 'opacity,visibility,transform',
+      },
+    );
+
+    return () => gsap.killTweensOf(activePanel);
+  }, [toggleState, toggleMobileState]);
+
   return (
     <div
       className="min-h-screen w-full relative overflow-hidden"
@@ -144,7 +171,7 @@ function System({ dashboardProps }) {
       }}
     >
       <MobileNav isOpen={isOpen} toggleMenu={toggleMenu} setToggleState={setToggleState} settoggleMobileState={settoggleMobileState} overlayer={overlayer} setOverlayer={setOverlayer} selectedSchemeName={selectedSchemeName} />
-      <div className='flex overflow-hidden'>
+      <div ref={tabContentRef} className='flex overflow-hidden'>
         <SideBar toggleState={toggleState} setToggleState={setToggleState} activeTab={activeTab} selectedSchemeName={selectedSchemeName} settoggleMobileState={settoggleMobileState}/>
         <Profile toggleState={toggleState} toggleMobileState={toggleMobileState} setToggleState={setToggleState} settoggleMobileState={settoggleMobileState}/>
 
