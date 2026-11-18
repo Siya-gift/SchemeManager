@@ -108,7 +108,7 @@ function SideBar({
       if (error) throw error;
 
       toast.success("Signed out successfully!");
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
       settoggleMobileState(1);
       setToggleState(1);
       setLoading(false);

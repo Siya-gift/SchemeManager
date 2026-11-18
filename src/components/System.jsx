@@ -198,7 +198,7 @@ function System({ dashboardProps }) {
         />
         <Settings toggleState={toggleState} toggleMobileState={toggleMobileState} settoggleMobileState={settoggleMobileState} setToggleState={setToggleState} activeTab={activeTab} />
       </div>
-      <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} toggleTabMobile={toggleTabMobile} />
+      <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} toggleMobileState={toggleMobileState} toggleMenu={toggleMenu} settoggleMobileState={settoggleMobileState} setToggleState={setToggleState} toggleTabMobile={toggleTabMobile} />
     </div>
   )
 }
