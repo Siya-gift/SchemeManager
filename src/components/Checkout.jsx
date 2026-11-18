@@ -38,10 +38,10 @@ function Checkout() {
           </span>
         </Link>
       </div>
-      <div className="flex flex-col items-center py-11 gap-3.5">
+      <div className="flex flex-col items-center py-11 gap-3.5 ">
         <div className="flex items-center justify-between w-full px-3">
           <p className="text-md text-white font-['Raleway'] not-italic font-nomarl text-base">
-            Choose Plan
+            Your Plan
           </p>
           <p className="text-md text-white font-['Raleway'] not-italic font-thin text-base">
             Checkout

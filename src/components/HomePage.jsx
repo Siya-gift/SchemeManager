@@ -212,7 +212,7 @@ function HomePage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setMinDelayPassed(true);
-    }, 10000);
+    }, 8000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -318,7 +318,7 @@ function HomePage() {
         </svg>
 
         <span className="text-xs font-medium tracking-[0.2em] text-white/50 uppercase animate-pulse">
-          Loading please wait...
+          Loading...
         </span>
       </div>
     );

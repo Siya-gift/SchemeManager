@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import luffyImg from "../images/Luffy_profile_pic.jpg";
+import luffyImg from "../images/PP_empty_icon.jpg";
 import dash_logo from "../images/dash_logo.svg";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";

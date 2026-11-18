@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import luffyImg from "../images/Luffy_profile_pic.jpg";
+import luffyImg from "../images/PP_empty_icon.jpg";
 import logout_ic from "../images/logout_ic.svg";
 import dash_logo from "../images/dash_logo.svg";
 import close_side_icon from "../images/close_side_icon.svg";
