@@ -58,7 +58,7 @@ function Checkout() {
         </div>
       </div>
       <div className="rounded-[15px] bg-linear-to-r from-[#00FF9D]/36 to-[#0368FF]/95 p-0.5">
-        <div className="flex justify-center flex-col rounded-[15px] bg-[#221436] px-5.5 py-3.5 gap-4">
+        <div className="flex justify-center flex-col rounded-[15px] bg-[#221436] px-5.5 py-3.5 gap-3">
           <div className="flex flex-col">
             <h4 className="text-[#AFAFAF] text-[18px] family-['Rajdhani'] font-bold">
               R 149/<span className="text-[8px]">Month</span>

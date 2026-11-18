@@ -6,7 +6,7 @@ import "../App.css";
 function PrimaryBtn6({ type, onClick, btnCheckout, loading }) {
   return (
     <button
-      className="relative text-white h-20  md:h-21 text-[11px] font-semibold px-12 py-5 overflow-hidden rounded-lg group transition-all duration-200 hover:scale-y-90 cursor-pointer focus:scale-85"
+      className="relative text-white h-25  md:h-21 text-[13px] font-semibold px-15 py-6 overflow-hidden rounded-lg group transition-all duration-200 hover:scale-y-90 cursor-pointer focus:scale-85"
       type={type}
       onClick={onClick}
       disabled={loading}
