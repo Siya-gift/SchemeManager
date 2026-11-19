@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import luffyImg from "../images/Luffy_profile_pic.jpg";
+import luffyImg from "../images/PP_empty_icon.jpg";
 import pen_edit from "../images/pen_edit.svg";
 import { supabase } from "../lib/supabaseClient.js";
 import { getAuthUserDisplayName } from "../lib/authUserName.js";
 import toast from "react-hot-toast";
 
-const getAuthUserAvatar = (user) =>
-  user?.user_metadata?.avatar_url || user?.user_metadata?.picture || "";
 
 function Profile({
   toggleState,
@@ -132,7 +130,7 @@ function Profile({
       // 6. Update the "Members" table
       const { error: dbError } = await supabase
         .from("Members")
-        .update({ profile_pictures: publicUrl }) // Replace 'avatar_url' with your exact column name
+        .update({ profile_picture: publicUrl }) // Replace 'avatar_url' with your exact column name
         .eq("id", user.id); // Change to .eq("email", user.email) if matched by email
 
       if (dbError) throw dbError;

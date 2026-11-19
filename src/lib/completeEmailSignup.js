@@ -1,5 +1,5 @@
 import { supabase } from "./supabaseClient.js";
-import Luffy_profile_pic from "../images/Luffy_profile_pic.jpg"
+import Luffy_profile_pic from "../images/PP_empty_icon.jpg"
 
 const pendingCompletions = new Map();
 const completedCompletions = new Set();
