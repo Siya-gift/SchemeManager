@@ -1440,11 +1440,11 @@ function App() {
       const fullDate = new Date(newSchemeYear, newSchemeDate, 1);
 
       const schemeToAdd = {
-        user_id: user.id,
         scheme: newScheme.trim(),
         monthly_contribution: Number(newSchemeAmount),
         starting_bal: Number(newSchemeStartingBal) || 0,
         created_at: fullDate.toISOString(),
+        member_id: user.id
       };
 
       const { data, error } = await supabase
@@ -1514,8 +1514,8 @@ function App() {
           starting_bal: startingBal,
           created_at: schemeDate.toISOString(),
         })
-        .eq("id", schemeId)
-        .eq("user_id", user.id)
+        .eq("id", user.id)
+        .eq("member_id", user.id)
         .select("*")
         .maybeSingle());
     } catch (requestError) {
@@ -1565,7 +1565,6 @@ function App() {
         .from("members_schemes")
         .delete()
         .eq("id", schemeId)
-        .eq("user_id", user.id)
         .select("id")
         .maybeSingle());
     } catch (requestError) {
@@ -1622,7 +1621,7 @@ function App() {
         const { data, error } = await supabase
           .from("members_schemes")
           .select("*")
-          .eq("user_id", user.id);
+          .eq("member_id", user.id);
 
         if (!isActive) return;
         if (error) {
