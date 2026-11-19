@@ -433,13 +433,23 @@ function SchemeMembers({
                 placeholder="Search Members..."
               />
 
+            <div className="flex flex-row w-full border rounded-xl">
               <button
-                className="bg-white/30 px-2 py-2.5 w-full border rounded-xl 
-              cursor-pointer hover:bg-white/45"
+                className="bg-white/30 px-2 py-2.5 w-full rounded-tl-xl rounded-bl-xl transition-all duration-300 ease-out
+              cursor-pointer hover:bg-white/45 focus:bg-white focus:text-black/50 flex items-center justify-center gap-1.5 text-sm border-r border-r-white"
                 onClick={openAddMember}
               >
-                <i className="fa-solid fa-plus"></i> Add Member
+                <i className="fa-solid fa-plus"></i> <p className="text-left">Add Member</p>
               </button>
+              <button
+                className="bg-white text-black/50 px-2 py-2.5 w-full rounded-tr-xl rounded-br-xl transition-all duration-300 ease-out
+              cursor-pointer hover:bg-white/45 focus:bg-white/30 focus:text-white flex items-center justify-center gap-1.5 text-sm border-l border-l-black/50"
+                onClick={openAddMember}
+              >
+                <i className="fa-solid fa-user-plus"></i> <p className="text-left">Invite Member</p>
+              </button>
+            </div>
+              
             </div>
           </div>
 
