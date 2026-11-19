@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient.js";
+import Luffy_profile_pic from "../images/Luffy_profile_pic.jpg"
 
 const pendingCompletions = new Map();
 const completedCompletions = new Set();
@@ -33,7 +34,6 @@ async function provisionUserSignup(user) {
   // 2. Create the member profile if missing
   if (!member) {
     const memberName =
-      user.user_metadata?.full_name ||
       user.user_metadata?.name ||
       user.email?.split("@")[0] ||
       "Member";
@@ -41,10 +41,9 @@ async function provisionUserSignup(user) {
     const { error } = await supabase.from("Members").insert({
       id: user.id,
       member_name: memberName,
-      tot_paid: "0.00",
-      status: "Pending",
-      scheme_name: ["clubs"],
-      plan_type: "Premium",
+      joined_date: new Date().toISOString(),
+      type: "Premium",
+      profile_picture: Luffy_profile_pic,
     });
 
     if (error && error.code !== "23505") {
@@ -53,35 +52,10 @@ async function provisionUserSignup(user) {
   }
 
   // 3. Check if the default "clubs" scheme already exists
-  const { data: schemes, error: schemeLookupError } = await supabase
-    .from("members_schemes")
-    .select("user_id")
-    .eq("user_id", user.id)
-    .eq("scheme", "clubs")
-    .limit(1);
-
-  if (schemeLookupError) {
-    throw new Error(
-      `Could not check the default scheme: ${schemeLookupError.message}`,
-    );
-  }
+  
 
   // 4. Create the default "clubs" scheme if missing
-  if (!schemes || schemes.length === 0) {
-    const { error } = await supabase.from("members_schemes").insert({
-      user_id: user.id,
-      scheme: "clubs",
-      monthly_contribution: 0,
-      starting_bal: 0,
-      created_at: new Date().toISOString(),
-    });
-
-    if (error && error.code !== "23505") {
-      throw new Error(`Could not set up the default scheme: ${error.message}`);
-    }
-  }
-
-  return "clubs";
+  
 }
 
 export function schemeSelected(
