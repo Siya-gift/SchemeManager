@@ -44,6 +44,7 @@ async function provisionUserSignup(user) {
       joined_date: new Date().toISOString(),
       type: "Premium",
       profile_picture: Luffy_profile_pic,
+      user_id: user.id
     });
 
     if (error && error.code !== "23505") {
