@@ -5,7 +5,6 @@ import { supabase } from "../lib/supabaseClient.js";
 import { getAuthUserDisplayName } from "../lib/authUserName.js";
 import toast from "react-hot-toast";
 
-
 function Profile({
   toggleState,
   toggleMobileState,
@@ -18,47 +17,127 @@ function Profile({
   const [phone, setPhone] = useState("0725678900");
 
   useEffect(() => {
+    let active = true;
+
     const fetchUserProfile = async () => {
       try {
-        // 1. Get the currently logged-in user
+        // 1. Get the currently logged-in user first so user.id is available
         const {
           data: { user },
           error: userError,
         } = await supabase.auth.getUser();
-        if (userError || !user) return;
-        setEmail(user?.email);
 
-        // Set initial values from Auth metadata while database loads
-        if (user.user_metadata?.avatar_url) {
-          setUserProfilePicture(user.user_metadata.avatar_url);
-        }
+        if (userError || !user || !active) return;
+
+        setEmail(user.email || "");
+
         if (user.user_metadata?.full_name) {
           setName(user.user_metadata.full_name);
         }
 
-        // 2. Fetch the latest values from your "Members" table
+        // 2. Check Storage first for an uploaded avatar
+        let resolvedAvatar = "";
+
+        try {
+          const { data: files, error: storageError } = await supabase.storage
+            .from("profile_pictures")
+            .list(user.id, {
+              limit: 20,
+            });
+
+          if (storageError) {
+            throw storageError;
+          }
+
+          if (Array.isArray(files)) {
+            const validFiles = files
+              .filter(
+                (file) => file?.name && file.name !== ".emptyFolderPlaceholder",
+              )
+              .sort(
+                (a, b) =>
+                  new Date(b.updated_at || b.created_at || 0).getTime() -
+                  new Date(a.updated_at || a.created_at || 0).getTime(),
+              );
+
+            const latestFile = validFiles[0];
+            if (latestFile) {
+              const { data: publicUrlData } = supabase.storage
+                .from("profile_pictures")
+                .getPublicUrl(`${user.id}/${latestFile.name}`);
+
+              if (publicUrlData?.publicUrl) {
+                const version = new Date(
+                  latestFile.updated_at || latestFile.created_at || Date.now(),
+                ).getTime();
+                const separator = publicUrlData.publicUrl.includes("?")
+                  ? "&"
+                  : "?";
+                resolvedAvatar = `${publicUrlData.publicUrl}${separator}v=${version}`;
+              }
+            }
+          }
+        } catch (storageErr) {
+          if (active) {
+            toast.error(
+              `Error fetching avatar from storage: ${storageErr?.message || "Unknown error"}`,
+            );
+          }
+        }
+
+        // 3. Check "Members" table if Storage didn't return a file
         const { data: memberData, error: dbError } = await supabase
           .from("Members")
           .select("member_name, profile_pictures")
           .eq("id", user.id) // Change to .eq("email", user.email) if matched by email
-          .single();
+          .maybeSingle();
 
-        if (dbError) throw dbError;
+        if (dbError) {
+          throw dbError;
+        }
 
-        if (memberData) {
-          if (memberData.profile_pictures) {
-            setUserProfilePicture(memberData.profile_pictures);
+        if (memberData && active) {
+          if (memberData.member_name) {
+            setName(memberData.member_name);
           }
-          if (memberData.name) {
-            setName(memberData.name);
+
+          if (!resolvedAvatar && memberData.profile_pictures) {
+            resolvedAvatar = memberData.profile_pictures;
           }
         }
+
+        // 4. Fallback to Auth metadata avatar
+        if (!resolvedAvatar) {
+          resolvedAvatar =
+            user.user_metadata?.avatar_url ||
+            user.user_metadata?.profile_picture ||
+            user.user_metadata?.picture ||
+            "";
+        }
+
+        if (active) {
+          setUserProfilePicture(resolvedAvatar);
+        }
       } catch (error) {
-        console.error("Error loading profile:", error.message);
+        console.error("Error loading profile:", error?.message || error);
       }
     };
 
     fetchUserProfile();
+
+    // Re-fetch when a user signs in or token refreshes without remounting
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+        fetchUserProfile();
+      }
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleUpdateName = async () => {

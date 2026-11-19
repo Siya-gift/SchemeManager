@@ -17,9 +17,10 @@ function SideBar({
   const [name, setName] = useState("Account");
   const [userProfilePicture, setUserProfilePicture] = useState("");
 
-  const getAuthUserAvatar = async (user) => {
-    if (!user) return "";
+  const getAuthUserAvatar = async (userParam) => {
+    let user = userParam;
 
+    // 2. Fallback to Storage bucket if not found in Members
     try {
       const { data: files, error } = await supabase.storage
         .from("profile_pictures")
@@ -28,7 +29,11 @@ function SideBar({
           sortBy: { column: "created_at", order: "desc" },
         });
 
-      if (!error && files) {
+      if (error) {
+        throw error;
+      }
+
+      if (files) {
         // Ignore Supabase's hidden folder placeholder file
         const validFile = files.find(
           (file) => file.name !== ".emptyFolderPlaceholder",
@@ -43,7 +48,54 @@ function SideBar({
         }
       }
     } catch (err) {
-      console.error("Error fetching avatar from storage:", err);
+      toast.error(
+        `Error fetching avatar from storage: ${err?.message || "Unknown error"}`,
+      );
+    }
+
+    // 0. Check Supabase Auth user metadata first
+    try {
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        throw authError;
+      }
+
+      if (data?.user) {
+        user = data.user;
+      }
+
+      const authAvatar =
+        user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+      if (authAvatar) {
+        return authAvatar;
+      }
+    } catch (err) {
+      toast.error(
+        `Error fetching auth user: ${err?.message || "Unknown error"}`,
+      );
+    }
+
+    if (!user?.id) return "";
+
+    // 1. Check the Members table next
+    try {
+      const { data: member, error: memberError } = await supabase
+        .from("Members")
+        .select("profile_picture")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (memberError) {
+        throw memberError;
+      }
+
+      if (member?.profile_picture) {
+        return member.profile_picture;
+      }
+    } catch (err) {
+      toast.error(
+        `Error fetching avatar from Members table: ${err?.message || "Unknown error"}`,
+      );
     }
 
     return "";

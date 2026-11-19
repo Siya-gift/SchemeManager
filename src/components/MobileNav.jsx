@@ -6,7 +6,14 @@ import { useGSAP } from "@gsap/react";
 import { supabase } from "../lib/supabaseClient.js";
 import { getAuthUserDisplayName } from "../lib/authUserName.js";
 
-function MobileNav({ isOpen, toggleMenu, setToggleState, settoggleMobileState, setOverlayer, selectedSchemeName }) {
+function MobileNav({
+  isOpen,
+  toggleMenu,
+  setToggleState,
+  settoggleMobileState,
+  setOverlayer,
+  selectedSchemeName,
+}) {
   const container = useRef();
 
   useGSAP(
@@ -28,33 +35,80 @@ function MobileNav({ isOpen, toggleMenu, setToggleState, settoggleMobileState, s
     { scope: container, dependencies: [isOpen] },
   );
 
-  const getAuthUserAvatar = async (user) => {
-    if (!user) return "";
+  const getAuthUserAvatar = async (userParam) => {
+    let user = userParam;
 
+    // 3. Fallback to Storage bucket for mobile/uploaded files
     try {
       const { data: files, error } = await supabase.storage
         .from("profile_pictures")
         .list(user.id, {
-          limit: 10,
-          sortBy: { column: "created_at", order: "desc" },
+          limit: 20,
         });
 
-      if (!error && files) {
-        // Ignore Supabase's hidden folder placeholder file
-        const validFile = files.find(
-          (file) => file.name !== ".emptyFolderPlaceholder",
+      if (!error && Array.isArray(files)) {
+        const validFiles = files.filter(
+          (file) => file?.name && file.name !== ".emptyFolderPlaceholder",
         );
 
-        if (validFile) {
+        // Sort newest first in JS using updated_at or created_at
+        validFiles.sort((a, b) => {
+          const timeA = new Date(a.updated_at || a.created_at || 0).getTime();
+          const timeB = new Date(b.updated_at || b.created_at || 0).getTime();
+          return timeB - timeA;
+        });
+
+        const latestFile = validFiles[0];
+        if (latestFile) {
           const { data } = supabase.storage
             .from("profile_pictures")
-            .getPublicUrl(`${user.id}/${validFile.name}`);
+            .getPublicUrl(`${user.id}/${latestFile.name}`);
 
-          if (data?.publicUrl) return data.publicUrl;
+          if (data?.publicUrl) {
+            // Cache-bust so mobile browsers & WebViews load newly replaced avatars
+            const version = new Date(
+              latestFile.updated_at || latestFile.created_at || Date.now(),
+            ).getTime();
+            const separator = data.publicUrl.includes("?") ? "&" : "?";
+            return `${data.publicUrl}${separator}v=${version}`;
+          }
         }
       }
     } catch (err) {
       console.error("Error fetching avatar from storage:", err);
+    }
+    
+    // 1. Check Supabase Auth user metadata first (helpful for OAuth/mobile sign-ins)
+    try {
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (!authError && data?.user) {
+        user = data.user;
+      }
+
+      const authAvatar =
+        user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+      if (authAvatar) {
+        return authAvatar;
+      }
+    } catch (err) {
+      console.error("Error fetching auth user:", err);
+    }
+
+    if (!user?.id) return "";
+
+    // 2. Check the Members table next
+    try {
+      const { data: member, error: memberError } = await supabase
+        .from("Members")
+        .select("profile_picture")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!memberError && member?.profile_picture) {
+        return member.profile_picture;
+      }
+    } catch (err) {
+      console.error("Error fetching avatar from Members table:", err);
     }
 
     return "";
