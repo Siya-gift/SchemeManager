@@ -88,7 +88,7 @@ function Profile({
         // 3. Check "Members" table if Storage didn't return a file
         const { data: memberData, error: dbError } = await supabase
           .from("Members")
-          .select("member_name, profile_pictures")
+          .select("member_name, profile_picture")
           .eq("id", user.id) // Change to .eq("email", user.email) if matched by email
           .maybeSingle();
 
@@ -101,8 +101,8 @@ function Profile({
             setName(memberData.member_name);
           }
 
-          if (!resolvedAvatar && memberData.profile_pictures) {
-            resolvedAvatar = memberData.profile_pictures;
+          if (!resolvedAvatar && memberData.profile_picture) {
+            resolvedAvatar = memberData.profile_picture;
           }
         }
 
