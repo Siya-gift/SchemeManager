@@ -259,7 +259,11 @@ function Expenses({
           <h3 className="text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap">
             {formattedDate}
           </h3>
-          <div className="flex md:justify-end gap-4 md:w-full">
+          <div className="flex md:justify-end gap-6 md:w-full">
+            <div className="flex items-center gap-1.5 flex-row text-white/80">
+              <p className="text-sm">0</p>
+              <i class="fa-solid fa-users"></i>
+            </div>
             <span
               className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
               onClick={openCalender}

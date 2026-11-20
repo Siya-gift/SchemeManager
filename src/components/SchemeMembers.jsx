@@ -3,6 +3,7 @@ import MemberAccountStatement from "../invoice/MemberAccountStatement";
 import Notifications from "./Notifications";
 
 function SchemeMembers({
+  schemeLoadBtn,
   toggleState,
   toggleMobileState,
   openCalender,
@@ -56,7 +57,7 @@ function SchemeMembers({
   newSchemeYear,
   setNewSchemeYear,
   saveScheme,
-  dash_schemes
+  dash_schemes,
 }) {
   const [isDotMenu, setisDotMenu] = useState(false);
   const [activeMenuIdx, setActiveMenuIdx] = useState(null);
@@ -69,7 +70,9 @@ function SchemeMembers({
   const [editSchemeAmount, setEditSchemeAmount] = useState(null);
   const [editSchemeStartingBal, setEditSchemeStartingBal] = useState(null);
   const [editSchemeDate, setEditSchemeDate] = useState(new Date().getMonth());
-  const [editSchemeYear, setEditSchemeYear] = useState(new Date().getFullYear());
+  const [editSchemeYear, setEditSchemeYear] = useState(
+    new Date().getFullYear(),
+  );
   const [editSchemeId, setEditSchemeId] = useState(null);
   const [deleteTargetIndex, setDeleteTargetIndex] = useState(null);
   const [deleteSchemeTargetId, setDeleteSchemeTargetId] = useState(null);
@@ -86,6 +89,7 @@ function SchemeMembers({
   const [isEditPaymentHist, setIsEditPaymentHist] = useState(false);
   const [isPaymentHistoryModal, setPaymentHistoryModal] = useState(false);
   const [showPdf, setShowPdf] = useState(false);
+  const [isInviteMember, setIsInviteMember] = useState(false);
 
   const [member, setMember] = useState("");
 
@@ -258,7 +262,47 @@ function SchemeMembers({
   };
 
   const editSchemeModal = (scheme) => {
-    const schemeDate = new Date(scheme.created_at ?? scheme.date);
+    let schemeDate = new Date(
+      scheme.starting_bal_date ?? scheme.created_at ?? scheme.date,
+    );
+    const startingBalDate = scheme.starting_bal_date;
+
+    if (
+      typeof startingBalDate === "string" &&
+      !Number.isNaN(Date.parse(startingBalDate))
+    ) {
+      schemeDate = new Date(startingBalDate);
+    } else if (typeof startingBalDate === "string") {
+      const monthYearMatch = startingBalDate
+        .trim()
+        .match(/^([A-Za-z]+)\s+(\d{4})$/);
+      if (monthYearMatch) {
+        const monthIndex = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ].findIndex(
+          (month) =>
+            month.toLowerCase() === monthYearMatch[1].toLowerCase(),
+        );
+        if (monthIndex >= 0) {
+          schemeDate = new Date(
+            Number(monthYearMatch[2]),
+            monthIndex,
+            1,
+          );
+        }
+      }
+    }
     const validDate = !Number.isNaN(schemeDate.getTime());
 
     setIsEditScheme(true);
@@ -270,7 +314,9 @@ function SchemeMembers({
     setEditSchemeStartingBal(
       Number(scheme.starting_bal ?? scheme.startingBal) || 0,
     );
-    setEditSchemeDate(validDate ? schemeDate.getMonth() : new Date().getMonth());
+    setEditSchemeDate(
+      validDate ? schemeDate.getMonth() : new Date().getMonth(),
+    );
     setEditSchemeYear(
       validDate ? schemeDate.getFullYear() : new Date().getFullYear(),
     );
@@ -284,6 +330,8 @@ function SchemeMembers({
       monthlyContribution: editSchemeAmount,
       startingBal: editSchemeStartingBal,
       date: new Date(editSchemeYear, editSchemeDate, 1).toISOString(),
+      month: editSchemeDate,
+      year: editSchemeYear,
     });
 
     if (saved) {
@@ -298,7 +346,7 @@ function SchemeMembers({
 
   const paymentHistoryModal = (member) => {
     setPayingMember(member.memberName);
-    setPDFMemberdata(member)
+    setPDFMemberdata(member);
     setPaymentHistoryModal(true);
   };
 
@@ -325,9 +373,12 @@ function SchemeMembers({
 
   const pdfGenerator = (data) => {
     const currentYear = new Date().getFullYear();
-    const memberData = data.filter((item) => item.userName === payingMember && parseInt(item.year) === currentYear);
-    setPDFdata(memberData)
-    setShowPdf(!showPdf)
+    const memberData = data.filter(
+      (item) =>
+        item.userName === payingMember && parseInt(item.year) === currentYear,
+    );
+    setPDFdata(memberData);
+    setShowPdf(!showPdf);
   };
 
   return (
@@ -349,14 +400,23 @@ function SchemeMembers({
           <h3 className="text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap">
             {formattedDate}
           </h3>
-          <div className="flex md:justify-end gap-4 md:w-full">
+          <div className="flex md:justify-end gap-6 md:w-full">
+            <div className="flex items-center gap-1.5 flex-row text-white/80">
+              <p className="text-sm">0</p>
+              <i class="fa-solid fa-users"></i>
+            </div>
             <span
               className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
               onClick={openCalender}
             >
               <i className="fa-solid fa-calendar-days"></i>
             </span>
-            <Notifications key={`${toggleState}-${toggleMobileState}`} desktopTab={toggleState} mobileTab={toggleMobileState} tabId={2} />
+            <Notifications
+              key={`${toggleState}-${toggleMobileState}`}
+              desktopTab={toggleState}
+              mobileTab={toggleMobileState}
+              tabId={2}
+            />
           </div>
         </div>
       </div>
@@ -393,9 +453,7 @@ function SchemeMembers({
                   <div className="flex gap-3 flex-end text-[11px] transition-transform">
                     <span
                       className="px-2 py-2 border rounded-lg inline-block hover:-translate-y-1"
-                      onClick={() =>
-                        editSchemeModal(item)
-                      }
+                      onClick={() => editSchemeModal(item)}
                     >
                       <i className="fa-regular fa-pen-to-square"></i>
                     </span>
@@ -433,23 +491,26 @@ function SchemeMembers({
                 placeholder="Search Members..."
               />
 
-            <div className="flex flex-row w-full border rounded-xl">
-              <button
-                className="bg-white/30 px-2 py-2.5 w-full rounded-tl-xl rounded-bl-xl transition-all duration-300 ease-out
+              <div className="flex flex-row w-full border rounded-xl">
+                <button
+                  className="bg-white/30 px-2 py-2.5 w-full rounded-tl-xl rounded-bl-xl transition-all duration-300 ease-out
               cursor-pointer hover:bg-white/45 focus:bg-white focus:text-black/50 flex items-center justify-center gap-1.5 text-sm border-r border-r-white"
-                onClick={openAddMember}
-              >
-                <i className="fa-solid fa-plus"></i> <p className="text-left">Add Member</p>
-              </button>
-              <button
-                className="bg-white text-black/50 px-2 py-2.5 w-full rounded-tr-xl rounded-br-xl transition-all duration-300 ease-out
+                  onClick={openAddMember}
+                >
+                  <i className="fa-solid fa-plus"></i>{" "}
+                  <p className="text-left">Add Member</p>
+                </button>
+                <button
+                  className="bg-white text-black/50 px-2 py-2.5 w-full rounded-tr-xl rounded-br-xl transition-all duration-300 ease-out
               cursor-pointer hover:bg-white/45 focus:bg-white/30 focus:text-white flex items-center justify-center gap-1.5 text-sm border-l border-l-black/50"
-                onClick={openAddMember}
-              >
-                <i className="fa-solid fa-user-plus"></i> <p className="text-left">Invite Member</p>
-              </button>
-            </div>
-              
+                  onClick={() => {
+                    setIsInviteMember(!isInviteMember);
+                  }}
+                >
+                  <i className="fa-solid fa-user-plus"></i>{" "}
+                  <p className="text-left">Invite Member</p>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -494,7 +555,8 @@ function SchemeMembers({
                         <td
                           className="py-4 px-2 align-middle font-medium truncate hover:text-white/70 cursor-pointer"
                           onClick={() => paymentHistoryModal(member)}
-                          name={"View Payment History"}>
+                          name={"View Payment History"}
+                        >
                           {idx + 1}. {member.memberName}
                         </td>
                         <td className="py-4 px-2 align-middle">
@@ -659,6 +721,41 @@ function SchemeMembers({
               onClick={saveMember}
             >
               Save
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isInviteMember && (
+        <div
+          className="fixed z-9 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+        bg-black/50 h-screen w-screen"
+        >
+          <div
+            className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2
+           w-75 md:w-185 h-auto border-none! glass px-3 py-5 bg-white/30 backdrop-blur-md z-9999"
+          >
+            <div className="flex justify-between align-center w-full text-white">
+              <h1 className="text-2xl">Invite Member</h1>
+              <p
+                className="font-bold text-2xl cursor-pointer"
+                onClick={() => {
+                  setIsInviteMember(!isInviteMember);
+                }}
+              >
+                &times;
+              </p>
+            </div>
+
+            <h1 className="text-white text-[clamp(24px,5vw,36px)] p-4 text-center">
+              Coming Soon.
+            </h1>
+
+            <button
+              disabled
+              className="w-full py-3 rounded-xl text-white/40 mt-6 bg-white/10 cursor-not-allowed opacity-60"
+            >
+              Invite
             </button>
           </div>
         </div>
@@ -1244,7 +1341,7 @@ function SchemeMembers({
                     "September",
                     "October",
                     "November",
-                    "December",
+                    "December"
                   ].map((month, index) => (
                     <option key={index} value={index} className="text-black">
                       {month}
@@ -1280,7 +1377,7 @@ function SchemeMembers({
                 className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30"
                 onClick={saveScheme}
               >
-                Save
+                {schemeLoadBtn ? "Saving..." : "Save"}
               </button>
             </div>
           </div>
@@ -1463,7 +1560,13 @@ function SchemeMembers({
                                         </td>
 
                                         <td className="px-6 py-4 font-semibold">
-                                          {(Number(h.amount).toLocaleString('en-ZA',{style:"currency", currency: "ZAR"}))}
+                                          {Number(h.amount).toLocaleString(
+                                            "en-ZA",
+                                            {
+                                              style: "currency",
+                                              currency: "ZAR",
+                                            },
+                                          )}
                                         </td>
 
                                         <td className="px-6 py-4">
@@ -1548,7 +1651,13 @@ function SchemeMembers({
                                       <span>Amount:</span>
 
                                       <span className="text-gray-900 font-semibold">
-                                        {(Number(h.amount).toLocaleString('en-ZA',{style:"currency", currency: "ZAR"}))}
+                                        {Number(h.amount).toLocaleString(
+                                          "en-ZA",
+                                          {
+                                            style: "currency",
+                                            currency: "ZAR",
+                                          },
+                                        )}
                                       </span>
                                     </div>
 
@@ -1620,16 +1729,19 @@ function SchemeMembers({
                 &times;
               </div>
             </div>
-            <div
-              className="h-[90%] "
-              style={{ marginTop: "20px"}}
-            >
-              <MemberAccountStatement PDFdata={PDFdata} PDFMemberdata={PDFMemberdata} selectedSchemeName={selectedSchemeName} schemes={schemes} />
+            <div className="h-[90%] " style={{ marginTop: "20px" }}>
+              <MemberAccountStatement
+                PDFdata={PDFdata}
+                PDFMemberdata={PDFMemberdata}
+                selectedSchemeName={selectedSchemeName}
+                schemes={schemes}
+              />
             </div>
           </div>
         </div>
       )}
     </div>
+  
   );
 }
 

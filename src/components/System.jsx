@@ -15,6 +15,7 @@ import systemBackground from '../images/bannerPic1.jpg'
 
 function System({ dashboardProps }) {
   const {
+    schemeLoadBtn,
     isOpen,
     setIsOpen,
     toggleMenu,
@@ -174,12 +175,11 @@ function System({ dashboardProps }) {
       <div ref={tabContentRef} className='flex overflow-hidden'>
         <SideBar toggleState={toggleState} setToggleState={setToggleState} activeTab={activeTab} selectedSchemeName={selectedSchemeName} settoggleMobileState={settoggleMobileState}/>
         <Profile toggleState={toggleState} toggleMobileState={toggleMobileState} setToggleState={setToggleState} settoggleMobileState={settoggleMobileState}/>
-
         <Dashboard toggleState={toggleState} toggleMobileState={toggleMobileState} overlayer={overlayer}
           openCalender={openCalender} formattedDate={formattedDate} schemes={schemes} setSchemes={setSchemes}
           isAddSchemeModal={isAddSchemeModal} setAddSchemeModal={setAddSchemeModal} newScheme={newScheme} setNewScheme={setNewScheme} newSchemeAmount={newSchemeAmount} setNewSchemeAmount={setNewSchemeAmount}
           handleSchemeNameInputChange={handleSchemeNameInputChange} handleSchemeAmountInputChange={handleSchemeAmountInputChange} handleSchemeStartingBalInputChange={handleSchemeStartingBalInputChange}
-          handleSchemeDateInputChange={handleSchemeDateInputChange} handleSchemeYearInputChange={handleSchemeYearInputChange} newSchemeStartingBal={newSchemeStartingBal} setNewSchemeStartingBal={setNewSchemeStartingBal}
+          handleSchemeDateInputChange={handleSchemeDateInputChange} handleSchemeYearInputChange={handleSchemeYearInputChange} newSchemeStartingBal={newSchemeStartingBal} setNewSchemeStartingBal={setNewSchemeStartingBal} setOverlayer={setOverlayer} schemeLoadBtn={schemeLoadBtn}
           newSchemeDate={newSchemeDate} setNewSchemeDate={setNewSchemeDate} newSchemeYear={newSchemeYear} setNewSchemeYear={setNewSchemeYear} saveScheme={saveScheme}
           schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState} setSchemeSelectedState={setSchemeSelectedState} handleConfirmPayment={handleConfirmPayment}
           totalSpentThisMonth={totalSpentThisMonth} activeTab={activeTab} toggleTabMobile={toggleTabMobile} financialData={financialData} netDifference={netDifference}
@@ -199,7 +199,7 @@ function System({ dashboardProps }) {
         <SchemeMembers toggleState={toggleState} toggleMobileState={toggleMobileState} openCalender={openCalender}
           isAddSchemeModal={isAddSchemeModal} setAddSchemeModal={setAddSchemeModal} newScheme={newScheme} setNewScheme={setNewScheme} newSchemeAmount={newSchemeAmount} setNewSchemeAmount={setNewSchemeAmount}
           handleSchemeNameInputChange={handleSchemeNameInputChange} handleSchemeAmountInputChange={handleSchemeAmountInputChange} handleSchemeStartingBalInputChange={handleSchemeStartingBalInputChange}
-          handleSchemeDateInputChange={handleSchemeDateInputChange} handleSchemeYearInputChange={handleSchemeYearInputChange} newSchemeStartingBal={newSchemeStartingBal} setNewSchemeStartingBal={setNewSchemeStartingBal}
+          handleSchemeDateInputChange={handleSchemeDateInputChange} handleSchemeYearInputChange={handleSchemeYearInputChange} newSchemeStartingBal={newSchemeStartingBal} setNewSchemeStartingBal={setNewSchemeStartingBal} schemeLoadBtn={schemeLoadBtn}
           newSchemeDate={newSchemeDate} setNewSchemeDate={setNewSchemeDate} newSchemeYear={newSchemeYear} setNewSchemeYear={setNewSchemeYear} saveScheme={saveScheme}
           formattedDate={formattedDate} schemes={schemes} updateScheme={updateScheme} deleteScheme={deleteScheme} schemeSelected={schemeSelected} schemeSelectedState={schemeSelectedState}
           setSchemeSelectedState={setSchemeSelectedState} selectedSchemeName={selectedSchemeName} allMembers={allMembers} handleConfirmPayment={handleConfirmPayment}

@@ -4,9 +4,11 @@ import Notifications from "./Notifications";
 import { supabase } from "../lib/supabaseClient";
 
 function Dashboard({
+  schemeLoadBtn,
   toggleState,
   toggleMobileState,
   overlayer,
+  setOverlayer,
   openCalender,
   formattedDate,
   schemes,
@@ -70,8 +72,15 @@ function Dashboard({
   newSchemeYear,
   setNewSchemeYear,
   saveScheme,
-  dash_schemes
+  dash_schemes,
 }) {
+  const startingBalanceMonths = Array.from({ length: 12 }, (_, index) =>
+    new Intl.DateTimeFormat("en", { month: "long" }).format(
+      new Date(2026, index, 1),
+    ),
+  );
+  // Output: ["January", "February", "March", ...]
+
   const [YearMonthFilter, setYearMonthFilter] = useState(1);
 
   const switchYearMonthFilter = (periodSelected) => {
@@ -205,7 +214,12 @@ function Dashboard({
               {formattedDate}
             </h3>
           </div>
-          <div className="flex md:justify-end gap-4 md:w-full">
+          <div className="flex md:justify-end gap-6 md:w-full">
+            <div className="flex items-center gap-1.5 flex-row text-white/80">
+              <p className="text-sm">{filteredMembers.length}</p>
+              <i className="fa-solid fa-users"></i>
+            </div>
+
             <span
               className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
               onClick={openCalender}
@@ -217,6 +231,7 @@ function Dashboard({
               desktopTab={toggleState}
               mobileTab={toggleMobileState}
               tabId={1}
+              setOverlayer={setOverlayer}
             />
           </div>
         </div>
@@ -646,24 +661,13 @@ function Dashboard({
                   value={newSchemeDate}
                   className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
                 >
-                  {[
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
-                  ].map((month, index) => (
-                    <option key={index} value={index} className="text-black">
-                      {month}
-                    </option>
-                  ))}
+                  {startingBalanceMonths.map(
+                    (month, index) => (
+                      <option key={index} value={index} className="text-black">
+                        {month}
+                      </option>
+                    ),
+                  )}
                 </select>
 
                 {/* Year Select */}
@@ -694,7 +698,7 @@ function Dashboard({
                 className="w-full py-3 rounded-xl text-white mt-6 bg-white/40 cursor-pointer hover:bg-white/30"
                 onClick={saveScheme}
               >
-                Save
+                {schemeLoadBtn ? "Saving..." : "Save"}
               </button>
             </div>
           </div>

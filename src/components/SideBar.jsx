@@ -262,7 +262,7 @@ function SideBar({
             uistate ? "opacity-0" : "opacity-100"
           }`}
         >
-          Scheme : {selectedSchemeName}
+          {selectedSchemeName}
         </small>
       </div>
       <div className="glass mt-5 flex flex-col h-full p-5">

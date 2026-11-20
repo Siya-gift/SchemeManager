@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState, useRef, useMemo } from "react";
-import Lenis from 'lenis';
+import Lenis from "lenis";
 import toast, { Toaster } from "react-hot-toast";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -90,6 +90,7 @@ function PasswordRecoveryRedirect() {
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [calenderState, setCalenderState] = useState(false);
+  const calender_ref = useRef(null);
   const toggleMenu = () => setIsOpen(!isOpen);
   const openCalender = () => setCalenderState(!calenderState);
   const [overlayer, setOverlayer] = useState(false);
@@ -124,7 +125,7 @@ function App() {
     return () => {
       lenis.destroy();
     };
-  }, [])
+  }, []);
 
   //props declared
   const [schemeSelectedState, setSchemeSelectedState] = useState(0);
@@ -1412,19 +1413,70 @@ function App() {
         : scheme.scheme !== removedScheme.scheme,
     );
 
-  const mapSchemeForApp = (scheme) => ({
-    ...scheme,
-    monthlyContribution: Number(scheme.monthly_contribution) || 0,
-    startingBal: Number(scheme.starting_bal) || 0,
-    date: scheme.created_at,
-  });
+  const mapSchemeForApp = (scheme) => {
+    const startingBalDate = scheme.starting_bal_date;
+    let date = scheme.created_at;
+
+    if (typeof startingBalDate === "string" && startingBalDate.trim()) {
+      const monthYearMatch = startingBalDate
+        .trim()
+        .match(/^([A-Za-z]+)\s+(\d{4})$/);
+      if (monthYearMatch) {
+        const monthIndex = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ].findIndex(
+          (month) => month.toLowerCase() === monthYearMatch[1].toLowerCase(),
+        );
+
+        if (monthIndex >= 0) {
+          date = new Date(
+            Number(monthYearMatch[2]),
+            monthIndex,
+            1,
+          ).toISOString();
+        }
+      } else if (/^\d{4}-\d{2}-\d{2}$/.test(startingBalDate)) {
+        date = startingBalDate;
+      } else if (/^\d{1,2}\/\d{4}$/.test(startingBalDate)) {
+        const [month, year] = startingBalDate.split("/").map(Number);
+        date = new Date(year, month - 1, 1).toISOString();
+      }
+    }
+
+    return {
+      ...scheme,
+      monthlyContribution: Number(scheme.monthly_contribution) || 0,
+      startingBal: Number(scheme.starting_bal) || 0,
+      date,
+    };
+  };
 
   const isSavingScheme = useRef(false);
+  const [schemeLoadBtn, setSchemeLoadBtn] = useState(false);
+
   const saveScheme = async () => {
     if (isSavingScheme.current) return;
-    if (!newScheme.trim()) return;
-    if (!newSchemeAmount) return;
+    if (!newScheme.trim()) {
+      toast.error("Fill in the scheme name field");
+      return;
+    }
+    if (!newSchemeAmount) {
+      toast.error("Fill in the scheme monthly contrubution amount field");
+      return;
+    }
 
+    setSchemeLoadBtn(true);
     isSavingScheme.current = true;
     try {
       const {
@@ -1438,13 +1490,18 @@ function App() {
       }
 
       const fullDate = new Date(newSchemeYear, newSchemeDate, 1);
+      const startingBalDateText = fullDate.toLocaleDateString("en-ZA", {
+        month: "long",
+        year: "numeric",
+      });
 
       const schemeToAdd = {
         scheme: newScheme.trim(),
         monthly_contribution: Number(newSchemeAmount),
         starting_bal: Number(newSchemeStartingBal) || 0,
-        created_at: fullDate.toISOString(),
-        member_id: user.id
+        starting_bal_date: startingBalDateText,
+        created_at: new Date().toISOString(),
+        member_id: user.id,
       };
 
       const { data, error } = await supabase
@@ -1453,8 +1510,23 @@ function App() {
         .select();
 
       if (error) {
-        console.error("Error saving scheme to Supabase:", error);
+        toast.error("Error saving scheme to Supabase:", error);
         return;
+      } else {
+        toast.success(
+          (t) => (
+            <div className="flex items-center justify-between gap-3">
+              <span>Scheme {newScheme.trim()} has been Created! You can now start adding members.</span>
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="text-gray-400 hover:text-gray-600 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+          ),
+          { duration: 10500 },
+        );
       }
 
       const insertedScheme = data[0];
@@ -1462,7 +1534,7 @@ function App() {
         ...insertedScheme,
         monthlyContribution: Number(insertedScheme.monthly_contribution),
         startingBal: Number(insertedScheme.starting_bal) || 0,
-        date: insertedScheme.created_at,
+        date: insertedScheme.starting_bal_date || insertedScheme.created_at,
       };
       setSchemes((prev) => upsertScheme(prev, appScheme));
 
@@ -1474,6 +1546,7 @@ function App() {
       setNewSchemeDate(new Date().getMonth());
       setNewSchemeYear(new Date().getFullYear());
       setAddSchemeModal(false);
+      setSchemeLoadBtn(false);
     } finally {
       isSavingScheme.current = false;
     }
@@ -1483,7 +1556,15 @@ function App() {
     const schemeName = changes.scheme?.trim();
     const monthlyContribution = Number(changes.monthlyContribution);
     const startingBal = Number(changes.startingBal);
-    const schemeDate = new Date(changes.date);
+    const hasSelectedMonthYear =
+      Number.isInteger(changes.month) && Number.isInteger(changes.year);
+    const schemeDate = hasSelectedMonthYear
+      ? new Date(changes.year, changes.month, 1)
+      : new Date(changes.date);
+    const startingBalDateText = schemeDate.toLocaleDateString("en-ZA", {
+      month: "long",
+      year: "numeric",
+    });
 
     if (
       schemeId == null ||
@@ -1494,7 +1575,9 @@ function App() {
       startingBal < 0 ||
       Number.isNaN(schemeDate.getTime())
     ) {
-      toast.error("Enter a valid scheme name, contribution, balance, and date.");
+      toast.error(
+        "Enter a valid scheme name, contribution, balance, and date.",
+      );
       return false;
     }
 
@@ -1512,9 +1595,10 @@ function App() {
           scheme: schemeName,
           monthly_contribution: monthlyContribution,
           starting_bal: startingBal,
+          starting_bal_date: startingBalDateText,
           created_at: schemeDate.toISOString(),
         })
-        .eq("id", user.id)
+        .eq("id", schemeId)
         .eq("member_id", user.id)
         .select("*")
         .maybeSingle());
@@ -1531,7 +1615,9 @@ function App() {
     }
 
     if (!data) {
-      toast.error("Scheme not found or you do not have permission to update it.");
+      toast.error(
+        "Scheme not found or you do not have permission to update it.",
+      );
       return false;
     }
 
@@ -1580,7 +1666,9 @@ function App() {
     }
 
     if (!data) {
-      toast.error("Scheme not found or you do not have permission to delete it.");
+      toast.error(
+        "Scheme not found or you do not have permission to delete it.",
+      );
       return false;
     }
 
@@ -1603,7 +1691,6 @@ function App() {
     return true;
   };
 
-  
   useEffect(() => {
     let isActive = true;
     let schemeSubscription = null;
@@ -1653,9 +1740,7 @@ function App() {
                   upsertScheme(prev, mapSchemeForApp(payload.new)),
                 );
               } else if (payload.eventType === "DELETE") {
-                setSchemes((prev) =>
-                  removeSchemeRow(prev, payload.old),
-                );
+                setSchemes((prev) => removeSchemeRow(prev, payload.old));
               } else if (payload.eventType === "UPDATE") {
                 setSchemes((prev) =>
                   upsertScheme(prev, mapSchemeForApp(payload.new)),
@@ -1688,6 +1773,7 @@ function App() {
   }, [user]);
 
   const dashboardProps = {
+    schemeLoadBtn,
     isOpen,
     setIsOpen,
     toggleMenu,
@@ -1956,6 +2042,20 @@ function App() {
     };
   }, []);
 
+  //calender animation
+  useGSAP(
+    () => {
+      if (!calender_ref.current) return;
+
+      gsap.fromTo(
+        calender_ref.current,
+        { opacity: 0, y: 80, scale: 0.78 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "ease.out" },
+      );
+    },
+    { dependencies: [calenderState] },
+  );
+
   return (
     <BrowserRouter>
       <PasswordRecoveryRedirect />
@@ -1965,10 +2065,38 @@ function App() {
           className="fixed top-0 left-0 w-screen h-screen bg-black/70 z-999999"
           onClick={() => setCalenderState(false)}
         >
+          <div className="absolute right-3 top-3 text-white text-xl flex gap-2  transition-all duration-300 items-center font-semibold cursor-pointer">
+            <span>&times;</span>{" "}
+            <span className="no-underline hover:underline underline-offset-4">
+              Close
+            </span>{" "}
+          </div>
           <div
             onClick={(e) => e.stopPropagation()}
-            className="fixed bottom-1/8 left-1/2 -translate-x-1/2 -translate-y-1/8"
+            className="fixed bottom-1/8 left-1/2 -translate-x-1/2 -translate-y-1/8 flex flex-col gap-25 items-center"
+            ref={calender_ref}
           >
+            <div className="flex flex-col gap-2">
+              <h1 className="flex items-center gap-3 text-white font-bold text-[clamp(1.5rem,3vw+0.75rem,2.625rem)] max-w-200 leading-tight">
+                <i
+                  className="fa-solid fa-calendar-days shrink-0"
+                  aria-hidden="true"
+                ></i>
+                <span>Select a date to view past and projected data</span>
+              </h1>
+              <p className="flex gap-2 text-xs md:text-sm text-slate-300 mt-2">
+                <i
+                  className="fa-solid fa-circle-info shrink-0"
+                  aria-hidden="true"
+                ></i>
+                Note:
+                <span className="w-100">
+                  You can only view data from the date the scheme was created
+                  onward.
+                </span>
+              </p>
+            </div>
+
             <Calendar
               onChange={onChange}
               value={value}
@@ -2022,10 +2150,7 @@ function App() {
             )
           }
         />
-        <Route
-          path="/Privacy"
-          element={<Privacy />}
-        />
+        <Route path="/Privacy" element={<Privacy />} />
         <Route
           path="/Terms_and_Conditions"
           element={
@@ -2140,7 +2265,6 @@ function App() {
           }
         />
       </Routes>
-      
     </BrowserRouter>
   );
 }

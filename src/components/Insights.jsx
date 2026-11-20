@@ -146,7 +146,11 @@ function Insights({ toggleState, toggleMobileState, formattedDate, openCalender,
         <div className='flex flex-wrap justify-center md:justify-end items-center gap-4 text-white mt-4 md:mt-0'>
           <h5 className='text-white/50 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap'> Filter by date: </h5>
           <h3 className='text-light cursor-pointer hover:text-white/80 uppercase text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] whitespace-nowrap'> {formattedDate} </h3>
-          <div className="flex md:justify-end gap-4 md:w-full">
+          <div className="flex md:justify-end gap-6 md:w-full">
+            <div className="flex items-center gap-1.5 flex-row text-white/80">
+              <p className="text-sm">0</p>
+              <i class="fa-solid fa-users"></i>
+            </div>
             <span
               className="cursor-pointer hover:text-white/80 text-[clamp(0.875rem,1vw+0.5rem,1.125rem)]"
               onClick={openCalender}
