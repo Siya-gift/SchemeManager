@@ -17,7 +17,7 @@ function SideBar({
   const [name, setName] = useState("Account");
   const [userProfilePicture, setUserProfilePicture] = useState("");
   const [plan_clr, setPlanClr] = useState("");
-  const [planName, setPlanName] = useState("premium");
+  const [planName, setPlanName] = useState("starter");
 
   const getAuthUserAvatar = async (userParam) => {
     let user = userParam;
@@ -287,12 +287,12 @@ function SideBar({
         </small>
 
         <div
-          className={`absolute -bottom-2 plan_type px-1.5 py-0.5 bg-black/87 rounded-xl transition-all ${
+          className={`absolute -bottom-2 plan_type px-1.5 py-0.5 bg-slate-800 rounded-xl transition-all text-center ${
             uistate ? "left-1/2 -translate-x-1/2" : "right-3"
           }`}
         >
           <p
-            className={`text-[9px] ${plan_clr} bg-clip-text text-transparent tracking-wide font-semibold font-['Raleway']`}
+            className={`text-[9px] ${plan_clr} bg-clip-text text-transparent tracking-wide font-bold font-['Raleway']`}
           >
             {planName}
           </p>

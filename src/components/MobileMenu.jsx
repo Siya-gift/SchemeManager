@@ -100,11 +100,12 @@ function MobileMenu({
   };
 
   return (
+    // later change the md:hidden
     <div
       ref={menuRef}
       className="fixed bottom-0 w-full h-[60svh] z-10 px-10 py-2 
              bg-white/30 backdrop-blur-[50px] border-t rounded-b-0 border-white/20 
-             Menu glass-scroll rounded-t-3xl"
+             Menu glass-scroll rounded-t-3xl md:hidden"
       id="Menu"
     >
       <div

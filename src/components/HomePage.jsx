@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react"; // Removed unused useState
 import gsap from "gsap";
+import { CustomEase } from "gsap/CustomEase";
 import "../App.css";
 import homeBG from "../images/bghomeSvg.svg";
 import proveBG from "../images/proveBG.jpg";
@@ -67,6 +68,7 @@ import { supabase } from "../lib/supabaseClient";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { plan_data } from "../lib/planData.js";
+import { useGSAP } from "@gsap/react";
 
 function HomePage() {
   const btnSignin = "Sign in";
@@ -83,6 +85,8 @@ function HomePage() {
   const scrollContainerRef = useRef(null);
   const scrollHideTimeoutRef = useRef(null);
   const svgRef = useRef(null);
+  const homeTitleRef = useRef(null);
+  const ctaGroupRef = useRef(null);
 
   const [activePlan, setActivePlan] = useState(1);
   const [activePlanCard, setActivePlanCard] = useState(1);
@@ -208,7 +212,7 @@ function HomePage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // 1. Minimum delay timer
+  //Minimum delay timer
   useEffect(() => {
     const timer = setTimeout(() => {
       setMinDelayPassed(true);
@@ -216,7 +220,7 @@ function HomePage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // 2. GSAP stroke-drawing animation hook
+  //GSAP stroke-drawing animation hook
   useEffect(() => {
     if (!loading && minDelayPassed) return;
     if (!svgRef.current) return;
@@ -248,81 +252,153 @@ function HomePage() {
     return () => ctx.revert(); // Cleanup GSAP on unmount
   }, [loading, minDelayPassed]);
 
-  // 3. Conditional render for loading state
-  if (loading || !minDelayPassed) {
-    return (
-      <div className="h-screen w-full bg-black flex flex-col items-center justify-center gap-4 overflow-hidden">
-        
+  const titleEase = CustomEase.create(
+    "custom",
+    "M0,0 C0.682,0.05 0.965,0.44 1,1",
+  );
 
-        {/* Attached ref to the SVG */}
-        <svg
-          ref={svgRef}
-          xmlns="http://www.w3.org/2000/svg"
-          width="131"
-          height="145"
-          viewBox="0 0 131 145"
-          fill="none"
-        >
-          <path
-            d="M51.7225 31.5054C22.7226 31.4247 0.658676 54.3634 0.575223 84.3633C0.494553 113.363 22.4361 134.424 51.4359 134.505C80.4358 134.586 102.494 113.647 102.575 84.6471C102.655 55.6472 80.7223 31.5861 51.7225 31.5054Z"
-            strokeWidth="1.15"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            stroke="white"
-          />
-          <path
-            opacity="0.6"
-            d="M51.8424 40.2486C27.3384 40.1804 9.64096 59.7346 9.5728 84.2386C9.50464 108.743 27.0985 126.435 51.6025 126.503C76.1065 126.571 93.7985 108.977 93.8666 84.4731C93.9348 59.9691 76.3464 40.3168 51.8424 40.2486Z"
-            strokeWidth="0.75"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            stroke="white"
-          />
-          <path
-            d="M48.6668 47.4969L58.6668 47.5248L58.6445 55.5247C67.6417 56.5498 72.6305 60.5637 74.6138 66.5692L64.6028 70.5414C61.6167 65.533 58.6222 63.5247 52.6223 63.508C45.6223 63.4885 42.614 66.4802 42.6028 70.4802C42.5917 74.4801 47.5889 75.4941 55.5833 77.5163C68.5749 80.5525 74.561 85.5691 74.536 94.5691C74.5109 103.569 68.4943 109.552 58.4887 111.525L58.4693 118.524L48.4693 118.497L48.4888 111.497C38.4916 110.469 32.5027 106.452 29.5222 99.4439L39.5361 94.4717C42.5194 100.48 47.5138 102.494 53.5138 102.511C59.5138 102.527 63.5221 99.5385 63.5332 95.5385C63.5443 91.5385 59.5499 89.5274 50.5555 87.5024C38.5639 84.469 32.5751 80.4523 32.6001 71.4523C32.6251 62.4524 38.639 57.4691 48.6445 55.4969L48.6668 47.4969Z"
-            strokeWidth="0.95"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            stroke="white"
-          />
-          <path
-            d="M67.8086 0.549894L129.808 0.722362L129.778 11.7223L107.686 44.661L93.6861 44.622L61.7781 11.5332L67.8086 0.549894Z"
-            strokeWidth="1.1"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            stroke="white"
-          />
-          <path
-            opacity="0.6"
-            d="M67.8086 0.549894L87.7585 18.6055M87.7585 18.6055L61.7781 11.5332M87.7585 18.6055L129.808 0.722362M87.7585 18.6055L93.6861 44.622M87.7585 18.6055L107.753 20.6611M107.753 20.6611L107.686 44.661M107.753 20.6611L129.778 11.7223"
-            strokeWidth="0.65"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            stroke="white"
-          />
-          <path
-            d="M107.686 44.6611L125.527 101.711L105.514 106.655L87.4107 143.605L79.4525 128.583"
-            strokeWidth="1.05"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            stroke="white"
-          />
-          <path
-            opacity="0.6"
-            d="M99.6694 50.6388L106.533 99.6581M106.533 99.6581L87.4108 143.605M106.533 99.6581L125.527 101.711"
-            strokeWidth="0.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            stroke="white"
-          />
-        </svg>
+  
 
-        <span className="text-xs font-medium tracking-[0.2em] text-white/50 uppercase animate-pulse">
-          Loading...
-        </span>
-      </div>
+  useGSAP(() => {
+    if (!homeTitleRef.current || !ctaGroupRef.current) return;
+
+    const mm = gsap.matchMedia();
+
+    mm.add(
+      {
+        isMobile: "(max-width: 767px)",
+        isDesktop: "(min-width: 768px)",
+      },
+      (context) => {
+        const { isMobile } = context.conditions;
+        const tl = gsap.timeline();
+
+        tl.fromTo(
+          homeTitleRef.current,
+          { y: -20, opacity: 0 },
+          {
+            clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+            duration: 1.4,
+            y: 0,
+            opacity: 1,
+            ease: "expo.out",
+          },
+        )
+          .fromTo(
+            ".hero-word",
+            {
+              opacity: 0,
+              scale: 1.25,
+              paddingLeft: 0,
+            },
+            {
+              opacity: 1,
+              scale: 1,
+              paddingLeft: isMobile ? 4 : 8,
+              duration: 0.65,
+              stagger: 0.16,
+              ease: "back.out(1.7)",
+            },
+            "-=0.5",
+          )
+          .fromTo(
+            ctaGroupRef.current.querySelectorAll(".hero-cta"),
+            {
+              y: isMobile ? 14 : 20,
+              scale: 0.96,
+              opacity: 0,
+            },
+            {
+              y: 0,
+              scale: 1,
+              opacity: 1,
+              duration: 0.55,
+              stagger: 0.12,
+              ease: "power3.out",
+              clearProps: "transform", // keeps hover/active scale transforms clean afterward
+            },
+            "-=0.35",
+          );
+      },
     );
-  }
+
+    return () => mm.revert();
+  });
+
+  //Conditional render for loading state
+  // if (loading || !minDelayPassed) {
+  //   return (
+  //     <div className="h-screen w-full bg-black flex flex-col items-center justify-center gap-4 overflow-hidden">
+
+  //       {/* Attached ref to the SVG */}
+  //       <svg
+  //         ref={svgRef}
+  //         xmlns="http://www.w3.org/2000/svg"
+  //         width="131"
+  //         height="145"
+  //         viewBox="0 0 131 145"
+  //         fill="none"
+  //       >
+  //         <path
+  //           d="M51.7225 31.5054C22.7226 31.4247 0.658676 54.3634 0.575223 84.3633C0.494553 113.363 22.4361 134.424 51.4359 134.505C80.4358 134.586 102.494 113.647 102.575 84.6471C102.655 55.6472 80.7223 31.5861 51.7225 31.5054Z"
+  //           strokeWidth="1.15"
+  //           strokeLinecap="round"
+  //           strokeLinejoin="round"
+  //           stroke="white"
+  //         />
+  //         <path
+  //           opacity="0.6"
+  //           d="M51.8424 40.2486C27.3384 40.1804 9.64096 59.7346 9.5728 84.2386C9.50464 108.743 27.0985 126.435 51.6025 126.503C76.1065 126.571 93.7985 108.977 93.8666 84.4731C93.9348 59.9691 76.3464 40.3168 51.8424 40.2486Z"
+  //           strokeWidth="0.75"
+  //           strokeLinecap="round"
+  //           strokeLinejoin="round"
+  //           stroke="white"
+  //         />
+  //         <path
+  //           d="M48.6668 47.4969L58.6668 47.5248L58.6445 55.5247C67.6417 56.5498 72.6305 60.5637 74.6138 66.5692L64.6028 70.5414C61.6167 65.533 58.6222 63.5247 52.6223 63.508C45.6223 63.4885 42.614 66.4802 42.6028 70.4802C42.5917 74.4801 47.5889 75.4941 55.5833 77.5163C68.5749 80.5525 74.561 85.5691 74.536 94.5691C74.5109 103.569 68.4943 109.552 58.4887 111.525L58.4693 118.524L48.4693 118.497L48.4888 111.497C38.4916 110.469 32.5027 106.452 29.5222 99.4439L39.5361 94.4717C42.5194 100.48 47.5138 102.494 53.5138 102.511C59.5138 102.527 63.5221 99.5385 63.5332 95.5385C63.5443 91.5385 59.5499 89.5274 50.5555 87.5024C38.5639 84.469 32.5751 80.4523 32.6001 71.4523C32.6251 62.4524 38.639 57.4691 48.6445 55.4969L48.6668 47.4969Z"
+  //           strokeWidth="0.95"
+  //           strokeLinecap="round"
+  //           strokeLinejoin="round"
+  //           stroke="white"
+  //         />
+  //         <path
+  //           d="M67.8086 0.549894L129.808 0.722362L129.778 11.7223L107.686 44.661L93.6861 44.622L61.7781 11.5332L67.8086 0.549894Z"
+  //           strokeWidth="1.1"
+  //           strokeLinecap="round"
+  //           strokeLinejoin="round"
+  //           stroke="white"
+  //         />
+  //         <path
+  //           opacity="0.6"
+  //           d="M67.8086 0.549894L87.7585 18.6055M87.7585 18.6055L61.7781 11.5332M87.7585 18.6055L129.808 0.722362M87.7585 18.6055L93.6861 44.622M87.7585 18.6055L107.753 20.6611M107.753 20.6611L107.686 44.661M107.753 20.6611L129.778 11.7223"
+  //           strokeWidth="0.65"
+  //           strokeLinecap="round"
+  //           strokeLinejoin="round"
+  //           stroke="white"
+  //         />
+  //         <path
+  //           d="M107.686 44.6611L125.527 101.711L105.514 106.655L87.4107 143.605L79.4525 128.583"
+  //           strokeWidth="1.05"
+  //           strokeLinecap="round"
+  //           strokeLinejoin="round"
+  //           stroke="white"
+  //         />
+  //         <path
+  //           opacity="0.6"
+  //           d="M99.6694 50.6388L106.533 99.6581M106.533 99.6581L87.4108 143.605M106.533 99.6581L125.527 101.711"
+  //           strokeWidth="0.7"
+  //           strokeLinecap="round"
+  //           strokeLinejoin="round"
+  //           stroke="white"
+  //         />
+  //       </svg>
+
+  //       <span className="text-xs font-medium tracking-[0.2em] text-white/50 uppercase animate-pulse">
+  //         Loading...
+  //       </span>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -505,17 +581,30 @@ function HomePage() {
             className="absolute w-full top-30 md:top-1/2 left-1/2 -translate-x-1/2 
                md:-translate-y-1/2    flex flex-col items-center justify-center gap-3 z-20"
           >
-            <h1 className=" text-center text-white text-[32px] md:text-[42px] max-w-75 md:max-w-full font-semibold leading-10 md:leading-10">
+            <h1
+              className="text-center text-white text-[32px] md:text-[42px] max-w-75 md:max-w-full font-semibold leading-10 md:leading-10 [clip-path:polygon(0%_100%,100%_100%,100%_100%,0%_100%)]"
+              ref={homeTitleRef}
+            >
               Bringing your financial goals to <br />
               life.{" "}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-[#00FF9D] from-36% to-[#0368FF] to-95% font-bold">
-                Secure. Grow. Achieve.
+                {["Secure.", "Grow.", "Achieve."].map((word, i) => (
+                  <span key={word} className="hero-word">
+                    {word}
+                    {i < 2 ? " " : ""}
+                  </span>
+                ))}
               </span>
             </h1>
 
-            <div className="flex flex-row items-center justify-center gap-0 md:gap-3">
-              <PrimaryBtn2 btnLearn={btnLearn} />
-              <Link to={"/Signup"}>
+            <div
+              ref={ctaGroupRef}
+              className="flex flex-row items-center justify-center gap-2 md:gap-3"
+            >
+              <div className="hero-cta">
+                <PrimaryBtn2 btnLearn={btnLearn} />
+              </div>
+              <Link to="/Signup" className="hero-cta">
                 <PrimaryBtn btnGetStarted={btnGetStarted} />
               </Link>
             </div>
