@@ -16,6 +16,8 @@ function SideBar({
   // Inside your component:
   const [name, setName] = useState("Account");
   const [userProfilePicture, setUserProfilePicture] = useState("");
+  const [plan_clr, setPlanClr] = useState("");
+  const [planName, setPlanName] = useState("premium");
 
   const getAuthUserAvatar = async (userParam) => {
     let user = userParam;
@@ -169,6 +171,25 @@ function SideBar({
     }
   };
 
+  useEffect(() => {
+    if (!planName) return;
+
+    const normalized = planName.toLowerCase().trim();
+    if (normalized === "starter") {
+      setPlanClr(
+        "bg-linear-to-r from-[#D900FF] from-[8.17%] via-[#6C73FF]/45 via-[74.52%] to-[#00E9FF]/20 to-[87.98%]",
+      );
+    } else if (normalized === "standard") {
+      setPlanClr(
+        "bg-linear-to-r from-[#0368FF] from-0% via-[#6C73FF]/45 via-[46.63%] to-[#00FF9D] to-[97.12%]",
+      );
+    } else if (normalized === "premium") {
+      setPlanClr(
+        "bg-linear-to-r from-[#FFEE00]/50 from-0% via-[#FFA96C]/45 via-[26.92%] to-[#B7FF00]/20 to-[66.83%]",
+      );
+    }
+  }, [planName]);
+
   return (
     <div
       className={`hidden md:flex md:flex-col md:flex-none m-5 min-h-[calc(100vh-2.5rem)] p-5 glass transition-[width] duration-300 ease-in-out ${
@@ -264,7 +285,20 @@ function SideBar({
         >
           {selectedSchemeName}
         </small>
+
+        <div
+          className={`absolute -bottom-2 plan_type px-1.5 py-0.5 bg-black/87 rounded-xl transition-all ${
+            uistate ? "left-1/2 -translate-x-1/2" : "right-3"
+          }`}
+        >
+          <p
+            className={`text-[9px] ${plan_clr} bg-clip-text text-transparent tracking-wide font-semibold font-['Raleway']`}
+          >
+            {planName}
+          </p>
+        </div>
       </div>
+
       <div className="glass mt-5 flex flex-col h-full p-5">
         <h3
           className={`mb-3 h-5 overflow-hidden whitespace-nowrap text-sm font-semibold uppercase tracking-wider text-white transition-opacity duration-200 ${

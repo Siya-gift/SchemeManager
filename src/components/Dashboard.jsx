@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import Overlayer from "./Overlayer";
 import Notifications from "./Notifications";
 import { supabase } from "../lib/supabaseClient";
+import toast from "react-hot-toast";
 
 function Dashboard({
   schemeLoadBtn,
@@ -74,6 +75,49 @@ function Dashboard({
   saveScheme,
   dash_schemes,
 }) {
+  const handleSavingsInfo = (e) => {
+    e.preventDefault()
+    toast.custom(
+      (t) => (
+        <div
+          className={`${
+            t.visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+          } transition-all duration-200 max-w-md w-full bg-white border border-slate-200 border-l-4 border-l-blue-400 shadow-lg rounded-xl p-4 flex items-start gap-3.5`}
+        >
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-400">
+            <i
+              className="fa-solid fa-circle-info text-sm"
+              aria-hidden="true"
+            ></i>
+          </div>
+
+          <div className="flex-1 text-sm leading-relaxed text-slate-600">
+            <p className="font-semibold text-slate-900 mb-0.5">
+              How Savings Are Calculated
+            </p>
+            <p>
+              Total collections minus all expenses (including{" "}
+              <span className="font-medium text-slate-800">
+                in-flow expenses
+              </span>
+              )—in simple terms, the actual money you keep.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => toast.dismiss(t.id)}
+            aria-label="Dismiss"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors cursor-pointer"
+          >
+            <i className="fa-solid fa-xmark text-xs" aria-hidden="true"></i>
+          </button>
+        </div>
+      ),
+      { duration: 9000 },
+    );
+  };
+
   const startingBalanceMonths = Array.from({ length: 12 }, (_, index) =>
     new Intl.DateTimeFormat("en", { month: "long" }).format(
       new Date(2026, index, 1),
@@ -279,8 +323,9 @@ function Dashboard({
             <i className="fa-solid fa-wallet mt-1"></i>
             <span>Savings </span>
             <div
-              className="text-white/50 text-sm text-center"
+              className="text-white/50 text-sm text-center hover:text-white/80 cursor-pointer"
               title="Total collections(YTD) Minus Monthly Expenses"
+              onClick={handleSavingsInfo}
             >
               <i className="fa-solid fa-circle-info"></i>
             </div>
@@ -661,13 +706,11 @@ function Dashboard({
                   value={newSchemeDate}
                   className="flex-1 bg-transparent px-3 py-2 text-white text-xs border border-white/60 focus:outline-none focus:border-white scheme-dark"
                 >
-                  {startingBalanceMonths.map(
-                    (month, index) => (
-                      <option key={index} value={index} className="text-black">
-                        {month}
-                      </option>
-                    ),
-                  )}
+                  {startingBalanceMonths.map((month, index) => (
+                    <option key={index} value={index} className="text-black">
+                      {month}
+                    </option>
+                  ))}
                 </select>
 
                 {/* Year Select */}
