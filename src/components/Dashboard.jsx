@@ -3,6 +3,9 @@ import Overlayer from "./Overlayer";
 import Notifications from "./Notifications";
 import { supabase } from "../lib/supabaseClient";
 import toast from "react-hot-toast";
+import CardSkeleton from "../Skeletons/CardSkeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function Dashboard({
   schemeLoadBtn,
@@ -74,9 +77,18 @@ function Dashboard({
   setNewSchemeYear,
   saveScheme,
   dash_schemes,
+  filteredExpenses,
 }) {
+  const skeletonCount = Number(localStorage.getItem("dash_schemes_count")) || 4;
+  const skeletonWidths = ["w-20", "w-32", "w-24", "w-28", "w-36"];
+  useEffect(() => {
+    if (dash_schemes?.length > 0) {
+      localStorage.setItem("dash_schemes_count", dash_schemes.length);
+    }
+  }, [dash_schemes]);
+
   const handleSavingsInfo = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     toast.custom(
       (t) => (
         <div
@@ -283,18 +295,26 @@ function Dashboard({
 
       {/* Tabs Scrollable on mobile */}
       <ul className="tabs glass-scroll flex gap-2 max-w-svw md:max-w-[70vw] overflow-x-auto pb-4 no-scrollbar">
-        {dash_schemes.map((scheme, idx) => (
-          <li
-            key={idx}
-            className={`tab hover:bg-white/45 cursor-pointer 
+        {dash_schemes && dash_schemes.length > 0
+          ? dash_schemes.map((scheme, idx) => (
+              <li
+                key={idx}
+                className={`tab hover:bg-white/45 cursor-pointer 
                 text-white glass rounded-2xl px-4 py-1.5 font-bold 
-                text-sm whitespace-nowrap transition-all
+                text-sm whitespace-nowrap transition-all 
                 ${schemeSelectedState === idx ? "bg-white/45" : ""}`}
-            onClick={() => schemeSelected(idx, scheme.scheme)}
-          >
-            {scheme.scheme || scheme}
-          </li>
-        ))}
+                onClick={() => schemeSelected(idx, scheme.scheme)}
+              >
+                {scheme.scheme || scheme}
+              </li>
+            ))
+          : Array.from({ length: skeletonCount }).map((_, idx) => (
+              <li key={idx}>
+                <CardSkeleton
+                  width={skeletonWidths[idx % skeletonWidths.length]}
+                />
+              </li>
+            ))}
 
         <li
           className="group flex items-center tab hover:bg-white/20 cursor-pointer 
@@ -332,7 +352,7 @@ function Dashboard({
           </h2>
 
           <div className="mt-4 w-full overflow-visible">
-            <h1 className="text-white text-[clamp(1.25rem,5vw,2.5rem)] md:text-[2vw] font-bold leading-none whitespace-nowrap">
+            <h1 className="text-white text-[clamp(1.25rem,5vw,2.5rem)] md:text-[2vw] font-bold leading-none whitespace-nowrap block">
               {(
                 Number(TotalCollectionsMinusMonthlyExpenses) +
                 Number(
@@ -345,24 +365,70 @@ function Dashboard({
               })}
             </h1>
 
-            <h3
-              className={`text-[clamp(0.7rem,2vw,0.9rem)] my-3 font-2 opacity-80 ${!startingBalance ? "invisible" : ""}`}
-            >
-              <i className="fa-solid fa-flag-checkered mr-1"></i>
-              Starting Balance:{" "}
-              {(startingBalance || 0).toLocaleString("en-ZA", {
-                style: "currency",
-                currency: "ZAR",
-              })}{" "}
-              <br />
-              {(asOfDate && asOfDate !== 0 && asOfDate !== "0"
-                ? new Date(asOfDate)
-                : new Date()
-              ).toLocaleDateString("en-ZA", {
-                month: "long",
-                year: "numeric",
-              })}
-            </h3>
+            {startingBalance !== 0 && startingBalance !== "0" ? (
+              <h3 className="text-[clamp(0.7rem,2vw,0.9rem)] font-2 my-3 opacity-80">
+                <span className="mr-1">
+                  <i className="fa-solid fa-flag-checkered"></i>
+                </span>
+                Starting Balance:{" "}
+                {startingBalance !== undefined &&
+                startingBalance !== null &&
+                startingBalance !== "" &&
+                !Number.isNaN(Number(startingBalance)) ? (
+                  Number(startingBalance).toLocaleString("en-ZA", {
+                    style: "currency",
+                    currency: "ZAR",
+                  })
+                ) : (
+                  <SkeletonTheme
+                    baseColor="rgba(255, 255, 255, 0.1)"
+                    highlightColor="rgba(255, 255, 255, 0.65)"
+                  >
+                    <Skeleton width={60} borderRadius={150} />
+                  </SkeletonTheme>
+                )}{" "}
+                <br />
+                {(() => {
+                  const parsedDate = asOfDate ? new Date(asOfDate) : null;
+                  const isValidDate =
+                    parsedDate && !isNaN(parsedDate.getTime());
+
+                  return isValidDate ? (
+                    parsedDate.toLocaleDateString("en-ZA", {
+                      month: "long",
+                      year: "numeric",
+                    })
+                  ) : (
+                    <SkeletonTheme
+                      baseColor="rgba(255, 255, 255, 0.1)"
+                      highlightColor="rgba(255, 255, 255, 0.65)"
+                    >
+                      <Skeleton width={100} borderRadius={150} />
+                    </SkeletonTheme>
+                  );
+                })()}
+              </h3>
+            ) : (
+              <div className="text-[clamp(0.7rem,2vw,0.9rem)] font-2 my-4 opacity-80 flex flex-col">
+                <h2 className="font-normal text-sm mb-1">Recent Expenses</h2>
+                <ul className="font-normal text-[10px] leading-relaxed line-clamp-2">
+                  {filteredExpenses.length !== 0 ? (
+                    filteredExpenses.map((expense, i) => (
+                      <li
+                        key={i}
+                        className={`inline-block truncate max-w-full align-bottom ${expense.type === "Refund / Credit (Inflow)" ? "bg-green-50 text-[#0a6847]" : "bg-white text-slate-400"}  px-2 rounded-2xl mr-1 mb-1`}
+                      >
+                        {expense.description}
+                      </li>
+                    ))
+                  ) : (
+                    <p className="inline-block bg-green-50 text-[#0a6847] px-2 rounded-2xl">
+                      Balanced
+                    </p>
+                  )}
+                </ul>
+              </div>
+            )}
 
             <hr className="mb-2 mt-3 border-white/25" />
 
@@ -407,7 +473,7 @@ function Dashboard({
             </ul>
           </div>
 
-          <h1 className="text-white text-[clamp(1.25rem,5vw,2.5rem)] md:text-[2vw] font-bold leading-none whitespace-nowrap mb-4 mt-4 md:mt-0">
+          <h1 className="text-white text-[clamp(1.25rem,5vw,2.5rem)] md:text-[2vw] font-bold leading-none whitespace-nowrap mb-auto mt-5 md:mt-3">
             {YearMonthFilter === 1
               ? totalSchemeYearlyContribution.toLocaleString("en-ZA", {
                   currency: "ZAR",
@@ -446,18 +512,30 @@ function Dashboard({
                 style={{ width: `${Math.min(100, progressPercentage)}%` }}
               ></div>
             </div>
-            <h5 className="text-xs font-bold">
-              Target:{" "}
-              {YearMonthFilter === 1
-                ? yearlyTarget.toLocaleString("en-ZA", {
-                    currency: "ZAR",
-                    style: "currency",
-                  })
-                : monthlyTarget.toLocaleString("en-ZA", {
-                    currency: "ZAR",
-                    style: "currency",
-                  })}
-            </h5>
+            <SkeletonTheme
+              baseColor="rgba(255, 255, 255, 0.1)"
+              highlightColor="rgba(255, 255, 255, 0.65)"
+            >
+              <h5 className="text-xs font-bold flex items-center gap-1">
+                <span>Target:</span>
+                {Number.isFinite(
+                  parseFloat(
+                    YearMonthFilter === 1 ? yearlyTarget : monthlyTarget,
+                  ),
+                ) ? (
+                  <span>
+                    {parseFloat(
+                      YearMonthFilter === 1 ? yearlyTarget : monthlyTarget,
+                    ).toLocaleString("en-ZA", {
+                      currency: "ZAR",
+                      style: "currency",
+                    })}
+                  </span>
+                ) : (
+                  <Skeleton width={85} borderRadius={150} />
+                )}
+              </h5>
+            </SkeletonTheme>
           </div>
         </div>
 

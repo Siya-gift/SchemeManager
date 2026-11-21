@@ -5,6 +5,8 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { supabase } from "../lib/supabaseClient.js";
 import { getAuthUserDisplayName } from "../lib/authUserName.js";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function MobileNav({
   isOpen,
@@ -77,7 +79,7 @@ function MobileNav({
     } catch (err) {
       console.error("Error fetching avatar from storage:", err);
     }
-    
+
     // 1. Check Supabase Auth user metadata first (helpful for OAuth/mobile sign-ins)
     try {
       const { data, error: authError } = await supabase.auth.getUser();
@@ -176,13 +178,23 @@ function MobileNav({
             settoggleMobileState(0);
           }}
         >
-          <div className=" ppic w-10 h-10 rounded-full overflow-hidden border border-white/20">
-            <img
-              src={userProfilePicture ? userProfilePicture : luffyImg}
-              className="h-full w-full object-cover"
-              alt="profile"
-            />
-          </div>
+          <SkeletonTheme
+            baseColor="rgba(255, 255, 255, .9)"
+            highlightColor="rgba(255, 255, 255, .9)"
+          >
+            {userProfilePicture ? (
+              <div className="ppic w-10 h-10 rounded-full overflow-hidden border border-white/20">
+                <img
+                  src={userProfilePicture}
+                  className="h-full w-full object-cover"
+                  alt="profile"
+                />
+              </div>
+            ) : (
+              <Skeleton circle width={40} height={40} />
+            )}
+          </SkeletonTheme>
+
           <img
             className="absolute -bottom-2 left-0 w-12"
             src={dash_logo}

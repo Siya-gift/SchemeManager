@@ -5,6 +5,8 @@ import dash_logo from "../images/dash_logo.svg";
 import close_side_icon from "../images/close_side_icon.svg";
 import { supabase } from "../lib/supabaseClient.js";
 import { getAuthUserDisplayName } from "../lib/authUserName.js";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function SideBar({
   toggleState,
@@ -14,7 +16,7 @@ function SideBar({
   settoggleMobileState,
 }) {
   // Inside your component:
-  const [name, setName] = useState("Account");
+  const [name, setName] = useState(null);
   const [userProfilePicture, setUserProfilePicture] = useState("");
   const [plan_clr, setPlanClr] = useState("");
   const [planName, setPlanName] = useState("starter");
@@ -234,57 +236,79 @@ function SideBar({
             settoggleMobileState(0);
           }}
         >
-          <div
-            className={`ppic relative group aspect-square shrink-0 rounded-full overflow-hidden transition-[width,height] duration-300 cursor-pointer ${
-              uistate ? "h-10" : "h-20"
-            }`}
+          <SkeletonTheme
+            baseColor="rgba(255, 255, 255, .9)"
+            highlightColor="rgba(255, 255, 255, .9)"
           >
-            <img
-              src={userProfilePicture || luffyImg}
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = luffyImg;
-              }}
-              className="h-full w-full object-cover"
-              alt="Profile"
-            />
+            <div
+              className={`ppic relative group aspect-square shrink-0 rounded-full overflow-hidden transition-[width,height] duration-300 cursor-pointer ${
+                uistate ? "h-10" : "h-20"
+              }`}
+            >
+              {userProfilePicture ? (
+                <img
+                  src={userProfilePicture}
+                  className="h-full w-full object-cover"
+                  alt="Profile"
+                />
+              ) : (
+                <Skeleton
+                  circle
+                  width="100%"
+                  height="100%"
+                  className="border border-white"
+                  containerClassName="block w-full h-full leading-none"
+                />
+              )}
 
-            {/* Dark hover overlay with centered cross */}
-            {toggleState !== 0 && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={`text-white/75 transition-all duration-200 rotate-0 ${
-                    uistate ? "h-4 w-4" : "h-6 w-6"
-                  }`}
-                >
-                  <path d="M5 12h14" />
-                  <path d="M12 5v14" />
-                </svg>
-              </div>
-            )}
-          </div>
+              {/* Dark hover overlay with centered cross */}
+              {toggleState !== 0 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`text-white/75 transition-all duration-200 rotate-0 ${
+                      uistate ? "h-4 w-4" : "h-6 w-6"
+                    }`}
+                  >
+                    <path d="M5 12h14" />
+                    <path d="M12 5v14" />
+                  </svg>
+                </div>
+              )}
+            </div>
+          </SkeletonTheme>
         </div>
+
         <h1
           className={`h-9 overflow-hidden truncate whitespace-nowrap text-3xl font-bold text-white transition-opacity duration-200 ${
             uistate ? "opacity-0" : "opacity-100"
           }`}
         >
-          {name}
+          <SkeletonTheme
+            baseColor="rgba(255, 255, 255, 0.1)"
+            highlightColor="rgba(255, 255, 255, 0.65)"
+          >
+            {name || <Skeleton width={160} borderRadius={150} />}
+          </SkeletonTheme>
         </h1>
-        <small
-          className={`block h-5 w-full truncate whitespace-nowrap text-[#abe9be] transition-opacity duration-200 ${
-            uistate ? "opacity-0" : "opacity-100"
-          }`}
+        <SkeletonTheme
+          baseColor="rgba(255, 255, 255, 0.1)"
+          highlightColor="rgba(255, 255, 255, 0.65)"
         >
-          {selectedSchemeName}
-        </small>
+          <small
+            className={`block h-5 w-full truncate whitespace-nowrap text-[#abe9be] transition-opacity duration-200 ${
+              uistate ? "opacity-0" : "opacity-100"
+            }`}
+          >
+            {selectedSchemeName || <Skeleton width={70} borderRadius={150} />}
+          </small>
+        </SkeletonTheme>
 
         <div
           className={`absolute -bottom-2 plan_type px-1.5 py-0.5 bg-slate-800 rounded-xl transition-all text-center ${
@@ -294,7 +318,7 @@ function SideBar({
           <p
             className={`text-[9px] ${plan_clr} bg-clip-text text-transparent tracking-wide font-bold font-['Raleway']`}
           >
-            {planName}
+            {planName || <Skeleton />}
           </p>
         </div>
       </div>
