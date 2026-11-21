@@ -201,9 +201,23 @@ function MobileNav({
             alt="logo"
           />
           <div>
-            <h1 className="text-white text-xl font-bold">{name}</h1>
+            <h1 className="text-white text-xl font-bold">
+              <SkeletonTheme
+                baseColor="rgba(255, 255, 255, 0.1)"
+                highlightColor="rgba(255, 255, 255, 0.65)"
+              >
+                {name || <Skeleton borderRadius={150} width={100} />}
+              </SkeletonTheme>
+            </h1>
             <small className="text-[#abe9be] block truncate max-w-45">
-              {selectedSchemeName}
+              <SkeletonTheme
+                baseColor="rgba(255, 255, 255, 0.1)"
+                highlightColor="rgba(255, 255, 255, 0.65)"
+              >
+                {selectedSchemeName || (
+                  <Skeleton borderRadius={150} width={60} />
+                )}
+              </SkeletonTheme>
             </small>
           </div>
         </div>
